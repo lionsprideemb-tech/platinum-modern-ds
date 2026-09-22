@@ -4,6 +4,14 @@
 
 DS01 — Reproducible HG-Engine Foundation
 
+**Status: CERTIFIED — 2026-09-22**
+
+## Certified project commit
+
+- Tested project commit: `8ff19397f6099110643a421c96a3799fb6d73eb4`
+- Permanent checkpoint branch: `checkpoint/ds01-certified`
+- Project workflow run: `35755920648` (DS01 Engine Build run #2)
+
 ## Upstream revisions
 
 - HG-Engine: `5157c501dc0e6f88ef1654ab121352a5cc9ed7de`
@@ -13,16 +21,17 @@ DS01 — Reproducible HG-Engine Foundation
 
 ## Repository safety
 
-Repository Guard run #1: PASS
+Repository Guard: PASS
 
 Verified:
 - no tracked `.nds`, `.sav`, ROM archives, or split archive parts
-- all pinned upstream revisions are full 40-character commit hashes
+- pinned upstream revisions are exact 40-character commit hashes
 - required DS01 documentation exists
 
 ## Engine build evidence
 
 DS01 Engine Build run #2:
+
 - HeartGold source checkout: PASS
 - HeartGold toolchain bootstrap: PASS
 - HeartGold reconstruction: PASS
@@ -30,23 +39,28 @@ DS01 Engine Build run #2:
 - project overlay application: PASS
 - generated HeartGold input preparation: PASS
 - HG-Engine compile: PASS
-- HG-Engine automated tests: RUNNING at last certification update
-- generated build fingerprint: PENDING tests
+- HG-Engine automated test command: PASS
+- generated build fingerprint step: PASS
+
+The workflow records the generated `test.nds` SHA-256 and byte size in its GitHub Actions step summary. The ROM itself is not uploaded or committed.
+
+## Regression test result
+
+- tests passed: **401**
+- unexpected test failures: **0**
+- upstream-known failing tests: **8**
+- skipped tests: **3**
+
+The known-failing/skipped cases are tracked separately and are not regressions introduced by Platinum Modern DS.
 
 ## Independent upstream evidence
 
-HG-Engine upstream build for the exact pinned commit `5157c501dc0e6f88ef1654ab121352a5cc9ed7de` completed successfully in upstream run #1294 (GitHub Actions run 35654224823), including the full automated test suite.
+The exact pinned HG-Engine commit also has a successful upstream full CI run (upstream run #1294 / GitHub Actions run `35654224823`).
 
-This is supporting evidence only; our project run #2 remains the local certification gate.
+## Certification decision
 
-## Current status
+DS01 is complete.
 
-**PROVISIONAL — NOT YET CERTIFIED**
+The project now has a reproducible, recoverable Nintendo DS foundation that can be rebuilt from pinned public source inputs without storing a clean commercial ROM.
 
-The engine and source reconstruction compile successfully. DS01 becomes certified only after the automated HG-Engine test suite completes successfully and the build fingerprint step runs.
-
-## Build policy
-
-A successful compile alone is not enough to close DS01.
-
-The full certification gate is defined in `docs/DS01_ACCEPTANCE.md`.
+Future engine changes must preserve this checkpoint and should be developed on feature branches before promotion to `main`.
