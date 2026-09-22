@@ -8,6 +8,7 @@ on:
       - "tools/convert_platinum_landdata.py"
       - "tools/convert_platinum_events.py"
       - "tools/convert_platinum_areadata.py"
+      - "tools/build_hgss_prop_set.py"
       - "tools/audit_world_capacity.py"
       - "tests/**"
       - "platinum_port/twinleaf/**"
@@ -84,14 +85,143 @@ jobs:
           test "$(jq -r '.hgss_building_tileset' /tmp/twinleaf_interior_area.json)" = "105"
           test "$(jq -r '.hgss_map_tileset' /tmp/twinleaf_interior_area.json)" = "107"
 
-      - name: Validate real Twinleaf map members
+      - name: Validate Twinleaf visual source assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("vendor/pokeplatinum")
+          manifest = json.loads(
+              Path("platinum_port/twinleaf/visual_resources.json").read_text()
+          )
+
+          for env_name, env in manifest["environments"].items():
+              for key in ("source_prop_texture", "source_map_texture"):
+                  p = root / env[key]
+                  assert p.is_file(), (env_name, key, p)
+                  assert p.read_bytes()[:4] == b"BTX0", (env_name, key, p)
+
+              for model in env["models"]:
+                  p = root / model["source_path"]
+                  assert p.is_file(), (env_name, model["source_id"], p)
+                  assert p.read_bytes()[:4] == b"BMD0", (
+                      env_name,
+                      model["source_id"],
+                      p,
+                  )
+
+          print("Twinleaf NSBMD/NSBTX source assets: PASS")
+          PY
+
+      - name: Build Twinleaf HGSS prop sets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build_hgss_prop_set.py             platinum_port/twinleaf/model_map_exterior.json             /tmp/twinleaf_exterior_prop_set.bin
+          python3 tools/build_hgss_prop_set.py             platinum_port/twinleaf/model_map_interior.json             /tmp/twinleaf_interior_prop_set.bin
+
+          test "$(stat -c%s /tmp/twinleaf_exterior_prop_set.bin)" = "10"
+          test "$(stat -c%s /tmp/twinleaf_interior_prop_set.bin)" = "46"
+
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+
+          def read_ids(path):
+              data = Path(path).read_bytes()
+              count = struct.unpack_from("<H", data, 0)[0]
+              ids = list(struct.unpack_from(f"<{count}H", data, 2))
+              assert len(data) == 2 + 2 * count
+              return ids
+
+          assert read_ids("/tmp/twinleaf_exterior_prop_set.bin") == [340, 341, 342, 343]
+          assert read_ids("/tmp/twinleaf_interior_prop_set.bin") == list(range(222, 244))
+          print("Twinleaf HGSS prop sets: PASS")
+          PY
+
+      - name: Convert and validate real Twinleaf map members
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p /tmp/twinleaf-converted
-          for id in 000 180 184 185 186 187; do
-            python3 tools/convert_platinum_landdata.py               "vendor/pokeplatinum/res/field/maps/data/map_data_${id}.bin"               "/tmp/twinleaf-converted/map_data_${id}.bin"
+
+          python3 tools/convert_platinum_landdata.py             vendor/pokeplatinum/res/field/maps/data/map_data_000.bin             /tmp/twinleaf-converted/map_data_000.bin             --model-map platinum_port/twinleaf/model_map_exterior.json
+
+          for id in 180 184 185 186 187; do
+            python3 tools/convert_platinum_landdata.py               "vendor/pokeplatinum/res/field/maps/data/map_data_${id}.bin"               "/tmp/twinleaf-converted/map_data_${id}.bin"               --model-map platinum_port/twinleaf/model_map_interior.json
           done
+
+          python3 - <<'PY'
+          import importlib.util
+          import json
+          from pathlib import Path
+
+          module = Path("tools/convert_platinum_landdata.py")
+          spec = importlib.util.spec_from_file_location("landconv", module)
+          landconv = importlib.util.module_from_spec(spec)
+          assert spec.loader is not None
+          spec.loader.exec_module(landconv)
+
+          ext_map = {
+              int(k): int(v)
+              for k, v in json.loads(
+                  Path("platinum_port/twinleaf/model_map_exterior.json").read_text()
+              ).items()
+          }
+          int_map = {
+              int(k): int(v)
+              for k, v in json.loads(
+                  Path("platinum_port/twinleaf/model_map_interior.json").read_text()
+              ).items()
+          }
+
+          expected_source = {
+              "000": [22, 23, 67, 236],
+              "180": [78, 79, 80, 82, 92, 168],
+              "184": [78, 79, 82, 83, 84, 85, 88, 92, 104, 157, 168],
+              "185": [79, 82, 85, 90, 105, 106, 111, 112, 138, 157],
+              "186": [78, 79, 82, 83, 84, 85, 88, 140, 155, 157, 168],
+              "187": [79, 82, 85, 90, 106, 111, 112, 137, 138, 156, 157],
+          }
+
+          for map_id, source_ids in expected_source.items():
+              source = Path(
+                  f"vendor/pokeplatinum/res/field/maps/data/map_data_{map_id}.bin"
+              ).read_bytes()
+              actual_source = sorted(set(landconv.building_model_ids_dppt(source)))
+              assert actual_source == source_ids, (map_id, actual_source, source_ids)
+
+              target = Path(
+                  f"/tmp/twinleaf-converted/map_data_{map_id}.bin"
+              ).read_bytes()
+              info = landconv.validate_hgss(target)
+              permissions, buildings, _, _ = landconv.parse_sizes(target)
+              assert buildings % landconv.BUILDING_RECORD_SIZE == 0
+
+              mapping = ext_map if map_id == "000" else int_map
+              expected_target = sorted({mapping[x] for x in source_ids})
+              actual_target = []
+              base = info["buildings_offset"]
+              import struct
+              for i in range(buildings // landconv.BUILDING_RECORD_SIZE):
+                  actual_target.append(
+                      struct.unpack_from(
+                          "<I",
+                          target,
+                          base + i * landconv.BUILDING_RECORD_SIZE,
+                      )[0]
+                  )
+              assert sorted(set(actual_target)) == expected_target, (
+                  map_id,
+                  sorted(set(actual_target)),
+                  expected_target,
+              )
+
+          print("Real Twinleaf model remapping: PASS")
+          PY
 
       - name: Smoke-test event converter
         shell: bash
@@ -121,3 +251,25 @@ jobs:
             .twinleaf.landdata_validation.status == "PASS" and
             .compatibility.map_matrix == "DIRECT_BINARY_FORMAT_AFTER_ID_REMAP"
           ' platinum_port/twinleaf/source_manifest.json >/dev/null
+
+          jq -e '
+            .strategy == "APPEND_ONLY_NO_OVERWRITE" and
+            .environments.exterior.target_area_data.id == 106 and
+            .environments.exterior.target_prop_set.id == 104 and
+            .environments.exterior.target_prop_texture.id == 104 and
+            .environments.exterior.target_map_texture.id == 106 and
+            (.environments.exterior.models | length) == 4 and
+            .environments.interior.target_area_data.id == 107 and
+            .environments.interior.target_prop_set.id == 105 and
+            .environments.interior.target_prop_texture.id == 105 and
+            .environments.interior.target_map_texture.id == 107 and
+            (.environments.interior.models | length) == 22
+          ' platinum_port/twinleaf/visual_resources.json >/dev/null
+
+          jq -e '
+            .strategy == "APPEND_ONLY_NO_OVERWRITE" and
+            .twinleaf.visual_resources.exterior_models.start == 340 and
+            .twinleaf.visual_resources.exterior_models.end_inclusive == 343 and
+            .twinleaf.visual_resources.interior_models.start == 222 and
+            .twinleaf.visual_resources.interior_models.end_inclusive == 243
+          ' platinum_port/twinleaf/target_allocation.json >/dev/null
