@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - feature/title-mercury-art
+      - feature/title-mercury-motion
     paths:
       - "tools/generate_mercury_title.py"
       - "docs/MERCURY_TITLE_SCREEN_SPEC.md"
@@ -58,6 +59,7 @@ jobs:
           test -s vendor/pokeplatinum/res/graphics/title_screen/top_screen_border.png
           grep -q '"en_US": "PRESS START"' vendor/pokeplatinum/res/text/title_screen.json
           grep -q 'GX_RGB(26, 26, 31)' vendor/pokeplatinum/src/applications/title_screen.c
+          grep -q 'Mercury Redux: subtle DS-native logo float' vendor/pokeplatinum/src/applications/title_screen.c
 
       - name: Install Metroskrew
         working-directory: vendor/pokeplatinum
