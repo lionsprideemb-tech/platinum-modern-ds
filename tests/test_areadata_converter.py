@@ -22,7 +22,7 @@ payload, meta = areaconv.convert(
     area_type=areaconv.HGSS_AREA_OUTDOOR,
 )
 assert len(payload) == 8
-assert payload == bytes.fromhex("7b002d00ffff0100")
+assert payload == bytes.fromhex("7b002d00ffff0101")
 assert meta["platinum_dummy"] == 0
 assert meta["hgss_dynamic_texture_type"] == 0xFFFF
 assert meta["hgss_area_type"] == 1
@@ -41,10 +41,29 @@ payload, meta = areaconv.convert(
     area_type=areaconv.HGSS_AREA_INDOOR,
 )
 assert len(payload) == 8
-assert payload == bytes.fromhex("7c002e00ffff0001")
+assert payload == bytes.fromhex("7c002e00ffff0000")
 assert meta["platinum_dummy"] == 3
 assert meta["hgss_dynamic_texture_type"] == 0xFFFF
 assert meta["hgss_area_type"] == 0
 assert meta["hgss_light_type"] == 1
 
 print("DS03 area-data converter regression: PASS")
+
+# Lighting archive 2 has no proven direct HGSS mapping.
+unsupported = {
+    "mapPropSet": "prop_model_set_001",
+    "mapTextureSet": "map_texture_set_001",
+    "lightingSet": "lighting_set_002",
+    "dummy": 0,
+}
+try:
+    areaconv.convert(
+        unsupported,
+        building_tileset=1,
+        map_tileset=1,
+        area_type=areaconv.HGSS_AREA_OUTDOOR,
+    )
+except ValueError:
+    pass
+else:
+    raise AssertionError("Unproven lighting archive 2 should require an explicit mapping")
