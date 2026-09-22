@@ -42,8 +42,13 @@ def parse_map_id_max(maps_h: str) -> tuple[int, int]:
     if not max_match:
         raise ValueError("MAP_ID_MAX not found")
     vals = [
-        int(v)
-        for v in re.findall(r"^#define\s+MAP_[A-Z0-9_]+\s+(\d+)\b", maps_h, re.M)
+        int(value)
+        for name, value in re.findall(
+            r"^#define\s+(MAP_[A-Z0-9_]+)\s+(\d+)\b",
+            maps_h,
+            re.M,
+        )
+        if name != "MAP_ID_MAX"
     ]
     return max(vals), int(max_match.group(1))
 
