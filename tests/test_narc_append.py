@@ -17,6 +17,7 @@ def synthetic(members):
         fat_magic=b"BTAF",
         fat_reserved=b"\0\0",
         btnf=b"BTNF" + struct.pack("<I", 16) + bytes.fromhex("0400000000000100"),
+        fimg_magic=b"GMIF",
         members=list(members),
     )
     return narcmod.build(base)
