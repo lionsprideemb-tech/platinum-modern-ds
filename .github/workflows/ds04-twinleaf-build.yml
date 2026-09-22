@@ -200,6 +200,110 @@ jobs:
           cp vendor/pokeheartgold/build/heartgold.us/pokeheartgold.us.nds vendor/hg-engine/rom.nds
           wget -q https://github.com/BluRosie/hg-engine/raw/workflows/assets/test.sav -O vendor/hg-engine/test.sav
 
+      - name: Preflight HG-Engine overlay patch offsets
+        working-directory: vendor/hg-engine
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          import sys
+
+          rom = Path("rom.nds").read_bytes()
+          y9_off, y9_size = struct.unpack_from("<II", rom, 0x50)
+          y9 = rom[y9_off:y9_off + y9_size]
+
+          defines = {
+              "DEBUG_BATTLE_SCENARIOS": True,
+              "DEBUG_AUTO_CONTINUE_GAME": True,
+          }
+
+          def import_defines(path):
+              p = Path(path)
+              if not p.exists():
+                  return
+              for raw in p.read_text(encoding="utf-8").splitlines():
+                  line = raw.strip()
+                  if not line.startswith("#define "):
+                      continue
+                  parts = line.split()
+                  if len(parts) >= 2:
+                      defines[parts[1]] = True if len(parts) == 2 or parts[2].startswith(("//", "/*")) else parts[2]
+
+          lines = Path("bytereplacement").read_text(encoding="utf-8").splitlines()
+          conditionals = []
+          bad = []
+
+          for raw in lines:
+              line = raw.strip()
+              if line.startswith('#include "'):
+                  try:
+                      import_defines(line.split('"')[1])
+                  except Exception as exc:
+                      print(f"include parse warning: {line}: {exc}")
+                  continue
+
+              upper = line.upper()
+              words = line.split()
+              if upper.startswith("#IFDEF ") and len(words) > 1:
+                  conditionals.insert(0, (words[1], True))
+                  continue
+              if upper.startswith("#IFNDEF ") and len(words) > 1:
+                  conditionals.insert(0, (words[1], False))
+                  continue
+              if upper == "#ELSE":
+                  if conditionals:
+                      name, state = conditionals.pop(0)
+                      conditionals.insert(0, (name, not state))
+                  continue
+              if upper == "#ENDIF":
+                  if conditionals:
+                      conditionals.pop(0)
+                  continue
+
+              inactive = False
+              for name, must_be_defined in conditionals:
+                  present = name in defines
+                  if (must_be_defined and not present) or ((not must_be_defined) and present):
+                      inactive = True
+                      break
+              if inactive or not line or line.startswith("#"):
+                  continue
+
+              openbin = line[:4]
+              if openbin == "arm9":
+                  continue
+              try:
+                  overlay = int(openbin)
+                  address = int(line[4:13], 16)
+              except ValueError:
+                  continue
+              if not (address & 0x02000000):
+                  continue
+
+              entry = overlay * 0x20
+              if entry + 8 > len(y9):
+                  bad.append((line, overlay, address, None, None, "overlay table entry missing"))
+                  continue
+              base = struct.unpack_from("<I", y9, entry + 4)[0]
+              offset = address - base
+              if offset < 0:
+                  bad.append((line, overlay, address, base, offset, "negative patch offset"))
+
+          print(f"ARM9 overlay table: offset=0x{y9_off:X}, bytes={y9_size}, entries={len(y9)//0x20}")
+          if bad:
+              print("HG-Engine overlay patch preflight: FAIL")
+              for line, overlay, address, base, offset, reason in bad:
+                  print(
+                      f"{reason}: overlay={overlay:04d} target=0x{address:08X} "
+                      f"base={('n/a' if base is None else f'0x{base:08X}')} "
+                      f"offset={('n/a' if offset is None else offset)} line={line}"
+                  )
+              sys.exit(1)
+
+          print("HG-Engine overlay patch preflight: PASS")
+          PY
+
       - name: Build HG-Engine on Twinleaf base
         working-directory: vendor/hg-engine
         shell: bash
