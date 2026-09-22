@@ -1,38 +1,58 @@
 # Milestones
 
-## DS01 — Reproducible Engine Build
-- Pin HG-Engine upstream.
-- Build a known-good ROM in CI without storing a clean commercial ROM.
-- Run upstream tests.
-- Record exact source revisions.
+## PT01 — Native Platinum Baseline
+- Pin `pret/pokeplatinum`.
+- Reproduce its source build in our own GitHub Actions workflow.
+- Run `make check`.
+- Record exact source revision and build fingerprint.
+- Keep commercial ROM files out of the repository.
 
-## DS02 — Pokédex 1025 Audit
-- Verify every canonical species #001–1025.
-- Track stats, typing, ability, evolution, learnset, graphics, forms, and special-mechanic status.
-- Produce machine-readable audit output.
+## PT02 — Project Modification Proof
+- Add `platinum-overlay/` as the project-owned modification layer.
+- Apply one harmless, visible modification.
+- Build successfully.
+- Capture emulator/runtime evidence that the modification is actually present.
+- Certify this as the first project-owned playable baseline.
 
-## DS03 — Modern Mechanics Certification
+## PT03 — Modern Mechanics Foundation
 - Fairy type.
 - Modern type chart.
-- Abilities.
+- Physical/special and battle-system compatibility audit.
+- Expand constants/tables safely before bulk data import.
+
+## PT04 — Pokédex Expansion Architecture
+- Determine species/form limits in native Platinum.
+- Expand species-indexed tables systematically.
+- Establish graphics/icon/cry/data allocation rules.
+- Add canonical Pokémon in controlled batches toward #1025.
+
+## PT05 — Battle Data Expansion
 - Moves.
+- Abilities.
 - Items.
 - Evolution methods.
-- Core QoL.
+- Learnsets.
+- Forms and special mechanics.
 
-## DS04 — Platinum Twinleaf Proof of Concept
-- Import/convert Twinleaf world content.
-- Player/rival houses.
-- Events and warps.
-- Verify save/load and transitions.
+## PT06 — Quality of Life
+- Modern reusable TMs or chosen TM policy.
+- Evolution modernization.
+- Faster/common interface improvements.
+- Field traversal improvements where desired.
+- Additional encounter and party-management conveniences.
 
-## DS05 — Twinleaf to Sandgem Slice
-- Route 201.
-- Rowan encounter.
-- Sandgem.
-- Lab flow.
-- First stable Platinum-world playable slice.
+## PT07 — Redux-Inspired Platinum UI
+- Build one information-rich native dual-screen interface.
+- Preserve the stock Platinum screen as a fallback until certified.
 
-## DS06 — First Redux-Inspired DS UI Screen
-- Build one native dual-screen information-rich interface.
-- Preserve stock UI fallback.
+## Later Mercury phases
+- Custom Pokémon/forms and Megas.
+- Ability/innate system.
+- Randomizer and presets.
+- Boss redesign.
+- Side quests and customization.
+- Full Mercury Redux content pass.
+
+## Archived research milestones
+
+The earlier DS01–DS04 HG-Engine/HGSS transplant work remains preserved in Git history and feature branches. It is reference material, not the active runtime architecture.
