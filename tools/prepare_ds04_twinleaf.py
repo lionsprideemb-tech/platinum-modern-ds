@@ -179,7 +179,8 @@ def patch_start_location(path: Path) -> None:
         ".mapId = MAP_NEW_BARK_PLAYER_HOUSE_2F,\n"
         "    .warpId = 0xFFFFFFFF,\n"
         "    .x = 0x00000006,\n"
-        "    .y = 0x00000006,",
+        "    .y = 0x00000006,\n"
+        "    .direction = 0x00000001,",
         ".mapId = MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F,\n"
         "    .warpId = 0xFFFFFFFF,\n"
         "    .x = 0x00000004,\n"
