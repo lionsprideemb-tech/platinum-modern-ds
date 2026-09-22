@@ -1,0 +1,50 @@
+name: Repository Guard
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Reject prohibited binary/source-package files
+        shell: bash
+        run: |
+          set -euo pipefail
+          bad="$(git ls-files | grep -Ei '(^|/)(rom\.nds|test\.nds)$|\.(nds|sav|7z|rar|tar|tar\.gz|tar\.zst)$|\.part[0-9]*$' || true)"
+          if [ -n "$bad" ]; then
+            echo "Prohibited files are tracked:"
+            echo "$bad"
+            exit 1
+          fi
+
+      - name: Validate upstream lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '
+            .schema == 1 and
+            (.sources["hg-engine"].repository | type == "string") and
+            (.sources["hg-engine"].commit | test("^[0-9a-f]{40}$")) and
+            (.sources["pokeheartgold"].repository | type == "string") and
+            (.sources["pokeheartgold"].commit | test("^[0-9a-f]{40}$")) and
+            (.sources["pokeplatinum"].repository | type == "string") and
+            (.sources["pokeplatinum"].commit | test("^[0-9a-f]{40}$")) and
+            (.sources["elite-redux"].repository | type == "string") and
+            (.sources["elite-redux"].commit | test("^[0-9a-f]{40}$"))
+          ' upstream/LOCK.json >/dev/null
+
+      - name: Verify required DS01 documentation
+        shell: bash
+        run: |
+          test -f docs/DS01_ACCEPTANCE.md
+          test -f docs/DS01_RUNBOOK.md
+          test -f docs/PROJECT_SCOPE.md
+          test -f docs/MILESTONES.md
