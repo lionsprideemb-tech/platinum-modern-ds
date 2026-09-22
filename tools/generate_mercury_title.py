@@ -9,7 +9,6 @@ Usage:
 
 from __future__ import annotations
 
-import base64
 import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
@@ -164,17 +163,13 @@ def tint_border(path: Path):
     im.save(path, bits=4)
 
 
-def install_segmented_png(
-    encoded_parts: list[Path],
+def install_binary_png(
+    source_path: Path,
     output_path: Path,
     expected_size: tuple[int, int],
-    expected_mode: str
+    expected_mode: str,
 ):
-    encoded = "".join(part.read_text().strip() for part in encoded_parts)
-    data = base64.b64decode(encoded, validate=True)
-
-
-    output_path.write_bytes(data)
+    output_path.write_bytes(source_path.read_bytes())
 
     # Validate the exact DS conversion inputs before nitrogfx sees them.
     with Image.open(output_path) as check:
@@ -233,10 +228,10 @@ def main():
 
     project_root=Path(__file__).resolve().parent.parent
     asset_dir=project_root/"assets/title_screen"
-    logo_parts=[asset_dir/f"logo64_{i:02}.txt" for i in range(8)]
-    border_parts=[asset_dir/f"footer16_{i:02}.txt" for i in range(4)]
+    logo_asset=asset_dir/"mercury_logo_top_256x128.png"
+    border_asset=asset_dir/"mercury_top_footer_256x64.png"
 
-    for p in (logo,border,source,*logo_parts,*border_parts):
+    for p in (logo,border,source,logo_asset,border_asset):
         if not p.exists():
             raise SystemExit(f"missing required Mercury title file: {p}")
 
@@ -244,17 +239,17 @@ def main():
     # than approximating the title with runtime-generated text. The upper
     # 256x128 art contains the branded scene/logo; the lower 256x64 strip leaves
     # clean space for Platinum's live PRESS START layer.
-    install_segmented_png(
-        logo_parts,
+    install_binary_png(
+        logo_asset,
         logo,
         (256, 128),
-        "P"
+        "P",
     )
-    install_segmented_png(
-        border_parts,
+    install_binary_png(
+        border_asset,
         border,
         (256, 64),
-        "P"
+        "P",
     )
     patch_title_runtime(source)
 
