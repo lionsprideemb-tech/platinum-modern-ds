@@ -155,10 +155,10 @@ jobs:
           {
             echo "## DS04 staged HeartGold built"
             echo
-            echo "- Runtime header slot: `MAP_UNUSED (538)`"
-            echo "- Test start: `Twinleaf Player House 2F @ (4,6), north`"
-            echo "- Staged HeartGold SHA-256: `$(sha256sum "$rom" | awk '{print $1}')`"
-            echo "- Staged HeartGold bytes: `$(stat -c%s "$rom")`"
+            echo "- Runtime header slot: MAP_UNUSED (538)"
+            echo "- Test start: Twinleaf Player House 2F @ (4,6), north"
+            echo "- Staged HeartGold SHA-256: $(sha256sum "$rom" | awk '{print $1}')"
+            echo "- Staged HeartGold bytes: $(stat -c%s "$rom")"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Checkout pinned HG-Engine
@@ -178,6 +178,31 @@ jobs:
         run: |
           cp vendor/pokeheartgold/build/heartgold.us/pokeheartgold.us.nds vendor/hg-engine/rom.nds
           wget -q https://github.com/BluRosie/hg-engine/raw/workflows/assets/test.sav -O vendor/hg-engine/test.sav
+
+      - name: Configure visual proof auto-continue
+        working-directory: vendor/hg-engine
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("Makefile")
+          text = path.read_text()
+
+          old_flags = "CFLAGS += -DDEBUG_BATTLE_SCENARIOS -DDEBUG_AUTO_CONTINUE_GAME -Werror"
+          new_flags = "CFLAGS += -DDEBUG_AUTO_CONTINUE_GAME -Werror"
+          old_armips = "ARMIPS_FLAGS = -equ DEBUG_BATTLE_SCENARIOS 1"
+          new_armips = "ARMIPS_FLAGS = -equ DEBUG_BATTLE_SCENARIOS 0"
+
+          if old_flags not in text or old_armips not in text:
+              raise SystemExit("unexpected HG-Engine AUTO_TEST Makefile layout")
+
+          text = text.replace(old_flags, new_flags)
+          text = text.replace(old_armips, new_armips)
+          path.write_text(text)
+
+          print("visual proof mode: auto-continue ON, battle-test dispatcher OFF")
+          PY
 
       - name: Build HG-Engine Twinleaf proof
         working-directory: vendor/hg-engine
