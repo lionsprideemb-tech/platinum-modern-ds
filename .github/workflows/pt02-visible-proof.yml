@@ -89,7 +89,7 @@ jobs:
           if not emu.is_running():
               raise SystemExit("DeSmuME did not start the native Platinum ROM")
 
-          checkpoints = [600, 1200, 2400, 3600, 4200, 4800, 5400, 6000]
+          checkpoints = [6000, 6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700, 9000]
           current = 0
           frames = []
 
