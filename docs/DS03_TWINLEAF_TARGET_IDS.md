@@ -3,7 +3,7 @@
 The pinned HeartGold source was audited before assigning target IDs.
 
 Latest passing capacity audit:
-- workflow run: `35764349659`
+- workflow run: `35766528414`
 - map header next append: **540**
 - matrix next append: **288**
 - zone-event next append: **491**
@@ -63,3 +63,13 @@ The visual archives have now been audited and allocated. The exact source files 
 Only models actually placed by the initial Twinleaf maps are imported for the proof build: 4 exterior models and 22 interior models. Platinum model IDs cannot be preserved because those slots are already occupied by HGSS assets, so building placement records are rewritten to the append-only target IDs.
 
 For the first rendering proof, HGSS dynamic texture animation is disabled (`0xFFFF`). Special behaviors keyed to original model IDs—such as door/laptop animation hooks—remain a later compatibility gate after static rendering is certified.
+
+
+## Certified validation
+
+Run `35766528414` / job `106877351674` passed the full visual dependency gate:
+- 4 exterior + 22 interior placed model resources found and signature-checked,
+- exterior/interior prop-set binaries generated and size-checked,
+- map/prop NSBTX packs signature-checked,
+- all six real land-data members converted with no unmapped placed model IDs,
+- append-only target allocations verified.
