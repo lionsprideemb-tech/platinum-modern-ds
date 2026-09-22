@@ -96,26 +96,57 @@ def build_logo(path: Path):
     end = draw_metal_text(out, "MERCURY", 65, 225, 33, "DejaVuSerifCondensed-Bold", 1)
     draw_metal_text(out, "R E D U X", min(101, end-2), 174, 16, "DejaVuSansCondensed-Bold", 1)
 
-    out.save(path)
+    # nitrogfx requires an indexed PNG with a palette. Reserve palette index 0
+    # for transparency, then quantize the visible artwork into 255 colors.
+    rgba = out.convert("RGBA")
+    alpha = rgba.getchannel("A")
+    rgb = Image.new("RGB", rgba.size, (0, 0, 0))
+    rgb.paste(rgba.convert("RGB"), mask=alpha)
+    q = rgb.quantize(colors=255, method=Image.Quantize.MEDIANCUT)
+
+    old_palette = q.getpalette()[:255 * 3]
+    pal = [0, 0, 0] + old_palette
+    pal += [0] * (768 - len(pal))
+
+    indexed = Image.new("P", rgba.size, 0)
+    indexed.putpalette(pal)
+    src_idx = q.load()
+    dst_idx = indexed.load()
+    a = alpha.load()
+    for yy in range(rgba.height):
+        for xx in range(rgba.width):
+            dst_idx[xx, yy] = 0 if a[xx, yy] < 96 else min(255, src_idx[xx, yy] + 1)
+
+    indexed.info["transparency"] = 0
+    indexed.save(path, bits=8)
 
 
 def tint_border(path: Path):
-    im = Image.open(path).convert("RGBA")
-    px=im.load()
-    for y in range(im.height):
-        for x in range(im.width):
-            r,g,b,a=px[x,y]
-            if a == 0:
-                continue
-            mx=max(r,g,b); mn=min(r,g,b)
-            sat=mx-mn
-            lum=(r+g+b)/3
-            # Keep bright center/white paper intact; recolor border accents.
-            if lum < 235 and sat > 10:
-                v=int(lum)
-                px[x,y]=(max(18,int(v*.66)), max(18,int(v*.58)), min(255,int(v*.92+35)), a)
-    im=ImageEnhance.Contrast(im).enhance(1.04)
-    im.save(path)
+    # Keep the original 4bpp index map untouched and recolor only its first
+    # 16 palette entries. This preserves Platinum's exact border tile layout.
+    im = Image.open(path)
+    if im.mode != "P":
+        raise RuntimeError(f"{path} must remain a paletted PNG")
+
+    pal = im.getpalette()
+    if pal is None:
+        raise RuntimeError(f"{path} does not contain a palette")
+
+    new = pal[:]
+    for i in range(16):
+        r, g, b = pal[i*3:i*3+3]
+        mx=max(r,g,b); mn=min(r,g,b)
+        sat=mx-mn
+        lum=(r+g+b)/3
+        if lum < 235 and sat > 10:
+            v=int(lum)
+            nr=max(18,int(v*.66))
+            ng=max(18,int(v*.58))
+            nb=min(255,int(v*.92+35))
+            new[i*3:i*3+3] = [nr, ng, nb]
+
+    im.putpalette(new)
+    im.save(path, bits=4)
 
 
 def patch_prompt_color(source: Path):
