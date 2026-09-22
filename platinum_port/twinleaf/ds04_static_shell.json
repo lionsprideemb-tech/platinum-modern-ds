@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "phase": "DS04_STATIC_TWINLEAF_SHELL",
+  "test_start": {
+    "map_name": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F",
+    "map_id": 544,
+    "x": 4,
+    "y": 6,
+    "direction": 1,
+    "note": "DS04 feature branch only; main remains unchanged."
+  },
+  "shared_scripts": {
+    "normal": {
+      "source_id": 965,
+      "file": "scr_seq_0965_SINNOH_TWINLEAF_EMPTY.s"
+    },
+    "init": {
+      "source_id": 966,
+      "file": "scr_seq_0966_SINNOH_TWINLEAF_EMPTY_hdr.s"
+    }
+  },
+  "maps": [
+    {
+      "name": "MAP_SINNOH_TWINLEAF_TOWN",
+      "id": 540,
+      "kind": "exterior",
+      "matrix_id": 288,
+      "matrix_file": "map_matrix_0288_SINNOH_TWINLEAF.bin",
+      "land_data_id": 676,
+      "event_id": 491,
+      "event_file": "491_SINNOH_TWINLEAF_TOWN.json"
+    },
+    {
+      "name": "MAP_SINNOH_TWINLEAF_RIVAL_HOUSE_1F",
+      "id": 541,
+      "kind": "interior",
+      "matrix_id": 290,
+      "matrix_file": "map_matrix_0290_SINNOH_TWINLEAF_RIVAL_HOUSE_1F.bin",
+      "land_data_id": 678,
+      "event_id": 492,
+      "event_file": "492_SINNOH_TWINLEAF_RIVAL_HOUSE_1F.json"
+    },
+    {
+      "name": "MAP_SINNOH_TWINLEAF_RIVAL_HOUSE_2F",
+      "id": 542,
+      "kind": "interior",
+      "matrix_id": 291,
+      "matrix_file": "map_matrix_0291_SINNOH_TWINLEAF_RIVAL_HOUSE_2F.bin",
+      "land_data_id": 679,
+      "event_id": 493,
+      "event_file": "493_SINNOH_TWINLEAF_RIVAL_HOUSE_2F.json"
+    },
+    {
+      "name": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_1F",
+      "id": 543,
+      "kind": "interior",
+      "matrix_id": 292,
+      "matrix_file": "map_matrix_0292_SINNOH_TWINLEAF_PLAYER_HOUSE_1F.bin",
+      "land_data_id": 680,
+      "event_id": 494,
+      "event_file": "494_SINNOH_TWINLEAF_PLAYER_HOUSE_1F.json"
+    },
+    {
+      "name": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F",
+      "id": 544,
+      "kind": "interior",
+      "matrix_id": 293,
+      "matrix_file": "map_matrix_0293_SINNOH_TWINLEAF_PLAYER_HOUSE_2F.bin",
+      "land_data_id": 681,
+      "event_id": 495,
+      "event_file": "495_SINNOH_TWINLEAF_PLAYER_HOUSE_2F.json"
+    },
+    {
+      "name": "MAP_SINNOH_TWINLEAF_NORTHEAST_HOUSE",
+      "id": 545,
+      "kind": "interior",
+      "matrix_id": 289,
+      "matrix_file": "map_matrix_0289_SINNOH_TWINLEAF_GENERIC_HOUSE.bin",
+      "land_data_id": 677,
+      "event_id": 496,
+      "event_file": "496_SINNOH_TWINLEAF_NORTHEAST_HOUSE.json"
+    },
+    {
+      "name": "MAP_SINNOH_TWINLEAF_SOUTHWEST_HOUSE",
+      "id": 546,
+      "kind": "interior",
+      "matrix_id": 289,
+      "matrix_file": "map_matrix_0289_SINNOH_TWINLEAF_GENERIC_HOUSE.bin",
+      "land_data_id": 677,
+      "event_id": 497,
+      "event_file": "497_SINNOH_TWINLEAF_SOUTHWEST_HOUSE.json"
+    }
+  ],
+  "temporary_compatibility": {
+    "music": "SEQ_GS_T_WAKABA",
+    "map_section": "MAPSEC_NEW_BARK_TOWN",
+    "world_map_x": 21,
+    "world_map_y": 12,
+    "message_bank": "NARC_msg_msg_0003_EVERYWHERE_bin",
+    "phone_calls": false,
+    "radio": false,
+    "fly": false
+  }
+}
