@@ -163,12 +163,42 @@ def tint_border(path: Path):
     im.save(path, bits=4)
 
 
-def patch_prompt_color(source: Path):
+def patch_title_runtime(source: Path):
     text=source.read_text()
-    text=text.replace(
-        "u16 letterColor = GX_RGB(21, 0, 0);\n    u16 shadowColor = GX_RGB(21, 0, 0);",
-        "u16 letterColor = GX_RGB(26, 26, 31);\n    u16 shadowColor = GX_RGB(7, 4, 16);"
+
+    prompt_old = (
+        "u16 letterColor = GX_RGB(21, 0, 0);\\n"
+        "    u16 shadowColor = GX_RGB(21, 0, 0);"
     )
+    prompt_new = (
+        "u16 letterColor = GX_RGB(26, 26, 31);\\n"
+        "    u16 shadowColor = GX_RGB(7, 4, 16);"
+    )
+    if prompt_old not in text:
+        raise RuntimeError("could not locate Platinum PRESS START palette code")
+    text=text.replace(prompt_old, prompt_new, 1)
+
+    # Mercury's logo keeps Platinum's restrained title-screen feel, but gets a
+    # very small vertical 'breathing' motion. It is tied to the same 3-second
+    # sine cycle already used by the title renderer, so there is no new timer
+    # or timing path to destabilize the original application.
+    motion_old = (
+        "        titleScreen->blinkCounter++;\\n"
+        "        titleScreen->blinkCounter &= 31;\\n\\n"
+        "        result = TRUE;"
+    )
+    motion_new = (
+        "        titleScreen->blinkCounter++;\\n"
+        "        titleScreen->blinkCounter &= 31;\\n\\n"
+        "        // Mercury Redux: subtle DS-native logo float (about +/-2 px).\\n"
+        "        Bg_SetOffset(bgConfig, TITLE_SCREEN_LAYER_LOGO, BG_OFFSET_UPDATE_SET_Y,\\n"
+        "            (CalcSineDegrees_Wraparound(titleScreen->giratinaHoverAngle) * 2) >> FX32_SHIFT);\\n\\n"
+        "        result = TRUE;"
+    )
+    if motion_old not in text:
+        raise RuntimeError("could not locate Platinum title idle loop")
+    text=text.replace(motion_old, motion_new, 1)
+
     source.write_text(text)
 
 
@@ -187,7 +217,7 @@ def main():
 
     build_logo(logo)
     tint_border(border)
-    patch_prompt_color(source)
+    patch_title_runtime(source)
 
     print("Mercury Redux title assets generated")
     print(f"logo: {logo}")
