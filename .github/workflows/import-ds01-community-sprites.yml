@@ -1,0 +1,61 @@
+name: Import DS01 Community Sprite Archive
+
+on:
+  push:
+    branches:
+      - assets/ds01-community-sprites-20260922
+    paths:
+      - ".github/workflows/import-ds01-community-sprites.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout import branch
+        uses: actions/checkout@v4
+        with:
+          ref: assets/ds01-community-sprites-20260922
+
+      - name: Stage archive outside engine build paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="staging-assets/community-sprites/2026-09-22"
+          mkdir -p "$target"
+
+          curl -L --fail --retry 3 \
+            'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-bd04-8211-a497-3ec9434225bf/raw?se=2026-09-22T18%3A01%3A55Z&sp=r&sv=2026-02-06&sr=b&scid=415c4696-fa7a-50cc-a1b3-e7245059bddc&skoid=dd316919-ffbf-4550-9c54-dfc99f412009&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-22T11%3A30%3A15Z&ske=2026-09-23T11%3A30%3A15Z&sks=b&skv=2026-02-06&sig=mBs7afpnEU2YPJekT70tHQx/H//0Xx6F2qb4ZyvDrEQ%3D' \
+            -o "$target/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip"
+
+          echo "6f676782799cb206d55a00260a693fccc25f5f59c8fc6b2819aeceaf1beb38f0  $target/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip" | sha256sum -c -
+
+          cat > "$target/README.md" <<'EOF'
+          # DS01 Community Sprite Staging
+
+          This directory is intentionally isolated from the active DS01/HG-Engine build.
+
+          - The archive is **not** referenced by `engine-overlay/`.
+          - No build workflow consumes these sprites yet.
+          - Nothing here changes species constants, Pokédex data, encounter data, or compiled graphics.
+          - Assets remain staged until they are explicitly audited/mapped into DS01.
+
+          Archive: `DS01_Expanded_Community_Sprite_Library_2026-09-22.zip`
+
+          SHA-256:
+          `6f676782799cb206d55a00260a693fccc25f5f59c8fc6b2819aeceaf1beb38f0`
+
+          Contents include the converted Mercury/Reborn/Elite Redux material plus curated DS-style community resources, conversion manifests, credits/provenance, and reference-only material.
+
+          Do not copy the entire archive wholesale into `engine-overlay/data/graphics/sprites/`. Integrate approved species/forms individually after their HG-Engine identifiers exist.
+          EOF
+
+          git rm .github/workflows/import-ds01-community-sprites.yml
+          git add "$target"
+
+          git config user.name "DS01 Asset Import"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "Stage expanded DS01 community sprite library"
+          git push origin HEAD:assets/ds01-community-sprites-20260922
