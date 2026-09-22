@@ -64,3 +64,22 @@ DS01 is complete.
 The project now has a reproducible, recoverable Nintendo DS foundation that can be rebuilt from pinned public source inputs without storing a clean commercial ROM.
 
 Future engine changes must preserve this checkpoint and should be developed on feature branches before promotion to `main`.
+
+
+## Upstream known-failing tests at DS01 certification
+
+1. Disguise — block damage, transform
+2. Ice Face — block damage, transform
+3. Illusion — breaks in Neutralizing Gas
+4. Immunity — switch-in healing with suppressed ability edge case
+5. Wandering Spirit — swaps abilities when defender faints
+6. Eject Pack — Mega Ability interaction
+7. Fling — Ripen interaction (Ripen currently unimplemented)
+8. Substitute — Substitute takes damage
+
+Skipped:
+1. Innards Out — full-damage/recoil/faint-order case
+2. Sludge Wave — chain kills in doubles
+3. Sludge Wave — chain kills in doubles with opening switch
+
+These are carried forward into later mechanics certification and do not represent new regressions introduced by Platinum Modern DS.
