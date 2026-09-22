@@ -70,7 +70,7 @@ jobs:
         run: |
           set -euo pipefail
           jq -e '
-            .twinleaf.headers | length == 7 and
+            (.twinleaf.headers | length) == 7 and
             .twinleaf.landdata_validation.status == "PASS" and
             .compatibility.map_matrix == "DIRECT_BINARY_FORMAT_AFTER_ID_REMAP"
           ' platinum_port/twinleaf/source_manifest.json >/dev/null
