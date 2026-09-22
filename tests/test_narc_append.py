@@ -2,6 +2,7 @@
 from pathlib import Path
 import importlib.util
 import struct
+import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -9,6 +10,7 @@ MODULE = ROOT / "tools" / "narc_append.py"
 spec = importlib.util.spec_from_file_location("narcmod", MODULE)
 narcmod = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
+sys.modules[spec.name] = narcmod
 spec.loader.exec_module(narcmod)
 
 def synthetic(members):
