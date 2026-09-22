@@ -2,16 +2,16 @@
 
 DS01 is complete only when all of the following are true:
 
-- [ ] `pokeheartgold` is pinned to an exact commit.
-- [ ] HG-Engine is pinned to an exact commit.
-- [ ] GitHub Actions reconstructs the HeartGold base from source.
-- [ ] No clean commercial ROM is stored in this repository.
-- [ ] HG-Engine compiles successfully against the generated base.
-- [ ] HG-Engine automated tests pass.
-- [ ] The workflow records a SHA-256 fingerprint and byte size for the resulting build.
-- [ ] The exact upstream revisions used are recorded in `upstream/LOCK.json`.
-- [ ] A known-good DS01 checkpoint commit/tag is recorded.
-- [ ] The next milestone can begin without requiring a local source archive.
+- [x] `pokeheartgold` is pinned to an exact commit.
+- [x] HG-Engine is pinned to an exact commit.
+- [x] GitHub Actions reconstructs the HeartGold base from source.
+- [x] No clean commercial ROM is stored in this repository.
+- [x] HG-Engine compiles successfully against the generated base.
+- [x] HG-Engine automated tests pass.
+- [x] The workflow records a SHA-256 fingerprint and byte size for the resulting build.
+- [x] The exact upstream revisions used are recorded in `upstream/LOCK.json`.
+- [x] A known-good DS01 checkpoint commit/tag is recorded.
+- [x] The next milestone can begin without requiring a local source archive.
 
 ## Non-goals
 
