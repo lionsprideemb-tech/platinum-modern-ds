@@ -1,0 +1,151 @@
+name: PT02 Visible Platinum Proof
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt02-visible-proof
+    paths:
+      - "platinum-overlay/**"
+      - "docs/PT02_VISIBLE_PROOF.md"
+      - ".github/workflows/pt02-visible-proof.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  visible-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-venv python3-pip wget xz-utils             libpng-dev rsync jq libsdl2-2.0-0
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply project Platinum overlay
+        shell: bash
+        run: |
+          rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+          grep -q '"en_US": "MERCURY DS"' vendor/pokeplatinum/res/text/title_screen.json
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure modified Platinum
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build modified Platinum ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Install runtime proof tools
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt02-venv"
+          . "$RUNNER_TEMP/pt02-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Capture native Platinum title frames
+        shell: bash
+        run: |
+          set -euo pipefail
+          . "$RUNNER_TEMP/pt02-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start the native Platinum ROM")
+
+          checkpoints = [600, 1200, 2400, 3600, 4200, 4800, 5400, 6000]
+          current = 0
+          frames = []
+
+          try:
+              for target in checkpoints:
+                  for _ in range(target - current):
+                      emu.cycle(False)
+                  current = target
+                  image = emu.screenshot()
+                  path = out / f"pt02-frame-{target:04d}.png"
+                  image.save(path)
+
+                  rgb = image.convert("RGB")
+                  colors = rgb.getcolors(maxcolors=256 * 384)
+                  unique = len(colors) if colors is not None else 256 * 384
+                  frames.append({
+                      "frame": target,
+                      "file": path.name,
+                      "unique_colors": unique,
+                      "extrema": rgb.getextrema(),
+                  })
+                  print(f"captured {path} unique_colors={unique}")
+          finally:
+              emu.destroy()
+
+          (out / "render-meta.json").write_text(json.dumps({
+              "gate": "PT02_NATIVE_PLATINUM_VISIBLE_PROOF",
+              "expected_visible_text": "MERCURY DS",
+              "rom": rom.name,
+              "frames": frames,
+          }, indent=2) + "\n")
+
+          if not any(f["unique_colors"] >= 16 for f in frames):
+              raise SystemExit("all runtime captures appear blank or uniform")
+          PY
+
+      - name: Upload PT02 runtime proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt02-native-platinum-visible-proof
+          path: |
+            runtime-preview/*.png
+            runtime-preview/render-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Record PT02 fingerprint
+        shell: bash
+        run: |
+          {
+            echo "## PT02 native Platinum modification built"
+            echo
+            echo "- pokeplatinum: `$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)`"
+            echo "- Proof resource: `res/text/title_screen.json`"
+            echo "- Expected runtime text: `MERCURY DS`"
+            echo "- ROM SHA-256: `$(sha256sum /var/tmp/pokeplatinum/pokeplatinum.us.nds | awk '{print $1}')`"
+            echo
+            echo "The ROM is used only inside the workflow for runtime validation; only screenshots/metadata are uploaded."
+          } >> "$GITHUB_STEP_SUMMARY"
