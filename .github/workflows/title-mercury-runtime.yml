@@ -6,6 +6,7 @@ on:
     branches:
       - feature/title-mercury-art
       - feature/title-mercury-motion
+      - feature/title-mercury-runtime-proof
     paths:
       - "tools/generate_mercury_title.py"
       - "assets/title_screen/**"
