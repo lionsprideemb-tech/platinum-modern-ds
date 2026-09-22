@@ -183,7 +183,8 @@ def patch_start_location(path: Path) -> None:
         ".mapId = MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F,\n"
         "    .warpId = 0xFFFFFFFF,\n"
         "    .x = 0x00000004,\n"
-        "    .y = 0x00000006,",
+        "    .y = 0x00000006,\n"
+        "    .direction = 0x00000000,",
     )
     if "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F" not in text:
         raise ValueError("Could not apply DS04 start-location patch")
