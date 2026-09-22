@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "updated": "2026-09-22",
+  "sources": {
+    "hg-engine": {
+      "repository": "BluRosie/hg-engine",
+      "commit": "5157c501dc0e6f88ef1654ab121352a5cc9ed7de"
+    },
+    "pokeheartgold": {
+      "repository": "pret/pokeheartgold",
+      "commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36"
+    },
+    "pokeplatinum": {
+      "repository": "pret/pokeplatinum",
+      "commit": "c248fb3f8cc9934ded800e489567c5c0eeee92eb"
+    },
+    "elite-redux": {
+      "repository": "Elite-Redux/eliteredux",
+      "commit": "5f730d8835f3c96d15195f2ac9f126981c3a331b"
+    }
+  }
+}
