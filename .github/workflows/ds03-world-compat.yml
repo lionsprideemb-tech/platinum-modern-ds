@@ -7,6 +7,7 @@ on:
     paths:
       - "tools/convert_platinum_landdata.py"
       - "tools/convert_platinum_events.py"
+      - "tools/convert_platinum_areadata.py"
       - "tests/**"
       - "platinum_port/twinleaf/**"
       - "upstream/LOCK.json"
@@ -50,11 +51,31 @@ jobs:
             --output /tmp/ds03_world_capacity.json
           cat /tmp/ds03_world_capacity.json
 
-      - name: Run synthetic land-data regression
+      - name: Run converter regression tests
         shell: bash
         run: |
           set -euo pipefail
           python3 tests/test_landdata_converter.py
+          python3 tests/test_areadata_converter.py
+
+      - name: Validate real Twinleaf area data
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/convert_platinum_areadata.py \
+            vendor/pokeplatinum/res/field/area_data/area_data_006.json \
+            /tmp/twinleaf_exterior_area.bin \
+            --building-tileset 0 --map-tileset 0 --area-type outdoor \
+            --metadata /tmp/twinleaf_exterior_area.json
+          python3 tools/convert_platinum_areadata.py \
+            vendor/pokeplatinum/res/field/area_data/area_data_020.json \
+            /tmp/twinleaf_interior_area.bin \
+            --building-tileset 0 --map-tileset 0 --area-type indoor \
+            --metadata /tmp/twinleaf_interior_area.json
+          test "$(stat -c%s /tmp/twinleaf_exterior_area.bin)" = "8"
+          test "$(stat -c%s /tmp/twinleaf_interior_area.bin)" = "8"
+          test "$(jq -r '.hgss_area_type' /tmp/twinleaf_exterior_area.json)" = "1"
+          test "$(jq -r '.hgss_area_type' /tmp/twinleaf_interior_area.json)" = "0"
 
       - name: Validate real Twinleaf map members
         shell: bash
