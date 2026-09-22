@@ -33,6 +33,12 @@ DS01 Engine Build run #2:
 - HG-Engine automated tests: RUNNING at last certification update
 - generated build fingerprint: PENDING tests
 
+## Independent upstream evidence
+
+HG-Engine upstream build for the exact pinned commit `5157c501dc0e6f88ef1654ab121352a5cc9ed7de` completed successfully in upstream run #1294 (GitHub Actions run 35654224823), including the full automated test suite.
+
+This is supporting evidence only; our project run #2 remains the local certification gate.
+
 ## Current status
 
 **PROVISIONAL — NOT YET CERTIFIED**
