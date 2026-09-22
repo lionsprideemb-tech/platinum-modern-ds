@@ -26,7 +26,7 @@ assert payload == bytes.fromhex("7b002d00ffff0101")
 assert meta["platinum_dummy"] == 0
 assert meta["hgss_dynamic_texture_type"] == 0xFFFF
 assert meta["hgss_area_type"] == 1
-assert meta["hgss_light_type"] == 0
+assert meta["hgss_light_type"] == 1
 
 interior = {
     "mapPropSet": "prop_model_set_016",
@@ -45,7 +45,7 @@ assert payload == bytes.fromhex("7c002e00ffff0000")
 assert meta["platinum_dummy"] == 3
 assert meta["hgss_dynamic_texture_type"] == 0xFFFF
 assert meta["hgss_area_type"] == 0
-assert meta["hgss_light_type"] == 1
+assert meta["hgss_light_type"] == 0
 
 print("DS03 area-data converter regression: PASS")
 
