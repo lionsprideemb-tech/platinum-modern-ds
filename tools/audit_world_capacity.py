@@ -80,8 +80,20 @@ def main() -> int:
         r"msg_(\d{4})\.gmm$",
     )
 
-    land_narc = root / "files/a/0/6/5"
-    land_count = parse_narc_file_count(land_narc)
+    resource_narcs = {
+        "land_data": "files/a/0/6/5",
+        "area_data": "files/a/0/4/2",
+        "exterior_building_models": "files/a/0/4/0",
+        "building_config_sets": "files/a/0/4/3",
+        "map_textures": "files/a/0/4/4",
+        "building_textures": "files/a/0/7/0",
+        "interior_building_models": "files/a/1/4/8",
+    }
+    resource_counts = {
+        name: parse_narc_file_count(root / path)
+        for name, path in resource_narcs.items()
+    }
+    land_count = resource_counts["land_data"]
 
     result = {
         "schema": 1,
@@ -111,11 +123,14 @@ def main() -> int:
             "highest_source_id": max(messages),
             "next_append_id": max(messages) + 1,
         },
-        "land_data_narc": {
-            "path": "files/a/0/6/5",
-            "member_count": land_count,
-            "highest_member_id": land_count - 1,
-            "next_append_id": land_count,
+        "resource_narcs": {
+            name: {
+                "path": resource_narcs[name],
+                "member_count": count,
+                "highest_member_id": count - 1,
+                "next_append_id": count,
+            }
+            for name, count in resource_counts.items()
         },
     }
 
