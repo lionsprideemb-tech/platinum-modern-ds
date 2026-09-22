@@ -1,0 +1,78 @@
+name: PT01 Native Platinum Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt01-platinum-native-base
+    paths:
+      - "upstream/LOCK.json"
+      - "platinum-overlay/**"
+      - "docs/PT01_PLATINUM_NATIVE_PIVOT.md"
+      - ".github/workflows/pt01-platinum-native-build.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  native-platinum:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 wget xz-utils libpng-dev rsync jq
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          test "$(git -C vendor/pokeplatinum rev-parse HEAD)" = "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply project Platinum overlay
+        shell: bash
+        run: |
+          if [ -d platinum-overlay ]; then
+            rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+          fi
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure native Platinum
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build and verify native Platinum
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make check
+
+      - name: Record PT01 fingerprint
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          {
+            echo "## PT01 native Platinum build passed"
+            echo
+            echo "- pokeplatinum: `$(jq -r '.sources["pokeplatinum"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")`"
+            echo "- Project branch: `${GITHUB_REF_NAME}`"
+            echo "- Project commit: `${GITHUB_SHA}`"
+            echo
+            echo "Native Platinum world/runtime retained. No HGSS world transplant is involved."
+            echo
+            echo "No commercial ROM artifact is uploaded by this workflow."
+          } >> "$GITHUB_STEP_SUMMARY"
