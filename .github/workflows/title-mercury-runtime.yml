@@ -62,8 +62,8 @@ jobs:
           python3 tools/generate_mercury_title.py vendor/pokeplatinum
           test -s vendor/pokeplatinum/res/graphics/title_screen/logo.png
           test -s vendor/pokeplatinum/res/graphics/title_screen/top_screen_border.png
-          for p in assets/title_screen/logo64.b64.{a,b,c,d}; do test -s "$p"; done
-          for p in assets/title_screen/footer16.b64.{a,b}; do test -s "$p"; done
+          for p in assets/title_screen/logo64_{00..07}.txt; do test -s "$p"; done
+          for p in assets/title_screen/footer16_{00..03}.txt; do test -s "$p"; done
           grep -q '"en_US": "PRESS START"' vendor/pokeplatinum/res/text/title_screen.json
           grep -q 'GX_RGB(26, 26, 31)' vendor/pokeplatinum/src/applications/title_screen.c
           grep -q 'Mercury Redux: subtle DS-native logo float' vendor/pokeplatinum/src/applications/title_screen.c
