@@ -3,7 +3,7 @@ name: DS01 Engine Build
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, asset-import-20260922]
     paths:
       - "upstream/LOCK.json"
       - "engine-overlay/**"
@@ -131,3 +131,98 @@ jobs:
             echo
             echo "No ROM artifact is uploaded by this workflow."
           } >> "$GITHUB_STEP_SUMMARY"
+
+
+  sprite_fetch:
+    if: github.ref == 'refs/heads/asset-import-20260922'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Build community source bundle
+        shell: bash
+        run: |
+          set -u
+          mkdir -p bundle/01_modern_ds_resource bundle/02_original_downloads bundle/03_source_notes
+          echo "Community sprite source fetch" > bundle/FETCH_STATUS.txt
+
+          if git clone --depth 1 --filter=blob:none --sparse https://github.com/DrPrettyman/PokemonSprites-64x64DSStyle.git modern-ds; then
+            git -C modern-ds sparse-checkout set sprites-processed README.md MISSING_SPRITES.md scripts/data
+            rm -rf modern-ds/.git
+            cp -R modern-ds/. bundle/01_modern_ds_resource/
+            echo "OK: modern DS-style GitHub resource" >> bundle/FETCH_STATUS.txt
+          else
+            echo "FAILED: modern DS-style GitHub resource" >> bundle/FETCH_STATUS.txt
+          fi
+
+          GEN6='https://www.dropbox.com/scl/fo/f6rdkcf4q5hhhb4nvw4q2/ADPek1h3iP_qnmpKRywj2AA?rlkey=j7zkw7y4vn3gt0sl6q6wpcetx&dl=1'
+          if curl -L --fail --retry 2 --connect-timeout 20 "$GEN6" -o bundle/02_original_downloads/gen6_ds_style_dropbox.zip && unzip -t bundle/02_original_downloads/gen6_ds_style_dropbox.zip >/dev/null 2>&1; then
+            echo "OK: Gen VI Dropbox" >> bundle/FETCH_STATUS.txt
+          else
+            echo "FAILED: Gen VI Dropbox" >> bundle/FETCH_STATUS.txt
+            rm -f bundle/02_original_downloads/gen6_ds_style_dropbox.zip
+          fi
+
+          GEN7='https://www.dropbox.com/sh/qzcsjctxl8riqev/AADbTFTmn0zBtKT6WzkoEQmya?dl=1'
+          if curl -L --fail --retry 2 --connect-timeout 20 "$GEN7" -o bundle/02_original_downloads/gen7plus_ds_style_dropbox.zip && unzip -t bundle/02_original_downloads/gen7plus_ds_style_dropbox.zip >/dev/null 2>&1; then
+            echo "OK: Gen VII+ Dropbox" >> bundle/FETCH_STATUS.txt
+          else
+            echo "FAILED: Gen VII+ Dropbox" >> bundle/FETCH_STATUS.txt
+            rm -f bundle/02_original_downloads/gen7plus_ds_style_dropbox.zip
+          fi
+
+          python -m pip install -q gdown
+          if gdown --id 17vlgBbf6_YNHy30Q590Dx-WBrRZ_3Y6Z -O bundle/02_original_downloads/dppt_gen6plus_backsprites.zip; then
+            echo "OK: DPPt Gen VI+ backsprites" >> bundle/FETCH_STATUS.txt
+          else
+            echo "FAILED: DPPt Gen VI+ backsprites" >> bundle/FETCH_STATUS.txt
+            rm -f bundle/02_original_downloads/dppt_gen6plus_backsprites.zip
+          fi
+
+          if gdown --id 1GFgwG6vSC_F1f4Sa6c_M08LeFYyqCaEF -O bundle/02_original_downloads/altered_platinum_r1.0.5.zip; then
+            echo "OK: Altered Platinum" >> bundle/FETCH_STATUS.txt
+          else
+            echo "FAILED: Altered Platinum (Google flagged download)" >> bundle/FETCH_STATUS.txt
+            rm -f bundle/02_original_downloads/altered_platinum_r1.0.5.zip
+          fi
+
+          python - <<'PY'
+          from pathlib import Path
+          import re, urllib.request, html
+          page='https://www.mediafire.com/file/zsafdt7q0fnvdqt/TowerOfAshes_GraphicsPack.zip/file'
+          out=Path('bundle/02_original_downloads/tower_of_ashes_graphics_pack.zip')
+          try:
+              req=urllib.request.Request(page,headers={'User-Agent':'Mozilla/5.0'})
+              body=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','ignore')
+              m=re.search(r'id="downloadButton"[^>]+href="([^"]+)"',body)
+              if not m: m=re.search(r'href="(https://download[^"]+)"',body)
+              if not m: raise RuntimeError('direct MediaFire link not found')
+              url=html.unescape(m.group(1))
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Referer':page})
+              out.write_bytes(urllib.request.urlopen(req,timeout=60).read())
+          except Exception as e:
+              print(e)
+              if out.exists(): out.unlink()
+          PY
+          if [ -s bundle/02_original_downloads/tower_of_ashes_graphics_pack.zip ]; then
+            echo "OK: Tower of Ashes" >> bundle/FETCH_STATUS.txt
+          else
+            echo "FAILED: Tower of Ashes" >> bundle/FETCH_STATUS.txt
+          fi
+
+          cat > bundle/03_source_notes/SOURCES.txt <<'EOF'
+          https://github.com/DrPrettyman/PokemonSprites-64x64DSStyle
+          https://www.pokecommunity.com/threads/gen-vi-ds-style-64x64-pokemon-sprite-resource.314422/
+          https://www.pokecommunity.com/threads/ds-style-gen-vii-and-beyond-pok%C3%A9mon-sprite-repository-in-64x64.368703/
+          https://www.pokecommunity.com/threads/the-dppt-style-gen-vi-and-beyond-backsprite-resource.448065/
+          https://projectpokemon.org/home/forums/topic/60361-pok%C3%A9mon-altered-platinum-sinnohan-forms-increased-difficulty-and-more/
+          https://www.deviantart.com/pikachumazzinga/art/Tower-of-Ashes-Free-Custom-Gen4-Backsprites-1102803694
+          EOF
+          find bundle -type f -printf '%P\n' | sort >> bundle/FETCH_STATUS.txt
+
+      - name: Upload community sprite bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: community-ds-sprite-sources-20260922
+          path: bundle
+          compression-level: 6
+          if-no-files-found: error
