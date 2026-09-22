@@ -188,6 +188,73 @@ jobs:
           make AUTO_TEST=Y -j"$(nproc)"
           test -s test.nds
 
+      - name: Capture Player House 2F runtime frames
+        working-directory: vendor/hg-engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          . .venv/bin/activate
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          out = Path("../../runtime-preview")
+          out.mkdir(parents=True, exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open("test.nds")
+
+          checkpoints = [300, 900, 1800, 3600]
+          current = 0
+          frames = []
+
+          try:
+              for target in checkpoints:
+                  for _ in range(target - current):
+                      emu.cycle(False)
+                  current = target
+                  image = emu.screenshot()
+                  path = out / f"player-house-2f-frame-{target:04d}.png"
+                  image.save(path)
+
+                  rgb = image.convert("RGB")
+                  colors = rgb.getcolors(maxcolors=256 * 384)
+                  unique = len(colors) if colors is not None else 256 * 384
+                  extrema = rgb.getextrema()
+                  frames.append({
+                      "frame": target,
+                      "file": path.name,
+                      "unique_colors": unique,
+                      "extrema": extrema,
+                  })
+                  print(f"captured {path} unique_colors={unique} extrema={extrema}")
+          finally:
+              emu.destroy()
+
+          meta = {
+              "gate": "DS04_PLAYER_HOUSE_2F_STATIC_RENDER",
+              "expected_map": "MAP_UNUSED / runtime Twinleaf Player House 2F",
+              "expected_position": [4, 6],
+              "expected_direction": "north",
+              "frames": frames,
+          }
+          (out / "render-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+
+          if not any(frame["unique_colors"] >= 16 for frame in frames):
+              raise SystemExit("runtime render appears blank/uniform at every checkpoint")
+          PY
+
+      - name: Upload Player House 2F preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: ds04-player-house-2f-runtime-preview
+          path: |
+            runtime-preview/*.png
+            runtime-preview/render-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Record DS04 runtime build fingerprint
         working-directory: vendor/hg-engine
         shell: bash
