@@ -126,7 +126,7 @@ def map_header_entry(item: dict) -> str:
     exterior = item["kind"] == "exterior"
     area = 106 if exterior else 107
     matrix_const = "NARC_map_matrix_" + item["matrix_file"].replace(".", "_")
-    event_const = "NARC_zone_event_" + item["event_file"].replace(".", "_")
+    event_const = "NARC_zone_event_" + item["event_file"].replace(".json", "_bin")
 
     return f"""    [{item['name']}] = {{
                         .wildEncounterBank = ENCDATA_NA,
