@@ -5,7 +5,17 @@
 
 ## Non-negotiable goal
 
-The Mercury Redux title screen must look professionally authored at the same visual standard as vanilla Platinum. It must not look like a pasted poster or a generic fan-game splash.
+The Mercury Redux title screen must look professionally authored at the same visual standard as vanilla Platinum. It must read immediately as a **Nintendo DS-era title screen**, not as a GBA ROM hack, upscaled GBA graphic, or pixel-art recreation.
+
+### DS-native visual rules
+
+- author at native DS title dimensions and layer structure
+- use Platinum's 8bpp/4bpp indexed graphics pipeline rather than GBA-style tile art conventions
+- preserve anti-aliased logo edges, gradients, bevels, transparency, and layered composition
+- avoid chunky pixel fonts, thick block outlines, oversized badges, and low-detail flat fills
+- preserve Platinum's native blinking prompt and title-screen animation logic
+- any future title/UI graphics must be designed for DS first rather than drawn at GBA scale and enlarged
+- runtime screenshots, not concept mockups, decide whether an asset looks sufficiently DS-native
 
 ## Behavior preserved exactly from Platinum
 
