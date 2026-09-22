@@ -233,8 +233,8 @@ def main():
 
     project_root=Path(__file__).resolve().parent.parent
     asset_dir=project_root/"assets/title_screen"
-    logo_parts=[asset_dir/f"logo64.b64.{suffix}" for suffix in ("a","b","c","d")]
-    border_parts=[asset_dir/f"footer16.b64.{suffix}" for suffix in ("a","b")]
+    logo_parts=[asset_dir/f"logo64_{i:02}.txt" for i in range(8)]
+    border_parts=[asset_dir/f"footer16_{i:02}.txt" for i in range(4)]
 
     for p in (logo,border,source,*logo_parts,*border_parts):
         if not p.exists():
