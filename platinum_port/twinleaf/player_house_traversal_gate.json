@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "phase": "DS04_NEXT_GATE_PLAYER_HOUSE_STAIRCASE",
+  "source_commit": "c248fb3f8cc9934ded800e489567c5c0eeee92eb",
+  "disabled_until_static_room_certified": true,
+  "maps": [
+    {
+      "map": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F",
+      "source_event": "res/field/events/events_twinleaf_town_player_house_2f.json",
+      "minimal_warps": [
+        {
+          "source_warp_index": 0,
+          "x": 8,
+          "z": 4,
+          "y": 0,
+          "destination": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_1F",
+          "destination_warp_index": 1
+        }
+      ],
+      "deferred": {
+        "bg_events": 5,
+        "object_events": [
+          {
+            "graphics": "OBJ_EVENT_GFX_BARRY",
+            "x": 10,
+            "z": 4
+          }
+        ],
+        "coord_events": 4,
+        "scripts": "all room interactions and rival story event"
+      }
+    },
+    {
+      "map": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_1F",
+      "source_event": "res/field/events/events_twinleaf_town_player_house_1f.json",
+      "minimal_warps": [
+        {
+          "source_warp_index": 1,
+          "x": 10,
+          "z": 3,
+          "y": 0,
+          "destination": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F",
+          "destination_warp_index": 0
+        }
+      ],
+      "deferred": {
+        "exterior_warp": {
+          "source_warp_index": 0,
+          "x": 6,
+          "z": 10,
+          "destination": "MAP_SINNOH_TWINLEAF_TOWN",
+          "destination_warp_index": 1
+        },
+        "object_events": [
+          {
+            "graphics": "OBJ_EVENT_GFX_MOM",
+            "x": 7,
+            "z": 8
+          },
+          {
+            "graphics": "OBJ_EVENT_GFX_POKEFAN_F",
+            "x": 6,
+            "z": 10
+          }
+        ],
+        "bg_events": 8,
+        "coord_events": 1,
+        "scripts": "Mom/rival-mom/dialogue/story-state logic"
+      }
+    }
+  ],
+  "certification_order": [
+    "Static Player House 2F renders and player stands at (4,6).",
+    "Player House 1F static map is enabled with no NPC/story events.",
+    "Only the reciprocal 2F↔1F staircase warps are enabled.",
+    "Bidirectional traversal is certified before Twinleaf exterior door is enabled.",
+    "NPC sprites, messages, TV/PC/Wii interactions, and Barry event are translated later."
+  ]
+}
