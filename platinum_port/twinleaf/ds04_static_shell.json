@@ -6,7 +6,7 @@
     "map_id": 544,
     "x": 4,
     "y": 6,
-    "direction": 1,
+    "direction": 0,
     "note": "DS04 feature branch only; main remains unchanged."
   },
   "shared_scripts": {
