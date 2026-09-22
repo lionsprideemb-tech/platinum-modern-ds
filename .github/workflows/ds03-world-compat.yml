@@ -31,6 +31,14 @@ jobs:
           git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
           git -C vendor/pokeplatinum checkout "$commit"
 
+      - name: Checkout pinned pokeheartgold
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit="$(jq -r '.sources["pokeheartgold"].commit' upstream/LOCK.json)"
+          git clone https://github.com/pret/pokeheartgold.git vendor/pokeheartgold
+          git -C vendor/pokeheartgold checkout "$commit"
+
       - name: Audit HGSS world resource capacity
         shell: bash
         run: |
