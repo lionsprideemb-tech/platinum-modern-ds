@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "strategy": "APPEND_ONLY_NO_OVERWRITE",
+  "source_capacity_run": 35764349659,
+  "base_capacity": {
+    "map_headers": {
+      "next_append_id": 540
+    },
+    "matrices": {
+      "next_append_id": 288
+    },
+    "zone_events": {
+      "next_append_id": 491
+    },
+    "scripts": {
+      "next_append_id": 965
+    },
+    "messages": {
+      "next_append_id": 829
+    },
+    "land_data": {
+      "next_append_id": 676
+    }
+  },
+  "twinleaf": {
+    "map_headers": [
+      {
+        "name": "MAP_SINNOH_TWINLEAF_TOWN",
+        "id": 540
+      },
+      {
+        "name": "MAP_SINNOH_TWINLEAF_RIVAL_HOUSE_1F",
+        "id": 541
+      },
+      {
+        "name": "MAP_SINNOH_TWINLEAF_RIVAL_HOUSE_2F",
+        "id": 542
+      },
+      {
+        "name": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_1F",
+        "id": 543
+      },
+      {
+        "name": "MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F",
+        "id": 544
+      },
+      {
+        "name": "MAP_SINNOH_TWINLEAF_NORTHEAST_HOUSE",
+        "id": 545
+      },
+      {
+        "name": "MAP_SINNOH_TWINLEAF_SOUTHWEST_HOUSE",
+        "id": 546
+      }
+    ],
+    "land_data": [
+      {
+        "source": "MAP_000",
+        "target_id": 676,
+        "role": "Twinleaf exterior"
+      },
+      {
+        "source": "MAP_180",
+        "target_id": 677,
+        "role": "generic Twinleaf residence"
+      },
+      {
+        "source": "MAP_184",
+        "target_id": 678,
+        "role": "rival house 1F"
+      },
+      {
+        "source": "MAP_185",
+        "target_id": 679,
+        "role": "rival house 2F"
+      },
+      {
+        "source": "MAP_186",
+        "target_id": 680,
+        "role": "player house 1F"
+      },
+      {
+        "source": "MAP_187",
+        "target_id": 681,
+        "role": "player house 2F"
+      }
+    ],
+    "matrices": [
+      {
+        "target_id": 288,
+        "role": "Twinleaf exterior proof matrix",
+        "land_data_id": 676,
+        "size": "1x1"
+      },
+      {
+        "target_id": 289,
+        "role": "generic house shared matrix",
+        "land_data_id": 677,
+        "size": "1x1"
+      },
+      {
+        "target_id": 290,
+        "role": "rival house 1F",
+        "land_data_id": 678,
+        "size": "1x1"
+      },
+      {
+        "target_id": 291,
+        "role": "rival house 2F",
+        "land_data_id": 679,
+        "size": "1x1"
+      },
+      {
+        "target_id": 292,
+        "role": "player house 1F",
+        "land_data_id": 680,
+        "size": "1x1"
+      },
+      {
+        "target_id": 293,
+        "role": "player house 2F",
+        "land_data_id": 681,
+        "size": "1x1"
+      }
+    ],
+    "zone_events": [
+      {
+        "target_id": 491,
+        "map_header_id": 540
+      },
+      {
+        "target_id": 492,
+        "map_header_id": 541
+      },
+      {
+        "target_id": 493,
+        "map_header_id": 542
+      },
+      {
+        "target_id": 494,
+        "map_header_id": 543
+      },
+      {
+        "target_id": 495,
+        "map_header_id": 544
+      },
+      {
+        "target_id": 496,
+        "map_header_id": 545
+      },
+      {
+        "target_id": 497,
+        "map_header_id": 546
+      }
+    ],
+    "messages": [
+      {
+        "target_id": 829,
+        "map_header_id": 540
+      },
+      {
+        "target_id": 830,
+        "map_header_id": 541
+      },
+      {
+        "target_id": 831,
+        "map_header_id": 542
+      },
+      {
+        "target_id": 832,
+        "map_header_id": 543
+      },
+      {
+        "target_id": 833,
+        "map_header_id": 544
+      },
+      {
+        "target_id": 834,
+        "map_header_id": 545
+      },
+      {
+        "target_id": 835,
+        "map_header_id": 546
+      }
+    ],
+    "script_bank_reservation": {
+      "start": 965,
+      "end_inclusive": 978,
+      "count": 14,
+      "rationale": "reserve two script resources per Twinleaf header (main + init) until exact HGSS script/header mapping is finalized"
+    }
+  },
+  "notes": [
+    "The exterior uses a temporary 1x1 proof matrix for DS04. It will later be replaced by a converted/remapped Sinnoh regional matrix as adjacent routes are imported.",
+    "Northeast and southwest houses share the same generic MAP_180 land-data member and matrix.",
+    "Area-data/building-model/texture allocations are intentionally not assigned until those dependency archives are audited.",
+    "No existing HGSS map/header/event/script/message/land-data IDs are overwritten."
+  ]
+}
