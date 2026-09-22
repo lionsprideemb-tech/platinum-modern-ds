@@ -9,6 +9,7 @@ Usage:
 
 from __future__ import annotations
 
+import base64
 import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
@@ -163,6 +164,18 @@ def tint_border(path: Path):
     im.save(path, bits=4)
 
 
+def install_encoded_png(encoded_path: Path, output_path: Path, expected_size: tuple[int, int], expected_mode: str):
+    data = base64.b64decode(encoded_path.read_text().strip())
+    output_path.write_bytes(data)
+
+    # Validate the exact DS conversion inputs before nitrogfx sees them.
+    with Image.open(output_path) as check:
+        if check.size != expected_size:
+            raise RuntimeError(f"{output_path} has wrong size: {check.size}, expected {expected_size}")
+        if check.mode != expected_mode:
+            raise RuntimeError(f"{output_path} has wrong mode: {check.mode}, expected {expected_mode}")
+
+
 def patch_title_runtime(source: Path):
     text=source.read_text()
 
@@ -210,12 +223,20 @@ def main():
     border=gfx/"top_screen_border.png"
     source=root/"src/applications/title_screen.c"
 
-    for p in (logo,border,source):
-        if not p.exists():
-            raise SystemExit(f"missing required Platinum file: {p}")
+    project_root=Path(__file__).resolve().parent.parent
+    logo_asset=project_root/"assets/title_screen/mercury_logo_top_256x128.png.b64"
+    border_asset=project_root/"assets/title_screen/mercury_top_footer_256x64.png.b64"
 
-    build_logo(logo)
-    tint_border(border)
+    for p in (logo,border,source,logo_asset,border_asset):
+        if not p.exists():
+            raise SystemExit(f"missing required Mercury title file: {p}")
+
+    # TIT02 visual pass: install the approved DS-scaled Mercury artwork rather
+    # than approximating the title with runtime-generated text. The upper
+    # 256x128 art contains the branded scene/logo; the lower 256x64 strip leaves
+    # clean space for Platinum's live PRESS START layer.
+    install_encoded_png(logo_asset, logo, (256, 128), "P")
+    install_encoded_png(border_asset, border, (256, 64), "P")
     patch_title_runtime(source)
 
     print("Mercury Redux title assets generated")
