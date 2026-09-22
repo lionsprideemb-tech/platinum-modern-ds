@@ -1,6 +1,6 @@
 # PT02 — Native Platinum Visible Modification Proof
 
-**Status:** ACTIVE
+**Status:** CERTIFIED
 
 ## Goal
 
@@ -29,3 +29,16 @@ PT02 passes only when:
 After this gate, large modernization work can begin without questioning whether our source modifications are actually reaching the game.
 
 Workflow activation commit: PT02 runtime proof is now enabled on this branch.
+
+
+## Certification
+
+PT02 is certified from GitHub Actions run **35781652257**.
+
+- Native Platinum build: passed
+- Actual DeSmuME runtime capture: passed
+- Certified frame: `pt02-frame-15600.png`
+- Visible project-owned title text: **MERCURY DS**
+- World/runtime foundation: native Pokémon Platinum
+
+This proves the project overlay is reaching and visibly changing the running Platinum build.
