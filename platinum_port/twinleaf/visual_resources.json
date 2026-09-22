@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "strategy": "APPEND_ONLY_NO_OVERWRITE",
+  "source": {
+    "repository": "pret/pokeplatinum",
+    "commit": "c248fb3f8cc9934ded800e489567c5c0eeee92eb"
+  },
+  "target": {
+    "repository": "pret/pokeheartgold",
+    "commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36"
+  },
+  "environments": {
+    "exterior": {
+      "source_area_data": "res/field/area_data/area_data_006.json",
+      "target_area_data": {
+        "archive": "files/a/0/4/2",
+        "id": 106
+      },
+      "source_prop_set": "res/field/props/model_sets/prop_model_set_000.json",
+      "target_prop_set": {
+        "archive": "files/a/0/4/3",
+        "id": 104
+      },
+      "source_prop_texture": "res/field/props/texture_sets/prop_texture_set_000.nsbtx",
+      "target_prop_texture": {
+        "archive": "files/a/0/7/0",
+        "id": 104
+      },
+      "source_map_texture": "res/field/maps/texture_sets/map_texture_set_006.nsbtx",
+      "target_map_texture": {
+        "archive": "files/a/0/4/4",
+        "id": 106
+      },
+      "dynamic_texture_type": 65535,
+      "area_type": 1,
+      "hgss_light_type": 1,
+      "model_archive": "files/a/0/4/0",
+      "models": [
+        {
+          "source_id": 22,
+          "source_name": "prop_model_022.nsbmd",
+          "source_path": "res/field/props/models/prop_model_022.nsbmd",
+          "target_id": 340
+        },
+        {
+          "source_id": 23,
+          "source_name": "prop_model_023.nsbmd",
+          "source_path": "res/field/props/models/prop_model_023.nsbmd",
+          "target_id": 341
+        },
+        {
+          "source_id": 67,
+          "source_name": "brown_wooden_door.nsbmd",
+          "source_path": "res/field/props/models/brown_wooden_door.nsbmd",
+          "target_id": 342
+        },
+        {
+          "source_id": 236,
+          "source_name": "prop_model_236.nsbmd",
+          "source_path": "res/field/props/models/prop_model_236.nsbmd",
+          "target_id": 343
+        }
+      ]
+    },
+    "interior": {
+      "source_area_data": "res/field/area_data/area_data_020.json",
+      "target_area_data": {
+        "archive": "files/a/0/4/2",
+        "id": 107
+      },
+      "source_prop_set": "res/field/props/model_sets/prop_model_set_016.json",
+      "target_prop_set": {
+        "archive": "files/a/0/4/3",
+        "id": 105
+      },
+      "source_prop_texture": "res/field/props/texture_sets/prop_texture_set_016.nsbtx",
+      "target_prop_texture": {
+        "archive": "files/a/0/7/0",
+        "id": 105
+      },
+      "source_map_texture": "res/field/maps/texture_sets/map_texture_set_020.nsbtx",
+      "target_map_texture": {
+        "archive": "files/a/0/4/4",
+        "id": 107
+      },
+      "dynamic_texture_type": 65535,
+      "area_type": 0,
+      "hgss_light_type": 0,
+      "model_archive": "files/a/1/4/8",
+      "models": [
+        {
+          "source_id": 78,
+          "source_name": "prop_model_078.nsbmd",
+          "source_path": "res/field/props/models/prop_model_078.nsbmd",
+          "target_id": 222
+        },
+        {
+          "source_id": 79,
+          "source_name": "prop_model_079.nsbmd",
+          "source_path": "res/field/props/models/prop_model_079.nsbmd",
+          "target_id": 223
+        },
+        {
+          "source_id": 80,
+          "source_name": "prop_model_080.nsbmd",
+          "source_path": "res/field/props/models/prop_model_080.nsbmd",
+          "target_id": 224
+        },
+        {
+          "source_id": 82,
+          "source_name": "prop_model_082.nsbmd",
+          "source_path": "res/field/props/models/prop_model_082.nsbmd",
+          "target_id": 225
+        },
+        {
+          "source_id": 83,
+          "source_name": "prop_model_083.nsbmd",
+          "source_path": "res/field/props/models/prop_model_083.nsbmd",
+          "target_id": 226
+        },
+        {
+          "source_id": 84,
+          "source_name": "prop_model_084.nsbmd",
+          "source_path": "res/field/props/models/prop_model_084.nsbmd",
+          "target_id": 227
+        },
+        {
+          "source_id": 85,
+          "source_name": "prop_model_085.nsbmd",
+          "source_path": "res/field/props/models/prop_model_085.nsbmd",
+          "target_id": 228
+        },
+        {
+          "source_id": 88,
+          "source_name": "prop_model_088.nsbmd",
+          "source_path": "res/field/props/models/prop_model_088.nsbmd",
+          "target_id": 229
+        },
+        {
+          "source_id": 90,
+          "source_name": "prop_model_090.nsbmd",
+          "source_path": "res/field/props/models/prop_model_090.nsbmd",
+          "target_id": 230
+        },
+        {
+          "source_id": 92,
+          "source_name": "prop_model_092.nsbmd",
+          "source_path": "res/field/props/models/prop_model_092.nsbmd",
+          "target_id": 231
+        },
+        {
+          "source_id": 104,
+          "source_name": "prop_model_104.nsbmd",
+          "source_path": "res/field/props/models/prop_model_104.nsbmd",
+          "target_id": 232
+        },
+        {
+          "source_id": 105,
+          "source_name": "prop_model_105.nsbmd",
+          "source_path": "res/field/props/models/prop_model_105.nsbmd",
+          "target_id": 233
+        },
+        {
+          "source_id": 106,
+          "source_name": "prop_model_106.nsbmd",
+          "source_path": "res/field/props/models/prop_model_106.nsbmd",
+          "target_id": 234
+        },
+        {
+          "source_id": 111,
+          "source_name": "prop_model_111.nsbmd",
+          "source_path": "res/field/props/models/prop_model_111.nsbmd",
+          "target_id": 235
+        },
+        {
+          "source_id": 112,
+          "source_name": "desk_drawer_laptop.nsbmd",
+          "source_path": "res/field/props/models/desk_drawer_laptop.nsbmd",
+          "target_id": 236
+        },
+        {
+          "source_id": 137,
+          "source_name": "prop_model_137.nsbmd",
+          "source_path": "res/field/props/models/prop_model_137.nsbmd",
+          "target_id": 237
+        },
+        {
+          "source_id": 138,
+          "source_name": "prop_model_138.nsbmd",
+          "source_path": "res/field/props/models/prop_model_138.nsbmd",
+          "target_id": 238
+        },
+        {
+          "source_id": 140,
+          "source_name": "prop_model_140.nsbmd",
+          "source_path": "res/field/props/models/prop_model_140.nsbmd",
+          "target_id": 239
+        },
+        {
+          "source_id": 155,
+          "source_name": "prop_model_155.nsbmd",
+          "source_path": "res/field/props/models/prop_model_155.nsbmd",
+          "target_id": 240
+        },
+        {
+          "source_id": 156,
+          "source_name": "prop_model_156.nsbmd",
+          "source_path": "res/field/props/models/prop_model_156.nsbmd",
+          "target_id": 241
+        },
+        {
+          "source_id": 157,
+          "source_name": "prop_model_157.nsbmd",
+          "source_path": "res/field/props/models/prop_model_157.nsbmd",
+          "target_id": 242
+        },
+        {
+          "source_id": 168,
+          "source_name": "prop_model_168.nsbmd",
+          "source_path": "res/field/props/models/prop_model_168.nsbmd",
+          "target_id": 243
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Only models actually placed in the initial Twinleaf maps are imported for the first proof build.",
+    "Model IDs are remapped because preserving Platinum IDs would overwrite existing HGSS model archive members.",
+    "Special behaviors keyed to Platinum model IDs (for example laptop/door animation hooks) must be audited and retargeted after static rendering is certified.",
+    "Dynamic texture animation is disabled with 0xFFFF for the first Twinleaf proof."
+  ]
+}
