@@ -1,0 +1,140 @@
+name: DS01 Engine Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "upstream/LOCK.json"
+      - "engine-overlay/**"
+      - ".github/workflows/ds01-build.yml"
+
+permissions:
+  contents: read
+
+env:
+  CC: gcc-10
+  CXX: g++-10
+  COMPARE: 0
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Read pinned revisions
+        id: pins
+        shell: bash
+        run: |
+          echo "hg_engine=$(jq -r '.sources[\"hg-engine\"].commit' upstream/LOCK.json)" >> "$GITHUB_OUTPUT"
+          echo "pokeheartgold=$(jq -r '.sources[\"pokeheartgold\"].commit' upstream/LOCK.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo apt update
+          sudo apt -y --allow-downgrades install \
+            g++-10-multilib linux-libc-dev binutils-arm-none-eabi p7zip-full \
+            pkg-config libpugixml-dev libpng-dev build-essential cmake \
+            python3-pip python3-venv git automake autoconf gcc-arm-none-eabi wget
+          sudo dpkg --add-architecture i386
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -q -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          sudo add-apt-repository ppa:cybermax-dexter/sdl2-backport -y
+          sudo wget -q -NP /etc/apt/sources.list.d/ "https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -cs)/winehq-$(lsb_release -cs).sources"
+          sudo apt update
+          sudo apt -y --allow-downgrades install --install-recommends winehq-stable
+
+      - name: Checkout pinned pokeheartgold
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeheartgold.git vendor/pokeheartgold
+          git -C vendor/pokeheartgold checkout "${{ steps.pins.outputs.pokeheartgold }}"
+
+      - name: Bootstrap pokeheartgold toolchain
+        shell: bash
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/vendor/pokeheartgold/tools"
+          mkdir -p "$GITHUB_WORKSPACE/vendor/pokeheartgold/sub"
+          mkdir -p "$RUNNER_TEMP/phg-download"
+          cd "$RUNNER_TEMP/phg-download"
+
+          wget -q https://github.com/pret/pokeheartgold/raw/workflows/assets/mwccarm.zip
+          unzip -q -o mwccarm.zip
+          rm -rf "$GITHUB_WORKSPACE/vendor/pokeheartgold/tools/mwccarm"
+          mv mwccarm "$GITHUB_WORKSPACE/vendor/pokeheartgold/tools/"
+
+          wget -q https://github.com/pret/pokeheartgold/raw/workflows/assets/NitroSDK-3_2-060901.7z
+          7z x -y NitroSDK-3_2-060901.7z >/dev/null
+          rm -rf "$GITHUB_WORKSPACE/vendor/pokeheartgold/tools/bin"
+          mv NitroSDK-3_2-060901/tools/bin "$GITHUB_WORKSPACE/vendor/pokeheartgold/tools/"
+          cp NitroSDK-3_2-060901/include/nitro/specfiles/ARM7-TS.lcf.template "$GITHUB_WORKSPACE/vendor/pokeheartgold/sub/"
+          cp NitroSDK-3_2-060901/include/nitro/specfiles/ARM9-TS.lcf.template "$GITHUB_WORKSPACE/vendor/pokeheartgold/"
+          cp NitroSDK-3_2-060901/include/nitro/specfiles/mwldarm.response.template "$GITHUB_WORKSPACE/vendor/pokeheartgold/"
+
+      - name: Configure swap
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 19
+
+      - name: Build HeartGold base from source
+        working-directory: vendor/pokeheartgold
+        env:
+          LM_LICENSE_FILE: "${{ github.workspace }}/vendor/pokeheartgold/tools/mwccarm/license.dat"
+          GAME_VERSION: HEARTGOLD
+          GAME_LANGUAGE: ENGLISH
+          GAME_REVISION: 0
+        shell: bash
+        run: make -j"$(nproc)"
+
+      - name: Checkout pinned HG-Engine
+        shell: bash
+        run: |
+          git clone --recursive https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine checkout "${{ steps.pins.outputs.hg_engine }}"
+          git -C vendor/hg-engine submodule update --init --recursive
+
+      - name: Apply project engine overlay
+        shell: bash
+        run: |
+          rsync -a --exclude README.md engine-overlay/ vendor/hg-engine/
+
+      - name: Prepare HG-Engine inputs
+        shell: bash
+        run: |
+          cp vendor/pokeheartgold/build/heartgold.us/pokeheartgold.us.nds vendor/hg-engine/rom.nds
+          wget -q https://github.com/BluRosie/hg-engine/raw/workflows/assets/test.sav -O vendor/hg-engine/test.sav
+
+      - name: Build HG-Engine
+        working-directory: vendor/hg-engine
+        shell: bash
+        run: |
+          unset CC
+          unset CXX
+          make AUTO_TEST=Y -j"$(nproc)"
+
+      - name: Run HG-Engine tests
+        working-directory: vendor/hg-engine
+        shell: bash
+        run: scripts/run_tests.sh -c -j "$(nproc)"
+
+      - name: Record build fingerprint
+        working-directory: vendor/hg-engine
+        shell: bash
+        run: |
+          {
+            echo "## DS01 build passed"
+            echo
+            echo "- HG-Engine: \`${{ steps.pins.outputs.hg_engine }}\`"
+            echo "- pokeheartgold: \`${{ steps.pins.outputs.pokeheartgold }}\`"
+            echo "- test.nds SHA-256: \`$(sha256sum test.nds | awk '{print $1}')\`"
+            echo "- test.nds bytes: \`$(stat -c%s test.nds)\`"
+            echo
+            echo "No ROM artifact is uploaded by this workflow."
+          } >> "$GITHUB_STEP_SUMMARY"
