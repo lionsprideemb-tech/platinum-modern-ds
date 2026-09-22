@@ -18,3 +18,13 @@ DS01 is complete only when all of the following are true:
 DS01 does **not** modify Sinnoh, Pokémon data, encounters, UI, or game balance.
 
 Its only purpose is to establish a reproducible, recoverable, known-good DS development foundation.
+
+
+## Certification evidence
+
+- GitHub Actions run: `35755920648`
+- Job: `106841528400`
+- Result: **SUCCESS**
+- Tests passed: **401**
+- Unexpected failures: **0**
+- Fingerprint step: **PASS**
