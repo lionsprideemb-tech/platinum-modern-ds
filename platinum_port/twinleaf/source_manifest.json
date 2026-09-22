@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "source": {
+    "repository": "pret/pokeplatinum",
+    "commit": "c248fb3f8cc9934ded800e489567c5c0eeee92eb"
+  },
+  "target": {
+    "engine_repository": "BluRosie/hg-engine",
+    "engine_commit": "5157c501dc0e6f88ef1654ab121352a5cc9ed7de",
+    "base_repository": "pret/pokeheartgold",
+    "base_commit": "9d8b7591f09b65804da2fb2dfd56f320633e0d36"
+  },
+  "compatibility": {
+    "map_matrix": "DIRECT_BINARY_FORMAT_AFTER_ID_REMAP",
+    "zone_events": "STRUCTURALLY_COMPATIBLE_WITH_FIELD_RENAME_AND_WARP_Y_NORMALIZATION",
+    "map_headers": "FIELD_REMAP_REQUIRED",
+    "scripts": "COMMAND_TRANSLATION_REQUIRED",
+    "text": "BANK_REBUILD_REQUIRED",
+    "map_models": "FORMAT_COMPATIBILITY_TO_VALIDATE",
+    "area_data": "ID_AND_RESOURCE_REMAP_REQUIRED",
+    "encounters": "FORMAT_TRANSLATION_TO_AUDIT",
+    "music": "SEQUENCE_ID_REMAP_REQUIRED"
+  },
+  "twinleaf": {
+    "headers": [
+      {
+        "source_id": 411,
+        "name": "MAP_HEADER_TWINLEAF_TOWN",
+        "matrix": "map_matrix_000",
+        "map_model": "MAP_000",
+        "area_data": "area_data_006"
+      },
+      {
+        "source_id": 412,
+        "name": "MAP_HEADER_TWINLEAF_TOWN_RIVAL_HOUSE_1F",
+        "matrix": "map_matrix_126",
+        "map_model": "MAP_184",
+        "area_data": "area_data_020"
+      },
+      {
+        "source_id": 413,
+        "name": "MAP_HEADER_TWINLEAF_TOWN_RIVAL_HOUSE_2F",
+        "matrix": "map_matrix_127",
+        "map_model": "MAP_185",
+        "area_data": "area_data_020"
+      },
+      {
+        "source_id": 414,
+        "name": "MAP_HEADER_TWINLEAF_TOWN_PLAYER_HOUSE_1F",
+        "matrix": "map_matrix_128",
+        "map_model": "MAP_186",
+        "area_data": "area_data_020"
+      },
+      {
+        "source_id": 415,
+        "name": "MAP_HEADER_TWINLEAF_TOWN_PLAYER_HOUSE_2F",
+        "matrix": "map_matrix_129",
+        "map_model": "MAP_187",
+        "area_data": "area_data_020"
+      },
+      {
+        "source_id": 416,
+        "name": "MAP_HEADER_TWINLEAF_TOWN_NORTHEAST_HOUSE",
+        "matrix": "map_matrix_123",
+        "map_model": "MAP_180",
+        "area_data": "area_data_020"
+      },
+      {
+        "source_id": 417,
+        "name": "MAP_HEADER_TWINLEAF_TOWN_SOUTHWEST_HOUSE",
+        "matrix": "map_matrix_123",
+        "map_model": "MAP_180",
+        "area_data": "area_data_020"
+      }
+    ],
+    "main_matrix_cell": {
+      "matrix": "map_matrix_000",
+      "x": 3,
+      "y": 27,
+      "map_model": "MAP_000",
+      "altitude": 0
+    },
+    "event_files": [
+      "res/field/events/events_twinleaf_town.json",
+      "res/field/events/events_twinleaf_town_rival_house_1f.json",
+      "res/field/events/events_twinleaf_town_rival_house_2f.json",
+      "res/field/events/events_twinleaf_town_player_house_1f.json",
+      "res/field/events/events_twinleaf_town_player_house_2f.json",
+      "res/field/events/events_twinleaf_town_northeast_house.json",
+      "res/field/events/events_twinleaf_town_southwest_house.json"
+    ],
+    "script_files": [
+      "res/field/scripts/scripts_twinleaf_town.s",
+      "res/field/scripts/scripts_twinleaf_town_rival_house_1f.s",
+      "res/field/scripts/scripts_twinleaf_town_rival_house_2f.s",
+      "res/field/scripts/scripts_twinleaf_town_player_house_1f.s",
+      "res/field/scripts/scripts_twinleaf_town_player_house_2f.s",
+      "res/field/scripts/scripts_twinleaf_town_northeast_house.s",
+      "res/field/scripts/scripts_twinleaf_town_southwest_house.s"
+    ],
+    "text_files": [
+      "res/text/twinleaf_town.json",
+      "res/text/twinleaf_town_rival_house_1f.json",
+      "res/text/twinleaf_town_rival_house_2f.json",
+      "res/text/twinleaf_town_player_house_1f.json",
+      "res/text/twinleaf_town_player_house_2f.json",
+      "res/text/twinleaf_town_northeast_house.json",
+      "res/text/twinleaf_town_southwest_house.json"
+    ],
+    "player_start": {
+      "map": "MAP_HEADER_TWINLEAF_TOWN_PLAYER_HOUSE_2F",
+      "source": "src/location.c"
+    }
+  }
+}
