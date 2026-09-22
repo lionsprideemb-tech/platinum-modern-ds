@@ -16,7 +16,7 @@
     "map_headers": "FIELD_REMAP_REQUIRED",
     "scripts": "COMMAND_TRANSLATION_REQUIRED",
     "text": "BANK_REBUILD_REQUIRED",
-    "map_models": "FORMAT_COMPATIBILITY_TO_VALIDATE",
+    "map_models": "MECHANICAL_LANDDATA_CONVERSION_INSERT_HGSS_BGS_AT_0x10",
     "area_data": "ID_AND_RESOURCE_REMAP_REQUIRED",
     "encounters": "FORMAT_TRANSLATION_TO_AUDIT",
     "music": "SEQUENCE_ID_REMAP_REQUIRED"
@@ -110,6 +110,53 @@
     "player_start": {
       "map": "MAP_HEADER_TWINLEAF_TOWN_PLAYER_HOUSE_2F",
       "source": "src/location.c"
+    },
+    "landdata_validation": {
+      "status": "PASS",
+      "maps": {
+        "MAP_000": {
+          "source_bytes": 41486,
+          "converted_bytes": 41490,
+          "buildings_bytes": 384,
+          "nsbmd_bytes": 38876,
+          "bdhc_bytes": 162
+        },
+        "MAP_180": {
+          "source_bytes": 4956,
+          "converted_bytes": 4960,
+          "buildings_bytes": 288,
+          "nsbmd_bytes": 2456,
+          "bdhc_bytes": 148
+        },
+        "MAP_184": {
+          "source_bytes": 8066,
+          "converted_bytes": 8070,
+          "buildings_bytes": 624,
+          "nsbmd_bytes": 5092,
+          "bdhc_bytes": 286
+        },
+        "MAP_185": {
+          "source_bytes": 5330,
+          "converted_bytes": 5334,
+          "buildings_bytes": 480,
+          "nsbmd_bytes": 2556,
+          "bdhc_bytes": 230
+        },
+        "MAP_186": {
+          "source_bytes": 8006,
+          "converted_bytes": 8010,
+          "buildings_bytes": 624,
+          "nsbmd_bytes": 5040,
+          "bdhc_bytes": 278
+        },
+        "MAP_187": {
+          "source_bytes": 5394,
+          "converted_bytes": 5398,
+          "buildings_bytes": 528,
+          "nsbmd_bytes": 2572,
+          "bdhc_bytes": 230
+        }
+      }
     }
   }
 }
