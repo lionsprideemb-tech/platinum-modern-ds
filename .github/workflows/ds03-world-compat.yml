@@ -31,6 +31,15 @@ jobs:
           git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
           git -C vendor/pokeplatinum checkout "$commit"
 
+      - name: Audit HGSS world resource capacity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/audit_world_capacity.py \
+            --pokeheartgold vendor/pokeheartgold \
+            --output /tmp/ds03_world_capacity.json
+          cat /tmp/ds03_world_capacity.json
+
       - name: Run synthetic land-data regression
         shell: bash
         run: |
