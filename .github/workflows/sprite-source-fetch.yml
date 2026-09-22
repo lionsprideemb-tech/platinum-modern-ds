@@ -28,7 +28,7 @@ jobs:
 
           echo "== DrPrettyman DS-style resource ==" >> bundle/FETCH_STATUS.txt
           if git clone --depth 1 --filter=blob:none --sparse https://github.com/DrPrettyman/PokemonSprites-64x64DSStyle.git modern-ds; then
-            git -C modern-ds sparse-checkout set sprites-processed README.md MISSING_SPRITES.md scripts/data
+            git -C modern-ds sparse-checkout set --no-cone '/sprites-processed/' '/README.md' '/MISSING_SPRITES.md' '/scripts/data/'
             rm -rf modern-ds/.git
             cp -R modern-ds/. bundle/01_modern_ds_resource/
             echo "OK: cloned processed DS-style battle sprites/icons and metadata" >> bundle/FETCH_STATUS.txt
