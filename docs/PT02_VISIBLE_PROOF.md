@@ -27,3 +27,5 @@ PT02 passes only when:
 6. The proof screenshots are retained as a short-lived GitHub Actions artifact.
 
 After this gate, large modernization work can begin without questioning whether our source modifications are actually reaching the game.
+
+Workflow activation commit: PT02 runtime proof is now enabled on this branch.
