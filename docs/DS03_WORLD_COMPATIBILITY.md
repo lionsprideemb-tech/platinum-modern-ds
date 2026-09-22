@@ -52,14 +52,34 @@ We should translate only the commands actually used by the current Platinum regi
 
 Platinum header IDs are 411–417 in that order, beginning with Twinleaf Town.
 
-## Remaining compatibility gates before first playable transplant
+## Compatibility gates
 
-1. Validate Platinum land-data/map-model container against HGSS loader.
-2. Resolve area-data/model/texture dependencies for area_data_006 and area_data_020.
-3. Build explicit Platinum→HGSS object sprite mapping for Twinleaf.
-4. Translate Twinleaf script commands and common-script calls.
-5. Rebuild/assign Twinleaf message banks.
-6. Allocate target HGSS map/header/script/event IDs without colliding with engine resources.
-7. Redirect the new-game start location only after the imported player house renders and warps correctly.
+Completed in DS03:
+- [x] Validate Platinum land-data/map-model container against HGSS layout.
+- [x] Resolve area-data/model/texture dependencies for `area_data_006` and `area_data_020`.
+- [x] Allocate append-only HGSS map/header/script/event/message/visual resource ranges.
+- [x] Validate all six real Twinleaf land-data members.
+- [x] Remap every building/prop model actually placed by the six Twinleaf land-data members.
+- [x] Validate required NSBMD and NSBTX source resources.
+- [x] Generate and validate HGSS prop-set members.
+- [x] Smoke-test Twinleaf zone-event conversion.
+
+Remaining before the first **interactive/playable** Twinleaf proof:
+- [ ] Build explicit Platinum→HGSS object-sprite mapping for Twinleaf NPC/event objects.
+- [ ] Translate Twinleaf script commands and common-script calls.
+- [ ] Rebuild/assign Twinleaf message banks.
+- [ ] Generate target HGSS map headers and matrices in the build tree.
+- [ ] Append converted resources to the target NARCs during a reproducible build.
+- [ ] Boot first in the imported player room and validate rendering/collision/warps.
+- [ ] Redirect normal New Game start only after the imported player house is certified.
 
 The first transplant should remain isolated from `main` until it compiles and boots.
+
+
+## DS03 certification evidence
+
+The compatibility layer is certified by GitHub Actions run `35766528414` (job `106877351674`), which completed successfully on 2026-09-22.
+
+The run verified the pinned Platinum and HeartGold sources, target capacity, area-data conversion, NSBMD/NSBTX source signatures, generated HGSS prop sets, all six real Twinleaf land-data conversions with model-ID remapping, the event conversion shape, and the append-only manifests.
+
+DS03 certification means **the Twinleaf world resources are mechanically convertible and fully allocated**. It does not yet mean the imported maps have booted in HG-Engine; that is the next transplant/build phase.
