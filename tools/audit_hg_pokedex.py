@@ -96,7 +96,7 @@ def audit(root: Path) -> tuple[list[dict[str, object]], dict[str, object]]:
         "hidden_ability_entry": read_text(root, "data/HiddenAbilityTable.c"),
         "icon_palette": read_text(root, "data/IconPaletteTable.c"),
         "learnset": read_text(root, "data/learnsets/learnsets.json"),
-        "battle_graphics": read_text(root, "data/graphics/pokegra.mk"),
+        "battle_graphics_root": root / "data/graphics/sprites",
         "follower_properties": read_text(root, "data/FollowerProperties.c"),
         "evolution_entry": read_text(root, "data/Evolutions.c"),
     }
@@ -114,7 +114,10 @@ def audit(root: Path) -> tuple[list[dict[str, object]], dict[str, object]]:
             ),
             "icon_palette": has_indexed_entry(surfaces["icon_palette"], species),
             "learnset": has_json_key(surfaces["learnset"], species),
-            "battle_graphics": has_token(surfaces["battle_graphics"], species),
+            "battle_graphics": (
+                (surfaces["battle_graphics_root"] / species.removeprefix("SPECIES_").lower() / "male" / "front.png").is_file()
+                and (surfaces["battle_graphics_root"] / species.removeprefix("SPECIES_").lower() / "male" / "back.png").is_file()
+            ),
             "follower_properties": has_indexed_entry(
                 surfaces["follower_properties"], species
             ),
