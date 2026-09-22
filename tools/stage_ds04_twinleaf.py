@@ -285,7 +285,32 @@ def patch_map_headers(hg: Path) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def patch_test_start(hg: Path) -> None:
+def patch_runtime_unused_header(hg: Path) -> None:
+    """Temporarily repurpose MAP_UNUSED for HG-Engine runtime compatibility.
+
+    This keeps the map-header array length unchanged so the base ARM9 layout is
+    much closer to vanilla HeartGold while we certify the imported room.
+    """
+    path = hg / "src/data/map_headers.h"
+    text = path.read_text(encoding="utf-8")
+    rx = re.compile(
+        r"    \[MAP_UNUSED\] = \{\n.*?^                        \},\n",
+        re.S | re.M,
+    )
+    m = rx.search(text)
+    if not m:
+        raise RuntimeError("Could not locate MAP_UNUSED header entry")
+    replacement = header_entry(
+        "MAP_UNUSED",
+        "NARC_map_matrix_map_matrix_0293_SINNOH_TWINLEAF_PLAYER_2F_bin",
+        107,
+        exterior=False,
+    )
+    text = text[:m.start()] + replacement + text[m.end():]
+    path.write_text(text, encoding="utf-8")
+
+
+def patch_test_start(hg: Path, *, runtime_compat_slot: bool = False) -> None:
     path = hg / "src/location_backup.c"
     text = path.read_text(encoding="utf-8")
     rx = re.compile(
@@ -299,7 +324,8 @@ def patch_test_start(hg: Path) -> None:
     body = m.group(2)
     body = re.sub(
         r"\.mapId\s*=\s*[^,]+,",
-        ".mapId = MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F,",
+        ".mapId = MAP_UNUSED," if runtime_compat_slot
+        else ".mapId = MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F,",
         body,
         count=1,
     )
@@ -399,7 +425,7 @@ def stage_visual_and_land_resources(hg: Path, pt: Path) -> dict:
     }
 
 
-def verify_staged(hg: Path) -> None:
+def verify_staged(hg: Path, *, runtime_compat_slot: bool = False) -> None:
     expected_after = {
         "land_data": 682,
         "area_data": 108,
@@ -416,13 +442,24 @@ def verify_staged(hg: Path) -> None:
             raise RuntimeError(f"{key}: expected staged count {count}, found {actual}")
 
     maps_h = (hg / "include/constants/maps.h").read_text(encoding="utf-8")
-    if "#define MAP_ID_MAX                                        547" not in maps_h:
-        raise RuntimeError("MAP_ID_MAX staging verification failed")
-
     headers_h = (hg / "src/data/map_headers.h").read_text(encoding="utf-8")
-    for name, _ in MAP_DEFINES:
-        if f"[{name}]" not in headers_h:
-            raise RuntimeError(f"Missing staged map header: {name}")
+    if runtime_compat_slot:
+        if "#define MAP_ID_MAX                                        540" not in maps_h:
+            raise RuntimeError("Runtime compatibility mode must preserve MAP_ID_MAX 540")
+        unused_pos = headers_h.find("[MAP_UNUSED]")
+        if unused_pos < 0:
+            raise RuntimeError("MAP_UNUSED header missing")
+        unused_block = headers_h[unused_pos:unused_pos + 1800]
+        if "map_matrix_0293_SINNOH_TWINLEAF_PLAYER_2F" not in unused_block:
+            raise RuntimeError("MAP_UNUSED was not redirected to Twinleaf Player House 2F")
+        if ".areaDataBank = 107" not in unused_block:
+            raise RuntimeError("MAP_UNUSED did not receive Twinleaf interior AreaData")
+    else:
+        if "#define MAP_ID_MAX                                        547" not in maps_h:
+            raise RuntimeError("MAP_ID_MAX staging verification failed")
+        for name, _ in MAP_DEFINES:
+            if f"[{name}]" not in headers_h:
+                raise RuntimeError(f"Missing staged map header: {name}")
 
     matrix_dir = hg / "files/fielddata/mapmatrix/map_matrix"
     for matrix_id, suffix, internal, land_id in MATRICES:
@@ -440,6 +477,14 @@ def main() -> int:
         action="store_true",
         help="Redirect HGSS player-room fallback/start to imported Platinum room",
     )
+    ap.add_argument(
+        "--runtime-compat-slot",
+        action="store_true",
+        help=(
+            "Use existing MAP_UNUSED as the temporary Twinleaf Player House 2F "
+            "header so the HGSS map-header array does not grow before HG-Engine."
+        ),
+    )
     ap.add_argument("--report", type=Path)
     args = ap.parse_args()
 
@@ -454,10 +499,18 @@ def main() -> int:
         "strategy": "APPEND_ONLY",
         "archives": stage_visual_and_land_resources(hg, pt),
         "matrices": [row[0] for row in MATRICES],
-        "map_headers": [value for _, value in MAP_DEFINES],
+        "map_headers": (
+            [538] if args.runtime_compat_slot
+            else [value for _, value in MAP_DEFINES]
+        ),
         "scripts": [NOOP_SCRIPT_ID, NOOP_HEADER_ID],
+        "runtime_compat_slot": bool(args.runtime_compat_slot),
         "test_start": bool(args.test_start),
-        "test_start_map": 544 if args.test_start else None,
+        "test_start_map": (
+            538 if args.test_start and args.runtime_compat_slot
+            else 544 if args.test_start
+            else None
+        ),
         "test_start_x": 4 if args.test_start else None,
         "test_start_y": 6 if args.test_start else None,
         "test_start_direction": 0 if args.test_start else None,
@@ -465,11 +518,14 @@ def main() -> int:
 
     stage_matrices(hg)
     stage_noop_scripts(hg)
-    patch_map_constants(hg)
-    patch_map_headers(hg)
+    if args.runtime_compat_slot:
+        patch_runtime_unused_header(hg)
+    else:
+        patch_map_constants(hg)
+        patch_map_headers(hg)
     if args.test_start:
-        patch_test_start(hg)
-    verify_staged(hg)
+        patch_test_start(hg, runtime_compat_slot=args.runtime_compat_slot)
+    verify_staged(hg, runtime_compat_slot=args.runtime_compat_slot)
 
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
