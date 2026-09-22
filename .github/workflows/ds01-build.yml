@@ -27,13 +27,6 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
 
-      - name: Read pinned revisions
-        id: pins
-        shell: bash
-        run: |
-          echo "hg_engine=$(jq -r '.sources[\"hg-engine\"].commit' upstream/LOCK.json)" >> "$GITHUB_OUTPUT"
-          echo "pokeheartgold=$(jq -r '.sources[\"pokeheartgold\"].commit' upstream/LOCK.json)" >> "$GITHUB_OUTPUT"
-
       - name: Install build dependencies
         shell: bash
         run: |
@@ -55,7 +48,7 @@ jobs:
         shell: bash
         run: |
           git clone https://github.com/pret/pokeheartgold.git vendor/pokeheartgold
-          git -C vendor/pokeheartgold checkout "${{ steps.pins.outputs.pokeheartgold }}"
+          git -C vendor/pokeheartgold checkout "$(jq -r '.sources["pokeheartgold"].commit' upstream/LOCK.json)"
 
       - name: Bootstrap pokeheartgold toolchain
         shell: bash
@@ -97,7 +90,7 @@ jobs:
         shell: bash
         run: |
           git clone --recursive https://github.com/BluRosie/hg-engine.git vendor/hg-engine
-          git -C vendor/hg-engine checkout "${{ steps.pins.outputs.hg_engine }}"
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
           git -C vendor/hg-engine submodule update --init --recursive
 
       - name: Apply project engine overlay
@@ -131,8 +124,8 @@ jobs:
           {
             echo "## DS01 build passed"
             echo
-            echo "- HG-Engine: \`${{ steps.pins.outputs.hg_engine }}\`"
-            echo "- pokeheartgold: \`${{ steps.pins.outputs.pokeheartgold }}\`"
+            echo "- HG-Engine: \`$(jq -r '.sources["hg-engine"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")\`"
+            echo "- pokeheartgold: \`$(jq -r '.sources["pokeheartgold"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")\`"
             echo "- test.nds SHA-256: \`$(sha256sum test.nds | awk '{print $1}')\`"
             echo "- test.nds bytes: \`$(stat -c%s test.nds)\`"
             echo
