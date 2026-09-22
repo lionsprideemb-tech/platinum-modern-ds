@@ -9,6 +9,7 @@ Usage:
 
 from __future__ import annotations
 
+import struct
 import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
@@ -179,6 +180,65 @@ def install_binary_png(
             raise RuntimeError(f"{output_path} has wrong mode: {check.mode}, expected {expected_mode}")
 
 
+def clear_tile_zero(path: Path):
+    # Tile 0 is used as the transparent/empty tile by the replacement maps.
+    im = Image.open(path)
+    if im.mode != "P":
+        raise RuntimeError(f"{path} must remain a paletted PNG")
+    px = im.load()
+    for y in range(8):
+        for x in range(8):
+            px[x, y] = 0
+    im.save(path)
+
+
+def write_linear_nscr(path: Path, width_tiles: int, height_tiles: int, bitdepth: int, tile_for):
+    data = bytearray()
+    for y in range(height_tiles):
+        for x in range(width_tiles):
+            tile = tile_for(x, y)
+            if tile < 0 or tile > 1023:
+                raise RuntimeError(f"tile index {tile} out of range for {path}")
+            data += struct.pack("<H", tile)
+
+    section_size = len(data) + 0x14
+    file_size = section_size + 0x10
+
+    header = bytearray(b"RCSN")
+    header += bytes((0xFF, 0xFE, 0x00, 0x01))
+    header += struct.pack("<I", file_size)
+    header += struct.pack("<H", 0x10)
+    header += struct.pack("<H", 1)
+
+    section = bytearray(b"NRCS")
+    section += struct.pack("<I", section_size)
+    section += struct.pack("<H", width_tiles * 8)
+    section += struct.pack("<H", height_tiles * 8)
+    section += bytes((0 if bitdepth == 4 else 1, 0, 0, 0))
+    section += struct.pack("<I", len(data))
+
+    path.write_bytes(header + section + data)
+
+
+def build_mercury_tilemaps(gfx: Path):
+    # BG2 is 512x256. Put the 256x128 art in the upper-left 32x16 tile area
+    # and leave the rest transparent. This removes Platinum's original
+    # hand-authored logo tile remapping, which scrambled replacement artwork.
+    write_linear_nscr(
+        gfx / "logo.NSCR",
+        64,
+        32,
+        8,
+        lambda x, y: (y * 32 + x) if (x < 32 and y < 16) else 0,
+    )
+
+    # BG3/BG1 are 256x256. The custom 256x64 footer occupies the visible
+    # bottom third of the DS screen (rows 16..23); unused rows map to tile 0.
+    border_map = lambda x, y: ((y - 16) * 32 + x) if 16 <= y < 24 else 0
+    write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 32, 4, border_map)
+    write_linear_nscr(gfx / "top_screen_border_2.NSCR", 32, 32, 4, border_map)
+
+
 def patch_title_runtime(source: Path):
     text=source.read_text()
 
@@ -251,6 +311,9 @@ def main():
         (256, 64),
         "P",
     )
+    clear_tile_zero(logo)
+    clear_tile_zero(border)
+    build_mercury_tilemaps(gfx)
     patch_title_runtime(source)
 
     print("Mercury Redux title assets generated")
