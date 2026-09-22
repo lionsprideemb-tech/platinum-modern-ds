@@ -6,7 +6,8 @@ on:
     branches:
       - feature/ds04-twinleaf-transplant
     paths:
-      - "tools/prepare_ds04_twinleaf.py"
+      - "tools/stage_ds04_twinleaf.py"
+      - "tools/narc_append.py"
       - "tools/convert_platinum_landdata.py"
       - "tools/convert_platinum_areadata.py"
       - "tools/build_hgss_prop_set.py"
@@ -60,75 +61,80 @@ jobs:
           git clone --filter=blob:none https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
           git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
 
-      - name: Build NARC tool
+      - name: Run DS04 staging regressions
         shell: bash
         run: |
           set -euo pipefail
-          make -C vendor/pokeheartgold/tools/nitroarc
-          test -x vendor/pokeheartgold/tools/nitroarc/nitroarc
+          python3 tests/test_narc_append.py
+          python3 tests/test_landdata_converter.py
+          python3 tests/test_areadata_converter.py
 
-      - name: Prepare static Twinleaf world shell
+      - name: Stage runtime-safe Twinleaf proof
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/prepare_ds04_twinleaf.py \
-            --project-root "$GITHUB_WORKSPACE" \
-            --pokeheartgold "$GITHUB_WORKSPACE/vendor/pokeheartgold" \
-            --pokeplatinum "$GITHUB_WORKSPACE/vendor/pokeplatinum"
+          python3 tools/stage_ds04_twinleaf.py \
+            --pokeheartgold vendor/pokeheartgold \
+            --pokeplatinum vendor/pokeplatinum \
+            --test-start \
+            --runtime-compat-slot \
+            --report /tmp/ds04_runtime_stage.json
+          cat /tmp/ds04_runtime_stage.json
 
-      - name: Verify DS04 source injection
+      - name: Verify runtime-safe source injection
         shell: bash
         run: |
           set -euo pipefail
 
-          grep -q '#define MAP_SINNOH_TWINLEAF_TOWN' vendor/pokeheartgold/include/constants/maps.h
-          grep -q '#define MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F' vendor/pokeheartgold/include/constants/maps.h
-          grep -q '#define MAP_ID_MAX                                        547' vendor/pokeheartgold/include/constants/maps.h
+          jq -e '
+            .strategy == "APPEND_ONLY" and
+            .runtime_compat_slot == true and
+            .archives.land_data.members == 682 and
+            .archives.area_data.members == 108 and
+            .archives.prop_sets.members == 106 and
+            .archives.map_textures.members == 108 and
+            .archives.prop_textures.members == 106 and
+            .archives.exterior_models.members == 344 and
+            .archives.interior_models.members == 244 and
+            .matrices == [288,289,290,291,292,293] and
+            .map_headers == [538] and
+            .scripts == [965,966] and
+            .test_start == true and
+            .test_start_map == 538 and
+            .test_start_x == 4 and
+            .test_start_y == 6 and
+            .test_start_direction == 0
+          ' /tmp/ds04_runtime_stage.json >/dev/null
 
-          grep -q '\[MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F\]' vendor/pokeheartgold/src/data/map_headers.h
-          grep -q 'MAP_SINNOH_TWINLEAF_PLAYER_HOUSE_2F' vendor/pokeheartgold/src/location_backup.c
-          grep -q '0x00000004' vendor/pokeheartgold/src/location_backup.c
-          grep -q '0x00000006' vendor/pokeheartgold/src/location_backup.c
-
-          test -f vendor/pokeheartgold/files/fielddata/mapmatrix/map_matrix/map_matrix_0288_SINNOH_TWINLEAF.bin
-          test -f vendor/pokeheartgold/files/fielddata/mapmatrix/map_matrix/map_matrix_0293_SINNOH_TWINLEAF_PLAYER_HOUSE_2F.bin
-          test -f vendor/pokeheartgold/files/fielddata/eventdata/zone_event/495_SINNOH_TWINLEAF_PLAYER_HOUSE_2F.json
-          test -f vendor/pokeheartgold/files/fielddata/script/scr_seq/scr_seq_0965_SINNOH_TWINLEAF_EMPTY.s
-          test -f vendor/pokeheartgold/files/fielddata/script/scr_seq/scr_seq_0966_SINNOH_TWINLEAF_EMPTY_hdr.s
+          grep -q '^#define MAP_ID_MAX[[:space:]]*540' vendor/pokeheartgold/include/constants/maps.h
+          if grep -q '^#define MAP_SINNOH_TWINLEAF_' vendor/pokeheartgold/include/constants/maps.h; then
+            echo "runtime-safe mode unexpectedly expanded map constants" >&2
+            exit 1
+          fi
 
           python3 - <<'PY'
-          import struct
           from pathlib import Path
 
-          root = Path("vendor/pokeheartgold")
-          checks = {
-              "files/a/0/6/5": 682,
-              "files/a/0/4/2": 108,
-              "files/a/0/4/3": 106,
-              "files/a/0/4/4": 108,
-              "files/a/0/7/0": 106,
-              "files/a/0/4/0": 344,
-              "files/a/1/4/8": 244,
-          }
+          headers = Path("vendor/pokeheartgold/src/data/map_headers.h").read_text()
+          pos = headers.index("[MAP_UNUSED]")
+          block = headers[pos:pos + 1800]
+          assert ".areaDataBank = 107" in block
+          assert "NARC_map_matrix_map_matrix_0293_SINNOH_TWINLEAF_PLAYER_2F_bin" in block
+          assert "NARC_scr_seq_scr_seq_0965_SINNOH_TWINLEAF_EMPTY_bin" in block
+          assert "NARC_scr_seq_scr_seq_0966_SINNOH_TWINLEAF_EMPTY_hdr_bin" in block
 
-          # Standard NARC header: FATB member count lives at 0x18 for these archives.
-          for rel, expected in checks.items():
-              data = (root / rel).read_bytes()
-              assert data[:4] == b"NARC", (rel, data[:4])
-              assert data[0x10:0x14] == b"BTAF", (rel, data[0x10:0x14])
-              count = struct.unpack_from("<H", data, 0x18)[0]
-              assert count == expected, (rel, count, expected)
+          loc = Path("vendor/pokeheartgold/src/location_backup.c").read_text()
+          assert ".mapId = MAP_UNUSED," in loc
+          assert ".x = 4," in loc
+          assert ".y = 6," in loc
+          assert ".direction = 0," in loc
 
-          matrix = (
-              root
-              / "files/fielddata/mapmatrix/map_matrix/map_matrix_0293_SINNOH_TWINLEAF_PLAYER_HOUSE_2F.bin"
-          ).read_bytes()
-          assert matrix[:5] == bytes((1, 1, 0, 0, 6))
-          assert matrix[5:11] == b"sinnoh"
-          assert struct.unpack_from("<H", matrix, 11)[0] == 681
-
-          print("DS04 source injection verification: PASS")
+          print("DS04 runtime-safe source injection: PASS")
           PY
+
+          test -f vendor/pokeheartgold/files/fielddata/mapmatrix/map_matrix/map_matrix_0293_SINNOH_TWINLEAF_PLAYER_2F.bin
+          test -f vendor/pokeheartgold/files/fielddata/script/scr_seq/scr_seq_0965_SINNOH_TWINLEAF_EMPTY.s
+          test -f vendor/pokeheartgold/files/fielddata/script/scr_seq/scr_seq_0966_SINNOH_TWINLEAF_EMPTY_hdr.s
 
       - name: Bootstrap pokeheartgold toolchain
         shell: bash
@@ -173,8 +179,6 @@ jobs:
           set -euo pipefail
           grep -q 'NARC_map_matrix_map_matrix_0288_SINNOH_TWINLEAF_bin 288' files/fielddata/mapmatrix/map_matrix.naix
           grep -q 'NARC_map_matrix_map_matrix_0293_SINNOH_TWINLEAF_PLAYER_HOUSE_2F_bin 293' files/fielddata/mapmatrix/map_matrix.naix
-          grep -q 'NARC_zone_event_491_SINNOH_TWINLEAF_TOWN_bin 491' files/fielddata/eventdata/zone_event.naix
-          grep -q 'NARC_zone_event_497_SINNOH_TWINLEAF_SOUTHWEST_HOUSE_bin 497' files/fielddata/eventdata/zone_event.naix
           grep -q 'NARC_scr_seq_scr_seq_0965_SINNOH_TWINLEAF_EMPTY_bin 965' files/fielddata/script/scr_seq.naix
           grep -q 'NARC_scr_seq_scr_seq_0966_SINNOH_TWINLEAF_EMPTY_hdr_bin 966' files/fielddata/script/scr_seq.naix
 
@@ -216,11 +220,11 @@ jobs:
           {
             echo "## DS04 Twinleaf transplant build passed"
             echo
-            echo "- test start: Twinleaf Player House 2F @ (4,6)"
-            echo "- map header IDs: 540-546"
+            echo "- test start: imported Twinleaf Player House 2F @ (4,6)"
+            echo "- temporary runtime header slot: MAP_UNUSED / 538"
+            echo "- MAP_ID_MAX preserved: 540"
             echo "- land-data IDs: 676-681"
             echo "- matrix IDs: 288-293"
-            echo "- event IDs: 491-497"
             echo "- shared empty scripts: 965 / 966"
             echo "- HG-Engine: `$(jq -r '.sources["hg-engine"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")`"
             echo "- pokeheartgold: `$(jq -r '.sources["pokeheartgold"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")`"
