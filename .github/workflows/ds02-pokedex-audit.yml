@@ -1,0 +1,54 @@
+name: DS02 Pokedex Audit
+
+on:
+  push:
+    branches:
+      - feature/ds02-pokedex-audit
+    paths:
+      - "tools/audit_hg_pokedex.py"
+      - "audits/**"
+      - "upstream/LOCK.json"
+      - ".github/workflows/ds02-pokedex-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned HG-Engine source
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit="$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+          git clone https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine checkout "$commit"
+
+      - name: Run canonical 1025 audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/audit_hg_pokedex.py --hg-engine vendor/hg-engine
+          cat audits/pokedex_1025_summary.json
+
+      - name: Verify audit boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(jq -r '.canonical_species_count' audits/pokedex_1025_summary.json)" = "1025"
+          test "$(jq -r '.first_species' audits/pokedex_1025_summary.json)" = "SPECIES_BULBASAUR"
+          test "$(jq -r '.last_species' audits/pokedex_1025_summary.json)" = "SPECIES_PECHARUNT"
+
+      - name: Upload audit outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: ds02-pokedex-audit
+          path: |
+            audits/pokedex_1025.csv
+            audits/pokedex_1025_summary.json
+          retention-days: 14
