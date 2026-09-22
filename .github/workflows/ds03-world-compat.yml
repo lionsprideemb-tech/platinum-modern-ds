@@ -8,6 +8,7 @@ on:
       - "tools/convert_platinum_landdata.py"
       - "tools/convert_platinum_events.py"
       - "tools/convert_platinum_areadata.py"
+      - "tools/audit_world_capacity.py"
       - "tests/**"
       - "platinum_port/twinleaf/**"
       - "upstream/LOCK.json"
@@ -65,17 +66,23 @@ jobs:
           python3 tools/convert_platinum_areadata.py \
             vendor/pokeplatinum/res/field/area_data/area_data_006.json \
             /tmp/twinleaf_exterior_area.bin \
-            --building-tileset 0 --map-tileset 0 --area-type outdoor \
+            --target-prop-set 104 --target-map-texture 106 --area-type outdoor \
             --metadata /tmp/twinleaf_exterior_area.json
           python3 tools/convert_platinum_areadata.py \
             vendor/pokeplatinum/res/field/area_data/area_data_020.json \
             /tmp/twinleaf_interior_area.bin \
-            --building-tileset 0 --map-tileset 0 --area-type indoor \
+            --target-prop-set 105 --target-map-texture 107 --area-type indoor \
             --metadata /tmp/twinleaf_interior_area.json
           test "$(stat -c%s /tmp/twinleaf_exterior_area.bin)" = "8"
           test "$(stat -c%s /tmp/twinleaf_interior_area.bin)" = "8"
           test "$(jq -r '.hgss_area_type' /tmp/twinleaf_exterior_area.json)" = "1"
+          test "$(jq -r '.hgss_light_type' /tmp/twinleaf_exterior_area.json)" = "1"
+          test "$(jq -r '.hgss_building_tileset' /tmp/twinleaf_exterior_area.json)" = "104"
+          test "$(jq -r '.hgss_map_tileset' /tmp/twinleaf_exterior_area.json)" = "106"
           test "$(jq -r '.hgss_area_type' /tmp/twinleaf_interior_area.json)" = "0"
+          test "$(jq -r '.hgss_light_type' /tmp/twinleaf_interior_area.json)" = "0"
+          test "$(jq -r '.hgss_building_tileset' /tmp/twinleaf_interior_area.json)" = "105"
+          test "$(jq -r '.hgss_map_tileset' /tmp/twinleaf_interior_area.json)" = "107"
 
       - name: Validate real Twinleaf map members
         shell: bash
