@@ -98,3 +98,67 @@ jobs:
         run: |
           git -C vendor/pokeheartgold status --short
           git -C vendor/pokeheartgold diff --stat
+
+
+  runtime-safe-stage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          hg_commit="$(jq -r '.sources["pokeheartgold"].commit' upstream/LOCK.json)"
+          pt_commit="$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none https://github.com/pret/pokeheartgold.git vendor/pokeheartgold-runtime
+          git -C vendor/pokeheartgold-runtime checkout "$hg_commit"
+
+          git clone --filter=blob:none https://github.com/pret/pokeplatinum.git vendor/pokeplatinum-runtime
+          git -C vendor/pokeplatinum-runtime checkout "$pt_commit"
+
+      - name: Stage runtime-safe Twinleaf room
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/stage_ds04_twinleaf.py             --pokeheartgold vendor/pokeheartgold-runtime             --pokeplatinum vendor/pokeplatinum-runtime             --runtime-compat-slot             --test-start             --report /tmp/ds04_runtime_safe_stage.json
+
+          jq -e '
+            .runtime_compat_slot == true and
+            .map_headers == [538] and
+            .test_start_map == 538 and
+            .test_start_x == 4 and
+            .test_start_y == 6 and
+            .test_start_direction == 0 and
+            .archives.land_data.members == 682 and
+            .archives.area_data.members == 108 and
+            .archives.prop_sets.members == 106 and
+            .archives.map_textures.members == 108 and
+            .archives.prop_textures.members == 106 and
+            .archives.exterior_models.members == 344 and
+            .archives.interior_models.members == 244
+          ' /tmp/ds04_runtime_safe_stage.json >/dev/null
+
+          grep -q '^#define MAP_ID_MAX[[:space:]]*540'             vendor/pokeheartgold-runtime/include/constants/maps.h
+          if grep -q '^#define MAP_SINNOH_TWINLEAF_'             vendor/pokeheartgold-runtime/include/constants/maps.h; then
+            echo "runtime-safe staging unexpectedly expanded map constants" >&2
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          from pathlib import Path
+          headers = Path("vendor/pokeheartgold-runtime/src/data/map_headers.h").read_text()
+          pos = headers.index("[MAP_UNUSED]")
+          block = headers[pos:pos + 1800]
+          assert ".areaDataBank = 107" in block
+          assert "NARC_map_matrix_map_matrix_0293_SINNOH_TWINLEAF_PLAYER_2F_bin" in block
+
+          loc = Path("vendor/pokeheartgold-runtime/src/location_backup.c").read_text()
+          assert ".mapId = MAP_UNUSED," in loc
+          assert ".x = 4," in loc
+          assert ".y = 6," in loc
+          assert ".direction = 0," in loc
+          print("DS04 runtime-safe staging: PASS")
+          PY
