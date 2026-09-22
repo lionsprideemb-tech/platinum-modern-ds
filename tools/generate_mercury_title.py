@@ -43,9 +43,14 @@ def draw_metal_text(base: Image.Image, text: str, y: int, max_width: int, start_
     w, h = box[2]-box[0], box[3]-box[1]
     x = (base.width - w) // 2
 
-    # Dark outer silhouette for DS readability.
-    draw.text((x, y), text, font=font, fill=(20, 16, 40, 255),
-              stroke_width=stroke+2, stroke_fill=(4, 4, 14, 255))
+    # Slim shadow and restrained outline. The DS title screens use clean
+    # anti-aliased artwork, not thick GBA-style pixel borders.
+    shadow = Image.new("RGBA", base.size, (0,0,0,0))
+    sd = ImageDraw.Draw(shadow)
+    sd.text((x+1, y+2), text, font=font, fill=(10, 8, 24, 210),
+            stroke_width=stroke+1, stroke_fill=(5, 4, 14, 225))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(0.45))
+    base.alpha_composite(shadow)
 
     mask = Image.new("L", base.size, 0)
     md = ImageDraw.Draw(mask)
@@ -68,10 +73,12 @@ def draw_metal_text(base: Image.Image, text: str, y: int, max_width: int, start_
             gp[xx,yy]=color
     base.alpha_composite(Image.composite(grad, Image.new("RGBA", base.size, (0,0,0,0)), mask))
 
-    # Violet edge/highlight.
+    # Fine violet edge plus a bright top highlight gives the subtitle the
+    # layered metallic/glass look common to DS-era title artwork.
     draw = ImageDraw.Draw(base)
     draw.text((x, y), text, font=font, fill=(0,0,0,0),
-              stroke_width=1, stroke_fill=(126, 88, 220, 255))
+              stroke_width=1, stroke_fill=(104, 78, 188, 235))
+    draw.line((x+3, y+2, x+w-3, y+2), fill=(242, 244, 255, 150), width=1)
     return y+h
 
 
@@ -84,17 +91,24 @@ def build_logo(path: Path):
     clear_y = 65
     ImageDraw.Draw(out).rectangle((0, clear_y, out.width, out.height), fill=(0,0,0,0))
 
-    # Subtle dark-violet crest plate behind the new subtitle.
-    plate = Image.new("RGBA", out.size, (0,0,0,0))
-    pd = ImageDraw.Draw(plate)
-    pd.rounded_rectangle((15, 61, 241, 123), radius=13,
-                         fill=(13, 10, 34, 235),
-                         outline=(98, 67, 178, 255), width=2)
-    pd.line((34, 119, 222, 119), fill=(139, 102, 236, 220), width=1)
-    out.alpha_composite(plate)
+    # DS-era treatment: no chunky badge/plaque. Platinum's title art reads as
+    # layered, anti-aliased 2D art with thin metallic edges and clean negative
+    # space. Build Mercury the same way so it does not resemble a GBA ROM hack.
+    accent = Image.new("RGBA", out.size, (0,0,0,0))
+    ad = ImageDraw.Draw(accent)
 
-    end = draw_metal_text(out, "MERCURY", 65, 225, 33, "DejaVuSerifCondensed-Bold", 1)
-    draw_metal_text(out, "R E D U X", min(101, end-2), 174, 16, "DejaVuSansCondensed-Bold", 1)
+    # Thin crystalline divider and restrained glow, matching the sharper DS look.
+    ad.line((28, 116, 228, 116), fill=(42, 30, 82, 210), width=3)
+    ad.line((34, 115, 222, 115), fill=(176, 158, 245, 235), width=1)
+    ad.polygon([(21,116),(28,110),(35,116),(28,122)], fill=(98,70,184,230))
+    ad.polygon([(221,116),(228,110),(235,116),(228,122)], fill=(98,70,184,230))
+    accent = accent.filter(ImageFilter.GaussianBlur(0.35))
+    out.alpha_composite(accent)
+
+    # Wide, polished metallic subtitle with thin dark-violet depth instead of
+    # heavy pixel outlines.
+    end = draw_metal_text(out, "MERCURY", 66, 228, 35, "DejaVuSerifCondensed-Bold", 1)
+    draw_metal_text(out, "R E D U X", min(101, end-1), 154, 14, "DejaVuSansCondensed-Bold", 1)
 
     # nitrogfx requires an indexed PNG with a palette. Reserve palette index 0
     # for transparency, then quantize the visible artwork into 255 colors.
