@@ -10,6 +10,7 @@ Usage:
 from __future__ import annotations
 
 import base64
+import hashlib
 import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
@@ -164,8 +165,22 @@ def tint_border(path: Path):
     im.save(path, bits=4)
 
 
-def install_encoded_png(encoded_path: Path, output_path: Path, expected_size: tuple[int, int], expected_mode: str):
-    data = base64.b64decode(encoded_path.read_text().strip())
+def install_segmented_png(
+    encoded_parts: list[Path],
+    output_path: Path,
+    expected_size: tuple[int, int],
+    expected_mode: str,
+    expected_sha256: str,
+):
+    encoded = "".join(part.read_text().strip() for part in encoded_parts)
+    data = base64.b64decode(encoded, validate=True)
+
+    actual_sha256 = hashlib.sha256(data).hexdigest()
+    if actual_sha256 != expected_sha256:
+        raise RuntimeError(
+            f"{output_path} asset digest mismatch: {actual_sha256} != {expected_sha256}"
+        )
+
     output_path.write_bytes(data)
 
     # Validate the exact DS conversion inputs before nitrogfx sees them.
@@ -224,10 +239,11 @@ def main():
     source=root/"src/applications/title_screen.c"
 
     project_root=Path(__file__).resolve().parent.parent
-    logo_asset=project_root/"assets/title_screen/mercury_logo_top_256x128.png.b64"
-    border_asset=project_root/"assets/title_screen/mercury_top_footer_256x64.png.b64"
+    asset_dir=project_root/"assets/title_screen"
+    logo_parts=[asset_dir/f"logo64.b64.{suffix}" for suffix in ("a","b","c","d")]
+    border_parts=[asset_dir/f"footer16.b64.{suffix}" for suffix in ("a","b")]
 
-    for p in (logo,border,source,logo_asset,border_asset):
+    for p in (logo,border,source,*logo_parts,*border_parts):
         if not p.exists():
             raise SystemExit(f"missing required Mercury title file: {p}")
 
@@ -235,8 +251,20 @@ def main():
     # than approximating the title with runtime-generated text. The upper
     # 256x128 art contains the branded scene/logo; the lower 256x64 strip leaves
     # clean space for Platinum's live PRESS START layer.
-    install_encoded_png(logo_asset, logo, (256, 128), "P")
-    install_encoded_png(border_asset, border, (256, 64), "P")
+    install_segmented_png(
+        logo_parts,
+        logo,
+        (256, 128),
+        "P",
+        "780672c45074f4625a53c73a57f13e217daee627fa481a7759380e9cc1b341ef",
+    )
+    install_segmented_png(
+        border_parts,
+        border,
+        (256, 64),
+        "P",
+        "5a19ee7eb944da12e6293769ecce721f185211fd495e0f786e9d9e55309d62c4",
+    )
     patch_title_runtime(source)
 
     print("Mercury Redux title assets generated")
