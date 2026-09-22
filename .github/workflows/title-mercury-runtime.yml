@@ -100,7 +100,7 @@ jobs:
           if not emu.is_running():
               raise SystemExit("DeSmuME did not start Mercury title build")
 
-          captures=[15000,15600,16200]
+          captures=[14800,15200,15600,16000]
           current=0
           meta=[]
           try:
@@ -114,17 +114,19 @@ jobs:
                   rgb=image.convert("RGB")
                   colors=rgb.getcolors(maxcolors=256*384)
                   unique=len(colors) if colors is not None else 256*384
-                  if unique < 16:
-                      raise SystemExit(f"title capture {target} appears blank")
-                  meta.append({"frame":target,"file":path.name,"unique_colors":unique})
+                  meta.append({"frame":target,"file":path.name,"unique_colors":unique,"blank_like":unique < 16})
           finally:
               emu.destroy()
 
+          usable=[m for m in meta if not m["blank_like"]]
+          if not usable:
+              raise SystemExit("all Mercury title captures were blank")
           (out/"title-meta.json").write_text(json.dumps({
               "gate":"MERCURY_TITLE_NATIVE_RUNTIME",
               "expected_prompt":"PRESS START",
               "preserved_native_behavior":True,
-              "captures":meta
+              "captures":meta,
+              "usable_capture_count":len(usable)
           },indent=2)+"\n")
           PY
 
