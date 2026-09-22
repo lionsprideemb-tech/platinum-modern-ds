@@ -14,6 +14,10 @@ on:
       - ".github/workflows/title-mercury-runtime.yml"
       - "upstream/LOCK.json"
 
+concurrency:
+  group: mercury-title-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
