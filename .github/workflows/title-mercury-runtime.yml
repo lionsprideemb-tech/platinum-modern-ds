@@ -8,6 +8,7 @@ on:
       - feature/title-mercury-motion
     paths:
       - "tools/generate_mercury_title.py"
+      - "assets/title_screen/**"
       - "docs/MERCURY_TITLE_SCREEN_SPEC.md"
       - "platinum-overlay/res/text/title_screen.json"
       - ".github/workflows/title-mercury-runtime.yml"
@@ -57,6 +58,8 @@ jobs:
           python3 tools/generate_mercury_title.py vendor/pokeplatinum
           test -s vendor/pokeplatinum/res/graphics/title_screen/logo.png
           test -s vendor/pokeplatinum/res/graphics/title_screen/top_screen_border.png
+          test -s assets/title_screen/mercury_logo_top_256x128.png.b64
+          test -s assets/title_screen/mercury_top_footer_256x64.png.b64
           grep -q '"en_US": "PRESS START"' vendor/pokeplatinum/res/text/title_screen.json
           grep -q 'GX_RGB(26, 26, 31)' vendor/pokeplatinum/src/applications/title_screen.c
           grep -q 'Mercury Redux: subtle DS-native logo float' vendor/pokeplatinum/src/applications/title_screen.c
