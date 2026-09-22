@@ -1,0 +1,74 @@
+{
+  "source_commit": "c248fb3f8cc9934ded800e489567c5c0eeee92eb",
+  "result": "PASS",
+  "checked": [
+    {
+      "map": "MAP_000",
+      "path": "res/field/maps/data/map_data_000.bin",
+      "source_bytes": 41486,
+      "permissions": 2048,
+      "buildings": 384,
+      "nsbmd": 38876,
+      "bdhc": 162,
+      "model_signature": "BMD0",
+      "converted_bytes": 41490
+    },
+    {
+      "map": "MAP_180",
+      "path": "res/field/maps/data/map_data_180.bin",
+      "source_bytes": 4956,
+      "permissions": 2048,
+      "buildings": 288,
+      "nsbmd": 2456,
+      "bdhc": 148,
+      "model_signature": "BMD0",
+      "converted_bytes": 4960
+    },
+    {
+      "map": "MAP_184",
+      "path": "res/field/maps/data/map_data_184.bin",
+      "source_bytes": 8066,
+      "permissions": 2048,
+      "buildings": 624,
+      "nsbmd": 5092,
+      "bdhc": 286,
+      "model_signature": "BMD0",
+      "converted_bytes": 8070
+    },
+    {
+      "map": "MAP_185",
+      "path": "res/field/maps/data/map_data_185.bin",
+      "source_bytes": 5330,
+      "permissions": 2048,
+      "buildings": 480,
+      "nsbmd": 2556,
+      "bdhc": 230,
+      "model_signature": "BMD0",
+      "converted_bytes": 5334
+    },
+    {
+      "map": "MAP_186",
+      "path": "res/field/maps/data/map_data_186.bin",
+      "source_bytes": 8006,
+      "permissions": 2048,
+      "buildings": 624,
+      "nsbmd": 5040,
+      "bdhc": 278,
+      "model_signature": "BMD0",
+      "converted_bytes": 8010
+    },
+    {
+      "map": "MAP_187",
+      "path": "res/field/maps/data/map_data_187.bin",
+      "source_bytes": 5394,
+      "permissions": 2048,
+      "buildings": 528,
+      "nsbmd": 2572,
+      "bdhc": 230,
+      "model_signature": "BMD0",
+      "converted_bytes": 5398
+    }
+  ],
+  "conversion_rule": "insert blank HGSS BGS block 34 12 00 00 after 16-byte section-size header",
+  "binaries_committed": false
+}
