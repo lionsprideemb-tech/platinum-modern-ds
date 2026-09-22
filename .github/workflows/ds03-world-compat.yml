@@ -28,7 +28,7 @@ jobs:
         run: |
           set -euo pipefail
           commit="$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
-          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git clone --filter=blob:none https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
           git -C vendor/pokeplatinum checkout "$commit"
 
       - name: Checkout pinned pokeheartgold
@@ -36,8 +36,10 @@ jobs:
         run: |
           set -euo pipefail
           commit="$(jq -r '.sources["pokeheartgold"].commit' upstream/LOCK.json)"
-          git clone https://github.com/pret/pokeheartgold.git vendor/pokeheartgold
+          git clone --filter=blob:none https://github.com/pret/pokeheartgold.git vendor/pokeheartgold
           git -C vendor/pokeheartgold checkout "$commit"
+          test -f vendor/pokeheartgold/include/constants/maps.h
+          test -f vendor/pokeheartgold/files/a/0/6/5
 
       - name: Audit HGSS world resource capacity
         shell: bash
