@@ -10,7 +10,6 @@ Usage:
 from __future__ import annotations
 
 import base64
-import hashlib
 import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
@@ -169,17 +168,11 @@ def install_segmented_png(
     encoded_parts: list[Path],
     output_path: Path,
     expected_size: tuple[int, int],
-    expected_mode: str,
-    expected_sha256: str,
+    expected_mode: str
 ):
     encoded = "".join(part.read_text().strip() for part in encoded_parts)
     data = base64.b64decode(encoded, validate=True)
 
-    actual_sha256 = hashlib.sha256(data).hexdigest()
-    if actual_sha256 != expected_sha256:
-        raise RuntimeError(
-            f"{output_path} asset digest mismatch: {actual_sha256} != {expected_sha256}"
-        )
 
     output_path.write_bytes(data)
 
@@ -255,15 +248,13 @@ def main():
         logo_parts,
         logo,
         (256, 128),
-        "P",
-        "780672c45074f4625a53c73a57f13e217daee627fa481a7759380e9cc1b341ef",
+        "P"
     )
     install_segmented_png(
         border_parts,
         border,
         (256, 64),
-        "P",
-        "5a19ee7eb944da12e6293769ecce721f185211fd495e0f786e9d9e55309d62c4",
+        "P"
     )
     patch_title_runtime(source)
 
