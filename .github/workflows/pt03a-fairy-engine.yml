@@ -1,0 +1,206 @@
+name: PT03A Fairy Engine
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt03a-fairy-engine
+    paths:
+      - "platinum-overlay/**"
+      - "docs/PT03A_IMPLEMENTATION_PLAN.md"
+      - ".github/workflows/pt03a-fairy-engine.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  fairy-engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-venv python3-pip wget xz-utils             libpng-dev rsync jq libsdl2-2.0-0
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Verify Fairy IDs and modern chart source
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path("vendor/pokeplatinum")
+          names = [x.strip() for x in (root / "generated/pokemon_types.txt").read_text().splitlines() if x.strip()]
+
+          assert names.index("TYPE_MYSTERY") == 9, names
+          assert names.index("TYPE_DARK") == 17, names
+          assert names.index("TYPE_FAIRY") == 18, names
+          assert names.index("NUM_POKEMON_TYPES") == 19, names
+
+          battle = (root / "src/battle/battle_lib.c").read_text()
+          m = re.search(r"static const u8 sTypeMatchupMultipliers\[\]\[3\] = \{(.*?)\n\};", battle, re.S)
+          assert m, "type chart table not found"
+          block = m.group(1)
+
+          entries = {}
+          for atk, dfn, mult in re.findall(
+              r"\{\s*(TYPE_[A-Z_]+),\s*(TYPE_[A-Z_]+),\s*(TYPE_MULTI_[A-Z_]+)\s*\}",
+              block,
+          ):
+              entries[(atk, dfn)] = mult
+
+          def effect(atk, dfn):
+              return entries.get((atk, dfn), "TYPE_MULTI_NEUTRAL")
+
+          expected = {
+              ("TYPE_DRAGON", "TYPE_FAIRY"): "TYPE_MULTI_IMMUNE",
+              ("TYPE_FAIRY", "TYPE_DRAGON"): "TYPE_MULTI_SUPER_EFF",
+              ("TYPE_FAIRY", "TYPE_FIGHTING"): "TYPE_MULTI_SUPER_EFF",
+              ("TYPE_FAIRY", "TYPE_DARK"): "TYPE_MULTI_SUPER_EFF",
+              ("TYPE_POISON", "TYPE_FAIRY"): "TYPE_MULTI_SUPER_EFF",
+              ("TYPE_STEEL", "TYPE_FAIRY"): "TYPE_MULTI_SUPER_EFF",
+              ("TYPE_FAIRY", "TYPE_FIRE"): "TYPE_MULTI_NOT_VERY_EFF",
+              ("TYPE_FAIRY", "TYPE_POISON"): "TYPE_MULTI_NOT_VERY_EFF",
+              ("TYPE_FAIRY", "TYPE_STEEL"): "TYPE_MULTI_NOT_VERY_EFF",
+              ("TYPE_FIGHTING", "TYPE_FAIRY"): "TYPE_MULTI_NOT_VERY_EFF",
+              ("TYPE_BUG", "TYPE_FAIRY"): "TYPE_MULTI_NOT_VERY_EFF",
+              ("TYPE_DARK", "TYPE_FAIRY"): "TYPE_MULTI_NOT_VERY_EFF",
+              ("TYPE_GHOST", "TYPE_STEEL"): "TYPE_MULTI_NEUTRAL",
+              ("TYPE_DARK", "TYPE_STEEL"): "TYPE_MULTI_NEUTRAL",
+              ("TYPE_NORMAL", "TYPE_GHOST"): "TYPE_MULTI_IMMUNE",
+              ("TYPE_ELECTRIC", "TYPE_GROUND"): "TYPE_MULTI_IMMUNE",
+              ("TYPE_GROUND", "TYPE_FLYING"): "TYPE_MULTI_IMMUNE",
+              ("TYPE_ICE", "TYPE_DRAGON"): "TYPE_MULTI_SUPER_EFF",
+              ("TYPE_FIGHTING", "TYPE_NORMAL"): "TYPE_MULTI_SUPER_EFF",
+          }
+
+          for pair, want in expected.items():
+              got = effect(*pair)
+              assert got == want, f"{pair}: expected {want}, got {got}"
+
+          hall_paths = [
+              "src/battle_hall_save.c",
+              "src/overlay104/battle_hall.c",
+              "src/overlay104/battle_hall_helpers.c",
+              "src/applications/frontier/battle_hall/main.c",
+          ]
+          for rel in hall_paths:
+              text = (root / rel).read_text()
+              assert "NUM_POKEMON_TYPES" not in text, f"unsafe global type bound remains in {rel}"
+              assert "TYPE_FAIRY" in text, f"legacy boundary marker missing in {rel}"
+
+          tv = (root / "src/tv_segment.c").read_text()
+          assert "LCRNG_RandMod(TYPE_FAIRY - 1)" in tv
+          print("PT03A source checks passed")
+          PY
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure modified Platinum
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build PT03A ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Install runtime proof tools
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt03a-venv"
+          . "$RUNNER_TEMP/pt03a-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Boot native Platinum after Fairy engine change
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pt03a-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start PT03A")
+
+          try:
+              for _ in range(1800):
+                  emu.cycle(False)
+              image = emu.screenshot()
+              image.save(out / "pt03a-boot-frame.png")
+              rgb = image.convert("RGB")
+              colors = rgb.getcolors(maxcolors=256 * 384)
+              unique = len(colors) if colors is not None else 256 * 384
+              if unique < 16:
+                  raise SystemExit("PT03A runtime capture appears blank/uniform")
+          finally:
+              emu.destroy()
+
+          (out / "pt03a-meta.json").write_text(json.dumps({
+              "gate": "PT03A_FAIRY_ENGINE_BOOT",
+              "type_fairy_id": 18,
+              "num_pokemon_types": 19,
+              "mystery_type_id": 9,
+              "runtime_boot": "passed"
+          }, indent=2) + "\n")
+          PY
+
+      - name: Upload PT03A proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt03a-fairy-engine-proof
+          path: |
+            runtime-preview/pt03a-boot-frame.png
+            runtime-preview/pt03a-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PT03A summary
+        shell: bash
+        run: |
+          {
+            echo "## PT03A Fairy engine build passed"
+            echo
+            echo "- Fairy gameplay type ID: `18`"
+            echo "- Mystery internal type ID preserved: `9`"
+            echo "- Total type IDs including Mystery: `19`"
+            echo "- Modern Fairy matchup source checks: passed"
+            echo "- Gen VI Steel resistance correction: passed"
+            echo "- Battle Hall legacy storage boundary: protected"
+            echo "- Native Platinum runtime boot: passed"
+          } >> "$GITHUB_STEP_SUMMARY"
