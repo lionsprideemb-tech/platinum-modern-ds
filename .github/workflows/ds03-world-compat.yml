@@ -1,0 +1,76 @@
+name: DS03 Platinum World Compatibility
+
+on:
+  push:
+    branches:
+      - feature/ds03-platinum-world-compat
+    paths:
+      - "tools/convert_platinum_landdata.py"
+      - "tools/convert_platinum_events.py"
+      - "tests/**"
+      - "platinum_port/twinleaf/**"
+      - "upstream/LOCK.json"
+      - ".github/workflows/ds03-world-compat.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit="$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$commit"
+
+      - name: Run synthetic land-data regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tests/test_landdata_converter.py
+
+      - name: Validate real Twinleaf map members
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/twinleaf-converted
+          for id in 000 180 184 185 186 187; do
+            python3 tools/convert_platinum_landdata.py               "vendor/pokeplatinum/res/field/maps/data/map_data_${id}.bin"               "/tmp/twinleaf-converted/map_data_${id}.bin"
+          done
+
+      - name: Smoke-test event converter
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/convert_platinum_events.py             vendor/pokeplatinum/res/field/events/events_twinleaf_town.json             /tmp/events_twinleaf_town.hgss.json             --header fielddata/script/scr_seq/event_TWINLEAF.h
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("/tmp/events_twinleaf_town.hgss.json")
+          data=json.loads(p.read_text())
+          assert data["header"] == "fielddata/script/scr_seq/event_TWINLEAF.h"
+          assert len(data.get("warps", [])) == 4
+          assert all(w["y"] == 0 for w in data["warps"])
+          assert len(data.get("objects", [])) == 8
+          assert len(data.get("coords", [])) == 2
+          print("DS03 Twinleaf event converter smoke test: PASS")
+          PY
+
+      - name: Verify source manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '
+            .twinleaf.headers | length == 7 and
+            .twinleaf.landdata_validation.status == "PASS" and
+            .compatibility.map_matrix == "DIRECT_BINARY_FORMAT_AFTER_ID_REMAP"
+          ' platinum_port/twinleaf/source_manifest.json >/dev/null
