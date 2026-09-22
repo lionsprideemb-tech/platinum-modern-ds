@@ -167,11 +167,11 @@ def patch_title_runtime(source: Path):
     text=source.read_text()
 
     prompt_old = (
-        "u16 letterColor = GX_RGB(21, 0, 0);\\n"
+        "u16 letterColor = GX_RGB(21, 0, 0);\n"
         "    u16 shadowColor = GX_RGB(21, 0, 0);"
     )
     prompt_new = (
-        "u16 letterColor = GX_RGB(26, 26, 31);\\n"
+        "u16 letterColor = GX_RGB(26, 26, 31);\n"
         "    u16 shadowColor = GX_RGB(7, 4, 16);"
     )
     if prompt_old not in text:
@@ -183,16 +183,16 @@ def patch_title_runtime(source: Path):
     # sine cycle already used by the title renderer, so there is no new timer
     # or timing path to destabilize the original application.
     motion_old = (
-        "        titleScreen->blinkCounter++;\\n"
-        "        titleScreen->blinkCounter &= 31;\\n\\n"
+        "        titleScreen->blinkCounter++;\n"
+        "        titleScreen->blinkCounter &= 31;\n\n"
         "        result = TRUE;"
     )
     motion_new = (
-        "        titleScreen->blinkCounter++;\\n"
-        "        titleScreen->blinkCounter &= 31;\\n\\n"
-        "        // Mercury Redux: subtle DS-native logo float (about +/-2 px).\\n"
-        "        Bg_SetOffset(bgConfig, TITLE_SCREEN_LAYER_LOGO, BG_OFFSET_UPDATE_SET_Y,\\n"
-        "            (CalcSineDegrees_Wraparound(titleScreen->giratinaHoverAngle) * 2) >> FX32_SHIFT);\\n\\n"
+        "        titleScreen->blinkCounter++;\n"
+        "        titleScreen->blinkCounter &= 31;\n\n"
+        "        // Mercury Redux: subtle DS-native logo float (about +/-2 px).\n"
+        "        Bg_SetOffset(bgConfig, TITLE_SCREEN_LAYER_LOGO, BG_OFFSET_UPDATE_SET_Y,\n"
+        "            (CalcSineDegrees_Wraparound(titleScreen->giratinaHoverAngle) * 2) >> FX32_SHIFT);\n\n"
         "        result = TRUE;"
     )
     if motion_old not in text:
@@ -200,7 +200,6 @@ def patch_title_runtime(source: Path):
     text=text.replace(motion_old, motion_new, 1)
 
     source.write_text(text)
-
 
 def main():
     if len(sys.argv) != 2:
