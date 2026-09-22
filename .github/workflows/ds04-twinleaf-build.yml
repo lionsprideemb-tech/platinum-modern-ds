@@ -178,7 +178,7 @@ jobs:
         run: |
           set -euo pipefail
           grep -q 'NARC_map_matrix_map_matrix_0288_SINNOH_TWINLEAF_bin 288' files/fielddata/mapmatrix/map_matrix.naix
-          grep -q 'NARC_map_matrix_map_matrix_0293_SINNOH_TWINLEAF_PLAYER_HOUSE_2F_bin 293' files/fielddata/mapmatrix/map_matrix.naix
+          grep -q 'NARC_map_matrix_map_matrix_0293_SINNOH_TWINLEAF_PLAYER_2F_bin 293' files/fielddata/mapmatrix/map_matrix.naix
           grep -q 'NARC_scr_seq_scr_seq_0965_SINNOH_TWINLEAF_EMPTY_bin 965' files/fielddata/script/scr_seq.naix
           grep -q 'NARC_scr_seq_scr_seq_0966_SINNOH_TWINLEAF_EMPTY_hdr_bin 966' files/fielddata/script/scr_seq.naix
 
