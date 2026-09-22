@@ -1,0 +1,65 @@
+name: DS03 Twinleaf Converter Tests
+
+on:
+  push:
+    branches:
+      - feature/ds03-platinum-world-compat
+    paths:
+      - "tools/convert_platinum_landdata.py"
+      - "tools/convert_platinum_events.py"
+      - "tests/**"
+      - "platinum_port/twinleaf/**"
+      - "upstream/LOCK.json"
+      - ".github/workflows/ds03-twinleaf-converters.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Run synthetic converter regression tests
+        shell: bash
+        run: python3 tests/test_landdata_converter.py
+
+      - name: Checkout pinned Platinum source
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit="$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone --depth 1 https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum fetch --depth 1 origin "$commit"
+          git -C vendor/pokeplatinum checkout "$commit"
+
+      - name: Convert and validate real Twinleaf maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/twinleaf-converted"
+          for id in 000 180 184 185 186 187; do
+            python3 tools/convert_platinum_landdata.py               "vendor/pokeplatinum/res/field/maps/data/map_data_${id}.bin"               "$RUNNER_TEMP/twinleaf-converted/map_data_${id}.bin"
+          done
+
+      - name: Confirm conversion sizes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          expected = json.loads(Path("platinum_port/twinleaf/landdata_validation.json").read_text())
+          root = Path("/tmp")
+          # Search runner temp tree without depending on its randomized absolute prefix.
+          converted = list(Path("/home/runner/work/_temp").glob("**/twinleaf-converted/map_data_*.bin"))
+          by_name = {p.name: p.stat().st_size for p in converted}
+          for row in expected["checked"]:
+              name = Path(row["path"]).name
+              assert by_name.get(name) == row["converted_bytes"], (name, by_name.get(name), row["converted_bytes"])
+          print("Real Twinleaf land-data conversion sizes: PASS")
+          PY
