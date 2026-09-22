@@ -204,6 +204,9 @@ jobs:
 
           emu = DeSmuME()
           emu.open("test.nds")
+          emu.backup.import_file("test.sav")
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not enter running state after loading test.nds")
 
           checkpoints = [300, 900, 1800, 3600]
           current = 0
@@ -263,11 +266,11 @@ jobs:
             echo
             echo "## DS04 HG-Engine runtime proof built"
             echo
-            echo "- HG-Engine: `$(jq -r '.sources["hg-engine"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")`"
-            echo "- pokeheartgold: `$(jq -r '.sources["pokeheartgold"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")`"
-            echo "- pokeplatinum: `$(jq -r '.sources["pokeplatinum"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")`"
-            echo "- test.nds SHA-256: `$(sha256sum test.nds | awk '{print $1}')`"
-            echo "- test.nds bytes: `$(stat -c%s test.nds)`"
+            echo "- HG-Engine: $(jq -r '.sources["hg-engine"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")"
+            echo "- pokeheartgold: $(jq -r '.sources["pokeheartgold"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")"
+            echo "- pokeplatinum: $(jq -r '.sources["pokeplatinum"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")"
+            echo "- test.nds SHA-256: $(sha256sum test.nds | awk '{print $1}')"
+            echo "- test.nds bytes: $(stat -c%s test.nds)"
             echo
             echo "No ROM artifact is uploaded by this workflow."
           } >> "$GITHUB_STEP_SUMMARY"
