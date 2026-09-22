@@ -31,6 +31,18 @@ HGSS_AREA_INDOOR = 0
 HGSS_AREA_OUTDOOR = 1
 HGSS_DYNAMIC_TEXTURES_DISABLED = 0xFFFF
 
+# HGSS AreaDataManager_GetAreaLightArchiveID maps its stored lightType as:
+#   0 -> lighting archive 1
+#   1 -> lighting archive 0
+#   2 -> lighting archive 3
+# Twinleaf only needs Platinum lighting archives 0 and 1, so both mappings
+# are proven. Archive 3 is included because HGSS exposes an exact mapping.
+PLATINUM_LIGHT_TO_HGSS_TYPE = {
+    0: 1,
+    1: 0,
+    3: 2,
+}
+
 
 def numeric_suffix(value: str, field: str) -> int:
     m = re.search(r"_(\d+)$", value)
@@ -61,7 +73,13 @@ def convert(
 ) -> tuple[bytes, dict[str, int]]:
     src = source_values(data)
     if light_type is None:
-        light_type = src["platinum_lighting_set"]
+        source_light = src["platinum_lighting_set"]
+        if source_light not in PLATINUM_LIGHT_TO_HGSS_TYPE:
+            raise ValueError(
+                f"Platinum lighting archive {source_light} has no proven HGSS mapping; "
+                "pass --light-type explicitly after auditing it"
+            )
+        light_type = PLATINUM_LIGHT_TO_HGSS_TYPE[source_light]
 
     for name, value in {
         "building_tileset": building_tileset,
@@ -101,8 +119,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("input", type=Path, help="pokeplatinum area_data_XXX.json")
     ap.add_argument("output", type=Path, help="8-byte HGSS AreaData member")
-    ap.add_argument("--building-tileset", required=True, type=int)
-    ap.add_argument("--map-tileset", required=True, type=int)
+    ap.add_argument(
+        "--target-prop-set", "--building-tileset",
+        dest="building_tileset", required=True, type=int,
+        help="Appended HGSS prop-model/config + prop-texture set ID",
+    )
+    ap.add_argument(
+        "--target-map-texture", "--map-tileset",
+        dest="map_tileset", required=True, type=int,
+        help="Appended HGSS map-texture member ID",
+    )
     ap.add_argument("--area-type", required=True, choices=("indoor", "outdoor"))
     ap.add_argument("--dynamic-texture-type", type=lambda x: int(x, 0), default=0xFFFF)
     ap.add_argument("--light-type", type=int)
