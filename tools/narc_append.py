@@ -22,6 +22,7 @@ class Narc:
     fat_magic: bytes
     fat_reserved: bytes
     btnf: bytes
+    fimg_magic: bytes
     members: list[bytes]
 
 
@@ -72,6 +73,7 @@ def parse(data: bytes) -> Narc:
         fat_magic=fat_magic,
         fat_reserved=fat_reserved,
         btnf=bytes(btnf),
+        fimg_magic=bytes(data[fimg_off:fimg_off + 4]),
         members=members,
     )
 
@@ -102,8 +104,7 @@ def build(narc: Narc, members: list[bytes] | None = None) -> bytes:
     for start, end in entries:
         fat.extend(struct.pack("<II", start, end))
 
-    fimg_magic = b"GMIF"
-    fimg = fimg_magic + struct.pack("<I", 8 + len(image)) + bytes(image)
+    fimg = narc.fimg_magic + struct.pack("<I", 8 + len(image)) + bytes(image)
 
     header = bytearray(narc.header)
     total = len(header) + len(fat) + len(narc.btnf) + len(fimg)
