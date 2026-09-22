@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "strategy": "APPEND_ONLY_NO_OVERWRITE",
-  "source_capacity_run": 35764349659,
+  "source_capacity_run": 35765538987,
   "base_capacity": {
     "map_headers": {
       "next_append_id": 540
@@ -20,6 +20,24 @@
     },
     "land_data": {
       "next_append_id": 676
+    },
+    "area_data": {
+      "next_append_id": 106
+    },
+    "building_config_sets": {
+      "next_append_id": 104
+    },
+    "map_textures": {
+      "next_append_id": 106
+    },
+    "building_textures": {
+      "next_append_id": 104
+    },
+    "exterior_building_models": {
+      "next_append_id": 340
+    },
+    "interior_building_models": {
+      "next_append_id": 222
     }
   },
   "twinleaf": {
@@ -188,12 +206,66 @@
       "end_inclusive": 978,
       "count": 14,
       "rationale": "reserve two script resources per Twinleaf header (main + init) until exact HGSS script/header mapping is finalized"
+    },
+    "visual_resources": {
+      "manifest": "platinum_port/twinleaf/visual_resources.json",
+      "area_data": [
+        {
+          "role": "Twinleaf exterior",
+          "target_id": 106
+        },
+        {
+          "role": "Twinleaf interiors",
+          "target_id": 107
+        }
+      ],
+      "prop_model_sets": [
+        {
+          "role": "Twinleaf exterior",
+          "target_id": 104
+        },
+        {
+          "role": "Twinleaf interiors",
+          "target_id": 105
+        }
+      ],
+      "prop_textures": [
+        {
+          "role": "Twinleaf exterior",
+          "target_id": 104
+        },
+        {
+          "role": "Twinleaf interiors",
+          "target_id": 105
+        }
+      ],
+      "map_textures": [
+        {
+          "role": "Twinleaf exterior",
+          "target_id": 106
+        },
+        {
+          "role": "Twinleaf interiors",
+          "target_id": 107
+        }
+      ],
+      "exterior_models": {
+        "start": 340,
+        "end_inclusive": 343,
+        "count": 4
+      },
+      "interior_models": {
+        "start": 222,
+        "end_inclusive": 243,
+        "count": 22
+      }
     }
   },
   "notes": [
     "The exterior uses a temporary 1x1 proof matrix for DS04. It will later be replaced by a converted/remapped Sinnoh regional matrix as adjacent routes are imported.",
     "Northeast and southwest houses share the same generic MAP_180 land-data member and matrix.",
-    "Area-data/building-model/texture allocations are intentionally not assigned until those dependency archives are audited.",
-    "No existing HGSS map/header/event/script/message/land-data IDs are overwritten."
+    "No existing HGSS map/header/event/script/message/land-data IDs are overwritten.",
+    "Visual resource IDs are append-only and defined in platinum_port/twinleaf/visual_resources.json.",
+    "Platinum model IDs are remapped; behavior keyed to original model IDs is a later compatibility gate after static rendering."
   ]
 }
