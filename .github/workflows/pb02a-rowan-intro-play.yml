@@ -1,0 +1,144 @@
+name: PB02A Rowan Intro Play Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02a-rowan-intro-play.yml"
+      - "docs/PLAYABLE_BASELINE_PLAN.md"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download sealed PB01 playable candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/artifacts/10776204522/zip \
+            > pb01-artifact.zip
+          unzip -q pb01-artifact.zip -d pb01-artifact
+          test -s pb01-artifact/Pokemon_Mercury_Redux_PB01.nds
+          sha256sum pb01-artifact/Pokemon_Mercury_Redux_PB01.nds
+          test "$(sha256sum pb01-artifact/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator proof tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02a-venv"
+          . "$RUNNER_TEMP/pb02a-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Play title through Rowan intro with real inputs
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02a-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom = Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          out = Path("pb02a-play")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("PB02A ROM did not boot")
+
+          frame = 0
+          captures = []
+
+          def run(frames):
+              global frame
+              for _ in range(frames):
+                  emu.cycle(False)
+                  frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02A emulator stopped at frame {frame}")
+
+          def pulse(key, held=12, settle=180):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              run(held)
+              emu.input.keypad_rm_key(mask)
+              run(settle)
+
+          def capture(label):
+              img = emu.screenshot()
+              name = f"{len(captures):02d}-{label}-{frame:05d}.png"
+              img.save(out / name)
+              colors = img.convert("RGB").getcolors(maxcolors=256*384)
+              unique = len(colors) if colors is not None else 256*384
+              captures.append({
+                  "index": len(captures),
+                  "stage": label,
+                  "frame": frame,
+                  "file": name,
+                  "unique_colors": unique,
+                  "blank_like": unique < 16,
+              })
+              if unique < 16:
+                  raise SystemExit(f"PB02A blank-like screen at {label}")
+
+          try:
+              run(16000)
+              capture("mercury-title")
+
+              pulse(Keys.KEY_START, held=20, settle=700)
+              capture("rowan-intro-entry")
+
+              # Real player input through the opening conversation. We stop
+              # before directional/name-entry automation and review every screen.
+              for i in range(1, 11):
+                  pulse(Keys.KEY_A, held=12, settle=300)
+                  capture(f"rowan-a-{i:02d}")
+
+              run(600)
+              capture("rowan-probe-stable")
+          finally:
+              emu.destroy()
+
+          meta = {
+              "gate": "PB02A_ROWAN_INTRO_REAL_INPUT_PLAY",
+              "source_rom_sha256": "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16",
+              "input_mode": "real native DS key input through py-desmume",
+              "a_presses_after_intro_entry": 10,
+              "last_frame": frame,
+              "captures": captures,
+              "visual_review_required": True,
+              "next": "review screenshots and continue from exact reached intro/naming state",
+          }
+          (out / "pb02a-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          print(json.dumps(meta, indent=2))
+          PY
+
+      - name: Upload PB02A play screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02a-rowan-intro-play-proof
+          path: pb02a-play/
+          if-no-files-found: error
+          retention-days: 14
