@@ -1,0 +1,120 @@
+name: PT05A Species Identity Layer
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt05a-species-identity
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/build_ds_species_id_map.py"
+      - "tools/generate_ds_species_identity_tables.py"
+      - "upstream/LOCK.json"
+      - ".github/workflows/pt05a-species-identity.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  identity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Validate Python generators
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/build_ds_species_id_map.py \
+            tools/generate_ds_species_identity_tables.py
+
+      - name: Generate DS-safe 1025 species identity tables
+        shell: bash
+        run: |
+          python3 tools/generate_ds_species_identity_tables.py \
+            --output-dir build/pt05a
+          test -s build/pt05a/species_id_map.json
+          test -s build/pt05a/mercury_species_identity.h
+          test -s build/pt05a/mercury_species_identity.c
+          test -s build/pt05a/pt05a-species-identity-report.json
+
+      - name: Assert identity proof points and round trips
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("build/pt05a/pt05a-species-identity-report.json").read_text())
+          mapping = json.loads(Path("build/pt05a/species_id_map.json").read_text())
+
+          assert report["canonical_species_count"] == 1025
+          assert report["internal_id_ceiling"] == 1075
+          assert report["reserved_ids_map_to_natdex_zero"] is True
+          assert report["all_canonical_round_trips_pass"] is True
+
+          proof = report["proof_points"]
+          assert proof["arceus"] == {"national_dex": 493, "internal_species_id": 493}
+          assert proof["victini"] == {"national_dex": 494, "internal_species_id": 544}
+          assert proof["genesect"] == {"national_dex": 649, "internal_species_id": 699}
+          assert proof["pecharunt"] == {"national_dex": 1025, "internal_species_id": 1075}
+
+          sentinels = mapping["sentinels"]
+          assert sentinels["SPECIES_NONE"] == 0
+          assert sentinels["SPECIES_EGG"] == 494
+          assert sentinels["SPECIES_BAD_EGG"] == 495
+          assert mapping["legacy_reserved_internal_ids"] == [496, 543]
+
+          species = mapping["species"]
+          assert len(species) == 1025
+          assert len({row["internal_species_id"] for row in species}) == 1025
+          assert len({row["national_dex"] for row in species}) == 1025
+          PY
+
+      - name: Cross-check pinned HG-Engine IDs
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --cone
+          git -C vendor/hg-engine sparse-checkout set include/constants
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+          species_h=vendor/hg-engine/include/constants/species.h
+          grep -Eq '^#define SPECIES_ARCEUS[[:space:]]+493$' "$species_h"
+          grep -Eq '^#define SPECIES_EGG[[:space:]]+494$' "$species_h"
+          grep -Eq '^#define SPECIES_BAD_EGG[[:space:]]+495$' "$species_h"
+          grep -Eq '^#define SPECIES_496[[:space:]]+496$' "$species_h"
+          grep -Eq '^#define SPECIES_543[[:space:]]+543$' "$species_h"
+          grep -Eq '^#define SPECIES_VICTINI[[:space:]]+544$' "$species_h"
+          grep -Eq '^#define SPECIES_PECHARUNT[[:space:]]+1075$' "$species_h"
+
+      - name: Upload PT05A identity proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt05a-species-identity-proof
+          path: |
+            build/pt05a/species_id_map.json
+            build/pt05a/mercury_species_identity.h
+            build/pt05a/mercury_species_identity.c
+            build/pt05a/pt05a-species-identity-report.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: PT05A summary
+        shell: bash
+        run: |
+          {
+            echo "## PT05A Species Identity Layer"
+            echo
+            echo "- 1025 canonical National Dex entries validated"
+            echo "- Egg / Bad Egg remain internal IDs 494 / 495"
+            echo "- Legacy DS-reserved IDs 496-543 remain non-canonical"
+            echo "- Victini NatDex 494 maps to internal species ID 544"
+            echo "- Pecharunt NatDex 1025 maps to internal species ID 1075"
+            echo "- All 1025 NatDex <-> internal ID round trips pass"
+            echo "- Pinned HG-Engine constants match the Mercury DS mapping"
+            echo "- Next: decouple pokeplatinum Dex indexing from internal species indexing"
+          } >> "$GITHUB_STEP_SUMMARY"
