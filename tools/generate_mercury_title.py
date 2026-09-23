@@ -202,6 +202,32 @@ def write_jasc_palette_from_png(image_path: Path, palette_path: Path, color_coun
     palette_path.write_bytes(("\r\n".join(lines) + "\r\n").encode("ascii"))
 
 
+def pack_logo_with_blank_tile(path: Path):
+    # Platinum's logo map uses tile 0 as the empty tile outside rows 3..18.
+    # Preserve all 512 artwork tiles by packing them after a new blank tile 0.
+    src = Image.open(path)
+    if src.mode != "P" or src.size != (256, 128):
+        raise RuntimeError(f"{path} must be a 256x128 paletted PNG")
+
+    packed = Image.new("P", (256, 136), 0)
+    packed.putpalette(src.getpalette())
+
+    src_px = src.load()
+    dst_px = packed.load()
+
+    for tile in range(512):
+        sx = (tile % 32) * 8
+        sy = (tile // 32) * 8
+        dst_tile = tile + 1
+        dx = (dst_tile % 32) * 8
+        dy = (dst_tile // 32) * 8
+        for py in range(8):
+            for px in range(8):
+                dst_px[dx + px, dy + py] = src_px[sx + px, sy + py]
+
+    packed.save(path)
+
+
 def clear_last_tile(path: Path):
     # Reserve the final 8x8 tile as an empty tile for unused map cells while
     # preserving the artwork's natural tile 0 and row-major tile order.
@@ -246,27 +272,20 @@ def write_linear_nscr(path: Path, width_tiles: int, height_tiles: int, bitdepth:
 
 
 def build_mercury_tilemaps(gfx: Path):
-    # Keep Platinum's original logo.NSCR untouched. It is already the correct
-    # 256x128 logo mapping used by the vanilla title screen. Earlier custom
-    # remaps introduced screen-block ambiguity.
-    #
-    # For this proof, neutralize the decorative border layers completely so the
-    # Mercury logo layer can be judged by itself, without Platinum's border/
-    # blur maps covering or blending through it.
+    # Recreate Platinum's proven logo placement exactly, but point rows 3..18
+    # at tiles 1..512. Tile 0 is now a true blank tile, so the top/bottom
+    # areas no longer repeat the artwork's first 8x8 block.
     write_linear_nscr(
-        gfx / "top_screen_border.NSCR",
+        gfx / "logo.NSCR",
         32,
-        24,
-        4,
-        lambda x, y: 0,
+        32,
+        8,
+        lambda x, y: ((y - 3) * 32 + x + 1) if 3 <= y < 19 else 0,
     )
-    write_linear_nscr(
-        gfx / "top_screen_border_2.NSCR",
-        32,
-        32,
-        4,
-        lambda x, y: 0,
-    )
+
+    # Keep the decorative border layers neutralized for this proof.
+    write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 24, 4, lambda x, y: 0)
+    write_linear_nscr(gfx / "top_screen_border_2.NSCR", 32, 32, 4, lambda x, y: 0)
 
 
 def patch_title_runtime(source: Path):
@@ -354,7 +373,7 @@ def main():
     blank.putpalette(border_im.getpalette())
     blank.save(border, bits=4)
 
-    clear_last_tile(logo)
+    pack_logo_with_blank_tile(logo)
     write_jasc_palette_from_png(border, gfx/"top_screen_border.pal", 256)
     build_mercury_tilemaps(gfx)
     patch_title_runtime(source)
