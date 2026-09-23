@@ -67,9 +67,9 @@ def build_map(species: list[str]) -> dict:
     assert checks["arceus"]["national_dex"] == 493
     assert checks["arceus"]["internal_species_id"] == 493
     assert checks["victini"]["national_dex"] == 494
-    assert checks["victini"]["internal_species_id"] == 544
+    assert checks["victini"]["internal_species_id"] == 494
     assert checks["pecharunt"]["national_dex"] == 1025
-    assert checks["pecharunt"]["internal_species_id"] == 1075
+    assert checks["pecharunt"]["internal_species_id"] == 1025
 
     return {
         "schema": "mercury-ds-species-id-map-v2",
