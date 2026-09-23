@@ -1,0 +1,229 @@
+name: PT04E Volcanion Battle Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt04e-gen6-bulk-expansion
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/build_species_registry.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "tools/install_pt04e_volcanion_battle_harness.py"
+      - "tools/install_pt04c_runtime_harness.py"
+      - "tools/install_pt04c_summary_harness.py"
+      - "tools/install_pt04c_pc_harness.py"
+      - "tools/install_pt04c_battle_harness.py"
+      - "platinum-overlay/**"
+      - "tools/generate_mercury_title.py"
+      - "assets/title_screen/**"
+      - ".github/workflows/pt04e-gen6-volcanion-battle.yml"
+      - "upstream/LOCK.json"
+
+concurrency:
+  group: pt04e-volcanion-battle-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-venv python3-pip wget xz-utils             libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Checkout pinned HG-Engine donor
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set             /data/Species.c             /data/BaseExperienceTable.c             /data/IconPaletteTable.c             /data/HeightTable.c             /data/SpriteOffsets.c             /data/graphics/sprites/
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Register canonical species through Volcanion
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum             --through 721             --output vendor/pokeplatinum/generated/species.txt             --report pt04e-battle-registry.json
+
+      - name: Restore sealed Gen V resource batch
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 649             --gate PT04D_GEN5_PREREQUISITE_INSTALL             --report pt04e-battle-gen5-install.json
+          test "$(jq -r '.installed_species' pt04e-battle-gen5-install.json)" = "156"
+
+      - name: Install sealed Gen VI resource batch
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 650 --end-dex 721             --gate PT04E_GEN6_BATTLE_RESOURCE_INSTALL             --report pt04e-battle-gen6-install.json
+          test "$(jq -r '.installed_species' pt04e-battle-gen6-install.json)" = "72"
+
+      - name: Install proven PT04C battle harness chain
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_runtime_harness.py             vendor/pokeplatinum             --report pt04e-battle-base-party.json
+          python3 tools/install_pt04c_summary_harness.py             vendor/pokeplatinum             --report pt04e-battle-base-summary.json
+          python3 tools/install_pt04c_pc_harness.py             vendor/pokeplatinum             --report pt04e-battle-base-pc.json
+          python3 tools/install_pt04c_battle_harness.py             vendor/pokeplatinum             --report pt04e-battle-base-entry.json
+
+      - name: Convert battle harness to Volcanion 721
+        shell: bash
+        run: |
+          python3 tools/install_pt04e_volcanion_battle_harness.py             vendor/pokeplatinum             --report pt04e-volcanion-battle-harness.json
+          test "$(jq -r '.species_id' pt04e-volcanion-battle-harness.json)" = "721"
+          grep -q 'SPECIES_VOLCANION' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Generate sealed Mercury title resources
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt04e-battle-venv"
+          . "$RUNNER_TEMP/pt04e-battle-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure Volcanion battle build
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build Volcanion battle ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Run Volcanion battle proof in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pt04e-battle-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start PT04E Volcanion battle ROM")
+
+          targets = [240, 480, 720, 960, 1200, 1800, 2400, 3200, 4000]
+          current = 0
+          stopped_at = None
+          captures = []
+          try:
+              for target in targets:
+                  for _ in range(target - current):
+                      emu.cycle(False)
+                      current += 1
+                      if not emu.is_running():
+                          stopped_at = current
+                          break
+                  if stopped_at is not None:
+                      break
+
+                  image = emu.screenshot()
+                  path = out / f"pt04e-volcanion-battle-{target:04d}.png"
+                  image.save(path)
+                  colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
+                  unique = len(colors) if colors is not None else 256 * 384
+                  captures.append({
+                      "frame": target,
+                      "file": path.name,
+                      "unique_colors": unique,
+                      "blank_like": unique < 16,
+                  })
+          finally:
+              try:
+                  if emu.is_running():
+                      emu.screenshot().save(out / f"pt04e-volcanion-battle-last-{current:04d}.png")
+              finally:
+                  emu.destroy()
+
+          meta = {
+              "gate": "PT04E_GEN6_VOLCANION_BATTLE_RUNTIME",
+              "player_species": "SPECIES_VOLCANION",
+              "species_id": 721,
+              "level": 50,
+              "opponent": "SPECIES_BIDOOF",
+              "opponent_level": 5,
+              "last_completed_frame": current,
+              "stopped_at_frame": stopped_at,
+              "captures": captures,
+              "visual_review_required": True,
+          }
+          (out / "pt04e-volcanion-battle-meta.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+
+          if stopped_at is not None:
+              raise SystemExit(
+                  f"PT04E Volcanion battle harness stopped at frame {stopped_at}; proof preserved"
+              )
+          PY
+
+      - name: Upload PT04E Volcanion battle proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt04e-volcanion-battle-runtime-proof
+          path: |
+            pt04e-battle-registry.json
+            pt04e-battle-gen5-install.json
+            pt04e-battle-gen6-install.json
+            pt04e-battle-base-party.json
+            pt04e-battle-base-summary.json
+            pt04e-battle-base-pc.json
+            pt04e-battle-base-entry.json
+            pt04e-volcanion-battle-harness.json
+            runtime-preview/*.png
+            runtime-preview/pt04e-volcanion-battle-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PT04E Volcanion battle summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## PT04E Volcanion battle runtime"
+            echo
+            echo "- Player lead: Volcanion #721, Lv.50"
+            echo "- Opponent: native Bidoof Lv.5"
+            echo "- Native Encounter_NewVsSpeciesAtLevel battle path"
+            echo "- Visual proof must confirm Volcanion player-side sprite/name/HP and stable battle UI"
+          } >> "$GITHUB_STEP_SUMMARY"
