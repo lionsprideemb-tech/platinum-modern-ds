@@ -180,14 +180,17 @@ def install_binary_png(
             raise RuntimeError(f"{output_path} has wrong mode: {check.mode}, expected {expected_mode}")
 
 
-def clear_tile_zero(path: Path):
-    # Tile 0 is used as the transparent/empty tile by the replacement maps.
+def clear_last_tile(path: Path):
+    # Reserve the final 8x8 tile as an empty tile for unused map cells while
+    # preserving the artwork's natural tile 0 and row-major tile order.
     im = Image.open(path)
     if im.mode != "P":
         raise RuntimeError(f"{path} must remain a paletted PNG")
     px = im.load()
-    for y in range(8):
-        for x in range(8):
+    x0 = im.width - 8
+    y0 = im.height - 8
+    for y in range(y0, im.height):
+        for x in range(x0, im.width):
             px[x, y] = 0
     im.save(path)
 
@@ -221,21 +224,24 @@ def write_linear_nscr(path: Path, width_tiles: int, height_tiles: int, bitdepth:
 
 
 def build_mercury_tilemaps(gfx: Path):
-    # BG2 is 512x256. Put the 256x128 art in the upper-left 32x16 tile area
-    # and leave the rest transparent. This removes Platinum's original
-    # hand-authored logo tile remapping, which scrambled replacement artwork.
+    # Platinum's original logo.NSCR is a 256x256 (32x32 tile) map even though
+    # the backing BG is configured larger for effects. Match that native map
+    # shape exactly: the Mercury art fills rows 0..15 and the rest uses a
+    # reserved transparent tile. Using a 512x256 map here causes DS screen-block
+    # addressing to scramble the artwork.
     write_linear_nscr(
         gfx / "logo.NSCR",
-        64,
+        32,
         32,
         8,
-        lambda x, y: (y * 32 + x) if (x < 32 and y < 16) else 0,
+        lambda x, y: (y * 32 + x) if y < 16 else 511,
     )
 
-    # BG3/BG1 are 256x256. The custom 256x64 footer occupies the visible
-    # bottom third of the DS screen (rows 16..23); unused rows map to tile 0.
-    border_map = lambda x, y: ((y - 16) * 32 + x) if 16 <= y < 24 else 0
-    write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 32, 4, border_map)
+    # Match Platinum's native border map dimensions: 256x192 for the base map
+    # and 256x256 for the alternate/blur map. The custom footer occupies
+    # visible rows 16..23.
+    border_map = lambda x, y: ((y - 16) * 32 + x) if 16 <= y < 24 else 255
+    write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 24, 4, border_map)
     write_linear_nscr(gfx / "top_screen_border_2.NSCR", 32, 32, 4, border_map)
 
 
@@ -311,8 +317,8 @@ def main():
         (256, 64),
         "P",
     )
-    clear_tile_zero(logo)
-    clear_tile_zero(border)
+    clear_last_tile(logo)
+    clear_last_tile(border)
     build_mercury_tilemaps(gfx)
     patch_title_runtime(source)
 
