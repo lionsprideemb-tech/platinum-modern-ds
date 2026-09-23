@@ -12,7 +12,7 @@ PT04C proves that a post-Gen-IV species at the first expanded boundary slot, **S
 - Run #12 — native Summary
 - Run #13 — native PC Storage
 - Run #28 — native Battle
-- Run #31 — native Save → system reset → native reload
+- Run #33 — native Save → system reset → native reload
 
 Earlier gates are sealed and are not to be repeated unless a future regression directly implicates them.
 
@@ -20,16 +20,16 @@ Earlier gates are sealed and are not to be repeated unless a future regression d
 
 GitHub Actions workflow run:
 
-- Run number: **31**
-- Run ID: **35890110766**
-- Head commit: **acaa4d22fc49a4b526a36ece93b36e20f86f5119**
+- Run number: **33**
+- Run ID: **35890163232**
+- Head commit: **f8ebba9a1937c043e15b6e09aafa3cb9ba943ddf**
 - Conclusion: **success**
 
 Artifact:
 
 - Name: `pt04c-victini-native-save-reload-proof`
-- Artifact ID: **10764014486**
-- SHA-256: `3108e3bd45c130f3864e0eb0c40afed71fd8346827a5a4e4072f4ba3d1598046`
+- Artifact ID: **10764533332**
+- SHA-256: `f3d0af7acfed3bf9dd1d0077170bc06c24abb1a0029bf0dd6280bef15b227eb9`
 
 ## Native persistence path proven
 
@@ -58,6 +58,8 @@ Captured DeSmuME frames were manually reviewed.
 - Frame 3600: the same reloaded Party state remains stable with **VICTINI Lv.50, 174/174 HP**.
 
 This is a real persistence proof, not an in-memory copy test: the system reset routes through the native saved-game loader before the post-reload assertions execute.
+
+The clean Run #33 frame 1800 and frame 3600 captures were compared against the independently successful Run #32 captures and are byte-for-byte identical, providing a second consistency check on the visual result.
 
 ## PT04C conclusion
 
