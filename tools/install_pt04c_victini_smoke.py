@@ -112,8 +112,8 @@ def patch_victini_data(template: dict) -> dict:
         "category": "Victory Pokémon",
         "entry_text": [
             "A post-Gen-IV species used to prove\n",
-            "Mercury DS can expand Platinum's\n",
-            "native species registry safely.",
+            "Mercury DS can safely expand\n",
+            "the native species registry.",
         ],
     }
     for lang in ("en", "fr", "de", "it", "es", "jp"):
