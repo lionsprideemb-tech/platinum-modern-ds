@@ -207,6 +207,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import json
+          from desmume.controls import Keys, keymask
           from desmume.emulator import DeSmuME
 
           rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
@@ -218,43 +219,63 @@ jobs:
           if not emu.is_running():
               raise SystemExit("DeSmuME did not start PT04C Summary harness ROM")
 
-          # Party/Pokedex creation is the already-sealed Run #8 path. This stage
-          # changes only the final child application to Platinum's native Summary
-          # screen for party slot 0.
-          captures = [600, 1200, 1800, 2400, 3200, 4800]
-          current = 0
-          meta = []
+          frame = 0
+          captures = []
+
+          def advance(count):
+              global frame
+              for _ in range(count):
+                  emu.cycle(False)
+              frame += count
+              if not emu.is_running():
+                  raise SystemExit(f"PT04C Summary harness stopped at frame {frame}")
+
+          def capture(label):
+              image = emu.screenshot()
+              path = out / f"pt04c-summary-{label}.png"
+              image.save(path)
+              colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
+              unique = len(colors) if colors is not None else 256 * 384
+              captures.append({
+                  "label": label,
+                  "frame": frame,
+                  "file": path.name,
+                  "unique_colors": unique,
+                  "blank_like": unique < 16,
+              })
+
+          def press(key, hold=3, settle=24):
+              emu.input.keypad_add_key(keymask(key))
+              advance(hold)
+              emu.input.keypad_rm_key(keymask(key))
+              advance(settle)
+
           try:
-              for target in captures:
-                  for _ in range(target - current):
-                      emu.cycle(False)
-                  current = target
-                  if not emu.is_running():
-                      raise SystemExit(f"PT04C Summary harness stopped before frame {target}")
-                  image = emu.screenshot()
-                  path = out / f"pt04c-summary-{target}.png"
-                  image.save(path)
-                  colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
-                  unique = len(colors) if colors is not None else 256 * 384
-                  meta.append({
-                      "frame": target,
-                      "file": path.name,
-                      "unique_colors": unique,
-                      "blank_like": unique < 16,
-                  })
+              # Proven Run #9 entry state: native Info page for Victini.
+              advance(600)
+              capture("info")
+
+              # Info -> Memo -> Skills -> Condition -> Battle Moves.
+              for _ in range(4):
+                  press(Keys.KEY_RIGHT)
+
+              advance(120)
+              capture("battle-moves")
+              advance(600)
+              capture("battle-moves-stable")
           finally:
               emu.destroy()
 
-          nonblank = [item for item in meta if not item["blank_like"]]
-          if len(nonblank) < 2:
-              raise SystemExit(f"PT04C Summary harness did not yield stable nonblank captures: {meta}")
+          if any(item["blank_like"] for item in captures):
+              raise SystemExit(f"PT04C Summary navigation produced a blank capture: {captures}")
 
           (out / "pt04c-summary-meta.json").write_text(json.dumps({
               "gate": "PT04C_VICTINI_NATIVE_SUMMARY_RUNTIME",
               "prerequisite": "PT04C native party checkpoint Run #8",
               "species_494": "SPECIES_VICTINI",
-              "runtime_process": "survived_through_frame_4800",
-              "captures": meta,
+              "runtime_process": f"survived_through_frame_{frame}",
+              "captures": captures,
+              "automated_navigation": "Info -> Battle Moves using four native RIGHT presses",
               "visual_review_required": True,
               "next_gate": "PT04C_VICTINI_PC_STORAGE_RUNTIME",
           }, indent=2) + "\n")
@@ -286,6 +307,6 @@ jobs:
             echo "- Native archive expansion checks retained"
             echo "- CI-only harness still creates Victini through Pokemon_GiveMonFromScript"
             echo "- Final child app is now Platinum's native Summary screen for party slot 0"
-            echo "- DeSmuME process survives through Summary-proof frame 4800"
+            echo "- DeSmuME captures native Info and Battle Moves tabs"
             echo "- Visual Summary/sprite/moves review is required before PC storage work"
           } >> "$GITHUB_STEP_SUMMARY"
