@@ -78,10 +78,34 @@ def parse_base_exp(path: Path) -> dict[str, int]:
     return {
         species: int(value)
         for species, value in re.findall(
-            r"\[(SPECIES_[A-Z0-9_]+)\]\s*=\s*(\d+)\s*,",
+            r"\[\s*(SPECIES_[A-Z0-9_]+)\s*\]\s*=\s*(\d+)\s*,",
             text,
         )
     }
+
+
+def load_generated_constants(path: Path) -> set[str]:
+    if not path.is_file():
+        raise SystemExit(f"missing Platinum generated constants file: {path}")
+    values = set()
+    for raw in path.read_text().splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        values.add(line.split("=", 1)[0].strip())
+    return values
+
+
+def translated_growth(name: str) -> str:
+    if name.startswith("GROWTH_"):
+        return "EXP_RATE_" + name.removeprefix("GROWTH_")
+    return name
+
+
+def translated_body_color(name: str) -> str:
+    if name.startswith("BODY_COLOR_"):
+        return "MON_COLOR_" + name.removeprefix("BODY_COLOR_")
+    return name
 
 
 def donor_dirname(species_const: str) -> str:
@@ -185,6 +209,15 @@ def main() -> None:
     species_text = species_c.read_text()
     base_exp = parse_base_exp(base_exp_c)
 
+    platinum_constants = {
+        "types": load_generated_constants(pt / "generated/pokemon_types.txt"),
+        "abilities": load_generated_constants(pt / "generated/abilities.txt"),
+        "held_items": load_generated_constants(pt / "generated/items.txt"),
+        "growth_rates": load_generated_constants(pt / "generated/exp_rates.txt"),
+        "egg_groups": load_generated_constants(pt / "generated/egg_groups.txt"),
+        "body_colors": load_generated_constants(pt / "generated/pokemon_colors.txt"),
+    }
+
     parsed = []
     missing_entries = []
     missing_assets = []
@@ -240,6 +273,25 @@ def main() -> None:
             "donor_assets": asset_state,
         })
 
+    compatibility = {
+        "unsupported_types": sorted(donor_types - platinum_constants["types"]),
+        "unsupported_abilities": sorted(donor_abilities - platinum_constants["abilities"]),
+        "unsupported_held_items": sorted(donor_items - platinum_constants["held_items"]),
+        "unsupported_growth_rates_after_translation": sorted(
+            {
+                translated_growth(value)
+                for value in donor_growth
+                if translated_growth(value) not in platinum_constants["growth_rates"]
+            }
+        ),
+        "unsupported_egg_groups": sorted(donor_egg_groups - platinum_constants["egg_groups"]),
+        "translation_rules": {
+            "growth_rate": "GROWTH_X -> EXP_RATE_X",
+            "body_color": "BODY_COLOR_X -> MON_COLOR_X",
+            "species_ids": "map by canonical species constant/National Dex, never HG numeric ID",
+        },
+    }
+
     report = {
         "gate": "PT04D_GEN5_DONOR_AUDIT",
         "range": [args.start_dex, args.end_dex],
@@ -255,6 +307,7 @@ def main() -> None:
             "egg_groups": sorted(donor_egg_groups),
         },
         "base_exp_over_255": exp_overflow,
+        "compatibility": compatibility,
         "proof_points": {
             "first": parsed[0] if parsed else None,
             "last": parsed[-1] if parsed else None,
@@ -272,6 +325,9 @@ def main() -> None:
         "missing_entries": len(missing_entries),
         "missing_required_assets": len(missing_assets),
         "base_exp_over_255": len(exp_overflow),
+        "unsupported_types": len(compatibility["unsupported_types"]),
+        "unsupported_abilities": len(compatibility["unsupported_abilities"]),
+        "unsupported_held_items": len(compatibility["unsupported_held_items"]),
         "status": report["status"],
     }, indent=2))
 
