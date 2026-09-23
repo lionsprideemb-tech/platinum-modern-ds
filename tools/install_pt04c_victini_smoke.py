@@ -163,6 +163,9 @@ def main() -> None:
     shutil.copy2(donor_front, dest / "male_front.png")
     shutil.copy2(donor_back, dest / "male_back.png")
     shutil.copy2(donor_icon, dest / "icon.png")
+    # The footprint archive requires a member even for footprint.has == False.
+    # Use the native NONE entry until Victini's footprint art is imported.
+    shutil.copy2(pt / "res/pokemon/none/footprint.png", dest / "footprint.png")
 
     palette = read_png_palette(donor_front)
     write_jasc_palette(dest / "normal.pal", palette)
@@ -189,6 +192,7 @@ def main() -> None:
         "poke_icon_files += files('icon.png')\n\n"
         "pokegra_files += files('male_back.png')\n"
         "pokegra_files += files('male_front.png')\n"
+        "\npokefoot_files += files('footprint.png')\n"
     )
 
     report = {
@@ -200,6 +204,7 @@ def main() -> None:
         "back_sprite_bytes": (dest / "male_back.png").stat().st_size,
         "icon_bytes": (dest / "icon.png").stat().st_size,
         "temporary_pt04_only": {
+            "footprint": "native NONE entry with footprint.has false until authentic art import",
             "base_exp_reward": "255 until PT05 widens the field for the intended value 300",
             "ability": "ABILITY_SYNCHRONIZE until PT05 Victory Star import",
             "learnset": "Gen-IV-compatible smoke-test subset until PT05 move expansion",
