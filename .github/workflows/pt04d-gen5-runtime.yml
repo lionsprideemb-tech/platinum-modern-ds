@@ -1,0 +1,237 @@
+name: PT04D Gen V Save Reload Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt04d-bulk-expansion
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/build_species_registry.py"
+      - "tools/audit_pt04d_species_batch.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "tools/install_pt04d_gen5_runtime_harness.py"
+      - "tools/install_pt04c_runtime_harness.py"
+      - "tools/install_pt04c_summary_harness.py"
+      - "tools/install_pt04c_pc_harness.py"
+      - "tools/install_pt04c_battle_harness.py"
+      - "tools/install_pt04c_save_reload_harness.py"
+      - "platinum-overlay/**"
+      - "tools/generate_mercury_title.py"
+      - "assets/title_screen/**"
+      - ".github/workflows/pt04d-gen5-runtime.yml"
+      - "upstream/LOCK.json"
+
+concurrency:
+  group: pt04d-gen5-runtime-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-venv python3-pip wget xz-utils             libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Checkout pinned HG-Engine Gen V donor
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set             /data/Species.c             /data/BaseExperienceTable.c             /data/IconPaletteTable.c             /data/HeightTable.c             /data/SpriteOffsets.c             /data/graphics/sprites/
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Register canonical species through Genesect
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum             --through 649             --output vendor/pokeplatinum/generated/species.txt             --report pt04d-runtime-registry.json
+          test "$(sed -n '495p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_VICTINI"
+          test "$(sed -n '650p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_GENESECT"
+
+      - name: Install sealed Gen V resource batch
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 649             --report pt04d-runtime-gen5-install.json
+          test "$(jq -r '.installed_species' pt04d-runtime-gen5-install.json)" = "156"
+
+      - name: Install proven PT04C native harness base
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_runtime_harness.py             vendor/pokeplatinum             --report pt04d-base-party-harness.json
+          python3 tools/install_pt04c_summary_harness.py             vendor/pokeplatinum             --report pt04d-base-summary-harness.json
+          python3 tools/install_pt04c_pc_harness.py             vendor/pokeplatinum             --report pt04d-base-pc-harness.json
+          python3 tools/install_pt04c_battle_harness.py             vendor/pokeplatinum             --report pt04d-base-battle-harness.json
+          python3 tools/install_pt04c_save_reload_harness.py             vendor/pokeplatinum             --report pt04d-base-save-reload-harness.json
+
+      - name: Upgrade harness to Gen V upper-boundary party
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_gen5_runtime_harness.py             vendor/pokeplatinum             --report pt04d-gen5-runtime-harness.json
+          test "$(jq -r '.primary_boundary.species_id' pt04d-gen5-runtime-harness.json)" = "649"
+          grep -q 'SPECIES_GENESECT' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'SPECIES_MANDIBUZZ' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'Party_GetCurrentCount(reloadedParty) == 6' vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Generate sealed Mercury title resources
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt04d-runtime-venv"
+          . "$RUNNER_TEMP/pt04d-runtime-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure Gen V runtime build
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build Gen V runtime ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Run Genesect 649 save reload proof in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pt04d-runtime-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start PT04D Gen V runtime ROM")
+
+          current = 0
+          stopped_at = None
+          captures = []
+          targets = list(range(120, 3601, 120)) + [4200, 4800]
+          try:
+              for target in targets:
+                  for _ in range(target - current):
+                      emu.cycle(False)
+                      current += 1
+                      if not emu.is_running():
+                          stopped_at = current
+                          break
+                  if stopped_at is not None:
+                      break
+
+                  image = emu.screenshot()
+                  path = out / f"pt04d-gen5-save-reload-{target:04d}.png"
+                  image.save(path)
+                  colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
+                  unique = len(colors) if colors is not None else 256 * 384
+                  captures.append({
+                      "frame": target,
+                      "file": path.name,
+                      "unique_colors": unique,
+                      "blank_like": unique < 16,
+                  })
+          finally:
+              try:
+                  if emu.is_running():
+                      image = emu.screenshot()
+                      image.save(out / f"pt04d-gen5-save-reload-last-{current:04d}.png")
+              finally:
+                  emu.destroy()
+
+          meta = {
+              "gate": "PT04D_GEN5_SAVE_RELOAD_RUNTIME",
+              "primary_boundary": "SPECIES_GENESECT",
+              "species_id": 649,
+              "party_size": 6,
+              "representatives": [
+                  "SPECIES_GENESECT",
+                  "SPECIES_VICTINI",
+                  "SPECIES_SNIVY",
+                  "SPECIES_COTTONEE",
+                  "SPECIES_DEERLING",
+                  "SPECIES_MANDIBUZZ",
+              ],
+              "last_completed_frame": current,
+              "stopped_at_frame": stopped_at,
+              "captures": captures,
+              "visual_review_required": True,
+          }
+          (out / "pt04d-gen5-save-reload-meta.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+
+          if stopped_at is not None:
+              raise SystemExit(
+                  f"PT04D Gen V save/reload harness stopped at frame {stopped_at}; proof preserved"
+              )
+          PY
+
+      - name: Upload PT04D Gen V runtime proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt04d-gen5-save-reload-runtime-proof
+          path: |
+            pt04d-runtime-registry.json
+            pt04d-runtime-gen5-install.json
+            pt04d-base-party-harness.json
+            pt04d-base-summary-harness.json
+            pt04d-base-pc-harness.json
+            pt04d-base-battle-harness.json
+            pt04d-base-save-reload-harness.json
+            pt04d-gen5-runtime-harness.json
+            runtime-preview/*.png
+            runtime-preview/pt04d-gen5-save-reload-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PT04D runtime summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## PT04D Gen V save/reload runtime"
+            echo
+            echo "- Genesect #649 is party slot 0 and the persistence boundary"
+            echo "- Six representative Gen V species are created through native gift-mon APIs"
+            echo "- Native save/reset/load path is inherited from the sealed PT04C harness"
+            echo "- Post-reload assertions verify party size, Genesect ID/level, representative species, and selected Pokedex flags"
+            echo "- Native Party UI is reopened for visual review"
+          } >> "$GITHUB_STEP_SUMMARY"
