@@ -180,6 +180,27 @@ def install_binary_png(
             raise RuntimeError(f"{output_path} has wrong mode: {check.mode}, expected {expected_mode}")
 
 
+def write_jasc_palette_from_png(image_path: Path, palette_path: Path, color_count: int = 256):
+    im = Image.open(image_path)
+    if im.mode != "P":
+        raise RuntimeError(f"{image_path} must remain a paletted PNG")
+    pal = im.getpalette()
+    if pal is None:
+        raise RuntimeError(f"{image_path} does not contain a palette")
+
+    colors = []
+    for i in range(color_count):
+        base = i * 3
+        if base + 2 < len(pal):
+            colors.append(tuple(pal[base:base + 3]))
+        else:
+            colors.append((0, 0, 0))
+
+    lines = ["JASC-PAL", "0100", str(color_count)]
+    lines.extend(f"{r} {g} {b}" for r, g, b in colors)
+    palette_path.write_text("\n".join(lines) + "\n")
+
+
 def clear_last_tile(path: Path):
     # Reserve the final 8x8 tile as an empty tile for unused map cells while
     # preserving the artwork's natural tile 0 and row-major tile order.
@@ -281,6 +302,53 @@ def patch_title_runtime(source: Path):
         raise RuntimeError("could not locate Platinum title idle loop")
     text=text.replace(motion_old, motion_new, 1)
 
+    # The Mercury art/map is genuinely 256 pixels wide. Match the logo BG's
+    # hardware screen size to that native width instead of Platinum's 512-wide
+    # buffer, removing the remaining screen-block ambiguity for replacement art.
+    logo_bg_old = (
+        "    BgTemplate bgSub2 = {\n"
+        "        .x = 0,\n"
+        "        .y = 0,\n"
+        "        .bufferSize = 0x1000,\n"
+        "        .baseTile = 0,\n"
+        "        .screenSize = BG_SCREEN_SIZE_512x256,\n"
+        "        .colorMode = GX_BG_COLORMODE_256,"
+    )
+    logo_bg_new = (
+        "    BgTemplate bgSub2 = {\n"
+        "        .x = 0,\n"
+        "        .y = 0,\n"
+        "        .bufferSize = 0x800,\n"
+        "        .baseTile = 0,\n"
+        "        .screenSize = BG_SCREEN_SIZE_256x256,\n"
+        "        .colorMode = GX_BG_COLORMODE_256,"
+    )
+    if logo_bg_old not in text:
+        raise RuntimeError("could not locate Platinum logo BG template")
+    text = text.replace(logo_bg_old, logo_bg_new, 1)
+
+    blur_bg_old = (
+        "    BgTemplate template = {\n"
+        "        .x = 0,\n"
+        "        .y = 0,\n"
+        "        .bufferSize = 0x1000,\n"
+        "        .baseTile = 0,\n"
+        "        .screenSize = BG_SCREEN_SIZE_512x256,\n"
+        "        .colorMode = GX_BG_COLORMODE_256,"
+    )
+    blur_bg_new = (
+        "    BgTemplate template = {\n"
+        "        .x = 0,\n"
+        "        .y = 0,\n"
+        "        .bufferSize = 0x800,\n"
+        "        .baseTile = 0,\n"
+        "        .screenSize = BG_SCREEN_SIZE_256x256,\n"
+        "        .colorMode = GX_BG_COLORMODE_256,"
+    )
+    if blur_bg_old not in text:
+        raise RuntimeError("could not locate Platinum blur BG template")
+    text = text.replace(blur_bg_old, blur_bg_new, 1)
+
     source.write_text(text)
 
 def main():
@@ -319,6 +387,7 @@ def main():
     )
     clear_last_tile(logo)
     clear_last_tile(border)
+    write_jasc_palette_from_png(border, gfx/"top_screen_border.pal", 256)
     build_mercury_tilemaps(gfx)
     patch_title_runtime(source)
 
