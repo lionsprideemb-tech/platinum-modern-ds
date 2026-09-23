@@ -1,0 +1,78 @@
+name: PT05A Gen V Donor Coverage
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt05a-gen5-bulk
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/audit_pt05a_gen5_donors.py"
+      - ".github/workflows/pt05a-gen5-donor-coverage.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-gen5-donors:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned HG-Engine donor data
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          cat > vendor/hg-engine/.git/info/sparse-checkout <<'EOF'
+          /data/graphics/sprites/
+          /data/HeightTable.c
+          /data/HiddenAbilityTable.c
+          /data/IconPaletteTable.c
+          /data/BaseExperienceTable.c
+          /data/BabyMons.c
+          /data/PokedexSort.c
+          /data/SpeciesToOWFormFemale.c
+          /data/FollowerProperties.c
+          /data/Species.c
+          /data/SpriteOffsets.c
+          /data/learnsets/learnsets.json
+          EOF
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Audit Gen V donor coverage
+        shell: bash
+        run: |
+          python3 tools/audit_pt05a_gen5_donors.py             vendor/hg-engine             --registry data/canonical_species_1025.txt             --report pt05a-gen5-donor-coverage.json
+
+          jq -e '.expected_species == 156' pt05a-gen5-donor-coverage.json
+          jq -e '.battle_graphics.complete == 156' pt05a-gen5-donor-coverage.json
+          jq -e '.battle_graphics.missing == 0' pt05a-gen5-donor-coverage.json
+          jq -e '.all_support_table_tokens_present == true' pt05a-gen5-donor-coverage.json
+          jq -e '.all_large_donor_files_present == true' pt05a-gen5-donor-coverage.json
+
+      - name: Upload PT05A Gen V donor coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt05a-gen5-donor-coverage
+          path: pt05a-gen5-donor-coverage.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PT05A summary
+        shell: bash
+        run: |
+          {
+            echo "## PT05A Gen V donor coverage"
+            echo
+            echo "- Audited National Dex #494-649 (Victini through Genesect)"
+            echo "- Required usable front/back battle sprites + icon for all 156 species"
+            echo "- Female-only donor fallback is handled explicitly"
+            echo "- Required HG-Engine support-table tokens are checked for every Gen V species"
+            echo "- Large species / learnset / sprite-offset donor sources must be present"
+            echo "- Next gate: compatibility mapping + bulk importer"
+          } >> "$GITHUB_STEP_SUMMARY"
