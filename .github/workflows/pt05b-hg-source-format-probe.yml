@@ -1,0 +1,49 @@
+name: PT05B HG Source Format Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt05b-gen5-compat
+    paths:
+      - "tools/probe_pt05b_hg_source_formats.py"
+      - ".github/workflows/pt05b-hg-source-format-probe.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned HG-Engine donor sources
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          cat > vendor/hg-engine/.git/info/sparse-checkout <<'EOF'
+          /data/Species.c
+          /data/SpriteOffsets.c
+          /data/learnsets/learnsets.json
+          EOF
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Probe donor source formats
+        shell: bash
+        run: |
+          python3 tools/probe_pt05b_hg_source_formats.py             vendor/hg-engine             --report pt05b-hg-source-format-probe.json
+          test -s pt05b-hg-source-format-probe.json
+
+      - name: Upload PT05B source format probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt05b-hg-source-format-probe
+          path: pt05b-hg-source-format-probe.json
+          if-no-files-found: error
+          retention-days: 14
