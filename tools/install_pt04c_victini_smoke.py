@@ -58,7 +58,9 @@ def patch_victini_data(template: dict) -> dict:
     }
     data["types"] = ["TYPE_PSYCHIC", "TYPE_FIRE"]
     data["catch_rate"] = 3
-    data["base_exp_reward"] = 300
+    # Platinum stores this field in one byte. PT05 must widen the data and
+    # runtime readers before importing the intended modern reward of 300.
+    data["base_exp_reward"] = 255
     data["ev_yields"] = {
         "hp": 3,
         "attack": 0,
@@ -198,6 +200,7 @@ def main() -> None:
         "back_sprite_bytes": (dest / "male_back.png").stat().st_size,
         "icon_bytes": (dest / "icon.png").stat().st_size,
         "temporary_pt04_only": {
+            "base_exp_reward": "255 until PT05 widens the field for the intended value 300",
             "ability": "ABILITY_SYNCHRONIZE until PT05 Victory Star import",
             "learnset": "Gen-IV-compatible smoke-test subset until PT05 move expansion",
             "cry": "native Mew cry placeholder until modern cry import",
