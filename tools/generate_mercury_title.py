@@ -164,6 +164,35 @@ def tint_border(path: Path):
     im.save(path, bits=4)
 
 
+def build_mercury_bottom_gradient(path: Path):
+    # Platinum's lower-title background is a tiny 64x8 tile strip whose
+    # tilemap repeats tiles 1..7 as horizontal bands. Rebuild those seven tiles
+    # as a restrained indigo/violet gradient so the animated 3D Giratina sits
+    # in the same visual world as the Mercury top screen.
+    im = Image.new("P", (64, 8), 0)
+    palette = [
+        0, 0, 0,
+        29, 24, 76,
+        24, 19, 64,
+        20, 15, 54,
+        16, 12, 45,
+        13, 9, 37,
+        10, 7, 30,
+        7, 5, 23,
+    ]
+    palette += [0] * (768 - len(palette))
+    im.putpalette(palette)
+
+    px = im.load()
+    for tile in range(8):
+        palette_index = min(tile, 7)
+        for y in range(8):
+            for x in range(tile * 8, tile * 8 + 8):
+                px[x, y] = palette_index
+
+    im.save(path, bits=4)
+
+
 def install_binary_png(
     source_path: Path,
     output_path: Path,
@@ -357,6 +386,35 @@ def patch_title_runtime(source: Path):
         raise RuntimeError("could not locate Platinum final title blend")
     text = text.replace(blend_old, "    G2S_BlendNone();", 1)
 
+    # Mercury lower-screen color grade: preserve Platinum's animated 3D
+    # Giratina, but cool the lighting toward silver/violet so it visually
+    # belongs with the custom top screen instead of reading as a separate red/
+    # yellow composition.
+    light0_old = "    NNS_G3dGlbLightColor(GX_LIGHTID_0, COLOR_WHITE);"
+    light0_new = "    NNS_G3dGlbLightColor(GX_LIGHTID_0, LIGHT_COLOR(26, 28, 31));"
+    if light0_old not in text:
+        raise RuntimeError("could not locate Platinum primary title light")
+    text = text.replace(light0_old, light0_new, 1)
+
+    dynamic_light_old = (
+        "    NNS_G3dGlbLightColor(GX_LIGHTID_1, LIGHT_COLOR(titleScreen->light1Brightness, "
+        "titleScreen->light1Brightness, titleScreen->light1Brightness));"
+    )
+    dynamic_light_new = (
+        "    NNS_G3dGlbLightColor(GX_LIGHTID_1, "
+        "LIGHT_COLOR((titleScreen->light1Brightness * 3) / 4, "
+        "(titleScreen->light1Brightness * 2) / 3, titleScreen->light1Brightness));"
+    )
+    if dynamic_light_old not in text:
+        raise RuntimeError("could not locate Platinum animated secondary light")
+    text = text.replace(dynamic_light_old, dynamic_light_new, 1)
+
+    main_light_old = "        NNS_G3dGlbLightColor(GX_LIGHTID_1, COLOR_WHITE);"
+    main_light_new = "        NNS_G3dGlbLightColor(GX_LIGHTID_1, LIGHT_COLOR(23, 20, 31));"
+    if main_light_old not in text:
+        raise RuntimeError("could not locate Platinum main-state secondary light")
+    text = text.replace(main_light_old, main_light_new, 1)
+
     source.write_text(text)
 
 def main():
@@ -366,6 +424,7 @@ def main():
     gfx=root/"res/graphics/title_screen"
     logo=gfx/"logo.png"
     border=gfx/"top_screen_border.png"
+    bottom_border=gfx/"bottom_screen_border.png"
     source=root/"src/applications/title_screen.c"
 
     project_root=Path(__file__).resolve().parent.parent
@@ -373,7 +432,7 @@ def main():
     logo_asset=asset_dir/"mercury_logo_top_256x128.png"
     border_asset=asset_dir/"mercury_top_footer_256x64.png"
 
-    for p in (logo,border,source,logo_asset,border_asset):
+    for p in (logo,border,bottom_border,source,logo_asset,border_asset):
         if not p.exists():
             raise SystemExit(f"missing required Mercury title file: {p}")
 
@@ -394,6 +453,7 @@ def main():
         "P",
     )
 
+    build_mercury_bottom_gradient(bottom_border)
     pack_logo_with_blank_tile(logo)
     pack_border_with_blank_tile(border)
     write_jasc_palette_from_png(border, gfx/"top_screen_border.pal", 256)
@@ -403,6 +463,7 @@ def main():
     print("Mercury Redux title assets generated")
     print(f"logo: {logo}")
     print(f"border: {border}")
+    print(f"bottom border: {bottom_border}")
     print(f"source: {source}")
 
 
