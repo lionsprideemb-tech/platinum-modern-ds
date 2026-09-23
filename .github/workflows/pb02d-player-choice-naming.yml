@@ -1,0 +1,114 @@
+name: PB02D Player Choice And Naming Screen
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02d-player-choice-naming.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download sealed PB01 candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact
+          gh api -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01-artifact.zip
+          unzip -q pb01-artifact.zip -d pb01-artifact
+          test "$(sha256sum pb01-artifact/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02d-venv"
+          . "$RUNNER_TEMP/pb02d-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Play to player naming screen
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02d-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          out=Path("pb02d-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"emulator stopped at {frame}")
+
+          def pulse(key, held=12, settle=260):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def touch(x,y,held=30,settle=600):
+              emu.input.touch_set_pos(x,y); run(held); emu.input.touch_release(); run(settle)
+
+          def cap(label):
+              im=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              im.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          try:
+              run(16000)
+              pulse(Keys.KEY_START,20,700)
+              for _ in range(6): pulse(Keys.KEY_A,12,300)
+              pulse(Keys.KEY_DOWN,12,120); pulse(Keys.KEY_DOWN,12,120); pulse(Keys.KEY_A,12,420)
+              pulse(Keys.KEY_A,12,320); pulse(Keys.KEY_A,12,320)
+              touch(128,94,30,600)
+              for _ in range(8): pulse(Keys.KEY_A,12,360)
+              cap("gender-choice-arrived")
+
+              # Default Platinum focus is the boy; confirm with native A.
+              pulse(Keys.KEY_A,12,650); cap("boy-choice-confirmed")
+              pulse(Keys.KEY_A,12,650); cap("boy-confirmation-dialogue-advanced")
+              pulse(Keys.KEY_A,12,900); cap("player-naming-screen")
+              run(600); cap("player-naming-screen-stable")
+          finally:
+              emu.destroy()
+
+          (out/"pb02d-meta.json").write_text(json.dumps({
+              "gate":"PB02D_PLAYER_CHOICE_NAMING_SCREEN",
+              "selected_player":"boy/default",
+              "last_frame":frame,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          PY
+
+      - name: Upload PB02D screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02d-player-choice-naming-proof
+          path: pb02d-play/
+          if-no-files-found: warn
+          retention-days: 14
