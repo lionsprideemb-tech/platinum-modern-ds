@@ -43,7 +43,8 @@ def read_png_palette(path: Path) -> list[tuple[int, int, int]]:
 def write_jasc_palette(path: Path, colors: list[tuple[int, int, int]]) -> None:
     lines = ["JASC-PAL", "0100", "16"]
     lines += [f"{r} {g} {b}" for r, g, b in colors[:16]]
-    path.write_text("\n".join(lines) + "\n")
+    # nitrogfx's JASC reader requires DOS line endings even on Linux.
+    path.write_bytes(("\r\n".join(lines) + "\r\n").encode("ascii"))
 
 
 def patch_victini_data(template: dict) -> dict:
@@ -151,7 +152,9 @@ def main() -> None:
     donor_front = donor / "male/front.png"
     donor_back = donor / "male/back.png"
     donor_icon = donor / "icon.png"
-    for path in (donor_front, donor_back, donor_icon):
+    donor_front_key = donor / "male/front.png.key"
+    donor_back_key = donor / "male/back.png.key"
+    for path in (donor_front, donor_back, donor_icon, donor_front_key, donor_back_key):
         if not path.is_file() or path.stat().st_size == 0:
             raise SystemExit(f"missing pinned HG-Engine donor asset: {path}")
 
@@ -162,6 +165,8 @@ def main() -> None:
 
     shutil.copy2(donor_front, dest / "male_front.png")
     shutil.copy2(donor_back, dest / "male_back.png")
+    shutil.copy2(donor_front_key, dest / "male_front.png.key")
+    shutil.copy2(donor_back_key, dest / "male_back.png.key")
     shutil.copy2(donor_icon, dest / "icon.png")
     # The footprint archive requires a member even for footprint.has == False.
     # Use the native NONE entry until Victini's footprint art is imported.
