@@ -1,10 +1,11 @@
-name: PT04C Victini Native Build Boot
+name: PT04C Native Battle Control Diagnostic
 
 on:
   workflow_dispatch:
   push:
     branches:
       - feature/pt04c-victini-runtime
+      - diagnostic/pt04c-native-battle-control
     paths:
       - "data/canonical_species_1025.txt"
       - "tools/build_species_registry.py"
@@ -139,6 +140,16 @@ jobs:
           grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c
           grep -q 'SPECIES_BIDOOF' vendor/pokeplatinum/src/field_map_change.c
 
+      - name: Diagnostic control - use native Bidoof as player species
+        shell: bash
+        run: |
+          # Keep the expanded #494 registry/resources in the ROM, but replace only
+          # the CI field harness participant. If this native-species battle boots,
+          # the crash is specific to #494 rather than the encounter task itself.
+          sed -i 's/SPECIES_VICTINI/SPECIES_BIDOOF/g' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'Pokemon_GiveMonFromScript' vendor/pokeplatinum/src/field_map_change.c
+          ! grep -q 'SPECIES_VICTINI' vendor/pokeplatinum/src/field_map_change.c
+
       - name: Generate sealed Mercury title resources
         shell: bash
         run: |
@@ -223,7 +234,7 @@ jobs:
           print(json.dumps(counts, indent=2))
           PY
 
-      - name: Run native Victini battle-entry harness in DeSmuME
+      - name: Run native Bidoof battle control in DeSmuME
         id: battle_runtime
         shell: bash
         run: |
@@ -278,9 +289,9 @@ jobs:
                   emu.destroy()
 
           (out / "pt04c-battle-meta.json").write_text(json.dumps({
-              "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_DIAGNOSTIC",
+              "gate": "PT04C_NATIVE_BIDOOF_BATTLE_CONTROL_DIAGNOSTIC",
               "prerequisite": "PT04C native PC storage checkpoint Run #13",
-              "player_species_494": "SPECIES_VICTINI",
+              "player_control_species": "SPECIES_BIDOOF",
               "opponent": "SPECIES_BIDOOF Lv.5",
               "last_completed_frame": current,
               "stopped_at_frame": stopped_at,
@@ -296,7 +307,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pt04c-victini-native-battle-entry-proof
+          name: pt04c-native-bidoof-battle-control-proof
           path: |
             pt04c-registry-report.json
             pt04c-victini-install.json
