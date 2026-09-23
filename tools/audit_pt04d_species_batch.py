@@ -9,6 +9,10 @@ from pathlib import Path
 GEN5_START = 494
 GEN5_END = 649
 
+# HG-Engine stores a few equivalent percentage buckets with adjacent raw
+# values (for example 190/191 and 222/223). The installer translates both.
+SUPPORTED_GENDER_RATIOS = {0, 31, 63, 127, 190, 191, 222, 223, 254, 255}
+
 
 def load_registry(path: Path) -> list[str]:
     entries = [
@@ -231,6 +235,7 @@ def main() -> None:
     donor_growth = set()
     donor_egg_groups = set()
     donor_types = set()
+    donor_gender_ratios = set()
     exp_overflow = []
 
     for dex, species_const in enumerate(target, start=args.start_dex):
@@ -265,6 +270,7 @@ def main() -> None:
         donor_growth.add(entry["exp_rate"])
         donor_egg_groups.update(entry["egg_groups"])
         donor_types.update(entry["types"])
+        donor_gender_ratios.add(entry["gender_ratio_raw"])
         if entry["base_exp_modern"] is not None and entry["base_exp_modern"] > 255:
             exp_overflow.append({
                 "national_dex": dex,
@@ -290,6 +296,9 @@ def main() -> None:
             }
         ),
         "unsupported_egg_groups": sorted(donor_egg_groups - platinum_constants["egg_groups"]),
+        "unsupported_gender_ratios_raw": sorted(
+            donor_gender_ratios - SUPPORTED_GENDER_RATIOS
+        ),
         "translation_rules": {
             "growth_rate": "GROWTH_X -> EXP_RATE_X",
             "body_color": "BODY_COLOR_X -> MON_COLOR_X",
@@ -310,6 +319,7 @@ def main() -> None:
             "held_items": sorted(donor_items),
             "growth_rates": sorted(donor_growth),
             "egg_groups": sorted(donor_egg_groups),
+            "gender_ratios_raw": sorted(donor_gender_ratios),
         },
         "base_exp_over_255": exp_overflow,
         "compatibility": compatibility,
@@ -317,7 +327,12 @@ def main() -> None:
             "first": parsed[0] if parsed else None,
             "last": parsed[-1] if parsed else None,
         },
-        "status": "PASS" if len(parsed) == len(target) and not missing_entries and not missing_assets else "FAIL",
+        "status": "PASS" if (
+            len(parsed) == len(target)
+            and not missing_entries
+            and not missing_assets
+            and not compatibility["unsupported_gender_ratios_raw"]
+        ) else "FAIL",
         "next_if_passed": "translate donor constants and generate Platinum-compatible resource directories for this canonical batch",
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
@@ -333,6 +348,7 @@ def main() -> None:
         "unsupported_types": len(compatibility["unsupported_types"]),
         "unsupported_abilities": len(compatibility["unsupported_abilities"]),
         "unsupported_held_items": len(compatibility["unsupported_held_items"]),
+        "unsupported_gender_ratios_raw": len(compatibility["unsupported_gender_ratios_raw"]),
         "status": report["status"],
     }, indent=2))
 
