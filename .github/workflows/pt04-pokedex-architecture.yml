@@ -1,4 +1,4 @@
-name: PT04 Pokédex Architecture Audit
+name: PT04 Pokédex Architecture and Registry
 
 on:
   workflow_dispatch:
@@ -7,6 +7,8 @@ on:
       - feature/pt04-pokedex-architecture
     paths:
       - "tools/audit_pt04_species_limits.py"
+      - "tools/build_species_registry.py"
+      - "data/canonical_species_1025.txt"
       - "docs/PT04_POKEDEX_ARCHITECTURE_AUDIT.md"
       - ".github/workflows/pt04-pokedex-architecture.yml"
       - "upstream/LOCK.json"
@@ -32,11 +34,27 @@ jobs:
         shell: bash
         run: python3 tools/audit_pt04_species_limits.py vendor/pokeplatinum
 
-      - name: Upload PT04 audit
+      - name: Validate canonical 1025 registry
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output pt04-generated-species.txt \
+            --report pt04-registry-report.json
+          test "$(wc -l < pt04-generated-species.txt)" -eq 1028
+          test "$(sed -n '495p' pt04-generated-species.txt)" = "SPECIES_VICTINI"
+          test "$(sed -n '1026p' pt04-generated-species.txt)" = "SPECIES_PECHARUNT"
+          test "$(tail -n 2 pt04-generated-species.txt | head -n 1)" = "SPECIES_EGG"
+          test "$(tail -n 1 pt04-generated-species.txt)" = "SPECIES_BAD_EGG"
+
+      - name: Upload PT04 architecture and registry proof
         uses: actions/upload-artifact@v4
         with:
-          name: pt04-pokedex-architecture-audit
-          path: pt04-audit.json
+          name: pt04-pokedex-architecture-registry
+          path: |
+            pt04-audit.json
+            pt04-registry-report.json
+            pt04-generated-species.txt
           if-no-files-found: error
           retention-days: 14
 
@@ -50,5 +68,7 @@ jobs:
             echo "- Species storage: u16 — target fits"
             echo "- Pokédex bitsets: dynamic from NATIONAL_DEX_COUNT"
             echo "- Persistent vanilla form field: 5 bits (0–31)"
-            echo "- Next: project-owned registry expansion harness"
+            echo "- Canonical #1-#1025 registry validated against Platinum's exact #1-#493 prefix"
+            echo "- Candidate generated/species.txt emitted with NONE / EGG / BAD_EGG sentinels"
+            echo "- Next: PT04C first post-Gen-IV runtime batch"
           } >> "$GITHUB_STEP_SUMMARY"
