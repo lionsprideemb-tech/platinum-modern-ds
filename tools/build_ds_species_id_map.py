@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Build the Mercury DS National-Dex -> internal-species ID map.
+"""Build the Mercury DS canonical National-Dex -> base-species ID map.
 
-Gen-IV DS resources reserve IDs after Arceus for Egg/Bad Egg and legacy
-form/icon slots.  Canonical post-Gen-IV Pokemon therefore begin at internal
-ID 544 while retaining their real National Dex numbers.
+PT04C proved the chosen architecture at the first boundary: canonical base
+species remain contiguous and use their National Dex number as their native
+species ID. Egg/Bad Egg sentinels move after the canonical base roster, while
+legacy alternate-form resource slots remain a separate form/archive concern.
 """
 
 from __future__ import annotations
@@ -13,13 +14,9 @@ import json
 from pathlib import Path
 
 VANILLA_NATDEX_MAX = 493
-EGG_INTERNAL_ID = 494
-BAD_EGG_INTERNAL_ID = 495
-LEGACY_RESERVED_FIRST = 496
-LEGACY_RESERVED_LAST = 543
-MODERN_INTERNAL_OFFSET = 50
-FIRST_MODERN_INTERNAL_ID = 544
 CANONICAL_SPECIES_COUNT = 1025
+EGG_INTERNAL_ID = CANONICAL_SPECIES_COUNT + 1
+BAD_EGG_INTERNAL_ID = CANONICAL_SPECIES_COUNT + 2
 
 
 def load_species(path: Path) -> list[str]:
@@ -38,15 +35,12 @@ def load_species(path: Path) -> list[str]:
 def internal_id_for_national_dex(national_dex: int) -> int:
     if not 1 <= national_dex <= CANONICAL_SPECIES_COUNT:
         raise ValueError(f"National Dex out of range: {national_dex}")
-    if national_dex <= VANILLA_NATDEX_MAX:
-        return national_dex
-    return national_dex + MODERN_INTERNAL_OFFSET
+    return national_dex
 
 
 def build_map(species: list[str]) -> dict:
     entries = []
     used_internal_ids: set[int] = {0, EGG_INTERNAL_ID, BAD_EGG_INTERNAL_ID}
-    used_internal_ids.update(range(LEGACY_RESERVED_FIRST, LEGACY_RESERVED_LAST + 1))
 
     for national_dex, species_const in enumerate(species, start=1):
         internal_id = internal_id_for_national_dex(national_dex)
@@ -78,7 +72,7 @@ def build_map(species: list[str]) -> dict:
     assert checks["pecharunt"]["internal_species_id"] == 1075
 
     return {
-        "schema": "mercury-ds-species-id-map-v1",
+        "schema": "mercury-ds-species-id-map-v2",
         "canonical_species_count": CANONICAL_SPECIES_COUNT,
         "vanilla_canonical_range": {"national_dex": [1, 493], "internal_ids": [1, 493]},
         "sentinels": {
@@ -86,11 +80,14 @@ def build_map(species: list[str]) -> dict:
             "SPECIES_EGG": EGG_INTERNAL_ID,
             "SPECIES_BAD_EGG": BAD_EGG_INTERNAL_ID,
         },
-        "legacy_reserved_internal_ids": [LEGACY_RESERVED_FIRST, LEGACY_RESERVED_LAST],
+        "legacy_form_note": (
+            "Legacy alternate-form/icon resource ordering is not represented as "
+            "canonical base-species IDs and must remain in form-specific registries."
+        ),
         "modern_rule": {
             "national_dex_range": [494, 1025],
-            "formula": "internal_species_id = national_dex + 50",
-            "internal_id_range": [FIRST_MODERN_INTERNAL_ID, 1075],
+            "formula": "internal_species_id = national_dex",
+            "internal_id_range": [494, 1025],
         },
         "proof_points": checks,
         "species": entries,
@@ -120,8 +117,8 @@ def main() -> None:
     print(
         "Mercury DS species-ID map: "
         f"{result['canonical_species_count']} canonical species; "
-        "Victini NatDex 494 -> internal 544; "
-        "Pecharunt NatDex 1025 -> internal 1075"
+        "Victini NatDex 494 -> internal 494; "
+        "Pecharunt NatDex 1025 -> internal 1025"
     )
 
 
