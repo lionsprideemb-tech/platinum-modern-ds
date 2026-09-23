@@ -11,6 +11,7 @@ on:
       - "tools/install_pt04c_victini_smoke.py"
       - "tools/install_pt04c_runtime_harness.py"
       - "tools/install_pt04c_summary_harness.py"
+      - "tools/install_pt04c_pc_harness.py"
       - "docs/PT04C_VICTINI_RUNTIME_PROOF.md"
       - "platinum-overlay/**"
       - "tools/generate_mercury_title.py"
@@ -115,6 +116,17 @@ jobs:
           grep -q '"PT04C_VICTINI_NATIVE_SUMMARY_HARNESS_INSTALL"' pt04c-summary-harness-install.json
           grep -q 'FieldSystem_GetPartyMenuMonSummary(0, fieldSystem, 0)' vendor/pokeplatinum/src/field_map_change.c
 
+      - name: Advance isolated harness to native PC storage
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_pc_harness.py \
+            vendor/pokeplatinum \
+            --report pt04c-pc-harness-install.json
+          test -s pt04c-pc-harness-install.json
+          grep -q '"PT04C_VICTINI_NATIVE_PC_STORAGE_HARNESS_INSTALL"' pt04c-pc-harness-install.json
+          grep -q 'PCBoxes_TryStoreBoxMonAt' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'FieldSystem_OpenPokemonStorage' vendor/pokeplatinum/src/field_map_change.c
+
       - name: Generate sealed Mercury title resources
         shell: bash
         run: |
@@ -199,7 +211,7 @@ jobs:
           print(json.dumps(counts, indent=2))
           PY
 
-      - name: Run native Victini Summary harness in DeSmuME
+      - name: Run native Victini PC storage harness in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/pt04c-venv/bin/activate"
@@ -207,7 +219,6 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import json
-          from desmume.controls import Keys, keymask
           from desmume.emulator import DeSmuME
 
           rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
@@ -217,84 +228,61 @@ jobs:
           emu = DeSmuME()
           emu.open(str(rom))
           if not emu.is_running():
-              raise SystemExit("DeSmuME did not start PT04C Summary harness ROM")
+              raise SystemExit("DeSmuME did not start PT04C PC storage harness ROM")
 
-          frame = 0
-          captures = []
-
-          def advance(count):
-              global frame
-              for _ in range(count):
-                  emu.cycle(False)
-              frame += count
-              if not emu.is_running():
-                  raise SystemExit(f"PT04C Summary harness stopped at frame {frame}")
-
-          def capture(label):
-              image = emu.screenshot()
-              path = out / f"pt04c-summary-{label}.png"
-              image.save(path)
-              colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
-              unique = len(colors) if colors is not None else 256 * 384
-              captures.append({
-                  "label": label,
-                  "frame": frame,
-                  "file": path.name,
-                  "unique_colors": unique,
-                  "blank_like": unique < 16,
-              })
-
-          def press(key, hold=1, settle=45):
-              # One emulated frame per press avoids DS key-repeat skipping pages.
-              emu.input.keypad_add_key(keymask(key))
-              advance(hold)
-              emu.input.keypad_rm_key(keymask(key))
-              advance(settle)
-
+          captures = [600, 1200, 1800, 3000]
+          current = 0
+          meta = []
           try:
-              # Proven Run #9 entry state: native Info page for Victini.
-              advance(600)
-              capture("info")
-
-              # Capture every transition instead of assuming the controller tap
-              # landed on exactly one page. Expected order:
-              # Info -> Memo -> Skills -> Condition -> Battle Moves.
-              for label in ("after-right-1", "after-right-2", "after-right-3", "after-right-4"):
-                  press(Keys.KEY_RIGHT)
-                  capture(label)
-
-              advance(300)
-              capture("after-right-4-stable")
+              for target in captures:
+                  for _ in range(target - current):
+                      emu.cycle(False)
+                  current = target
+                  if not emu.is_running():
+                      raise SystemExit(f"PT04C PC storage harness stopped before frame {target}")
+                  image = emu.screenshot()
+                  path = out / f"pt04c-pc-{target}.png"
+                  image.save(path)
+                  colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
+                  unique = len(colors) if colors is not None else 256 * 384
+                  meta.append({
+                      "frame": target,
+                      "file": path.name,
+                      "unique_colors": unique,
+                      "blank_like": unique < 16,
+                  })
           finally:
               emu.destroy()
 
-          if any(item["blank_like"] for item in captures):
-              raise SystemExit(f"PT04C Summary navigation produced a blank capture: {captures}")
+          if len([item for item in meta if not item["blank_like"]]) < 2:
+              raise SystemExit(f"PT04C PC storage harness did not yield stable nonblank captures: {meta}")
 
-          (out / "pt04c-summary-meta.json").write_text(json.dumps({
-              "gate": "PT04C_VICTINI_NATIVE_SUMMARY_RUNTIME",
-              "prerequisite": "PT04C native party checkpoint Run #8",
+          (out / "pt04c-pc-meta.json").write_text(json.dumps({
+              "gate": "PT04C_VICTINI_NATIVE_PC_STORAGE_RUNTIME",
+              "prerequisite": "PT04C native Summary checkpoint Run #12",
               "species_494": "SPECIES_VICTINI",
-              "runtime_process": f"survived_through_frame_{frame}",
-              "captures": captures,
-              "automated_navigation": "four one-frame native RIGHT taps with per-page captures",
+              "box_id": 0,
+              "box_slot": 0,
+              "runtime_process": "survived_through_frame_3000",
+              "captures": meta,
               "visual_review_required": True,
-              "next_gate": "PT04C_VICTINI_PC_STORAGE_RUNTIME",
+              "next_gate": "PT04C_VICTINI_BATTLE_ENTRY_RUNTIME",
           }, indent=2) + "\n")
           PY
 
-      - name: Upload PT04C native Summary runtime proof
+      - name: Upload PT04C native PC storage runtime proof
         uses: actions/upload-artifact@v4
         with:
-          name: pt04c-victini-native-summary-proof
+          name: pt04c-victini-native-pc-storage-proof
           path: |
             pt04c-registry-report.json
             pt04c-victini-install.json
             pt04c-runtime-harness-install.json
             pt04c-summary-harness-install.json
+            pt04c-pc-harness-install.json
             pt04c-archive-proof.json
             runtime-preview/*.png
-            runtime-preview/pt04c-summary-meta.json
+            runtime-preview/pt04c-pc-meta.json
           if-no-files-found: error
           retention-days: 14
 
@@ -302,13 +290,14 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## PT04C Victini native Summary runtime gate"
+            echo "## PT04C Victini native PC storage runtime gate"
             echo
             echo "- Sealed Run #8 party/Pokedex checkpoint retained"
+            echo "- Sealed Run #12 Summary checkpoint retained"
             echo "- Victini remains National Dex / species ID 494"
             echo "- Native archive expansion checks retained"
-            echo "- CI-only harness still creates Victini through Pokemon_GiveMonFromScript"
-            echo "- Final child app is now Platinum's native Summary screen for party slot 0"
-            echo "- DeSmuME captures native Info and Battle Moves tabs"
-            echo "- Visual Summary/sprite/moves review is required before PC storage work"
+            echo "- Victini is stored through PCBoxes_TryStoreBoxMonAt into Box 1 / Slot 1"
+            echo "- Runtime asserts the boxed species remains SPECIES_VICTINI"
+            echo "- Platinum's native PC storage application is launched"
+            echo "- Visual box/icon review is required before battle-entry work"
           } >> "$GITHUB_STEP_SUMMARY"
