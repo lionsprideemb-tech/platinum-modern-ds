@@ -275,7 +275,7 @@ jobs:
               "species_494": "SPECIES_VICTINI",
               "runtime_process": f"survived_through_frame_{frame}",
               "captures": captures,
-              "automated_navigation": "Info -> Battle Moves using four native RIGHT presses",
+              "automated_navigation": "Info -> Battle Moves using three native RIGHT presses",
               "visual_review_required": True,
               "next_gate": "PT04C_VICTINI_PC_STORAGE_RUNTIME",
           }, indent=2) + "\n")
