@@ -353,6 +353,11 @@ def main() -> None:
     parser.add_argument("--start-dex", type=int, default=494)
     parser.add_argument("--end-dex", type=int, default=649)
     parser.add_argument("--report", type=Path, default=Path("pt04d-gen5-install.json"))
+    parser.add_argument(
+        "--gate",
+        default="PT04D_GEN5_BATCH_INSTALL",
+        help="report gate name for the current canonical batch",
+    )
     args = parser.parse_args()
 
     pt = args.pokeplatinum_root.resolve()
@@ -518,14 +523,14 @@ def main() -> None:
         })
 
     report = {
-        "gate": "PT04D_GEN5_BATCH_INSTALL",
+        "gate": args.gate,
         "range": [args.start_dex, args.end_dex],
         "installed_species": len(installed),
         "first": installed[0],
         "last": installed[-1],
         "exceptions": exceptions,
         "status": "PASS" if len(installed) == len(target) else "FAIL",
-        "next_if_passed": "configure/build expanded Platinum and verify Gen V archive counts",
+        "next_if_passed": "configure/build expanded Platinum and verify this batch's archive counts",
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({
