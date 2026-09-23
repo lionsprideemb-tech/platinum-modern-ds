@@ -1,0 +1,187 @@
+name: PT04D Gen V Bulk Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt04d-bulk-expansion
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/build_species_registry.py"
+      - "tools/build_ds_species_id_map.py"
+      - "tools/audit_pt04d_species_batch.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "platinum-overlay/**"
+      - "tools/generate_mercury_title.py"
+      - "assets/title_screen/**"
+      - ".github/workflows/pt04d-gen5-bulk-build.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  gen5-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-venv python3-pip wget xz-utils             libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Checkout pinned HG-Engine Gen V donor
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set             /data/Species.c             /data/BaseExperienceTable.c             /data/IconPaletteTable.c             /data/HeightTable.c             /data/SpriteOffsets.c             /data/graphics/sprites/
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+          test -s vendor/hg-engine/data/Species.c
+          test -s vendor/hg-engine/data/SpriteOffsets.c
+          test -s vendor/hg-engine/data/graphics/sprites/snivy/male/front.png
+          test -s vendor/hg-engine/data/graphics/sprites/genesect/male/front.png
+
+      - name: Register canonical species through Genesect
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum             --through 649             --output vendor/pokeplatinum/generated/species.txt             --report pt04d-gen5-registry.json
+          test "$(sed -n '494p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_ARCEUS"
+          test "$(sed -n '495p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_VICTINI"
+          test "$(sed -n '650p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_GENESECT"
+          test "$(sed -n '651p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_EGG"
+          test "$(sed -n '652p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_BAD_EGG"
+
+      - name: Re-audit Gen V donor batch
+        shell: bash
+        run: |
+          python3 tools/audit_pt04d_species_batch.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 649             --report pt04d-gen5-donor-audit.json
+
+      - name: Install Gen V resource batch
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 649             --report pt04d-gen5-install.json
+          test "$(jq -r '.installed_species' pt04d-gen5-install.json)" = "156"
+          test "$(jq -r '.first.species' pt04d-gen5-install.json)" = "SPECIES_VICTINI"
+          test "$(jq -r '.last.species' pt04d-gen5-install.json)" = "SPECIES_GENESECT"
+          test -s vendor/pokeplatinum/res/pokemon/snivy/data.json
+          test -s vendor/pokeplatinum/res/pokemon/genesect/data.json
+
+      - name: Generate sealed Mercury title resources
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt04d-venv"
+          . "$RUNNER_TEMP/pt04d-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure Gen V-expanded Platinum
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build Platinum through Genesect
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Verify Gen V expanded archives
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, struct
+
+          roots = [Path("/var/tmp/pokeplatinum"), Path("vendor/pokeplatinum")]
+
+          def find_one(name):
+              for root in roots:
+                  if root.exists():
+                      matches = list(root.rglob(name))
+                      if matches:
+                          return matches[0]
+              raise SystemExit(f"missing compiled archive: {name}")
+
+          def narc_count(path):
+              data = path.read_bytes()
+              pos = data.find(b"BTAF")
+              if pos < 0:
+                  pos = data.find(b"FATB")
+              if data[:4] != b"NARC" or pos < 0:
+                  raise SystemExit(f"invalid NARC: {path}")
+              return struct.unpack_from("<H", data, pos + 8)[0]
+
+          counts = {
+              "pl_personal": narc_count(find_one("pl_personal.narc")),
+              "pl_pokegra": narc_count(find_one("pl_pokegra.narc")),
+              "pl_poke_icon": narc_count(find_one("pl_poke_icon.narc")),
+              "height": narc_count(find_one("height.narc")),
+          }
+
+          # NONE + 649 canonical species + existing alternate-form personal entries.
+          if counts["pl_personal"] < 650:
+              raise SystemExit(f"personal archive did not reach Genesect: {counts}")
+          # Six base sprite archive members per canonical slot through #649.
+          if counts["pl_pokegra"] < 650 * 6:
+              raise SystemExit(f"pokegra archive did not reach Genesect: {counts}")
+          if counts["pl_poke_icon"] < 650:
+              raise SystemExit(f"icon archive did not reach Genesect: {counts}")
+          if counts["height"] < 650 * 4:
+              raise SystemExit(f"height archive did not reach Genesect: {counts}")
+
+          Path("pt04d-gen5-archive-proof.json").write_text(
+              json.dumps({"gate":"PT04D_GEN5_COMPILED_ARCHIVES","counts":counts}, indent=2) + "\n"
+          )
+          print(json.dumps(counts, indent=2))
+          PY
+
+      - name: Upload PT04D Gen V build proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt04d-gen5-bulk-build-proof
+          path: |
+            pt04d-gen5-registry.json
+            pt04d-gen5-donor-audit.json
+            pt04d-gen5-install.json
+            pt04d-gen5-archive-proof.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: PT04D summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## PT04D Gen V bulk build"
+            echo
+            echo "- Canonical native IDs: Victini 494 through Genesect 649"
+            echo "- 156 donor species/resources processed as one batch"
+            echo "- Unsupported PT05 mechanics are explicit in pt04d-gen5-install.json"
+            echo "- Build/archive proof must pass before runtime spot testing"
+          } >> "$GITHUB_STEP_SUMMARY"
