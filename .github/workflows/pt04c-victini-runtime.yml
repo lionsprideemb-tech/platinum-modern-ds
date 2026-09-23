@@ -1,0 +1,258 @@
+name: PT04C Victini Native Build Boot
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt04c-victini-runtime
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/build_species_registry.py"
+      - "tools/install_pt04c_victini_smoke.py"
+      - "docs/PT04C_VICTINI_RUNTIME_PROOF.md"
+      - "platinum-overlay/**"
+      - "tools/generate_mercury_title.py"
+      - "assets/title_screen/**"
+      - ".github/workflows/pt04c-victini-runtime.yml"
+      - "upstream/LOCK.json"
+
+concurrency:
+  group: pt04c-victini-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  build-boot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Checkout pinned HG-Engine Victini donor
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --cone
+          git -C vendor/hg-engine sparse-checkout set data/graphics/sprites/victini
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+          test -s vendor/hg-engine/data/graphics/sprites/victini/male/front.png
+          test -s vendor/hg-engine/data/graphics/sprites/victini/male/back.png
+          test -s vendor/hg-engine/data/graphics/sprites/victini/icon.png
+
+      - name: Apply certified Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Register National Dex 494
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 494 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report pt04c-registry-report.json
+          test "$(sed -n '494p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_ARCEUS"
+          test "$(sed -n '495p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_VICTINI"
+          test "$(sed -n '496p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_EGG"
+          test "$(sed -n '497p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_BAD_EGG"
+
+      - name: Install Victini native resource slot
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_victini_smoke.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report pt04c-victini-install.json
+          test -s vendor/pokeplatinum/res/pokemon/victini/data.json
+          test -s vendor/pokeplatinum/res/pokemon/victini/male_front.png
+          test -s vendor/pokeplatinum/res/pokemon/victini/male_back.png
+          test -s vendor/pokeplatinum/res/pokemon/victini/icon.png
+          grep -q '"SPECIES_VICTINI"' vendor/pokeplatinum/res/pokemon/victini/data.json
+          grep -q '"TYPE_PSYCHIC"' vendor/pokeplatinum/res/pokemon/victini/data.json
+          grep -q '"TYPE_FIRE"' vendor/pokeplatinum/res/pokemon/victini/data.json
+
+      - name: Generate sealed Mercury title resources
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt04c-venv"
+          . "$RUNNER_TEMP/pt04c-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure expanded Platinum
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build Platinum with Victini at 494
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Verify expanded compiled archives
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import struct
+
+          roots = [Path("/var/tmp/pokeplatinum"), Path("vendor/pokeplatinum")]
+
+          def find_one(name):
+              matches = []
+              for root in roots:
+                  if root.exists():
+                      matches.extend(root.rglob(name))
+              if not matches:
+                  raise SystemExit(f"compiled archive not found: {name}")
+              return matches[0]
+
+          def narc_count(path):
+              data = path.read_bytes()
+              if data[:4] != b"NARC":
+                  raise SystemExit(f"{path} is not a NARC")
+              pos = data.find(b"BTAF")
+              if pos < 0:
+                  pos = data.find(b"FATB")
+              if pos < 0:
+                  raise SystemExit(f"{path} has no FAT block")
+              return struct.unpack_from("<H", data, pos + 8)[0]
+
+          personal = find_one("pl_personal.narc")
+          pokegra = find_one("pl_pokegra.narc")
+          icons = find_one("pl_poke_icon.narc")
+
+          counts = {
+              "pl_personal": narc_count(personal),
+              "pl_pokegra": narc_count(pokegra),
+              "pl_poke_icon": narc_count(icons),
+          }
+
+          # NONE + 494 real species must all have a base personal-data slot.
+          if counts["pl_personal"] < 495:
+              raise SystemExit(f"personal archive did not expand: {counts}")
+          # pl_pokegra allocates six members per non-egg registered species:
+          # female/male back, female/male front, normal/shiny palettes.
+          if counts["pl_pokegra"] < 495 * 6:
+              raise SystemExit(f"battle sprite archive did not expand: {counts}")
+
+          Path("pt04c-archive-proof.json").write_text(json.dumps({
+              "gate": "PT04C_COMPILED_ARCHIVE_EXPANSION",
+              "species_494": "SPECIES_VICTINI",
+              "archive_counts": counts,
+              "personal_archive": str(personal),
+              "pokegra_archive": str(pokegra),
+              "icon_archive": str(icons),
+          }, indent=2) + "\n")
+          print(json.dumps(counts, indent=2))
+          PY
+
+      - name: Boot expanded ROM in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pt04c-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start PT04C ROM")
+
+          captures = [14800, 15600, 16000]
+          current = 0
+          meta = []
+          try:
+              for target in captures:
+                  for _ in range(target - current):
+                      emu.cycle(False)
+                  current = target
+                  image = emu.screenshot()
+                  path = out / f"pt04c-title-{target}.png"
+                  image.save(path)
+                  colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
+                  unique = len(colors) if colors is not None else 256 * 384
+                  meta.append({
+                      "frame": target,
+                      "file": path.name,
+                      "unique_colors": unique,
+                      "blank_like": unique < 16,
+                  })
+          finally:
+              emu.destroy()
+
+          if not any(not item["blank_like"] for item in meta):
+              raise SystemExit("PT04C ROM boot captures are blank")
+
+          (out / "pt04c-boot-meta.json").write_text(json.dumps({
+              "gate": "PT04C_EXPANDED_ROM_BOOT",
+              "species_494": "SPECIES_VICTINI",
+              "runtime_boot": "passed",
+              "captures": meta,
+              "next_gate": "PT04C_VICTINI_PARTY_BATTLE_RUNTIME",
+          }, indent=2) + "\n")
+          PY
+
+      - name: Upload PT04C build/boot proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt04c-victini-build-boot-proof
+          path: |
+            pt04c-registry-report.json
+            pt04c-victini-install.json
+            pt04c-archive-proof.json
+            runtime-preview/*.png
+            runtime-preview/pt04c-boot-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PT04C summary
+        shell: bash
+        run: |
+          {
+            echo "## PT04C Victini native build/boot gate"
+            echo
+            echo "- Victini registered at National Dex / species ID 494"
+            echo "- Egg and Bad Egg sentinels shifted safely"
+            echo "- Native personal-data and battle-sprite archives expanded"
+            echo "- Real Victini front/back/icon donor graphics compiled"
+            echo "- Existing Fairy + Mercury title modifications retained"
+            echo "- Expanded NDS booted in DeSmuME"
+            echo "- Next: place Victini into a native party/battle runtime path"
+          } >> "$GITHUB_STEP_SUMMARY"
