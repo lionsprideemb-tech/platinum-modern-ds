@@ -139,6 +139,18 @@ jobs:
           grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c
           grep -q 'SPECIES_BIDOOF' vendor/pokeplatinum/src/field_map_change.c
 
+      - name: Advance isolated harness to native save/reload
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_save_reload_harness.py \
+            vendor/pokeplatinum \
+            --report pt04c-save-reload-harness-install.json
+          test -s pt04c-save-reload-harness-install.json
+          grep -q '"PT04C_VICTINI_SAVE_RELOAD_RUNTIME_INSTALL"' pt04c-save-reload-harness-install.json
+          grep -q 'FieldSystem_Save(fieldSystem)' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'OS_ResetSystem(RESET_ERROR)' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'MON_DATA_LEVEL' vendor/pokeplatinum/src/field_map_change.c
+
       - name: Generate sealed Mercury title resources
         shell: bash
         run: |
@@ -223,8 +235,8 @@ jobs:
           print(json.dumps(counts, indent=2))
           PY
 
-      - name: Run native Victini battle-entry harness in DeSmuME
-        id: battle_runtime
+      - name: Run native Victini save/reload harness in DeSmuME
+        id: save_reload_runtime
         shell: bash
         run: |
           . "$RUNNER_TEMP/pt04c-venv/bin/activate"
@@ -233,7 +245,6 @@ jobs:
           from pathlib import Path
           import json
           from desmume.emulator import DeSmuME
-          from desmume.controls import Keys, keymask
 
           rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
           out = Path("runtime-preview")
@@ -242,20 +253,14 @@ jobs:
           emu = DeSmuME()
           emu.open(str(rom))
           if not emu.is_running():
-              raise SystemExit("DeSmuME did not start PT04C battle-entry harness ROM")
+              raise SystemExit("DeSmuME did not start PT04C save/reload harness ROM")
 
           current = 0
           meta = []
           stopped_at = None
           try:
-              a_mask = keymask(Keys.KEY_A)
-              for target in range(60, 1801, 60):
+              for target in range(120, 3601, 120):
                   for _ in range(target - current):
-                      if current == 620:
-                          emu.input.keypad_add_key(a_mask)
-                      elif current == 622:
-                          emu.input.keypad_rm_key(a_mask)
-
                       emu.cycle(False)
                       if not emu.is_running():
                           stopped_at = current + 1
@@ -265,7 +270,7 @@ jobs:
                       break
 
                   image = emu.screenshot()
-                  path = out / f"pt04c-battle-diagnostic-{target:04d}.png"
+                  path = out / f"pt04c-save-reload-{target:04d}.png"
                   image.save(path)
                   colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
                   unique = len(colors) if colors is not None else 256 * 384
@@ -279,16 +284,19 @@ jobs:
               try:
                   if emu.is_running():
                       image = emu.screenshot()
-                      path = out / f"pt04c-battle-last-{current:04d}.png"
+                      path = out / f"pt04c-save-reload-last-{current:04d}.png"
                       image.save(path)
               finally:
                   emu.destroy()
 
-          (out / "pt04c-battle-meta.json").write_text(json.dumps({
-              "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_DIAGNOSTIC",
-              "prerequisite": "PT04C native PC storage checkpoint Run #13",
-              "player_species_494": "SPECIES_VICTINI",
-              "opponent": "SPECIES_BIDOOF Lv.5",
+          (out / "pt04c-save-reload-meta.json").write_text(json.dumps({
+              "gate": "PT04C_VICTINI_SAVE_RELOAD_RUNTIME",
+              "prerequisite": "PT04C native Battle checkpoint Run #28",
+              "species_494": "SPECIES_VICTINI",
+              "expected_level": 50,
+              "save_entrypoint": "FieldSystem_Save",
+              "reload_entrypoint": "gGameStartLoadSaveAppTemplate -> SaveData_Load",
+              "reset_mode": "RESET_ERROR",
               "last_completed_frame": current,
               "stopped_at_frame": stopped_at,
               "captures": meta,
@@ -296,14 +304,14 @@ jobs:
           }, indent=2) + "\n")
 
           if stopped_at is not None:
-              raise SystemExit(f"PT04C battle-entry harness stopped at/near frame {stopped_at}; diagnostic proof preserved")
+              raise SystemExit(f"PT04C save/reload harness stopped at/near frame {stopped_at}; diagnostic proof preserved")
           PY
 
-      - name: Upload PT04C native battle-entry runtime proof
+      - name: Upload PT04C native save/reload runtime proof
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pt04c-victini-native-battle-entry-proof
+          name: pt04c-victini-native-save-reload-proof
           path: |
             pt04c-registry-report.json
             pt04c-victini-install.json
@@ -311,9 +319,10 @@ jobs:
             pt04c-summary-harness-install.json
             pt04c-pc-harness-install.json
             pt04c-battle-harness-install.json
+            pt04c-save-reload-harness-install.json
             pt04c-archive-proof.json
             runtime-preview/*.png
-            runtime-preview/pt04c-battle-meta.json
+            runtime-preview/pt04c-save-reload-meta.json
           if-no-files-found: error
           retention-days: 14
 
@@ -321,14 +330,15 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## PT04C Victini native battle-entry runtime gate"
+            echo "## PT04C Victini save/reload runtime gate"
             echo
             echo "- Sealed Run #8 party/Pokedex checkpoint retained"
             echo "- Sealed Run #12 Summary checkpoint retained"
             echo "- Sealed Run #13 PC storage checkpoint retained"
+            echo "- Sealed Run #28 native Battle checkpoint retained"
             echo "- Victini remains National Dex / species ID 494"
-            echo "- Native archive expansion checks retained"
-            echo "- Player party is asserted to contain SPECIES_VICTINI"
-            echo "- Platinum's scripted wild encounter path starts against Lv.5 Bidoof"
-            echo "- Visual battle/player-sprite review is required before save/reload work"
+            echo "- FieldSystem_Save writes the test state"
+            echo "- RESET_ERROR routes through gGameStartLoadSaveAppTemplate / SaveData_Load"
+            echo "- Post-reload party, Pokedex flags, species ID, and level are asserted"
+            echo "- Native Party UI is reopened for final visual proof"
           } >> "$GITHUB_STEP_SUMMARY"
