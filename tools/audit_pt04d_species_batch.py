@@ -189,6 +189,11 @@ def main() -> None:
     parser.add_argument("--start-dex", type=int, default=GEN5_START)
     parser.add_argument("--end-dex", type=int, default=GEN5_END)
     parser.add_argument("--report", type=Path, default=Path("pt04d-gen5-donor-audit.json"))
+    parser.add_argument(
+        "--gate",
+        default="PT04D_GEN5_DONOR_AUDIT",
+        help="report gate name for the current canonical batch",
+    )
     args = parser.parse_args()
 
     if not (494 <= args.start_dex <= args.end_dex <= 1025):
@@ -293,7 +298,7 @@ def main() -> None:
     }
 
     report = {
-        "gate": "PT04D_GEN5_DONOR_AUDIT",
+        "gate": args.gate,
         "range": [args.start_dex, args.end_dex],
         "expected_species": len(target),
         "parsed_species": len(parsed),
@@ -313,7 +318,7 @@ def main() -> None:
             "last": parsed[-1] if parsed else None,
         },
         "status": "PASS" if len(parsed) == len(target) and not missing_entries and not missing_assets else "FAIL",
-        "next_if_passed": "translate donor constants and generate Platinum-compatible Gen V resource directories",
+        "next_if_passed": "translate donor constants and generate Platinum-compatible resource directories for this canonical batch",
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
 
