@@ -1,0 +1,86 @@
+name: PT05B Dex Internal-ID Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt05b-dex-indexing
+    paths:
+      - "tools/audit_pt05b_dex_indexing.py"
+      - "upstream/LOCK.json"
+      - ".github/workflows/pt05b-dex-indexing-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Run PT05B identity-coupling audit
+        shell: bash
+        run: |
+          python3 -m py_compile tools/audit_pt05b_dex_indexing.py
+          python3 tools/audit_pt05b_dex_indexing.py \
+            vendor/pokeplatinum \
+            --report build/pt05b/pt05b-dex-indexing-audit.json
+          test -s build/pt05b/pt05b-dex-indexing-audit.json
+
+      - name: Verify blocker categories
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("build/pt05b/pt05b-dex-indexing-audit.json").read_text())
+          assert report["gate"] == "PT05B_DEX_INTERNAL_ID_COUPLING_AUDIT"
+          assert report["confirmed_blocker_categories"] >= 7
+          assert report["confirmed_blocker_matches"] >= 10
+
+          required = {
+              "species_constants_coupled",
+              "pokedex_rejects_internal_ids",
+              "pokedex_bits_use_internal_id",
+              "pokedex_loops_treat_natdex_as_species",
+              "speciesproc_uses_egg_as_dex_ceiling",
+              "personal_data_bounds_use_natdex_count",
+              "height_weight_arrays_index_internal_species",
+          }
+          assert required.issubset(report["findings"])
+          PY
+
+      - name: Upload PT05B audit proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt05b-dex-internal-id-audit
+          path: build/pt05b/pt05b-dex-indexing-audit.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: PT05B audit summary
+        shell: bash
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          r = json.loads(Path("build/pt05b/pt05b-dex-indexing-audit.json").read_text())
+          print("## PT05B Dex/Internal Species-ID Audit")
+          print()
+          print(f"- Confirmed blocker categories: {r['confirmed_blocker_categories']}")
+          print(f"- Confirmed blocker matches: {r['confirmed_blocker_matches']}")
+          for key, value in r["global_reference_counts"].items():
+              print(f"- Global {key} references: {value}")
+          print("- Next: integrate identity translation tables and patch these paths in measured order")
+          PY
