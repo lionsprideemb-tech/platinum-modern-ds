@@ -244,7 +244,8 @@ jobs:
                   "blank_like": unique < 16,
               })
 
-          def press(key, hold=3, settle=24):
+          def press(key, hold=1, settle=45):
+              # One emulated frame per press avoids DS key-repeat skipping pages.
               emu.input.keypad_add_key(keymask(key))
               advance(hold)
               emu.input.keypad_rm_key(keymask(key))
@@ -255,14 +256,15 @@ jobs:
               advance(600)
               capture("info")
 
+              # Capture every transition instead of assuming the controller tap
+              # landed on exactly one page. Expected order:
               # Info -> Memo -> Skills -> Condition -> Battle Moves.
-              for _ in range(4):
+              for label in ("after-right-1", "after-right-2", "after-right-3", "after-right-4"):
                   press(Keys.KEY_RIGHT)
+                  capture(label)
 
-              advance(120)
-              capture("battle-moves")
-              advance(600)
-              capture("battle-moves-stable")
+              advance(300)
+              capture("after-right-4-stable")
           finally:
               emu.destroy()
 
@@ -275,7 +277,7 @@ jobs:
               "species_494": "SPECIES_VICTINI",
               "runtime_process": f"survived_through_frame_{frame}",
               "captures": captures,
-              "automated_navigation": "Info -> Battle Moves using three native RIGHT presses",
+              "automated_navigation": "four one-frame native RIGHT taps with per-page captures",
               "visual_review_required": True,
               "next_gate": "PT04C_VICTINI_PC_STORAGE_RUNTIME",
           }, indent=2) + "\n")
