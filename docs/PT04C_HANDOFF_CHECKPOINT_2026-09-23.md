@@ -47,39 +47,56 @@
   - Full Victini PC preview sprite renders.
   - VICTINI / Lv. 50 / PSYCHIC / FIRE render correctly in PC.
 
-## Current unfinished gate
+## 4. Native Battle
 
-### Native Battle Entry
-Goal: prove the already-verified player-side Victini (#494) can be loaded into Platinum's real battle engine.
+- Passing run: **#28**
+- Run ID: `35888401619`
+- Passing commit: `1c97ff3815bfe42249d7373068b2991a2f18435b`
+- Sealed checkpoint commit: `108fe5c43ceda88e9a5d48e67d939a677d305e8a`
+- Verified:
+  - Native wild battle loads successfully.
+  - Wild Bidoof Lv.5 renders.
+  - "Go! VICTINI!" appears.
+  - Victini back sprite renders.
+  - VICTINI Lv.50 battle HUD renders with 174/174 HP.
+  - Native command menu reaches "What will VICTINI do?"
 
-Current harness design:
-- Player party retains Victini in slot 0.
-- Runtime asserts `Party_HasSpecies(..., SPECIES_VICTINI)`.
-- Opponent is native **Bidoof Lv. 5** to isolate player-side species-494 behavior.
-- Native entrypoint: `Encounter_NewVsSpeciesAtLevel`.
-- CI-only harness; approved normal game flow remains untouched.
+## 5. Native Save / Reset / Reload
 
-### Attempts
-- Run #14 / `35881442253`: failed **before build** because the battle installer used a nonexistent include anchor. No sealed work was affected.
-- Fix commit: `d982ff0be41b67b2554cff98a9e355799c856007`.
-- Current retry: **Run #15**
-- Run ID: `35881692234`
-- Current state at checkpoint: in progress; dependencies completed and pinned pokeplatinum checkout had begun.
-- Do not treat battle entry as passed until Run #15 (or its corrected successor) completes compile + archive checks + DeSmuME and the battle screenshots are visually reviewed.
+- Passing run: **#31**
+- Run ID: `35890110766`
+- Passing head commit: `acaa4d22fc49a4b526a36ece93b36e20f86f5119`
+- Artifact ID: `10764014486`
+- Artifact SHA-256: `3108e3bd45c130f3864e0eb0c40afed71fd8346827a5a4e4072f4ba3d1598046`
+- Final PT04C closure checkpoint commit: `a89096243f10e2ef57797b54b4a7549d881f6ed0`
+- Verified:
+  - `FieldSystem_Save` succeeds with Victini #494 in party.
+  - Harness performs `OS_ResetSystem(RESET_ERROR)`.
+  - Platinum reloads through `gGameStartLoadSaveAppTemplate` / `SaveData_Load`.
+  - Post-reload assertions confirm Victini remains in party.
+  - Seen/Caught Pokédex flags survive.
+  - Slot 0 remains `SPECIES_VICTINI`, Lv.50.
+  - Visual frame 1800 shows native Party UI with VICTINI Lv.50, 174/174 HP.
+  - State remains stable through frame 3600.
+
+## PT04C status
+
+**COMPLETE / SEALED**
+
+The full boundary-species lifecycle is proven:
+
+`Register #494 → create → Party → Pokédex → Summary → PC → Battle → Save → Reset → Reload`
+
+Do not repeat these gates for every species.
 
 ## Next action on resume
 
-1. Read Run #15 status.
-2. If it failed, inspect only the failed step/log and patch that issue.
-3. If it passed, download `pt04c-victini-native-battle-entry-proof`.
-4. Visually verify player Victini in the native battle UI.
-5. Seal a battle-entry checkpoint.
-6. Only then begin the isolated save/reload gate.
+Begin the first **bulk post-493 roster expansion** phase. Use automated validation for registry IDs, personal data, sprite/icon resources, text, evolution links, learnsets, cries, and archive bounds. Use representative runtime spot tests for special cases rather than repeating the full Victini lifecycle individually.
 
 ## Locked project constraints retained
 
 - No rollback of approved DS/Platinum design work.
-- PT04C test harness remains CI-only.
-- Normal Mercury DS game flow remains untouched by runtime harness patches.
-- Do not start wider Gen V registration yet.
-- Do not start save/reload until battle entry is separately verified and sealed.
+- Runtime proof harnesses remain CI-only.
+- Normal Mercury DS game flow remains untouched by PT04C harness patches.
+- Victini-specific temporary donor compromises remain temporary and are replaced during the bulk data/asset pass.
+- Wider roster work should now proceed in batches with checkpoints rather than one Pokémon at a time.
