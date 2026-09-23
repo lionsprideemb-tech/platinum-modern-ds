@@ -1,0 +1,124 @@
+name: PB02I Twinleaf Bedroom Arrival
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02i-twinleaf-bedroom.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download sealed PB01 candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact
+          gh api -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01-artifact.zip
+          unzip -q pb01-artifact.zip -d pb01-artifact
+          test "$(sha256sum pb01-artifact/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02i-venv"
+          . "$RUNNER_TEMP/pb02i-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Play to Twinleaf bedroom and exit TV text
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02i-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          out=Path("pb02i-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running(): raise SystemExit(f"stopped at {frame}")
+
+          def pulse(key,held=12,settle=300):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def touch(x,y,held=18,settle=180):
+              emu.input.touch_set_pos(x,y); run(held); emu.input.touch_release(); run(settle)
+
+          def cap(label):
+              im=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              im.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          # Replay the now-certified intro path.
+          run(16000); pulse(Keys.KEY_START,20,700)
+          for _ in range(6): pulse(Keys.KEY_A,12,300)
+          pulse(Keys.KEY_DOWN,12,120); pulse(Keys.KEY_DOWN,12,120); pulse(Keys.KEY_A,12,420)
+          pulse(Keys.KEY_A,12,320); pulse(Keys.KEY_A,12,320)
+          emu.input.touch_set_pos(128,94); run(30); emu.input.touch_release(); run(600)
+          for _ in range(8): pulse(Keys.KEY_A,12,360)
+          pulse(Keys.KEY_A,12,650); pulse(Keys.KEY_A,12,650); pulse(Keys.KEY_A,12,900)
+          pulse(Keys.KEY_A,12,700); pulse(Keys.KEY_A,12,700); pulse(Keys.KEY_A,12,900)
+          for x,y in [(66,119),(101,99),(154,119),(66,99),(31,139),(154,119),(101,139)]:
+              touch(x,y)
+          touch(224,72,24,700)
+          for _ in range(6): pulse(Keys.KEY_A,12,500)
+          pulse(Keys.KEY_DOWN,12,180); pulse(Keys.KEY_A,12,650)
+          pulse(Keys.KEY_A,12,650); pulse(Keys.KEY_A,12,700)
+          for _ in range(5): pulse(Keys.KEY_A,12,500)
+          # Now at opening TV text.
+          run(1600); cap("twinleaf-tv-opening")
+
+          pulse(Keys.KEY_A,12,700); cap("tv-text-advanced-1")
+          pulse(Keys.KEY_A,12,700); cap("tv-text-advanced-2")
+          run(1200); cap("twinleaf-bedroom-stable")
+
+          # One harmless movement pulse proves field control if room is live.
+          pulse(Keys.KEY_LEFT,12,300); cap("bedroom-left-input")
+          run(600); cap("bedroom-after-input-stable")
+
+          (out/"pb02i-meta.json").write_text(json.dumps({
+              "gate":"PB02I_TWINLEAF_BEDROOM_ARRIVAL",
+              "player_name":"MERCURY",
+              "rival_name":"BARRY",
+              "last_frame":frame,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02I screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02i-twinleaf-bedroom-proof
+          path: pb02i-play/
+          if-no-files-found: warn
+          retention-days: 14
