@@ -228,6 +228,32 @@ def pack_logo_with_blank_tile(path: Path):
     packed.save(path)
 
 
+def pack_border_with_blank_tile(path: Path):
+    # The 4bpp footer also needs tile 0 reserved for transparent map cells.
+    # Pack its 256 artwork tiles after a blank tile 0, exactly like the logo.
+    src = Image.open(path)
+    if src.mode != "P" or src.size != (256, 64):
+        raise RuntimeError(f"{path} must be a 256x64 paletted PNG")
+
+    packed = Image.new("P", (256, 72), 0)
+    packed.putpalette(src.getpalette())
+
+    src_px = src.load()
+    dst_px = packed.load()
+
+    for tile in range(256):
+        sx = (tile % 32) * 8
+        sy = (tile // 32) * 8
+        dst_tile = tile + 1
+        dx = (dst_tile % 32) * 8
+        dy = (dst_tile // 32) * 8
+        for py in range(8):
+            for px in range(8):
+                dst_px[dx + px, dy + py] = src_px[sx + px, sy + py]
+
+    packed.save(path, bits=4)
+
+
 def clear_last_tile(path: Path):
     # Reserve the final 8x8 tile as an empty tile for unused map cells while
     # preserving the artwork's natural tile 0 and row-major tile order.
@@ -283,9 +309,11 @@ def build_mercury_tilemaps(gfx: Path):
         lambda x, y: ((y - 3) * 32 + x + 1) if 3 <= y < 19 else 0,
     )
 
-    # Keep the decorative border layers neutralized for this proof.
-    write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 24, 4, lambda x, y: 0)
-    write_linear_nscr(gfx / "top_screen_border_2.NSCR", 32, 32, 4, lambda x, y: 0)
+    # Restore the Mercury footer into visible rows 16..23. Tile 0 remains
+    # transparent everywhere else, while footer art occupies tiles 1..256.
+    border_map = lambda x, y: ((y - 16) * 32 + x + 1) if 16 <= y < 24 else 0
+    write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 24, 4, border_map)
+    write_linear_nscr(gfx / "top_screen_border_2.NSCR", 32, 32, 4, border_map)
 
 
 def patch_title_runtime(source: Path):
@@ -366,14 +394,8 @@ def main():
         "P",
     )
 
-    # Blank Platinum's decorative border art for the isolated Mercury logo
-    # proof. Palette index 0 is transparent on the text BG layer.
-    border_im = Image.open(border)
-    blank = Image.new("P", border_im.size, 0)
-    blank.putpalette(border_im.getpalette())
-    blank.save(border, bits=4)
-
     pack_logo_with_blank_tile(logo)
+    pack_border_with_blank_tile(border)
     write_jasc_palette_from_png(border, gfx/"top_screen_border.pal", 256)
     build_mercury_tilemaps(gfx)
     patch_title_runtime(source)
