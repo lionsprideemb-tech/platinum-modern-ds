@@ -237,6 +237,8 @@ def main() -> None:
     donor_types = set()
     donor_gender_ratios = set()
     exp_overflow = []
+    unsupported_gender_ratios = []
+    supported_gender_ratios = {0, 31, 63, 127, 190, 191, 222, 223, 254, 255}
 
     for dex, species_const in enumerate(target, start=args.start_dex):
         try:
@@ -263,6 +265,13 @@ def main() -> None:
                 "species": species_const,
                 "directory": str(sprite_root),
                 "assets": asset_state,
+            })
+
+        if entry["gender_ratio_raw"] not in supported_gender_ratios:
+            unsupported_gender_ratios.append({
+                "national_dex": dex,
+                "species": species_const,
+                "gender_ratio_raw": entry["gender_ratio_raw"],
             })
 
         donor_abilities.update(entry["abilities"])
@@ -322,6 +331,7 @@ def main() -> None:
             "gender_ratios_raw": sorted(donor_gender_ratios),
         },
         "base_exp_over_255": exp_overflow,
+        "unsupported_gender_ratios": unsupported_gender_ratios,
         "compatibility": compatibility,
         "proof_points": {
             "first": parsed[0] if parsed else None,
@@ -345,6 +355,7 @@ def main() -> None:
         "missing_entries": len(missing_entries),
         "missing_required_assets": len(missing_assets),
         "base_exp_over_255": len(exp_overflow),
+        "unsupported_gender_ratios": len(unsupported_gender_ratios),
         "unsupported_types": len(compatibility["unsupported_types"]),
         "unsupported_abilities": len(compatibility["unsupported_abilities"]),
         "unsupported_held_items": len(compatibility["unsupported_held_items"]),
