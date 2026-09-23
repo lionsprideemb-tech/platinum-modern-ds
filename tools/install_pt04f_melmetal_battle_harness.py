@@ -45,7 +45,7 @@ def main() -> None:
         "native_entrypoint": "Encounter_NewVsSpeciesAtLevel",
         "expected_visual_proof": [
             "Melmetal player-side back sprite",
-            "VOLCANION player name",
+            "MELMETAL player name",
             "Lv.50 and sane HP",
             "native battle command UI",
             "stable render across multiple captures",
