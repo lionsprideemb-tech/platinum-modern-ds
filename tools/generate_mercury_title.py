@@ -246,25 +246,27 @@ def write_linear_nscr(path: Path, width_tiles: int, height_tiles: int, bitdepth:
 
 
 def build_mercury_tilemaps(gfx: Path):
-    # Platinum's original logo.NSCR is a 256x256 (32x32 tile) map even though
-    # the backing BG is configured larger for effects. Match that native map
-    # shape exactly: the Mercury art fills rows 0..15 and the rest uses a
-    # reserved transparent tile. Using a 512x256 map here causes DS screen-block
-    # addressing to scramble the artwork.
+    # Keep Platinum's original logo.NSCR untouched. It is already the correct
+    # 256x128 logo mapping used by the vanilla title screen. Earlier custom
+    # remaps introduced screen-block ambiguity.
+    #
+    # For this proof, neutralize the decorative border layers completely so the
+    # Mercury logo layer can be judged by itself, without Platinum's border/
+    # blur maps covering or blending through it.
     write_linear_nscr(
-        gfx / "logo.NSCR",
+        gfx / "top_screen_border.NSCR",
         32,
-        32,
-        8,
-        lambda x, y: (y * 32 + x) if y < 16 else 511,
+        24,
+        4,
+        lambda x, y: 0,
     )
-
-    # Match Platinum's native border map dimensions: 256x192 for the base map
-    # and 256x256 for the alternate/blur map. The custom footer occupies
-    # visible rows 16..23.
-    border_map = lambda x, y: ((y - 16) * 32 + x) if 16 <= y < 24 else 255
-    write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 24, 4, border_map)
-    write_linear_nscr(gfx / "top_screen_border_2.NSCR", 32, 32, 4, border_map)
+    write_linear_nscr(
+        gfx / "top_screen_border_2.NSCR",
+        32,
+        32,
+        4,
+        lambda x, y: 0,
+    )
 
 
 def patch_title_runtime(source: Path):
@@ -303,52 +305,10 @@ def patch_title_runtime(source: Path):
         raise RuntimeError("could not locate Platinum title idle loop")
     text=text.replace(motion_old, motion_new, 1)
 
-    # The Mercury art/map is genuinely 256 pixels wide. Match the logo BG's
-    # hardware screen size to that native width instead of Platinum's 512-wide
-    # buffer, removing the remaining screen-block ambiguity for replacement art.
-    logo_bg_old = (
-        "    BgTemplate bgSub2 = {\n"
-        "        .x = 0,\n"
-        "        .y = 0,\n"
-        "        .bufferSize = 0x1000,\n"
-        "        .baseTile = 0,\n"
-        "        .screenSize = BG_SCREEN_SIZE_512x256,\n"
-        "        .colorMode = GX_BG_COLORMODE_256,"
-    )
-    logo_bg_new = (
-        "    BgTemplate bgSub2 = {\n"
-        "        .x = 0,\n"
-        "        .y = 0,\n"
-        "        .bufferSize = 0x800,\n"
-        "        .baseTile = 0,\n"
-        "        .screenSize = BG_SCREEN_SIZE_256x256,\n"
-        "        .colorMode = GX_BG_COLORMODE_256,"
-    )
-    if logo_bg_old not in text:
-        raise RuntimeError("could not locate Platinum logo BG template")
-    text = text.replace(logo_bg_old, logo_bg_new, 1)
-
-    blur_bg_old = (
-        "    BgTemplate template = {\n"
-        "        .x = 0,\n"
-        "        .y = 0,\n"
-        "        .bufferSize = 0x1000,\n"
-        "        .baseTile = 0,\n"
-        "        .screenSize = BG_SCREEN_SIZE_512x256,\n"
-        "        .colorMode = GX_BG_COLORMODE_256,"
-    )
-    blur_bg_new = (
-        "    BgTemplate template = {\n"
-        "        .x = 0,\n"
-        "        .y = 0,\n"
-        "        .bufferSize = 0x800,\n"
-        "        .baseTile = 0,\n"
-        "        .screenSize = BG_SCREEN_SIZE_256x256,\n"
-        "        .colorMode = GX_BG_COLORMODE_256,"
-    )
-    if blur_bg_old not in text:
-        raise RuntimeError("could not locate Platinum blur BG template")
-    text = text.replace(blur_bg_old, blur_bg_new, 1)
+    blend_old = "    G2S_SetBlendAlpha(GX_BLEND_PLANEMASK_BG0 | GX_BLEND_PLANEMASK_BG1, GX_BLEND_PLANEMASK_BG2 | GX_BLEND_PLANEMASK_BG3, 26, 10);"
+    if blend_old not in text:
+        raise RuntimeError("could not locate Platinum final title blend")
+    text = text.replace(blend_old, "    G2S_BlendNone();", 1)
 
     source.write_text(text)
 
@@ -386,8 +346,15 @@ def main():
         (256, 64),
         "P",
     )
+
+    # Blank Platinum's decorative border art for the isolated Mercury logo
+    # proof. Palette index 0 is transparent on the text BG layer.
+    border_im = Image.open(border)
+    blank = Image.new("P", border_im.size, 0)
+    blank.putpalette(border_im.getpalette())
+    blank.save(border, bits=4)
+
     clear_last_tile(logo)
-    clear_last_tile(border)
     write_jasc_palette_from_png(border, gfx/"top_screen_border.pal", 256)
     build_mercury_tilemaps(gfx)
     patch_title_runtime(source)
