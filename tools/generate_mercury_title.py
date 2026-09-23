@@ -198,7 +198,8 @@ def write_jasc_palette_from_png(image_path: Path, palette_path: Path, color_coun
 
     lines = ["JASC-PAL", "0100", str(color_count)]
     lines.extend(f"{r} {g} {b}" for r, g, b in colors)
-    palette_path.write_text("\n".join(lines) + "\n")
+    # NitroGFX's JASC parser expects Windows CRLF endings.
+    palette_path.write_bytes(("\r\n".join(lines) + "\r\n").encode("ascii"))
 
 
 def clear_last_tile(path: Path):
