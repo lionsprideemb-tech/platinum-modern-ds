@@ -25,6 +25,13 @@ def main() -> None:
     if not field_map_change_c.is_file():
         raise SystemExit(f"missing pinned pokeplatinum source file: {field_map_change_c}")
 
+    replace_once(
+        field_map_change_c,
+        '#include "location.h"\n',
+        '#include "location.h"\n#include "main.h"\n',
+        "reset constants include",
+    )
+
     battle_block = """        // PT04C battle-entry phase: keep the already-proven native Victini
         // in party slot 0 and start Platinum's real scripted wild encounter
         // path. The opponent is deliberately native/low-risk so this gate
