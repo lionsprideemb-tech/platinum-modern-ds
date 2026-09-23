@@ -39,6 +39,13 @@ def main() -> None:
         field_map_change_c,
         '#include "location.h"\n',
         '#include "location.h"\n#include "main.h"\n',
+        "reset parameter include",
+    )
+
+    replace_once(
+        field_map_change_c,
+        '#include "location.h"\n',
+        '#include "location.h"\n#include "main.h"\n',
         "reset constants include",
     )
 
