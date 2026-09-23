@@ -50,14 +50,24 @@ def main() -> None:
     )
 
     # The normal game reaches GameStartNewSave only after Rowan intro has already
-    # called StartNewSave. The harness skips that intro, so initialize the blank
-    # save explicitly before the normal NewSave initialization.
+    # called StartNewSave and written a valid player identity. The harness skips
+    # that intro, so reproduce the minimum real profile state before NewSave init.
+    insert_include_once(
+        game_start_c,
+        '#include "constants/game_options.h"\n',
+        '#include "constants/charcode.h"\n',
+        "CI trainer-name constants include",
+    )
     replace_once(
         game_start_c,
         "    SaveData *saveData = ((ApplicationArgs *)ApplicationManager_Args(appMan))->saveData;\n"
         "    InitializeNewSave(HEAP_ID_GAME_START, saveData, 1);",
         "    SaveData *saveData = ((ApplicationArgs *)ApplicationManager_Args(appMan))->saveData;\n"
         "    StartNewSave(HEAP_ID_GAME_START, saveData);\n"
+        "    static const charcode_t pt04cTrainerName[] = { CHAR_P, CHAR_T, CHAR_0, CHAR_4, CHAR_C, CHAR_EOS };\n"
+        "    TrainerInfo *trainerInfo = SaveData_GetTrainerInfo(saveData);\n"
+        "    TrainerInfo_SetName(trainerInfo, pt04cTrainerName);\n"
+        "    TrainerInfo_SetGender(trainerInfo, 0);\n"
         "    InitializeNewSave(HEAP_ID_GAME_START, saveData, 1);",
         "blank-save initializer hook",
     )
