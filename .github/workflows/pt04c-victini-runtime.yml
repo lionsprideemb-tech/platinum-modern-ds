@@ -1,0 +1,186 @@
+name: PT04C Victini Native Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt04c-victini-canary
+    paths:
+      - "platinum-overlay/res/pokemon/victini/**"
+      - "tools/build_species_registry.py"
+      - "tools/prepare_pt04c_victini_canary.py"
+      - "data/canonical_species_1025.txt"
+      - "docs/PT04C_VICTINI_CANARY.md"
+      - ".github/workflows/pt04c-victini-runtime.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  victini-canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Expand registry through Victini
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 494 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report pt04c-registry.json
+          test "$(sed -n '494p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_ARCEUS"
+          test "$(sed -n '495p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_VICTINI"
+          test "$(sed -n '496p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_EGG"
+
+      - name: Prepare Victini structural canary
+        shell: bash
+        run: python3 tools/prepare_pt04c_victini_canary.py vendor/pokeplatinum
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+          grep -q "SPECIES_VICTINI" generated/species.h
+
+      - name: Install emulator proof tools
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt04c-venv"
+          . "$RUNNER_TEMP/pt04c-venv/bin/activate"
+          pip install --upgrade pip py-desmume
+
+      - name: Capture Rowan-intro Victini runtime
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pt04c-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.controls import Keys, keymask
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start PT04C ROM")
+
+          def roll(frames):
+              for _ in range(frames):
+                  emu.cycle(False)
+
+          def tap(key, hold=4, settle=45):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              roll(hold)
+              emu.input.keypad_rm_key(mask)
+              roll(settle)
+
+          meta = []
+          try:
+              # Skip the opening movie aggressively, enter the title/menu, and
+              # choose New Game. Repeated A then advances Rowan dialogue but the
+              # capture cadence is dense enough to catch the Pokémon reveal.
+              roll(360)
+              for _ in range(10):
+                  tap(Keys.KEY_START, hold=3, settle=90)
+              for _ in range(8):
+                  tap(Keys.KEY_A, hold=3, settle=90)
+
+              for idx in range(18):
+                  tap(Keys.KEY_A, hold=3, settle=100)
+                  image = emu.screenshot()
+                  path = out / f"pt04c-rowan-{idx:02}.png"
+                  image.save(path)
+                  rgb = image.convert("RGB")
+                  colors = rgb.getcolors(maxcolors=256*384)
+                  unique = len(colors) if colors is not None else 256*384
+                  meta.append({
+                      "capture": idx,
+                      "file": path.name,
+                      "unique_colors": unique,
+                      "blank_like": unique < 16,
+                  })
+          finally:
+              emu.destroy()
+
+          usable = [m for m in meta if not m["blank_like"]]
+          if not usable:
+              raise SystemExit("all PT04C captures were blank")
+
+          (out / "pt04c-meta.json").write_text(json.dumps({
+              "gate": "PT04C_VICTINI_NATIVE_RUNTIME",
+              "species": "SPECIES_VICTINI",
+              "national_dex": 494,
+              "rowan_intro_canary": True,
+              "captures": meta,
+              "usable_capture_count": len(usable),
+          }, indent=2) + "\n")
+          PY
+
+      - name: Upload PT04C runtime proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt04c-victini-runtime-proof
+          path: |
+            runtime-preview/*.png
+            runtime-preview/pt04c-meta.json
+            pt04c-registry.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## PT04C Victini native runtime canary"
+            echo
+            echo "- Distinct National Dex #494 species slot compiled"
+            echo "- Real DS Victini front/back/icon assets compiled through Platinum archives"
+            echo "- Rowan intro patched only for runtime proof"
+            echo "- Emulator capture artifact uploaded"
+            echo "- PT05 will replace canary cry/ability/learnset/shiny placeholders"
+          } >> "$GITHUB_STEP_SUMMARY"
