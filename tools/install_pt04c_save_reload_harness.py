@@ -14,6 +14,16 @@ def replace_once(path: Path, old: str, new: str, label: str) -> None:
     path.write_text(text.replace(old, new, 1))
 
 
+def insert_include_once(path: Path, anchor: str, include_line: str, label: str) -> None:
+    text = path.read_text()
+    if include_line in text:
+        return
+    count = text.count(anchor)
+    if count != 1:
+        raise SystemExit(f"{label}: expected exactly one include anchor in {path}, found {count}")
+    path.write_text(text.replace(anchor, anchor + include_line, 1))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("pokeplatinum_root", type=Path)
