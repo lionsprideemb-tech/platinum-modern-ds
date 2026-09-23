@@ -164,6 +164,109 @@ def tint_border(path: Path):
     im.save(path, bits=4)
 
 
+def recolor_nsbmd_palettes(path: Path, transforms: dict[str, str]):
+    """Recolor named embedded TEX0 palettes without touching geometry/animation."""
+    data = bytearray(path.read_bytes())
+    if data[:4] != b"BMD0":
+        raise RuntimeError(f"{path} is not an NSBMD/BMD0 file")
+    if struct.unpack_from("<H", data, 4)[0] != 0xFEFF:
+        raise RuntimeError(f"{path} has an unexpected Nitro byte order")
+
+    section_count = struct.unpack_from("<H", data, 14)[0]
+    tex0 = None
+    for i in range(section_count):
+        off = struct.unpack_from("<I", data, 16 + i * 4)[0]
+        if data[off:off + 4] == b"TEX0":
+            tex0 = off
+            break
+    if tex0 is None:
+        raise RuntimeError(f"{path} has no embedded TEX0 section")
+
+    palette_list_rel = struct.unpack_from("<I", data, tex0 + 0x34)[0]
+    palette_data = tex0 + struct.unpack_from("<I", data, tex0 + 0x38)[0]
+    palette_data_len = struct.unpack_from("<H", data, tex0 + 0x30)[0] << 3
+    list_base = tex0 + palette_list_rel
+
+    count = data[list_base + 1]
+    sizes_off = list_base + 12 + count * 4
+    elem_size = struct.unpack_from("<H", data, sizes_off)[0] or 4
+    elem_data = sizes_off + 4
+    names_off = elem_data + count * elem_size
+
+    entries = []
+    for i in range(count):
+        raw_name = bytes(data[names_off + i * 16:names_off + (i + 1) * 16])
+        name = raw_name.split(b"\x00", 1)[0].decode("ascii")
+        off_shr3 = struct.unpack_from("<H", data, elem_data + i * elem_size)[0]
+        entries.append((name, palette_data + (off_shr3 << 3)))
+
+    entries.sort(key=lambda item: item[1])
+    end_of_palettes = palette_data + palette_data_len
+
+    def clamp5(value):
+        return max(0, min(31, int(round(value))))
+
+    def mercury_violet(r, g, b):
+        # Keep truly neutral highlights silver; rotate red body/wing ramps into
+        # saturated violet so Giratina remains high-contrast but no longer reads
+        # like an untouched Platinum asset.
+        if max(r, g, b) - min(r, g, b) <= 2 and max(r, g, b) >= 20:
+            v = clamp5(max(r, g, b))
+            return (v, v, min(31, v + 1))
+        t = max(r, g, b) / 31.0
+        return (
+            clamp5(4 + 19 * t),
+            clamp5(2 + 10 * t),
+            clamp5(8 + 23 * t),
+        )
+
+    def mercury_platinum(r, g, b):
+        # Giratina's vanilla yellow palette stores most of its useful shading
+        # in the blue component. Remap that ramp to cool platinum/lavender.
+        t = max(0.0, min(1.0, b / 23.0))
+        return (
+            clamp5(14 + 16 * t),
+            clamp5(14 + 16 * t),
+            clamp5(20 + 11 * t),
+        )
+
+    def mercury_cool_metal(r, g, b):
+        t = max(r, g, b) / 31.0
+        return (
+            clamp5(9 + 21 * t),
+            clamp5(10 + 21 * t),
+            clamp5(16 + 15 * t),
+        )
+
+    palette_funcs = {
+        "violet": mercury_violet,
+        "platinum": mercury_platinum,
+        "cool_metal": mercury_cool_metal,
+    }
+
+    found = set()
+    for idx, (name, start) in enumerate(entries):
+        mode = transforms.get(name)
+        if mode is None:
+            continue
+        end = entries[idx + 1][1] if idx + 1 < len(entries) else end_of_palettes
+        fn = palette_funcs[mode]
+        for off in range(start, end, 2):
+            color = struct.unpack_from("<H", data, off)[0]
+            r = color & 0x1F
+            g = (color >> 5) & 0x1F
+            b = (color >> 10) & 0x1F
+            nr, ng, nb = fn(r, g, b)
+            struct.pack_into("<H", data, off, nr | (ng << 5) | (nb << 10))
+        found.add(name)
+
+    missing = set(transforms) - found
+    if missing:
+        raise RuntimeError(f"{path} is missing expected palettes: {sorted(missing)}")
+
+    path.write_bytes(data)
+
+
 def build_mercury_bottom_scene(path: Path):
     # Full 256x192 DS-native lower-screen composition. This remains a 4bpp
     # background behind Platinum's real animated 3D Giratina, so the original
@@ -545,6 +648,9 @@ def main():
     logo=gfx/"logo.png"
     border=gfx/"top_screen_border.png"
     bottom_border=gfx/"bottom_screen_border.png"
+    giratina_model=gfx/"giratina.nsbmd"
+    giratina_face_model=gfx/"giratina_face.nsbmd"
+    giratina_portal_model=gfx/"giratina_portal.nsbmd"
     source=root/"src/applications/title_screen.c"
 
     project_root=Path(__file__).resolve().parent.parent
@@ -552,7 +658,7 @@ def main():
     logo_asset=asset_dir/"mercury_logo_top_256x128.png"
     border_asset=asset_dir/"mercury_top_footer_256x64.png"
 
-    for p in (logo,border,bottom_border,source,logo_asset,border_asset):
+    for p in (logo,border,bottom_border,giratina_model,giratina_face_model,giratina_portal_model,source,logo_asset,border_asset):
         if not p.exists():
             raise SystemExit(f"missing required Mercury title file: {p}")
 
@@ -574,6 +680,30 @@ def main():
     )
 
     build_mercury_bottom_scene(bottom_border)
+
+    # Title-screen-only Giratina color treatment. Geometry, skeletal animation,
+    # texture animation, and portal motion stay vanilla; only embedded palettes
+    # are shifted into Mercury's platinum/violet identity.
+    recolor_nsbmd_palettes(
+        giratina_model,
+        {
+            "gira01_pl": "violet",
+            "gira02_pl": "platinum",
+        },
+    )
+    recolor_nsbmd_palettes(
+        giratina_face_model,
+        {
+            "op_ana07_pl": "violet",
+        },
+    )
+    recolor_nsbmd_palettes(
+        giratina_portal_model,
+        {
+            "op_ana02_pl": "cool_metal",
+        },
+    )
+
     pack_logo_with_blank_tile(logo)
     pack_border_with_blank_tile(border)
     write_jasc_palette_from_png(border, gfx/"top_screen_border.pal", 256)
@@ -584,6 +714,9 @@ def main():
     print(f"logo: {logo}")
     print(f"border: {border}")
     print(f"bottom border: {bottom_border}")
+    print(f"Giratina model: {giratina_model}")
+    print(f"Giratina face model: {giratina_face_model}")
+    print(f"Giratina portal model: {giratina_portal_model}")
     print(f"source: {source}")
 
 
