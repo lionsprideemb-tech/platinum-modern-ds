@@ -54,9 +54,22 @@ def main() -> None:
         // in party slot 0 and start Platinum's real scripted wild encounter
         // path. The opponent is deliberately native/low-risk so this gate
         // isolates player-side species-494 loading into the battle engine.
-        GF_ASSERT(Party_HasSpecies(
-            SaveData_GetParty(fieldSystem->saveData),
-            SPECIES_VICTINI));
+        Party *controlParty = SaveData_GetParty(fieldSystem->saveData);
+        GF_ASSERT(Party_HasSpecies(controlParty, SPECIES_VICTINI));
+
+        // Run one native-species control through the exact same battle handoff.
+        // If this reaches battle, the handoff is sound and the remaining fault
+        // is isolated to species-494 battle-only data/resources.
+        GF_ASSERT(Party_RemovePokemonBySlotIndex(controlParty, 0));
+        GF_ASSERT(Pokemon_GiveMonFromScript(
+            HEAP_ID_FIELD3,
+            fieldSystem->saveData,
+            SPECIES_MEW,
+            50,
+            ITEM_NONE,
+            fieldSystem->location->mapHeaderID,
+            0));
+        GF_ASSERT(Party_HasSpecies(controlParty, SPECIES_MEW));
 
         int *battleResult = Heap_Alloc(HEAP_ID_FIELD2, sizeof(int));
         *battleResult = 0;
