@@ -1,10 +1,11 @@
-name: PT04C Victini Native Build Boot
+name: PT04C Outdoor Battle Control Diagnostic
 
 on:
   workflow_dispatch:
   push:
     branches:
       - feature/pt04c-victini-runtime
+      - diagnostic/pt04c-outdoor-battle-control
     paths:
       - "data/canonical_species_1025.txt"
       - "tools/build_species_registry.py"
@@ -13,6 +14,7 @@ on:
       - "tools/install_pt04c_summary_harness.py"
       - "tools/install_pt04c_pc_harness.py"
       - "tools/install_pt04c_battle_harness.py"
+      - "tools/install_pt04c_outdoor_spawn.py"
       - "docs/PT04C_VICTINI_RUNTIME_PROOF.md"
       - "platinum-overlay/**"
       - "tools/generate_mercury_title.py"
@@ -134,10 +136,21 @@ jobs:
           python3 tools/install_pt04c_battle_harness.py \
             vendor/pokeplatinum \
             --report pt04c-battle-harness-install.json
+            pt04c-outdoor-spawn-install.json
           test -s pt04c-battle-harness-install.json
           grep -q '"PT04C_VICTINI_NATIVE_BATTLE_ENTRY_HARNESS_INSTALL"' pt04c-battle-harness-install.json
           grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c
           grep -q 'SPECIES_BIDOOF' vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Move CI control battle to Twinleaf exterior
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_outdoor_spawn.py \
+            vendor/pokeplatinum \
+            --report pt04c-outdoor-spawn-install.json
+          test -s pt04c-outdoor-spawn-install.json
+          grep -q '"PT04C_NATIVE_OUTDOOR_BATTLE_CONTROL"' pt04c-outdoor-spawn-install.json
+          grep -q 'SetPlayerFirstRespawnLocation' vendor/pokeplatinum/src/game_start.c
 
       - name: Generate sealed Mercury title resources
         shell: bash
@@ -223,7 +236,7 @@ jobs:
           print(json.dumps(counts, indent=2))
           PY
 
-      - name: Run native Victini battle-entry harness in DeSmuME
+      - name: Run native Mew battle from Twinleaf exterior in DeSmuME
         id: battle_runtime
         shell: bash
         run: |
@@ -278,9 +291,9 @@ jobs:
                   emu.destroy()
 
           (out / "pt04c-battle-meta.json").write_text(json.dumps({
-              "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_DIAGNOSTIC",
+              "gate": "PT04C_NATIVE_OUTDOOR_BATTLE_CONTROL_DIAGNOSTIC",
               "prerequisite": "PT04C native PC storage checkpoint Run #13",
-              "player_species_494": "SPECIES_VICTINI",
+              "player_control_species": "SPECIES_MEW",
               "opponent": "SPECIES_BIDOOF Lv.5",
               "last_completed_frame": current,
               "stopped_at_frame": stopped_at,
@@ -296,7 +309,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pt04c-victini-native-battle-entry-proof
+          name: pt04c-native-outdoor-battle-control-proof
           path: |
             pt04c-registry-report.json
             pt04c-victini-install.json
