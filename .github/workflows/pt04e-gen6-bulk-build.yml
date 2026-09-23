@@ -75,6 +75,14 @@ jobs:
         run: |
           python3 tools/audit_pt04d_species_batch.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 650 --end-dex 721             --gate PT04E_GEN6_DONOR_AUDIT             --report pt04e-gen6-donor-audit.json
 
+      - name: Restore sealed Gen V prerequisite resources
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 649             --gate PT04D_GEN5_PREREQUISITE_INSTALL             --report pt04e-gen5-prerequisite-install.json
+          test "$(jq -r '.installed_species' pt04e-gen5-prerequisite-install.json)" = "156"
+          test -s vendor/pokeplatinum/res/pokemon/victini/meson.build
+          test -s vendor/pokeplatinum/res/pokemon/genesect/meson.build
+
       - name: Install Gen VI resource batch
         shell: bash
         run: |
@@ -178,6 +186,7 @@ jobs:
           path: |
             pt04e-gen6-registry.json
             pt04e-gen6-donor-audit.json
+            pt04e-gen5-prerequisite-install.json
             pt04e-gen6-install.json
             pt04e-gen6-archive-proof.json
           if-no-files-found: warn
