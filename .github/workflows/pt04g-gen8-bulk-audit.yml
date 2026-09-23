@@ -45,7 +45,7 @@ jobs:
           test -s vendor/hg-engine/data/Species.c
           test -s vendor/hg-engine/data/BaseExperienceTable.c
           test -s vendor/hg-engine/data/graphics/sprites/grookey/male/front.png
-          test -s vendor/hg-engine/data/graphics/sprites/enamorus/male/front.png
+          test -s vendor/hg-engine/data/graphics/sprites/enamorus/female/front.png
 
       - name: Verify canonical contiguous DS IDs
         shell: bash
