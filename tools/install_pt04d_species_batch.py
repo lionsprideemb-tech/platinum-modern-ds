@@ -9,7 +9,7 @@ import shutil
 import struct
 from pathlib import Path
 
-from tools.audit_pt04d_species_batch import (
+from audit_pt04d_species_batch import (
     extract_braced_block,
     load_generated_constants,
     load_registry,
