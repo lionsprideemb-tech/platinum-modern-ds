@@ -109,13 +109,23 @@ def main() -> None:
         break;"""
     replace_once(field_map_change_c, old_case0, new_case0, "Victini party/catch insertion")
 
-    old_cases = """    case 2:
+    old_cases = """    case 1:
+        FieldTransition_StartMapAndFadeIn(task);
+        (*state)++;
+        break;
+    case 2:
         return TRUE;
     }
 
     return FALSE;
-}"""
-    new_cases = """    case 2:
+}
+
+void FieldSystem_SetLoadNewGameSpawnTask"""
+    new_cases = """    case 1:
+        FieldTransition_StartMapAndFadeIn(task);
+        (*state)++;
+        break;
+    case 2:
         // Open the real native party application and leave it on screen for the
         // emulator proof capture. The automation will close it in later PT04C
         // phases when summary/PC/battle/save-reload checks are added.
@@ -130,7 +140,9 @@ def main() -> None:
     }
 
     return FALSE;
-}"""
+}
+
+void FieldSystem_SetLoadNewGameSpawnTask"""
     replace_once(field_map_change_c, old_cases, new_cases, "party UI launch hook")
 
     report = {
