@@ -164,31 +164,116 @@ def tint_border(path: Path):
     im.save(path, bits=4)
 
 
-def build_mercury_bottom_gradient(path: Path):
-    # Platinum's lower-title background is a tiny 64x8 tile strip whose
-    # tilemap repeats tiles 1..7 as horizontal bands. Rebuild those seven tiles
-    # as a restrained indigo/violet gradient so the animated 3D Giratina sits
-    # in the same visual world as the Mercury top screen.
-    im = Image.new("P", (64, 8), 0)
+def build_mercury_bottom_scene(path: Path):
+    # Full 256x192 DS-native lower-screen composition. This remains a 4bpp
+    # background behind Platinum's real animated 3D Giratina, so the original
+    # model/animation pipeline stays intact while the surrounding presentation
+    # becomes unmistakably Mercury Redux.
     palette = [
-        0, 0, 0,
-        29, 24, 76,
-        24, 19, 64,
-        20, 15, 54,
-        16, 12, 45,
-        13, 9, 37,
-        10, 7, 30,
-        7, 5, 23,
+        (4, 3, 13),      # 0 near-black violet
+        (8, 6, 24),      # 1
+        (12, 8, 38),     # 2
+        (17, 11, 54),    # 3
+        (24, 16, 72),    # 4
+        (34, 23, 94),    # 5
+        (47, 32, 118),   # 6
+        (63, 45, 143),   # 7
+        (82, 63, 166),   # 8
+        (105, 85, 190),  # 9
+        (132, 113, 211), # 10
+        (163, 148, 228), # 11
+        (77, 114, 179),  # 12 cool-blue accent
+        (113, 150, 207), # 13
+        (163, 190, 230), # 14
+        (231, 236, 250), # 15 silver-white
     ]
-    palette += [0] * (768 - len(palette))
-    im.putpalette(palette)
 
+    im = Image.new("P", (256, 192), 0)
+    flat = []
+    for rgb in palette:
+        flat.extend(rgb)
+    flat += [0] * (768 - len(flat))
+    im.putpalette(flat)
     px = im.load()
-    for tile in range(8):
-        palette_index = min(tile, 7)
-        for y in range(8):
-            for x in range(tile * 8, tile * 8 + 8):
-                px[x, y] = palette_index
+
+    # Vertical twilight gradient.
+    for y in range(192):
+        if y < 28:
+            idx = 5
+        elif y < 60:
+            idx = 4
+        elif y < 96:
+            idx = 3
+        elif y < 132:
+            idx = 2
+        elif y < 164:
+            idx = 1
+        else:
+            idx = 0
+        for x in range(256):
+            px[x, y] = idx
+
+    d = ImageDraw.Draw(im)
+
+    # Distortion-space halo behind Giratina. These concentric broken arcs are
+    # intentionally angular and sparse so they read clearly at 256x192.
+    rings = [
+        (28, 24, 228, 164, 6),
+        (43, 36, 213, 154, 7),
+        (59, 49, 197, 143, 8),
+        (76, 62, 180, 132, 9),
+    ]
+    for box in rings:
+        x0, y0, x1, y1, col = box
+        d.arc((x0, y0, x1, y1), 196, 344, fill=col, width=2)
+        d.arc((x0, y0, x1, y1), 16, 164, fill=max(5, col-1), width=1)
+
+    # Subtle vertical rift glow in the center.
+    for x, col in ((118, 6), (121, 7), (124, 8), (127, 9), (130, 8), (133, 7), (136, 6)):
+        d.line((x, 42, x, 162), fill=col, width=1)
+
+    # Crystalline/Distortion shards framing the model without covering it.
+    left_shards = [
+        [(0, 28), (28, 40), (5, 48)],
+        [(0, 61), (35, 72), (7, 82)],
+        [(0, 101), (31, 108), (3, 121)],
+        [(12, 142), (42, 132), (31, 158)],
+    ]
+    right_shards = [
+        [(255, 31), (226, 43), (252, 52)],
+        [(255, 66), (221, 76), (250, 87)],
+        [(255, 103), (224, 111), (252, 123)],
+        [(244, 143), (214, 133), (225, 159)],
+    ]
+    shard_cols = [8, 7, 6, 5]
+    for pts, col in zip(left_shards, shard_cols):
+        d.polygon(pts, fill=col)
+        d.line(pts + [pts[0]], fill=min(15, col + 3), width=1)
+    for pts, col in zip(right_shards, shard_cols):
+        d.polygon(pts, fill=col)
+        d.line(pts + [pts[0]], fill=min(15, col + 3), width=1)
+
+    # Small fixed star/glint pattern keeps the scene alive without looking
+    # noisy or like a GBA-era tiled backdrop.
+    stars = [
+        (18, 18, 14), (47, 24, 12), (81, 16, 13), (174, 19, 13),
+        (207, 27, 14), (236, 17, 12), (28, 91, 13), (228, 94, 13),
+        (52, 154, 12), (202, 150, 12), (91, 173, 13), (165, 169, 13),
+    ]
+    for x, y, col in stars:
+        d.point((x, y), fill=col)
+        if col >= 13:
+            d.point((x-1, y), fill=max(10, col-2))
+            d.point((x+1, y), fill=max(10, col-2))
+            d.point((x, y-1), fill=max(10, col-2))
+            d.point((x, y+1), fill=max(10, col-2))
+
+    # Thin lower crystalline horizon. Copyright text remains on its own
+    # foreground layer above this.
+    d.line((24, 173, 232, 173), fill=6, width=1)
+    d.line((48, 176, 208, 176), fill=4, width=1)
+    d.polygon([(20,173),(25,168),(30,173),(25,178)], fill=8)
+    d.polygon([(226,173),(231,168),(236,173),(231,178)], fill=8)
 
     im.save(path, bits=4)
 
@@ -344,6 +429,11 @@ def build_mercury_tilemaps(gfx: Path):
     write_linear_nscr(gfx / "top_screen_border.NSCR", 32, 24, 4, border_map)
     write_linear_nscr(gfx / "top_screen_border_2.NSCR", 32, 32, 4, border_map)
 
+    # Full-screen lower Mercury scene: one native DS tile per map cell.
+    lower_map = lambda x, y: y * 32 + x
+    write_linear_nscr(gfx / "bottom_screen_border.NSCR", 32, 24, 4, lower_map)
+    write_linear_nscr(gfx / "bottom_screen_border_2.NSCR", 32, 24, 4, lower_map)
+
 
 def patch_title_runtime(source: Path):
     text=source.read_text()
@@ -453,7 +543,7 @@ def main():
         "P",
     )
 
-    build_mercury_bottom_gradient(bottom_border)
+    build_mercury_bottom_scene(bottom_border)
     pack_logo_with_blank_tile(logo)
     pack_border_with_blank_tile(border)
     write_jasc_palette_from_png(border, gfx/"top_screen_border.pal", 256)
