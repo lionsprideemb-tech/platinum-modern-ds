@@ -43,43 +43,30 @@ def main() -> None:
 
     insert_include_once(
         field_map_change_c,
-        '#include "constants/heap.h"\n',
-        '#include "constants/battle.h"\n',
-        "battle constants include",
-    )
-    insert_include_once(
-        field_map_change_c,
-        '#include "overlay006/hm_cut_in.h"\n',
-        '#include "overlay006/wild_encounters.h"\n',
-        "scripted wild encounter include",
-    )
-    insert_include_once(
-        field_map_change_c,
         '#include "field_bgm.h"\n',
-        '#include "field_battle_data_transfer.h"\n',
-        "battle DTO include",
+        '#include "encounter.h"\n',
+        "encounter include",
     )
 
     start_marker = "        // PT04C PC-storage phase: store the proven Victini into the native"
     end_marker = "        FieldSystem_OpenPokemonStorage(fieldSystem, storageSession);"
-    replacement = """        // PT04C battle control: use a native species but drive the real battle
-        // application directly after finishing the field map. This bypasses
-        // only the synthetic new-save encounter-effect transition, letting us
-        // distinguish transition issues from battle/species issues.
-        Party *controlParty = SaveData_GetParty(fieldSystem->saveData);
-        GF_ASSERT(Party_HasSpecies(controlParty, SPECIES_VICTINI));
-        GF_ASSERT(Party_RemovePokemonBySlotIndex(controlParty, 0));
-        GF_ASSERT(Pokemon_GiveMonFromScript(
-            HEAP_ID_FIELD3,
-            fieldSystem->saveData,
-            SPECIES_MEW,
-            50,
-            ITEM_NONE,
-            fieldSystem->location->mapHeaderID,
-            0));
-        GF_ASSERT(Party_HasSpecies(controlParty, SPECIES_MEW));
+    replacement = """        // PT04C battle-entry phase: keep the already-proven native Victini
+        // in party slot 0 and start Platinum's real scripted wild encounter
+        // path. The opponent is deliberately native/low-risk so this gate
+        // isolates player-side species-494 loading into the battle engine.
+        GF_ASSERT(Party_HasSpecies(
+            SaveData_GetParty(fieldSystem->saveData),
+            SPECIES_VICTINI));
 
-        FieldTransition_FinishMap(task);"""
+        int *battleResult = Heap_Alloc(HEAP_ID_FIELD2, sizeof(int));
+        *battleResult = 0;
+
+        Encounter_NewVsSpeciesAtLevel(
+            task,
+            SPECIES_BIDOOF,
+            5,
+            battleResult,
+            FALSE);"""
 
     replace_block(
         field_map_change_c,
@@ -89,47 +76,21 @@ def main() -> None:
         "battle entry hook",
     )
 
-    post_pc_case = """    case 3:
-        if (!FieldSystem_IsRunningApplication(fieldSystem)) {
-            return TRUE;
-        }
-        break;"""
-    direct_battle_cases = """    case 3:
-        // The map process is now finished. Build a normal wild-battle DTO,
-        // including a copy of the player's actual party, then launch Platinum's
-        // native battle overlay directly.
-        FieldBattleDTO *dto = FieldBattleDTO_New(HEAP_ID_FIELD2, BATTLE_TYPE_WILD_MON);
-        FieldBattleDTO_Init(dto, fieldSystem);
-        CreateWildMon_Scripted(fieldSystem, SPECIES_BIDOOF, 5, dto);
-        FieldSystem_StartBattleProcess(fieldSystem, dto);
-        (*state)++;
-        break;
-    case 4:
-        if (FieldSystem_IsRunningApplication(fieldSystem)) {
-            break;
-        }
-        return TRUE;"""
-    text = field_map_change_c.read_text()
-    count = text.count(post_pc_case)
-    if count != 1:
-        raise SystemExit(f"direct battle state hook: expected one match, found {count}")
-    field_map_change_c.write_text(text.replace(post_pc_case, direct_battle_cases, 1))
-
     report = {
         "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_HARNESS_INSTALL",
         "scope": "CI workspace only; normal Mercury DS game flow unchanged",
         "prerequisite": "PT04C native PC storage checkpoint Run #13",
-        "player_species": "SPECIES_MEW_CONTROL",
-        "player_species_id": 151,
+        "player_species": "SPECIES_VICTINI",
+        "player_species_id": 494,
         "opponent_species": "SPECIES_BIDOOF",
         "opponent_level": 5,
-        "native_entrypoint": "FieldSystem_StartBattleProcess",
+        "native_entrypoint": "Encounter_NewVsSpeciesAtLevel",
         "native_checks": [
-            "Party_HasSpecies(SPECIES_MEW)",
-            "native FieldBattleDTO initialized with player party + scripted Bidoof",
+            "Party_HasSpecies(SPECIES_VICTINI)",
+            "real scripted wild encounter path launched",
             "battle application must remain alive for visual proof",
         ],
-        "next_if_passed": "visually verify native Mew control; then restore Victini and isolate species-494 battle-only fault",
+        "next_if_passed": "checkpoint battle entry proof, then add isolated save/reload proof",
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
