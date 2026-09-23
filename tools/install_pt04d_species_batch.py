@@ -488,16 +488,18 @@ def main() -> None:
             "poke_icon_files += files('icon.png')",
             "",
         ]
+        # Platinum's base sprite archive order is back sprites first
+        # (female, male), then front sprites (female, male). Keep that exact
+        # ordering for dual-gender species so each canonical slot resolves to
+        # the correct native pl_pokegra members.
         if has_female:
-            meson += [
-                "pokegra_files += files('female_back.png')",
-                "pokegra_files += files('female_front.png')",
-            ]
+            meson.append("pokegra_files += files('female_back.png')")
         if has_male:
-            meson += [
-                "pokegra_files += files('male_back.png')",
-                "pokegra_files += files('male_front.png')",
-            ]
+            meson.append("pokegra_files += files('male_back.png')")
+        if has_female:
+            meson.append("pokegra_files += files('female_front.png')")
+        if has_male:
+            meson.append("pokegra_files += files('male_front.png')")
         meson += ["", "pokefoot_files += files('footprint.png')", ""]
         (dest / "meson.build").write_text("\n".join(meson))
 
