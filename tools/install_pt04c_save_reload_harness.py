@@ -36,25 +36,11 @@ def main() -> None:
         raise SystemExit(f"missing pinned pokeplatinum source file: {field_map_change_c}")
 
     # RESET_ERROR is declared with the boot/reset contract in main.h.
-    replace_once(
+    insert_include_once(
         field_map_change_c,
         '#include "location.h"\n',
-        '#include "location.h"\n#include "main.h"\n',
+        '#include "main.h"\n',
         "RESET_ERROR include",
-    )
-
-    replace_once(
-        field_map_change_c,
-        '#include "location.h"\n',
-        '#include "location.h"\n#include "main.h"\n',
-        "reset parameter include",
-    )
-
-    replace_once(
-        field_map_change_c,
-        '#include "location.h"\n',
-        '#include "location.h"\n#include "main.h"\n',
-        "reset constants include",
     )
 
     battle_block = """        // PT04C battle-entry phase: keep the already-proven native Victini
