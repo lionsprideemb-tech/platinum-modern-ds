@@ -43,7 +43,7 @@ def main() -> None:
 
     insert_include_once(
         field_map_change_c,
-        '#include "easy_chat_args.h"\n',
+        '#include "field_bgm.h"\n',
         '#include "encounter.h"\n',
         "encounter include",
     )
