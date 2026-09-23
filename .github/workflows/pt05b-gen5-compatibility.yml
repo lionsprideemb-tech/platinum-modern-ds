@@ -1,0 +1,100 @@
+name: PT05B Gen V Compatibility Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt05b-gen5-compat
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/audit_pt05b_gen5_compatibility.py"
+      - ".github/workflows/pt05b-gen5-compatibility.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Read pinned commits
+        shell: bash
+        run: |
+          echo "HG_COMMIT=$(python3 -c 'import json; print(json.load(open("upstream/LOCK.json"))["sources"]["hg-engine"]["commit"])')" >> "$GITHUB_ENV"
+          echo "PT_COMMIT=$(python3 -c 'import json; print(json.load(open("upstream/LOCK.json"))["sources"]["pokeplatinum"]["commit"])')" >> "$GITHUB_ENV"
+
+      - name: Checkout pinned HG-Engine compatibility sources
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          cat > vendor/hg-engine/.git/info/sparse-checkout <<'EOF'
+          /data/Species.c
+          /data/HiddenAbilityTable.c
+          /data/BaseExperienceTable.c
+          /data/learnsets/learnsets.json
+          EOF
+          git -C vendor/hg-engine checkout "$HG_COMMIT"
+
+      - name: Checkout pinned Platinum identifier registries
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum sparse-checkout init --no-cone
+          cat > vendor/pokeplatinum/.git/info/sparse-checkout <<'EOF'
+          /generated/abilities.txt
+          /generated/moves.txt
+          /generated/pokemon_types.txt
+          /generated/items.txt
+          /generated/egg_groups.txt
+          /generated/exp_rates.txt
+          EOF
+          git -C vendor/pokeplatinum checkout "$PT_COMMIT"
+
+      - name: Audit Gen V compatibility surface
+        shell: bash
+        run: |
+          python3 tools/audit_pt05b_gen5_compatibility.py             vendor/hg-engine             vendor/pokeplatinum             --registry data/canonical_species_1025.txt             --report pt05b-gen5-compatibility.json
+
+          python3 - <<'PY'
+          import json
+          d=json.load(open("pt05b-gen5-compatibility.json"))
+          assert d["species_count"] == 156
+          assert d["ready_for_mapping_plan"] is True
+          assert not d["parse_failures"]
+          assert not d["learnset_missing"]
+          print(json.dumps({
+              "identifier_counts": d["identifier_counts"],
+              "unsupported_counts": {
+                  k: len(v) for k, v in d["unsupported_in_platinum"].items()
+              },
+              "base_exp_overflow_count": d["platinum_byte_width_constraints"]["base_experience_over_255_count"],
+          }, indent=2))
+          PY
+
+      - name: Upload PT05B compatibility audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt05b-gen5-compatibility-audit
+          path: pt05b-gen5-compatibility.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PT05B summary
+        shell: bash
+        run: |
+          {
+            echo "## PT05B Gen V compatibility audit"
+            echo
+            echo "- Parsed all 156 Gen V HG-Engine species-data blocks"
+            echo "- Parsed all 156 Gen V learnsets"
+            echo "- Compared referenced abilities, moves, types, held items, egg groups, and growth rates against pinned Platinum"
+            echo "- Recorded base-experience values that exceed Platinum's native byte field"
+            echo "- Output is the input to the compatibility-map implementation"
+          } >> "$GITHUB_STEP_SUMMARY"
