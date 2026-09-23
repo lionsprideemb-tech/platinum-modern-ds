@@ -136,7 +136,7 @@ jobs:
             --report pt04c-battle-harness-install.json
           test -s pt04c-battle-harness-install.json
           grep -q '"PT04C_VICTINI_NATIVE_BATTLE_ENTRY_HARNESS_INSTALL"' pt04c-battle-harness-install.json
-          grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'FieldSystem_StartBattleProcess' vendor/pokeplatinum/src/field_map_change.c
           grep -q 'SPECIES_BIDOOF' vendor/pokeplatinum/src/field_map_change.c
 
       - name: Generate sealed Mercury title resources
