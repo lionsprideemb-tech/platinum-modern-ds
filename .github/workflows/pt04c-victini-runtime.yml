@@ -143,28 +143,11 @@ jobs:
       - name: Diagnostic - bypass encounter cut-in only
         shell: bash
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path("vendor/pokeplatinum/src/encounter.c")
-          text = path.read_text()
-          old = """    case 0:
-        MapObjectMan_PauseAllMovement(fieldSystem->mapObjMan);
-        FieldTransition_StartEncounterEffect(task, encounter->introEffectID, encounter->battleBGM);
-        (*state)++;
-        break;"""
-          new = """    case 0:
-        // PT04C CI diagnostic: bypass only the field encounter cut-in.
-        // The normal battle DTO, field shutdown, and battle child application
-        // remain untouched so we can isolate the persistent black screen.
-        MapObjectMan_PauseAllMovement(fieldSystem->mapObjMan);
-        Sound_SetSceneAndPlayBGM(SOUND_SCENE_BATTLE, encounter->battleBGM, 1);
-        (*state)++;
-        break;"""
-          if text.count(old) != 1:
-              raise SystemExit(f"expected one FieldTask_Encounter case-0 block, found {text.count(old)}")
-          path.write_text(text.replace(old, new, 1))
-          PY
+          python3 tools/install_pt04c_skip_encounter_effect.py \
+            vendor/pokeplatinum \
+            --report pt04c-cutin-bypass-install.json
+          test -s pt04c-cutin-bypass-install.json
+          grep -q '"PT04C_NATIVE_BATTLE_CUTIN_BYPASS_INSTALL"' pt04c-cutin-bypass-install.json
           grep -q 'PT04C CI diagnostic: bypass only the field encounter cut-in' vendor/pokeplatinum/src/encounter.c
 
       - name: Generate sealed Mercury title resources
