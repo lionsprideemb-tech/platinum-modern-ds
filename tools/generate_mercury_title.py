@@ -505,6 +505,36 @@ def patch_title_runtime(source: Path):
         raise RuntimeError("could not locate Platinum main-state secondary light")
     text = text.replace(main_light_old, main_light_new, 1)
 
+    # The redesigned lower screen uses a full 256x192 4bpp tile set
+    # (24 KiB), far larger than Platinum's tiny vanilla border strip. Move
+    # BG3's character data to 0x8000 so it cannot overlap the main-screen
+    # tilemaps at 0x2000/0x3800 or the copyright tiles at 0x4000.
+    giratina_bg_old = (
+        "    BgTemplate bgMain3 = {\n"
+        "        .x = 0,\n"
+        "        .y = 0,\n"
+        "        .bufferSize = 0x800,\n"
+        "        .baseTile = 0,\n"
+        "        .screenSize = BG_SCREEN_SIZE_256x256,\n"
+        "        .colorMode = GX_BG_COLORMODE_16,\n"
+        "        .screenBase = GX_BG_SCRBASE_0x2000,\n"
+        "        .charBase = GX_BG_CHARBASE_0x00000,"
+    )
+    giratina_bg_new = (
+        "    BgTemplate bgMain3 = {\n"
+        "        .x = 0,\n"
+        "        .y = 0,\n"
+        "        .bufferSize = 0x800,\n"
+        "        .baseTile = 0,\n"
+        "        .screenSize = BG_SCREEN_SIZE_256x256,\n"
+        "        .colorMode = GX_BG_COLORMODE_16,\n"
+        "        .screenBase = GX_BG_SCRBASE_0x2000,\n"
+        "        .charBase = GX_BG_CHARBASE_0x08000,"
+    )
+    if giratina_bg_old not in text:
+        raise RuntimeError("could not locate Platinum Giratina background template")
+    text = text.replace(giratina_bg_old, giratina_bg_new, 1)
+
     source.write_text(text)
 
 def main():
