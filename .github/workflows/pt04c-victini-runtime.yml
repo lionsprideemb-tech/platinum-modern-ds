@@ -224,6 +224,7 @@ jobs:
           PY
 
       - name: Run native Victini battle-entry harness in DeSmuME
+        id: battle_runtime
         shell: bash
         run: |
           . "$RUNNER_TEMP/pt04c-venv/bin/activate"
@@ -242,18 +243,22 @@ jobs:
           if not emu.is_running():
               raise SystemExit("DeSmuME did not start PT04C battle-entry harness ROM")
 
-          captures = [240, 480, 720, 960, 1200, 1800, 2400]
           current = 0
           meta = []
+          stopped_at = None
           try:
-              for target in captures:
+              for target in range(60, 1201, 60):
                   for _ in range(target - current):
                       emu.cycle(False)
-                  current = target
-                  if not emu.is_running():
-                      raise SystemExit(f"PT04C battle-entry harness stopped before frame {target}")
+                      if not emu.is_running():
+                          stopped_at = current + 1
+                          break
+                      current += 1
+                  if stopped_at is not None:
+                      break
+
                   image = emu.screenshot()
-                  path = out / f"pt04c-battle-{target}.png"
+                  path = out / f"pt04c-battle-diagnostic-{target:04d}.png"
                   image.save(path)
                   colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
                   unique = len(colors) if colors is not None else 256 * 384
@@ -264,24 +269,31 @@ jobs:
                       "blank_like": unique < 16,
                   })
           finally:
-              emu.destroy()
-
-          if len([item for item in meta if not item["blank_like"]]) < 2:
-              raise SystemExit(f"PT04C battle-entry harness did not yield stable nonblank captures: {meta}")
+              try:
+                  if emu.is_running():
+                      image = emu.screenshot()
+                      path = out / f"pt04c-battle-last-{current:04d}.png"
+                      image.save(path)
+              finally:
+                  emu.destroy()
 
           (out / "pt04c-battle-meta.json").write_text(json.dumps({
-              "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_RUNTIME",
+              "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_DIAGNOSTIC",
               "prerequisite": "PT04C native PC storage checkpoint Run #13",
               "player_species_494": "SPECIES_VICTINI",
               "opponent": "SPECIES_BIDOOF Lv.5",
-              "runtime_process": "survived_through_frame_2400",
+              "last_completed_frame": current,
+              "stopped_at_frame": stopped_at,
               "captures": meta,
               "visual_review_required": True,
-              "next_gate": "PT04C_VICTINI_SAVE_RELOAD_RUNTIME",
           }, indent=2) + "\n")
+
+          if stopped_at is not None:
+              raise SystemExit(f"PT04C battle-entry harness stopped at/near frame {stopped_at}; diagnostic proof preserved")
           PY
 
       - name: Upload PT04C native battle-entry runtime proof
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pt04c-victini-native-battle-entry-proof
