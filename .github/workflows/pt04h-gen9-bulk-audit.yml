@@ -1,0 +1,109 @@
+name: PT04H Gen IX Bulk Expansion Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt04h-gen9-bulk-expansion
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/build_ds_species_id_map.py"
+      - "tools/audit_pt04d_species_batch.py"
+      - "platinum-overlay/**"
+      - ".github/workflows/pt04h-gen9-bulk-audit.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+jobs:
+  donor-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Checkout pinned HG-Engine Gen IX donor data
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/graphics/sprites/
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+          test -s vendor/hg-engine/data/Species.c
+          test -s vendor/hg-engine/data/BaseExperienceTable.c
+
+      - name: Verify canonical contiguous DS IDs
+        shell: bash
+        run: |
+          python3 tools/build_ds_species_id_map.py --output pt04h-species-id-map.json
+          python3 - <<'PY'
+          import json
+          d = json.load(open("pt04h-species-id-map.json"))
+          entries = {e["species"]: e for e in d["species"]}
+          assert entries["SPECIES_SPRIGATITO"]["national_dex"] == 906
+          assert entries["SPECIES_SPRIGATITO"]["internal_species_id"] == 906
+          assert entries["SPECIES_PECHARUNT"]["national_dex"] == 1025
+          assert entries["SPECIES_PECHARUNT"]["internal_species_id"] == 1025
+          assert d["sentinels"]["SPECIES_EGG"] == 1026
+          assert d["sentinels"]["SPECIES_BAD_EGG"] == 1027
+          print("Canonical Gen IX contiguous species IDs verified.")
+          PY
+
+      - name: Audit Gen IX donor batch
+        shell: bash
+        run: |
+          python3 tools/audit_pt04d_species_batch.py \
+            vendor/pokeplatinum \
+            vendor/hg-engine \
+            --start-dex 906 \
+            --end-dex 1025 \
+            --gate PT04H_GEN9_DONOR_AUDIT \
+            --report pt04h-gen9-donor-audit.json
+
+      - name: Summarize Gen IX donor audit
+        if: always()
+        shell: bash
+        run: |
+          if test -s pt04h-gen9-donor-audit.json; then
+            jq '{
+              gate,
+              range,
+              expected_species,
+              parsed_species,
+              missing_entries: (.missing_entries | length),
+              missing_required_assets: (.missing_required_assets | length),
+              unsupported_gender_ratios: (.unsupported_gender_ratios | length),
+              base_exp_over_255: (.base_exp_over_255 | length),
+              unsupported_types: (.compatibility.unsupported_types | length),
+              unsupported_abilities: (.compatibility.unsupported_abilities | length),
+              unsupported_held_items: (.compatibility.unsupported_held_items | length),
+              status
+            }' pt04h-gen9-donor-audit.json
+          fi
+
+      - name: Upload PT04H Gen IX audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt04h-gen9-donor-audit
+          path: |
+            pt04h-species-id-map.json
+            pt04h-gen9-donor-audit.json
+          if-no-files-found: error
+          retention-days: 14
