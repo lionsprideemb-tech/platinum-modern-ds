@@ -12,6 +12,7 @@ on:
       - "tools/install_pt04c_runtime_harness.py"
       - "tools/install_pt04c_summary_harness.py"
       - "tools/install_pt04c_pc_harness.py"
+      - "tools/install_pt04c_battle_harness.py"
       - "docs/PT04C_VICTINI_RUNTIME_PROOF.md"
       - "platinum-overlay/**"
       - "tools/generate_mercury_title.py"
@@ -127,6 +128,17 @@ jobs:
           grep -q 'PCBoxes_TryStoreBoxMonAt' vendor/pokeplatinum/src/field_map_change.c
           grep -q 'FieldSystem_OpenPokemonStorage' vendor/pokeplatinum/src/field_map_change.c
 
+      - name: Advance isolated harness to native battle entry
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_battle_harness.py \
+            vendor/pokeplatinum \
+            --report pt04c-battle-harness-install.json
+          test -s pt04c-battle-harness-install.json
+          grep -q '"PT04C_VICTINI_NATIVE_BATTLE_ENTRY_HARNESS_INSTALL"' pt04c-battle-harness-install.json
+          grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'SPECIES_BIDOOF' vendor/pokeplatinum/src/field_map_change.c
+
       - name: Generate sealed Mercury title resources
         shell: bash
         run: |
@@ -211,7 +223,7 @@ jobs:
           print(json.dumps(counts, indent=2))
           PY
 
-      - name: Run native Victini PC storage harness in DeSmuME
+      - name: Run native Victini battle-entry harness in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/pt04c-venv/bin/activate"
@@ -228,9 +240,9 @@ jobs:
           emu = DeSmuME()
           emu.open(str(rom))
           if not emu.is_running():
-              raise SystemExit("DeSmuME did not start PT04C PC storage harness ROM")
+              raise SystemExit("DeSmuME did not start PT04C battle-entry harness ROM")
 
-          captures = [600, 1200, 1800, 3000]
+          captures = [240, 480, 720, 960, 1200, 1800, 2400]
           current = 0
           meta = []
           try:
@@ -239,9 +251,9 @@ jobs:
                       emu.cycle(False)
                   current = target
                   if not emu.is_running():
-                      raise SystemExit(f"PT04C PC storage harness stopped before frame {target}")
+                      raise SystemExit(f"PT04C battle-entry harness stopped before frame {target}")
                   image = emu.screenshot()
-                  path = out / f"pt04c-pc-{target}.png"
+                  path = out / f"pt04c-battle-{target}.png"
                   image.save(path)
                   colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
                   unique = len(colors) if colors is not None else 256 * 384
@@ -255,34 +267,34 @@ jobs:
               emu.destroy()
 
           if len([item for item in meta if not item["blank_like"]]) < 2:
-              raise SystemExit(f"PT04C PC storage harness did not yield stable nonblank captures: {meta}")
+              raise SystemExit(f"PT04C battle-entry harness did not yield stable nonblank captures: {meta}")
 
-          (out / "pt04c-pc-meta.json").write_text(json.dumps({
-              "gate": "PT04C_VICTINI_NATIVE_PC_STORAGE_RUNTIME",
-              "prerequisite": "PT04C native Summary checkpoint Run #12",
-              "species_494": "SPECIES_VICTINI",
-              "box_id": 0,
-              "box_slot": 0,
-              "runtime_process": "survived_through_frame_3000",
+          (out / "pt04c-battle-meta.json").write_text(json.dumps({
+              "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_RUNTIME",
+              "prerequisite": "PT04C native PC storage checkpoint Run #13",
+              "player_species_494": "SPECIES_VICTINI",
+              "opponent": "SPECIES_BIDOOF Lv.5",
+              "runtime_process": "survived_through_frame_2400",
               "captures": meta,
               "visual_review_required": True,
-              "next_gate": "PT04C_VICTINI_BATTLE_ENTRY_RUNTIME",
+              "next_gate": "PT04C_VICTINI_SAVE_RELOAD_RUNTIME",
           }, indent=2) + "\n")
           PY
 
-      - name: Upload PT04C native PC storage runtime proof
+      - name: Upload PT04C native battle-entry runtime proof
         uses: actions/upload-artifact@v4
         with:
-          name: pt04c-victini-native-pc-storage-proof
+          name: pt04c-victini-native-battle-entry-proof
           path: |
             pt04c-registry-report.json
             pt04c-victini-install.json
             pt04c-runtime-harness-install.json
             pt04c-summary-harness-install.json
             pt04c-pc-harness-install.json
+            pt04c-battle-harness-install.json
             pt04c-archive-proof.json
             runtime-preview/*.png
-            runtime-preview/pt04c-pc-meta.json
+            runtime-preview/pt04c-battle-meta.json
           if-no-files-found: error
           retention-days: 14
 
@@ -290,14 +302,14 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## PT04C Victini native PC storage runtime gate"
+            echo "## PT04C Victini native battle-entry runtime gate"
             echo
             echo "- Sealed Run #8 party/Pokedex checkpoint retained"
             echo "- Sealed Run #12 Summary checkpoint retained"
+            echo "- Sealed Run #13 PC storage checkpoint retained"
             echo "- Victini remains National Dex / species ID 494"
             echo "- Native archive expansion checks retained"
-            echo "- Victini is stored through PCBoxes_TryStoreBoxMonAt into Box 1 / Slot 1"
-            echo "- Runtime asserts the boxed species remains SPECIES_VICTINI"
-            echo "- Platinum's native PC storage application is launched"
-            echo "- Visual box/icon review is required before battle-entry work"
+            echo "- Player party is asserted to contain SPECIES_VICTINI"
+            echo "- Platinum's scripted wild encounter path starts against Lv.5 Bidoof"
+            echo "- Visual battle/player-sprite review is required before save/reload work"
           } >> "$GITHUB_STEP_SUMMARY"
