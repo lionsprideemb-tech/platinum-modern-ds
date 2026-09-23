@@ -17,8 +17,10 @@ on:
       - "upstream/LOCK.json"
 
 concurrency:
-  group: mercury-title-${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel an active proof run. Duplicate pushes for the same commit are
+  # serialized instead, while a newer commit gets its own independent group.
+  group: mercury-title-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
