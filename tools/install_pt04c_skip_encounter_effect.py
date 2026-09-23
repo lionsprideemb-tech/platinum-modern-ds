@@ -38,7 +38,17 @@ def main() -> None:
         (*state)++;
         break;"""
 
-    replace_once(encounter_c, old, new, "FieldTask_Encounter cut-in bypass")
+    text = encounter_c.read_text()
+    func_start = text.index("static BOOL FieldTask_Encounter(FieldTask *task)")
+    func_end = text.index("static void StartEncounter(", func_start)
+    region = text[func_start:func_end]
+    if region.count(old) != 1:
+        raise SystemExit(
+            "FieldTask_Encounter cut-in bypass: expected exactly one target "
+            f"inside FieldTask_Encounter, found {region.count(old)}"
+        )
+    region = region.replace(old, new, 1)
+    encounter_c.write_text(text[:func_start] + region + text[func_end:])
 
     report = {
         "gate": "PT04C_NATIVE_BATTLE_CUTIN_BYPASS_INSTALL",
