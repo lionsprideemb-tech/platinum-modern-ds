@@ -7,6 +7,7 @@ on:
       - feature/title-mercury-art
       - feature/title-mercury-motion
       - feature/title-mercury-runtime-proof
+      - feature/title-mercury-bottom-art
     paths:
       - "tools/generate_mercury_title.py"
       - "assets/title_screen/**"
