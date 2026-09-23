@@ -13,6 +13,7 @@ on:
       - "tools/install_pt04c_summary_harness.py"
       - "tools/install_pt04c_pc_harness.py"
       - "tools/install_pt04c_battle_harness.py"
+      - "tools/install_pt04c_save_reload_harness.py"
       - "docs/PT04C_VICTINI_RUNTIME_PROOF.md"
       - "platinum-overlay/**"
       - "tools/generate_mercury_title.py"
