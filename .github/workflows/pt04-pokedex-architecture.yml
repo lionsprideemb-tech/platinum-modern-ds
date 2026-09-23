@@ -1,0 +1,54 @@
+name: PT04 Pokédex Architecture Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/pt04-pokedex-architecture
+    paths:
+      - "tools/audit_pt04_species_limits.py"
+      - "docs/PT04_POKEDEX_ARCHITECTURE_AUDIT.md"
+      - ".github/workflows/pt04-pokedex-architecture.yml"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Audit species expansion architecture
+        shell: bash
+        run: python3 tools/audit_pt04_species_limits.py vendor/pokeplatinum
+
+      - name: Upload PT04 audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt04-pokedex-architecture-audit
+          path: pt04-audit.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## PT04A Pokédex expansion architecture"
+            echo
+            echo "- Base species target: 1025"
+            echo "- Species storage: u16 — target fits"
+            echo "- Pokédex bitsets: dynamic from NATIONAL_DEX_COUNT"
+            echo "- Persistent vanilla form field: 5 bits (0–31)"
+            echo "- Next: project-owned registry expansion harness"
+          } >> "$GITHUB_STEP_SUMMARY"
