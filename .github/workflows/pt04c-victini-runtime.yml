@@ -233,6 +233,7 @@ jobs:
           from pathlib import Path
           import json
           from desmume.emulator import DeSmuME
+          from desmume.controls import Keys, keymask
 
           rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
           out = Path("runtime-preview")
@@ -247,8 +248,14 @@ jobs:
           meta = []
           stopped_at = None
           try:
-              for target in range(60, 1201, 60):
+              a_mask = keymask(Keys.KEY_A)
+              for target in range(60, 1801, 60):
                   for _ in range(target - current):
+                      if current == 620:
+                          emu.input.keypad_add_key(a_mask)
+                      elif current == 622:
+                          emu.input.keypad_rm_key(a_mask)
+
                       emu.cycle(False)
                       if not emu.is_running():
                           stopped_at = current + 1
