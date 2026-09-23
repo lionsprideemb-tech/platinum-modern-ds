@@ -1,10 +1,11 @@
-name: PT04C Victini Native Build Boot
+name: PT04C Battle Cut-in Diagnostic
 
 on:
   workflow_dispatch:
   push:
     branches:
       - feature/pt04c-victini-runtime
+      - diagnostic/pt04c-skip-encounter-effect
     paths:
       - "data/canonical_species_1025.txt"
       - "tools/build_species_registry.py"
@@ -139,6 +140,33 @@ jobs:
           grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c
           grep -q 'SPECIES_BIDOOF' vendor/pokeplatinum/src/field_map_change.c
 
+      - name: Diagnostic - bypass encounter cut-in only
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("vendor/pokeplatinum/src/encounter.c")
+          text = path.read_text()
+          old = """    case 0:
+        MapObjectMan_PauseAllMovement(fieldSystem->mapObjMan);
+        FieldTransition_StartEncounterEffect(task, encounter->introEffectID, encounter->battleBGM);
+        (*state)++;
+        break;"""
+          new = """    case 0:
+        // PT04C CI diagnostic: bypass only the field encounter cut-in.
+        // The normal battle DTO, field shutdown, and battle child application
+        // remain untouched so we can isolate the persistent black screen.
+        MapObjectMan_PauseAllMovement(fieldSystem->mapObjMan);
+        Sound_SetSceneAndPlayBGM(SOUND_SCENE_BATTLE, encounter->battleBGM, 1);
+        (*state)++;
+        break;"""
+          if text.count(old) != 1:
+              raise SystemExit(f"expected one FieldTask_Encounter case-0 block, found {text.count(old)}")
+          path.write_text(text.replace(old, new, 1))
+          PY
+          grep -q 'PT04C CI diagnostic: bypass only the field encounter cut-in' vendor/pokeplatinum/src/encounter.c
+
       - name: Generate sealed Mercury title resources
         shell: bash
         run: |
@@ -223,7 +251,7 @@ jobs:
           print(json.dumps(counts, indent=2))
           PY
 
-      - name: Run native Victini battle-entry harness in DeSmuME
+      - name: Run native Mew battle with cut-in bypass in DeSmuME
         id: battle_runtime
         shell: bash
         run: |
@@ -278,9 +306,9 @@ jobs:
                   emu.destroy()
 
           (out / "pt04c-battle-meta.json").write_text(json.dumps({
-              "gate": "PT04C_VICTINI_NATIVE_BATTLE_ENTRY_DIAGNOSTIC",
+              "gate": "PT04C_NATIVE_BATTLE_CUTIN_BYPASS_DIAGNOSTIC",
               "prerequisite": "PT04C native PC storage checkpoint Run #13",
-              "player_species_494": "SPECIES_VICTINI",
+              "player_control_species": "SPECIES_MEW",
               "opponent": "SPECIES_BIDOOF Lv.5",
               "last_completed_frame": current,
               "stopped_at_frame": stopped_at,
@@ -296,7 +324,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pt04c-victini-native-battle-entry-proof
+          name: pt04c-native-battle-cutin-bypass-proof
           path: |
             pt04c-registry-report.json
             pt04c-victini-install.json
