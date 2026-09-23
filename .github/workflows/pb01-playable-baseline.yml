@@ -1,0 +1,380 @@
+name: PB01 Playable Baseline Candidate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - "data/canonical_species_1025.txt"
+      - "tools/build_species_registry.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "platinum-overlay/**"
+      - "tools/generate_mercury_title.py"
+      - "assets/title_screen/**"
+      - "docs/PLAYABLE_BASELINE_PLAN.md"
+      - ".github/workflows/pb01-playable-baseline.yml"
+      - "upstream/LOCK.json"
+
+concurrency:
+  group: pb01-playable-baseline-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  playable-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Verify first playable candidate keeps Platinum story resources native
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+              "platinum-overlay/README.md",
+              "platinum-overlay/generated/pokemon_types.txt",
+              "platinum-overlay/res/text/title_screen.json",
+              "platinum-overlay/src/applications/frontier/battle_hall/main.c",
+              "platinum-overlay/src/battle/battle_lib.c",
+              "platinum-overlay/src/battle_hall_save.c",
+              "platinum-overlay/src/overlay104/battle_hall.c",
+              "platinum-overlay/src/overlay104/battle_hall_helpers.c",
+              "platinum-overlay/src/tv_segment.c",
+          }
+          actual = {
+              str(p).replace("\\", "/")
+              for p in Path("platinum-overlay").rglob("*")
+              if p.is_file()
+          }
+          extra = sorted(actual - allowed)
+          missing = sorted(allowed - actual)
+          if extra or missing:
+              raise SystemExit(
+                  "PB01 overlay-scope guard failed. "
+                  f"Unexpected files={extra}; missing expected files={missing}"
+              )
+          print("PB01 overlay scope is story-safe: no map/script/event replacements.")
+          PY
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Checkout pinned HG-Engine donor resources
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/graphics/sprites/
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Register complete canonical roster
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report pb01-species-registry.json
+          test "$(sed -n '1p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_NONE"
+          test "$(sed -n '494p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_ARCEUS"
+          test "$(sed -n '1026p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_PECHARUNT"
+          test "$(sed -n '1027p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_EGG"
+          test "$(sed -n '1028p' vendor/pokeplatinum/generated/species.txt)" = "SPECIES_BAD_EGG"
+
+      - name: Restore Gen V resources
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 649 \
+            --gate PB01_GEN5_RESOURCE_INSTALL \
+            --report pb01-gen5-install.json
+
+      - name: Restore Gen VI resources
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 650 --end-dex 721 \
+            --gate PB01_GEN6_RESOURCE_INSTALL \
+            --report pb01-gen6-install.json
+
+      - name: Restore Gen VII resources
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 722 --end-dex 809 \
+            --gate PB01_GEN7_RESOURCE_INSTALL \
+            --report pb01-gen7-install.json
+
+      - name: Restore Gen VIII resources
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 810 --end-dex 905 \
+            --gate PB01_GEN8_RESOURCE_INSTALL \
+            --report pb01-gen8-install.json
+
+      - name: Restore Gen IX resources
+        shell: bash
+        run: |
+          python3 tools/install_pt04d_species_batch.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 906 --end-dex 1025 \
+            --gate PB01_GEN9_RESOURCE_INSTALL \
+            --report pb01-gen9-install.json
+          test "$(jq -r '.installed_species' pb01-gen9-install.json)" = "120"
+
+      - name: Generate Mercury title resources
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pb01-venv"
+          . "$RUNNER_TEMP/pb01-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+          grep -q '"en_US": "PRESS START"' vendor/pokeplatinum/res/text/title_screen.json
+
+      - name: Verify no runtime test harness was installed
+        shell: bash
+        run: |
+          if grep -q 'PT04C' vendor/pokeplatinum/src/field_map_change.c; then
+            echo "Unexpected PT04C runtime harness marker in normal playable build"
+            exit 1
+          fi
+          if grep -q 'Encounter_NewVsSpeciesAtLevel' vendor/pokeplatinum/src/field_map_change.c; then
+            echo "Unexpected CI battle-entry injection in normal playable build"
+            exit 1
+          fi
+          echo "Normal field flow is free of PT04 runtime harness injection."
+
+      - name: Install Metroskrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure normal playable ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build normal playable ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Verify full-roster compiled archives
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, struct, hashlib
+
+          roots = [Path("/var/tmp/pokeplatinum"), Path("vendor/pokeplatinum")]
+
+          def find_one(name):
+              for root in roots:
+                  if root.exists():
+                      matches = list(root.rglob(name))
+                      if matches:
+                          return matches[0]
+              raise SystemExit(f"missing compiled archive: {name}")
+
+          def narc_count(path):
+              data = path.read_bytes()
+              pos = data.find(b"BTAF")
+              if pos < 0:
+                  pos = data.find(b"FATB")
+              if data[:4] != b"NARC" or pos < 0:
+                  raise SystemExit(f"invalid NARC: {path}")
+              return struct.unpack_from("<H", data, pos + 8)[0]
+
+          counts = {
+              "pl_personal": narc_count(find_one("pl_personal.narc")),
+              "pl_pokegra": narc_count(find_one("pl_pokegra.narc")),
+              "pl_poke_icon": narc_count(find_one("pl_poke_icon.narc")),
+              "height": narc_count(find_one("height.narc")),
+          }
+          expected = {
+              "pl_personal": 1040,
+              "pl_pokegra": 6156,
+              "pl_poke_icon": 1079,
+              "height": 4104,
+          }
+          if counts != expected:
+              raise SystemExit(f"PB01 archive mismatch: {counts} != {expected}")
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          digest = hashlib.sha256(rom.read_bytes()).hexdigest()
+          manifest = {
+              "gate": "PB01_NORMAL_PLAYABLE_BUILD",
+              "title": "Pokemon Mercury Redux playable baseline candidate",
+              "canonical_species_range": [1, 1025],
+              "sentinels": {"egg": 1026, "bad_egg": 1027},
+              "archive_counts": counts,
+              "rom_size_bytes": rom.stat().st_size,
+              "rom_sha256": digest,
+              "story_base": "pinned native Pokemon Platinum world/scripts; no PB01 map/script/event overlay",
+              "runtime_harness_injected": False,
+              "certification_status": "candidate_pending_runtime_smoke",
+          }
+          Path("pb01-playable-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+          print(json.dumps(manifest, indent=2))
+          PY
+
+      - name: Native title and post-title smoke test
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb01-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("PB01 candidate did not boot in DeSmuME")
+
+          def run(frames):
+              for _ in range(frames):
+                  emu.cycle(False)
+                  if not emu.is_running():
+                      raise SystemExit("PB01 emulator stopped unexpectedly")
+
+          def pulse(key, held=30, settle=300):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              run(held)
+              emu.input.keypad_rm_key(mask)
+              run(settle)
+
+          def capture(name):
+              image = emu.screenshot()
+              path = out / name
+              image.save(path)
+              colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
+              unique = len(colors) if colors is not None else 256 * 384
+              if unique < 16:
+                  raise SystemExit(f"PB01 blank-like capture: {name}")
+              return {"file": name, "unique_colors": unique}
+
+          captures = []
+          try:
+              run(16000)
+              captures.append({"stage": "title", **capture("pb01-title.png")})
+
+              pulse(Keys.KEY_START, held=30, settle=600)
+              captures.append({"stage": "after_start", **capture("pb01-after-start.png")})
+
+              pulse(Keys.KEY_A, held=30, settle=1200)
+              captures.append({"stage": "after_confirm", **capture("pb01-after-confirm.png")})
+
+              run(1200)
+              captures.append({"stage": "stable_post_title", **capture("pb01-post-title-stable.png")})
+          finally:
+              emu.destroy()
+
+          proof = {
+              "gate": "PB01_NATIVE_BOOT_AND_TITLE_EXIT",
+              "rom_booted": True,
+              "native_start_input_sent": True,
+              "native_confirm_input_sent": True,
+              "emulator_remained_running": True,
+              "captures": captures,
+              "visual_review_required": True,
+              "next_gate": "PB02_EARLY_GAME_PLAYABLE_CERTIFICATION",
+          }
+          (out / "pb01-runtime-meta.json").write_text(json.dumps(proof, indent=2) + "\n")
+          print(json.dumps(proof, indent=2))
+          PY
+
+      - name: Stage playable candidate artifact
+        shell: bash
+        run: |
+          mkdir -p playable-candidate
+          cp "$BUILD/pokeplatinum.us.nds" playable-candidate/Pokemon_Mercury_Redux_PB01.nds
+          cp pb01-playable-manifest.json playable-candidate/
+          cp runtime-preview/*.png playable-candidate/
+          cp runtime-preview/pb01-runtime-meta.json playable-candidate/
+          sha256sum playable-candidate/Pokemon_Mercury_Redux_PB01.nds > playable-candidate/SHA256SUMS.txt
+
+      - name: Upload PB01 playable candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: playable-candidate/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload PB01 build proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-redux-pb01-build-proof
+          path: |
+            pb01-species-registry.json
+            pb01-gen5-install.json
+            pb01-gen6-install.json
+            pb01-gen7-install.json
+            pb01-gen8-install.json
+            pb01-gen9-install.json
+            pb01-playable-manifest.json
+            runtime-preview/pb01-runtime-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PB01 summary
+        shell: bash
+        run: |
+          {
+            echo "## Mercury Redux PB01 playable baseline candidate"
+            echo
+            echo "- Normal Platinum game flow: no PT04 runtime harness"
+            echo "- Native Platinum world/story scripts preserved in PB01"
+            echo "- Complete canonical species capacity #1-1025 regenerated"
+            echo "- Mercury title branding retained"
+            echo "- Normal ROM compiled and booted in DeSmuME"
+            echo "- Native title input exercised"
+            echo "- Candidate ROM uploaded for PB02 gameplay certification"
+          } >> "$GITHUB_STEP_SUMMARY"
