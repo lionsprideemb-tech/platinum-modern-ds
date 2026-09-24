@@ -1,0 +1,113 @@
+name: PHASE-A12L Finish Parcel Handoff
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a12l-finish-parcel-handoff.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A12K checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a12k-post-parcel
+          path: checkpoint
+          run-id: 36031007867
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a12l-venv"
+          . "$RUNNER_TEMP/phase-a12l-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Finish remaining Parcel dialogue and restore control
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a12l-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E; Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a12k-post-parcel.dst")
+          out=Path("phase-a12l"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A12L stopped at {frame}")
+
+          def pulse(key,held=12,settle=520):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              caps.append({
+                  "stage":label,"frame":frame,"file":name,
+                  "x":emu.memory.unsigned.read_short(X),
+                  "z":emu.memory.unsigned.read_short(Z)
+              })
+
+          run(180); cap("parcel-dialogue-resume")
+          for i in range(1,13):
+              pulse(Keys.KEY_A)
+              if i in (3,6,9,12): cap(f"advance-{i:02d}")
+
+          run(1800); cap("parcel-complete-stable")
+          saved=out/"phase-a12l-parcel-complete.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"phase-a12l-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A12L_FINISH_PARCEL_HANDOFF",
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A12L evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a12l-parcel-complete
+          path: phase-a12l/
+          if-no-files-found: error
+          retention-days: 30
