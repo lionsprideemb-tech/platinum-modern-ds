@@ -177,13 +177,14 @@ def description_lines(desc: str | None) -> list[str]:
 
 
 def generation_for_move_id(move_id: int) -> int:
+    # Canonical IDs after dropping HG-Engine's three preserved dummy slots.
     if move_id <= 559:
         return 5
     if move_id <= 621:
         return 6
-    if move_id <= 728:
+    if move_id <= 742:
         return 7
-    if move_id <= 853:
+    if move_id <= 850:
         return 8
     return 9
 
