@@ -1,8 +1,8 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "architecture": "u16",
   "move_none_id": 0,
-  "canonical_floor": 922,
+  "canonical_floor": 919,
   "sentinel_id": 65535,
   "usable_id_max": 65534,
   "runtime_soft_ceiling": 4095,
@@ -13,7 +13,7 @@
       "start": 1,
       "end": 2047,
       "active": true,
-      "purpose": "Official Pokémon moves. IDs 1-922 are the current Gen 1-9 floor. This leaves 1125 additional canonical slots before custom lanes."
+      "purpose": "Official Pokémon moves. IDs 1-919 cover the pinned Gen 1-9 canonical set after removing HG-Engine's three dummy slots. Future official moves stay in this lane."
     },
     {
       "name": "community_imports",
@@ -50,5 +50,7 @@
       "active": false,
       "purpose": "Architecturally valid u16 space but intentionally not materialized on DS without a separate memory/table audit."
     }
-  ]
+  ],
+  "donor_compatibility_max_id": 922,
+  "donor_id_note": "Pinned HG-Engine keeps three HGSS dummy slots at 468-470, so its modern move IDs are +3 versus canonical main-series IDs. Mercury drops those dummies when importing."
 }
