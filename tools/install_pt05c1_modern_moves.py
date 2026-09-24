@@ -239,6 +239,7 @@ def main() -> None:
         split = canonical_assignment(block, "split", r"SPLIT_[A-Z]+")
         move_type = canonical_assignment(block, "type", r"TYPE_[A-Z0-9_]+")
         target, donor_target_composite = canonical_target_assignment(block)
+        target_requires_extension = donor_target_composite is not None
         power = int(canonical_assignment(block, "power", r"[0-9]+", "0"))
         accuracy = int(canonical_assignment(block, "accuracy", r"[0-9]+", "0"))
         pp = int(canonical_assignment(block, "pp", r"[0-9]+", "1"))
@@ -328,6 +329,7 @@ def main() -> None:
             "stored_effect": battle_effect,
             "stored_target": target,
             "donor_target_composite": donor_target_composite,
+            "target_requires_extension": target_requires_extension,
             "lane": lane,
         })
 
