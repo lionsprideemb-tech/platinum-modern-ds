@@ -1,0 +1,125 @@
+name: PB02Z Barry THUD Event
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02z-barry-thud-event.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and Twinleaf checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d pb01-artifact
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10789223904/zip > checkpoint.zip
+          unzip -q checkpoint.zip -d checkpoint
+          test -s checkpoint/twinleaf-exterior.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02z-venv"
+          . "$RUNNER_TEMP/pb02z-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Walk to native Barry THUD trigger and play event
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02z-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/twinleaf-exterior.dst")
+          out=Path("pb02z-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running(): raise SystemExit(f"stopped at {frame}")
+
+          def pulse(key,held=12,settle=300):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              im=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              im.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("twinleaf-checkpoint")
+
+          # Pinned events_twinleaf_town.json:
+          # player house door x116,z885; Barry trigger x105,z876.
+          # Checkpoint is one tile south of the player door, so west 11,
+          # north 9 approaches the trigger and the 10th north enters it.
+          for i in range(1,12):
+              pulse(Keys.KEY_LEFT,12,230)
+              if i in (4,8,11): cap(f"west-{i:02d}")
+
+          for i in range(1,10):
+              pulse(Keys.KEY_UP,12,230)
+              if i in (3,6,9): cap(f"north-{i:02d}")
+
+          cap("before-thud-trigger")
+          pulse(Keys.KEY_UP,12,1600)
+          cap("thud-event-triggered")
+          run(900); cap("thud-event-stable")
+
+          for i in range(1,8):
+              pulse(Keys.KEY_A,12,600)
+              cap(f"thud-dialogue-a-{i:02d}")
+
+          run(1000); cap("post-thud-event-stable")
+
+          post=out/"post-barry-thud.dst"
+          emu.savestate.save_file(str(post))
+
+          (out/"pb02z-meta.json").write_text(json.dumps({
+              "gate":"PB02Z_BARRY_THUD_EVENT",
+              "source_checkpoint_artifact":10789223904,
+              "target_coord":[105,876],
+              "event":"TwinleafTown_CoordEvent_RivalThud",
+              "state_file":post.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02Z proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02z-barry-thud-event-proof
+          path: pb02z-play/
+          if-no-files-found: error
+          retention-days: 14
