@@ -1,3 +1,4 @@
+# PT05C retry after move-capacity validation fix
 name: PT05C Canonical Modern Moves Stage 1
 
 on:
