@@ -1,0 +1,170 @@
+name: PT05C1 Build-Forward Modern Move Namespace
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-build-forward
+    paths:
+      - "tools/install_pt05c1_modern_moves.py"
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - ".github/workflows/pt05c1-build-forward-modern-moves.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  build-forward:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 140
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Rebuild 1025-species resource layer
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report pt05c1-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --gate "PT05C1_${tag}_RESOURCE_INSTALL" \
+              --report "pt05c1-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+      - name: Expand WOTBL move IDs
+        shell: bash
+        run: python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+      - name: Install canonical Gen 5-9 move namespace
+        shell: bash
+        run: |
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report pt05c1-modern-moves.json \
+            --implemented-registry pt05c1-implemented-moves.txt
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          moves=Path("vendor/pokeplatinum/generated/moves.txt").read_text().splitlines()
+          assert moves[468] == "MOVE_HONE_CLAWS", moves[468]
+          assert moves[922] == "MOVE_MALIGNANT_CHAIN", moves[922]
+          assert moves[923] == "MAX_MOVES", moves[923]
+
+          report=json.loads(Path("pt05c1-modern-moves.json").read_text())
+          assert report["modern_moves_added"] == 455
+          assert report["modern_moves_immediately_implemented"] == 314
+          assert report["modern_moves_stubbed_pending_effect_port"] == 141
+          print("canonical modern move namespace: PASS")
+          PY
+
+      - name: Install learnsets using only implemented move effects
+        shell: bash
+        run: |
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves pt05c1-implemented-moves.txt \
+            --report pt05c1-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report pt05c1-evolutions.json
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt05c1-venv"
+          . "$RUNNER_TEMP/pt05c1-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build normal game ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage PT05C1 artifact
+        shell: bash
+        run: |
+          mkdir -p build-forward
+          cp "$BUILD/pokeplatinum.us.nds" build-forward/Pokemon_Mercury_Redux_PT05C1.nds
+          cp pt05c1-modern-moves.json build-forward/
+          cp pt05c1-learnsets.json build-forward/
+          cp pt05c1-evolutions.json build-forward/
+          cp pt05c1-implemented-moves.txt build-forward/
+          {
+            echo "PT05C1"
+            echo "Canonical move IDs: 0..922"
+            echo "Modern move constants added: 455"
+            echo "Modern moves using existing Platinum battle effects: 314"
+            echo "Modern moves awaiting new effect ports: 141"
+            echo "Pending-effect moves are excluded from natural learnsets."
+          } > build-forward/PT05C1_MANIFEST.txt
+          sha256sum build-forward/Pokemon_Mercury_Redux_PT05C1.nds > build-forward/SHA256SUMS.txt
+
+      - name: Upload PT05C1 build
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-redux-pt05c1-modern-moves
+          path: build-forward/
+          if-no-files-found: error
+          retention-days: 30
