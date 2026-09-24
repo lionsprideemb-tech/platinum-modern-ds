@@ -1,14 +1,14 @@
 # Platinum Modern DS
 
-A modernized Sinnoh project built on the Nintendo DS using HG-Engine as the gameplay foundation and Pokémon Platinum as the world/content reference.
+A modernized Pokémon Platinum project built directly on the native Platinum/pokeplatinum runtime. HG-Engine is retained as a donor/reference for modern mechanics, move systems, animation ideas, and implementation patterns—not as Mercury Redux's final runtime.
 
 ## Core goals
 
-- HG-Engine foundation
+- Native Pokémon Platinum / pokeplatinum runtime
 - National Pokédex support through #1025
 - Fairy type and modern battle mechanics
 - Updated abilities, moves, items, and evolution methods
-- Pokémon Platinum world/progression ported to the HG-Engine/HGSS runtime
+- Preserve Platinum's existing Sinnoh world, progression, scripts, events, save flow, and presentation as the playable foundation
 - Quality-of-life improvements
 - Elite Redux-inspired information-rich DS UI, rebuilt natively for dual screens
 - Reproducible GitHub-based build and checkpoint workflow
@@ -31,9 +31,18 @@ A modernized Sinnoh project built on the Nintendo DS using HG-Engine as the game
 
 ## Initial milestones
 
-1. DS01 — reproducible clean HG-Engine build
-2. DS02 — #001–1025 roster audit
-3. DS03 — modern mechanics/QoL certification
-4. DS04 — Platinum Twinleaf world proof-of-concept
-5. DS05 — Twinleaf → Route 201 → Sandgem playable slice
-6. DS06 — first Elite Redux-inspired native DS UI screen
+1. PT01 — reproducible clean pokeplatinum build
+2. PT02 — native Platinum full-game baseline certification
+3. PT03 — #001–1025 roster/data expansion on Platinum
+4. PT04 — modern mechanics, Fairy, abilities, moves, items, and evolution support
+5. PT05 — modern DS move-animation integration and Platinum-native visual certification
+6. PT06 — Elite Redux-inspired information-rich Platinum UI
+7. PT07 — Mercury Redux gameplay/content changes layered onto the certified modern Platinum base
+
+## Architecture correction — 2026-09-24
+
+The project's source-of-truth runtime is now explicitly **pokeplatinum / Pokémon Platinum**, not HGSS/HG-Engine.
+
+HG-Engine remains valuable as a donor and reference library for modern battle systems, data structures, move implementations, animation scripts, tests, and quality-of-life ideas. Nothing imported from HG-Engine is considered runtime-compatible or visually certified until it is ported to and tested inside the Platinum runtime.
+
+The guiding rule is: **modernize the already-complete Platinum game first; then build Mercury Redux on top of that finished, tested Platinum base.**
