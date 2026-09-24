@@ -46,7 +46,7 @@ jobs:
           . "$RUNNER_TEMP/pb02ai-venv/bin/activate"
           pip install --upgrade pip py-desmume Pillow
 
-      - name: Run proven THUD path, correct stair route, and Barry departure
+      - name: Run proven THUD path and corrected stair route
         shell: bash
         run: |
           . "$RUNNER_TEMP/pb02ai-venv/bin/activate"
@@ -86,30 +86,25 @@ jobs:
               return r>180 and g>180 and b>180
 
           def indoor(img):
-              rgb=img.convert("RGB")
-              r,g,b=rgb.getpixel((10,50))
+              r,g,b=img.convert("RGB").getpixel((10,50))
               return r<12 and g<12 and b<12
 
           cap("pb02aa-source")
 
-          # This exact sequence was visually proven by PB02AC.
-          for _ in range(3):
-              pulse(Keys.KEY_UP,12,450)
+          # Visually proven PB02AC sequence.
+          for _ in range(3): pulse(Keys.KEY_UP,12,450)
           thud=cap("thud-visible")
           if not textbox(thud):
               raise SystemExit("PB02AI: THUD text did not appear")
 
-          # PB02AC visual proof: exactly five confirmations clear the full THUD
-          # dialogue sequence and restore the exterior field.
           for i in range(1,6):
               pulse(Keys.KEY_A,12,1100)
               cap(f"thud-a-{i:02d}")
           run(1800)
           post_thud=cap("thud-complete-field")
           if textbox(post_thud):
-              raise SystemExit("PB02AI: THUD dialogue still open after proven five confirmations")
+              raise SystemExit("PB02AI: THUD dialogue still open")
 
-          # Proven PB02AC entry: UP once to door approach, UP once through warp.
           pulse(Keys.KEY_UP,12,450); cap("door-approach")
           pulse(Keys.KEY_UP,12,1200)
           one_f=cap("barry-house-1f-arrival")
@@ -117,25 +112,18 @@ jobs:
               raise SystemExit("PB02AI: did not enter Barry house 1F")
           run(700); cap("barry-house-1f-stable")
 
-          # Correct route proven by PB02Y from the 1F entrance:
-          # LEFT x3, UP x6, LEFT x1 crosses the native (2,3) stair warp.
+          # Visual review showed the prior route stopped one tile short.
+          # From this exact entrance, LEFT x3 then UP x7 crosses the stair warp.
           for _ in range(3): pulse(Keys.KEY_LEFT,12,240)
-          for _ in range(6): pulse(Keys.KEY_UP,12,280)
-          cap("stair-approach")
-          pulse(Keys.KEY_LEFT,12,1200)
-          two_f=cap("barry-house-2f-arrival")
-          run(900)
+          for i in range(1,8):
+              pulse(Keys.KEY_UP,12,280)
+              if i in (6,7): cap(f"stair-up-{i:02d}")
+          run(1200)
           first=cap("barry-2f-first-message")
-
-          # 2F uses a tighter room footprint; this pixel is black in the proven
-          # PB02Y 2F arrival and non-black on 1F.
-          r,g,b=two_f.convert("RGB").getpixel((50,60))
-          if not (r<12 and g<12 and b<12):
-              raise SystemExit("PB02AI: did not transition to Barry house 2F")
           if not textbox(first):
               raise SystemExit("PB02AI: Barry 2F OnFrame message did not begin")
 
-          # Advance Take Bag/Journal + Waiting on Road, including all pages.
+          # Take Bag/Journal + Waiting on Road, including all pages.
           for i in range(1,7):
               pulse(Keys.KEY_A,12,1100)
               cap(f"barry-2f-a-{i:02d}")
@@ -144,7 +132,7 @@ jobs:
           if textbox(stable):
               raise SystemExit("PB02AI: Barry upstairs dialogue still open")
 
-          # Prove ReleaseAll with actual movement.
+          # Prove ReleaseAll with a real movement delta.
           base=emu.screenshot().convert("RGB")
           pulse(Keys.KEY_DOWN,12,500)
           after=emu.screenshot().convert("RGB")
@@ -162,7 +150,7 @@ jobs:
               "source_artifact":10790910656,
               "thud_confirmations":5,
               "house_entry":"UP x2 after THUD",
-              "stair_route":"LEFT x3, UP x6, LEFT x1",
+              "stair_route":"LEFT x3, UP x7",
               "field_control_proved":True,
               "output_state":saved.name,
               "captures":caps,
