@@ -75,14 +75,10 @@ def main() -> None:
 
     if not records:
         raise SystemExit("community batch is empty")
-    if records[0]["id"] != COMMUNITY_START:
-        raise SystemExit(
-            f"first community ID must be {COMMUNITY_START}, got {records[0]['id']}"
-        )
-    for expected, record in enumerate(records, start=COMMUNITY_START):
-        if record["id"] != expected:
+    for previous, record in zip(records, records[1:]):
+        if record["id"] != previous["id"] + 1:
             raise SystemExit(
-                f"community batch must be contiguous: expected {expected}, got {record['id']}"
+                f"community batch must be contiguous: {previous['id']} -> {record['id']}"
             )
 
     moves_txt = pt / "generated" / "moves.txt"
@@ -91,24 +87,40 @@ def main() -> None:
         raise SystemExit("move registry does not end in MAX_MOVES")
 
     existing = registry[:-1]
-    if len(existing) != 920 or existing[-1] != "MOVE_MALIGNANT_CHAIN":
+    if len(existing) < 920 or existing[919] != "MOVE_MALIGNANT_CHAIN":
         raise SystemExit(
-            "CM01 requires the certified PT05C1 namespace through canonical ID 919"
+            "community imports require the certified PT05C1 namespace through canonical ID 919"
         )
 
     tokens = set(existing)
     reserved_tokens: list[str] = []
     noop_anim = '#include "macros/btlanimcmd.inc"\n\nL_0:\n    End\n'
 
-    for move_id in range(len(existing), COMMUNITY_START):
-        token = f"MOVE_RESERVED_OFFICIAL_{move_id:04d}"
-        if token in tokens:
-            raise SystemExit(f"reserved token collision: {token}")
-        stem = token.removeprefix("MOVE_").lower()
-        write_move_dir(pt, stem, reserved_data(), noop_anim)
-        existing.append(token)
-        tokens.add(token)
-        reserved_tokens.append(token)
+    # The first community-import pass materializes the protected official-ID
+    # lane once. Later batches append directly after already-installed community
+    # moves, avoiding a rebuild of duplicate placeholders.
+    if len(existing) == 920:
+        for move_id in range(len(existing), COMMUNITY_START):
+            token = f"MOVE_RESERVED_OFFICIAL_{move_id:04d}"
+            if token in tokens:
+                raise SystemExit(f"reserved token collision: {token}")
+            stem = token.removeprefix("MOVE_").lower()
+            write_move_dir(pt, stem, reserved_data(), noop_anim)
+            existing.append(token)
+            tokens.add(token)
+            reserved_tokens.append(token)
+    elif len(existing) < COMMUNITY_START:
+        raise SystemExit(
+            f"partial reserved lane detected: registry stops at {len(existing) - 1}"
+        )
+
+    expected_first_id = len(existing)
+    if records[0]["id"] != expected_first_id:
+        raise SystemExit(
+            f"next community ID must be {expected_first_id}, got {records[0]['id']}"
+        )
+    if records[-1]["id"] > 2559:
+        raise SystemExit("community batch exceeds the locked 2048-2559 lane")
 
     installed = []
     for record in records:
@@ -167,12 +179,13 @@ def main() -> None:
         "runtime": "pokeplatinum",
         "official_canonical_end": 919,
         "reserved_official_materialized": [920, OFFICIAL_RESERVED_END],
-        "reserved_placeholder_count": len(reserved_tokens),
+        "reserved_placeholder_count_added_this_pass": len(reserved_tokens),
         "community_lane": [2048, 2559],
-        "community_moves_installed": len(installed),
-        "first_community_id": installed[0]["id"],
-        "last_community_id": installed[-1]["id"],
-        "max_moves_value": len(existing),
+        "community_moves_installed_this_pass": len(installed),
+        "first_community_id_this_pass": installed[0]["id"],
+        "last_community_id_this_pass": installed[-1]["id"],
+        "total_materialized_move_count": len(existing),
+        "total_community_moves_materialized": max(0, len(existing) - COMMUNITY_START),
         "moves": installed,
         "policy": (
             "reserved 920-2047 entries are inert build-time placeholders; "
