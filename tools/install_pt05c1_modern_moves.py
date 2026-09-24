@@ -1,0 +1,299 @@
+#!/usr/bin/env python3
+"""Install the canonical Gen 5-9 move namespace into Platinum.
+
+PT05C1 establishes stable canonical move IDs 468..922 and immediately enables
+all moves whose HG-Engine battle-effect ID maps to one of Platinum's existing
+0..276 effect scripts.
+
+Moves that require a genuinely new battle effect are still assigned their
+canonical ID and metadata, but temporarily point at a safe stub effect and are
+excluded from the "implemented moves" registry. That prevents species
+learnsets from teaching a move before its real battle effect has been ported.
+
+Animations are intentionally safe placeholders during engine bring-up. The
+canonical move behavior is the blocker; animation fidelity is a later pass.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from pathlib import Path
+
+MOVE_DEFINE_RE = re.compile(r"^#define\s+(MOVE_[A-Z0-9_]+)\s+([0-9]+)\s*$", re.M)
+EFFECT_DEFINE_RE = re.compile(r"^#define\s+(MOVE_EFFECT_[A-Z0-9_]+)\s+([0-9]+)\s*$", re.M)
+
+SPLIT_MAP = {
+    "SPLIT_PHYSICAL": "CLASS_PHYSICAL",
+    "SPLIT_SPECIAL": "CLASS_SPECIAL",
+    "SPLIT_STATUS": "CLASS_STATUS",
+}
+
+FLAG_MAP = {
+    "FLAG_CONTACT": "MOVE_FLAG_MAKES_CONTACT",
+    "FLAG_PROTECT": "MOVE_FLAG_CAN_PROTECT",
+    "FLAG_MAGIC_COAT": "MOVE_FLAG_CAN_MAGIC_COAT",
+    "FLAG_SNATCH": "MOVE_FLAG_CAN_SNATCH",
+    "FLAG_MIRROR_MOVE": "MOVE_FLAG_CAN_MIRROR_MOVE",
+    "FLAG_HIDE_SHADOW": "MOVE_FLAG_HIDES_SHADOWS",
+}
+
+CONTEST_TYPE_MAP = {
+    "CONTEST_COOL": "CONTEST_TYPE_COOL",
+    "CONTEST_BEAUTY": "CONTEST_TYPE_BEAUTY",
+    "CONTEST_CUTE": "CONTEST_TYPE_CUTE",
+    "CONTEST_SMART": "CONTEST_TYPE_SMART",
+    "CONTEST_TOUGH": "CONTEST_TYPE_TOUGH",
+}
+
+
+def load_constants(path: Path) -> list[str]:
+    return [
+        line.strip()
+        for line in path.read_text().splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+
+
+def extract_block(text: str, token: str) -> str:
+    marker = f"[{token}] = {{"
+    start = text.find(marker)
+    if start < 0:
+        raise ValueError(f"missing donor block for {token}")
+    brace = text.find("{", start)
+    depth = 0
+    for pos in range(brace, len(text)):
+        ch = text[pos]
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start:pos + 1]
+    raise ValueError(f"unterminated donor block for {token}")
+
+
+def cap(block: str, pattern: str, default=None):
+    m = re.search(pattern, block, re.S)
+    return m.group(1) if m else default
+
+
+def c_string(block: str, field: str) -> str | None:
+    raw = cap(block, rf"\.{re.escape(field)}\s*=\s*\"((?:\\.|[^\"\\])*)\"")
+    if raw is None:
+        return None
+    # The donor uses C escapes such as \n and occasionally escaped quotes.
+    return bytes(raw, "utf-8").decode("unicode_escape")
+
+
+def description_lines(desc: str | None) -> list[str]:
+    if not desc:
+        return [
+            "A modern move ported\n",
+            "for Mercury Redux.",
+        ]
+    lines = desc.split("\n")
+    while lines and lines[-1] == "":
+        lines.pop()
+    if not lines:
+        return ["A modern move."]
+    return [line + ("\n" if i < len(lines) - 1 else "") for i, line in enumerate(lines)]
+
+
+def generation_for_move_id(move_id: int) -> int:
+    if move_id <= 559:
+        return 5
+    if move_id <= 621:
+        return 6
+    if move_id <= 728:
+        return 7
+    if move_id <= 853:
+        return 8
+    return 9
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("pokeplatinum_root", type=Path)
+    ap.add_argument("hg_engine_root", type=Path)
+    ap.add_argument("--report", type=Path, default=Path("pt05c1-move-import.json"))
+    ap.add_argument(
+        "--implemented-registry",
+        type=Path,
+        default=Path("pt05c1-implemented-moves.txt"),
+    )
+    args = ap.parse_args()
+
+    pt = args.pokeplatinum_root.resolve()
+    hg = args.hg_engine_root.resolve()
+
+    move_h = (hg / "include/constants/moves.h").read_text(errors="replace")
+    effect_h = (hg / "include/constants/move_effects.h").read_text(errors="replace")
+    moves_c = (hg / "data/Moves.c").read_text(errors="replace")
+
+    donor_moves = {name: int(num) for name, num in MOVE_DEFINE_RE.findall(move_h)}
+    donor_effects = {name: int(num) for name, num in EFFECT_DEFINE_RE.findall(effect_h)}
+    donor_effects.setdefault("MOVE_EFFECT_ATK_SP_ATK_SPEED_UP_2_LOSE_HALF_MAX_HP", 303)
+
+    pt_effects = load_constants(pt / "generated/move_battle_effects.txt")
+    pt_ranges = set(load_constants(pt / "generated/move_ranges.txt"))
+    pt_types = set(load_constants(pt / "generated/pokemon_types.txt"))
+    native_effect_max = len(pt_effects) - 1
+
+    moves_txt = pt / "generated/moves.txt"
+    old_move_registry = load_constants(moves_txt)
+    if not old_move_registry or old_move_registry[-1] != "MAX_MOVES":
+        raise SystemExit("Platinum move registry does not end in MAX_MOVES")
+
+    existing_moves = old_move_registry[:-1]
+    if existing_moves[-1] != "MOVE_SHADOW_FORCE":
+        raise SystemExit(f"unexpected final native move: {existing_moves[-1]}")
+    if len(existing_moves) != 468:
+        raise SystemExit(f"expected 468 native move constants including MOVE_NONE, got {len(existing_moves)}")
+
+    modern = [
+        (token, move_id)
+        for token, move_id in sorted(donor_moves.items(), key=lambda kv: kv[1])
+        if 468 <= move_id <= 922
+    ]
+    if len(modern) != 455:
+        raise SystemExit(f"expected 455 modern move constants, got {len(modern)}")
+    for expected, (_, move_id) in enumerate(modern, start=468):
+        if move_id != expected:
+            raise SystemExit(f"modern move ID gap: expected {expected}, got {move_id}")
+
+    # Preserve the donor's canonical IDs exactly by adding every constant.
+    moves_txt.write_text("\n".join(existing_moves + [x[0] for x in modern] + ["MAX_MOVES", ""]))
+
+    rows = []
+    implemented_modern = []
+    stubbed_modern = []
+    generated_dirs = []
+
+    for token, move_id in modern:
+        block = extract_block(moves_c, token)
+        effect_token = cap(block, r"\.effect\s*=\s*(MOVE_EFFECT_[A-Z0-9_]+)")
+        if not effect_token or effect_token not in donor_effects:
+            raise SystemExit(f"{token}: could not resolve donor effect {effect_token!r}")
+        effect_id = donor_effects[effect_token]
+        implemented = effect_id <= native_effect_max
+
+        split = cap(block, r"\.split\s*=\s*(SPLIT_[A-Z]+)")
+        move_type = cap(block, r"\.type\s*=\s*(TYPE_[A-Z0-9_]+)")
+        target = cap(block, r"\.target\s*=\s*(RANGE_[A-Z0-9_]+)")
+        power = int(cap(block, r"\.power\s*=\s*([0-9]+)", "0"))
+        accuracy = int(cap(block, r"\.accuracy\s*=\s*([0-9]+)", "0"))
+        pp = int(cap(block, r"\.pp\s*=\s*([0-9]+)", "1"))
+        effect_chance = int(cap(block, r"\.effectChance\s*=\s*([0-9]+)", "0"))
+        priority = int(cap(block, r"\.priority\s*=\s*(-?[0-9]+)", "0"))
+
+        if split not in SPLIT_MAP:
+            raise SystemExit(f"{token}: unsupported split {split}")
+        if move_type not in pt_types:
+            raise SystemExit(f"{token}: target Platinum build lacks type {move_type}")
+        if target not in pt_ranges:
+            raise SystemExit(f"{token}: target Platinum build lacks range {target}")
+
+        flags_expr = cap(block, r"\.flags\s*=\s*([^,\n]+)", "") or ""
+        flags = []
+        for donor_flag, pt_flag in FLAG_MAP.items():
+            if re.search(rf"\b{re.escape(donor_flag)}\b", flags_expr):
+                flags.append(pt_flag)
+        # Platinum's move-data bit 5 is King's Rock compatibility. HG-Engine
+        # reuses that bit for Dexit gating, so infer it for ordinary damaging
+        # moves rather than mapping bit 5 blindly.
+        if power > 0:
+            flags.append("MOVE_FLAG_TRIGGERS_KINGS_ROCK")
+
+        contest_type_src = cap(block, r"\.contestType\s*=\s*(CONTEST_[A-Z]+)")
+        contest_type = CONTEST_TYPE_MAP.get(contest_type_src, "CONTEST_TYPE_COOL")
+
+        name = c_string(block, "name") or token.removeprefix("MOVE_").replace("_", " ").title()
+        desc = c_string(block, "description")
+
+        if implemented:
+            battle_effect = pt_effects[effect_id]
+            implemented_modern.append(token)
+            lane = "implemented_native_effect"
+        else:
+            # Keep the ID/data present but do not teach the move yet.
+            battle_effect = "BATTLE_EFFECT_DO_NOTHING" if split == "SPLIT_STATUS" else "BATTLE_EFFECT_HIT"
+            stubbed_modern.append(token)
+            lane = "stub_waiting_for_effect_port"
+
+        data = {
+            "name": name,
+            "description": description_lines(desc),
+            "class": SPLIT_MAP[split],
+            "type": move_type,
+            "power": power,
+            "accuracy": accuracy,
+            "pp": pp,
+            "effect": {
+                "type": battle_effect,
+                "chance": effect_chance if implemented else 0,
+            },
+            "range": target,
+            "priority": priority,
+            "flags": flags,
+            "contest": {
+                "effect": "CONTEST_EFFECT_BASIC",
+                "type": contest_type,
+            },
+        }
+
+        stem = token.removeprefix("MOVE_").lower()
+        move_dir = pt / "res/moves" / stem
+        move_dir.mkdir(parents=True, exist_ok=False)
+        (move_dir / "data.json").write_text(json.dumps(data, indent=4, ensure_ascii=False) + "\n")
+        (move_dir / "script.s").write_text(
+            '#include "macros/btlcmd.inc"\n\n\n_000:\n    GoToEffectScript \n'
+        )
+        (move_dir / "anim.s").write_text(
+            '#include "macros/btlanimcmd.inc"\n\nL_0:\n    End\n'
+        )
+        generated_dirs.append(stem)
+
+        rows.append({
+            "id": move_id,
+            "generation": generation_for_move_id(move_id),
+            "move": token,
+            "name": name,
+            "donor_effect": effect_token,
+            "donor_effect_id": effect_id,
+            "stored_effect": battle_effect,
+            "lane": lane,
+        })
+
+    # Learnsets may teach native Gen-IV moves plus only modern moves whose
+    # canonical battle effect is currently implemented.
+    implemented_registry = existing_moves + implemented_modern
+    args.implemented_registry.write_text("\n".join(implemented_registry) + "\n")
+
+    report = {
+        "gate": "PT05C1_CANONICAL_MOVE_NAMESPACE_AND_NATIVE_EFFECT_IMPORT",
+        "canonical_move_range": [0, 922],
+        "max_move_constant": "MOVE_MALIGNANT_CHAIN",
+        "modern_moves_added": len(modern),
+        "modern_moves_immediately_implemented": len(implemented_modern),
+        "modern_moves_stubbed_pending_effect_port": len(stubbed_modern),
+        "platinum_native_effect_max": native_effect_max,
+        "implemented_registry": str(args.implemented_registry),
+        "placeholder_animation_policy": "no-op animation during engine bring-up",
+        "contest_policy": "basic contest effect placeholder until contest-fidelity pass",
+        "moves": rows,
+    }
+    args.report.write_text(json.dumps(report, indent=2) + "\n")
+
+    print(json.dumps({
+        "gate": report["gate"],
+        "modern_moves_added": len(modern),
+        "implemented_now": len(implemented_modern),
+        "stubbed_pending_effects": len(stubbed_modern),
+        "final_canonical_move_id": modern[-1][1],
+    }, indent=2))
+
+
+if __name__ == "__main__":
+    main()
