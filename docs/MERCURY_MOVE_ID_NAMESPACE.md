@@ -21,6 +21,17 @@ typedef struct SpeciesLearnsetEntry {
 ID **0** remains `MOVE_NONE`. ID **65535 / 0xFFFF** remains the learnset
 sentinel, so the largest representable playable ID is **65534**.
 
+
+## HG-Engine donor numbering
+
+The pinned HG-Engine source keeps three HGSS dummy entries at donor IDs
+468-470. Its Hone Claws is therefore donor ID 471 and its Malignant Chain is
+donor ID 922. Mercury does **not** keep those dummy gaps in the canonical
+namespace: donor IDs 471-922 are imported as canonical IDs 468-919.
+
+This translation is source-facing only. It does not reduce the 16-bit
+architecture or the reserved future capacity.
+
 ## Important DS-specific rule: wide encoding, compact live IDs
 
 The 16-bit format does **not** mean Mercury should immediately place custom
@@ -46,7 +57,7 @@ but they are not to be materialized just to create large empty gaps.
 | Range | Lane | Use |
 |---|---|---|
 | 0 | `MOVE_NONE` | No move |
-| 1-2047 | Official canonical | Official Pokémon moves. Gen 1-9 currently occupies through 922, leaving 1125 future official slots. |
+| 1-2047 | Official canonical | Official Pokémon moves. Gen 1-9 from the pinned HG donor normalizes through canonical ID 919, leaving 1128 future official slots. |
 | 2048-2559 | Community imports | Curated reusable fan-made/community moves with source/provenance metadata. |
 | 2560-3071 | Mercury custom | Original Mercury Redux moves for ordinary player/trainer use. |
 | 3072-3583 | Boss / variant / signature | Mega, Delta, boss, event, alternate-form, and other signature moves. |
@@ -66,12 +77,12 @@ but they are not to be materialized just to create large empty gaps.
 7. Do not raise the active ceiling above 4095 without a build + battle-memory
    proof that covers `MAX_MOVES`, AI move-table storage, move-data NARCs,
    battle UI, Move Reminder, and save/reload.
-8. The current official endpoint, 922, is tracked as `canonical_floor`; moving
+8. The current normalized Gen 1-9 endpoint, 919, is tracked as `canonical_floor`; moving
    that floor upward does not require another learnset-format migration.
 
 ## Why 2047 for official moves?
 
-It gives the current 922-move canon **1125 additional official IDs** before any
+It gives the current normalized Gen 1-9 move set **1125 additional official IDs** before any
 custom namespace begins, while keeping the first custom lane at 2048 instead of
 jumping thousands of entries higher. That is a much safer fit for Nintendo DS
 memory than treating the full 16-bit address space as a sparse table.
