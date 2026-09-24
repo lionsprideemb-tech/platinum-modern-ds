@@ -1,5 +1,28 @@
 # Milestones
 
+> **Authoritative execution order:** see `docs/MERCURY_MASTER_ROADMAP_FASTEST_PATH_2026-09-24.md`.
+>
+> Project strategy as of 2026-09-24: finish and freeze **Mercury Modern Platinum 1.0** first, then layer Mercury features onto that known-complete game in small reversible passes. Long tile-by-tile navigation testing is no longer the normal development method.
+
+## Current fast-path sequence
+
+1. PT05A — bulk modern compatible learnsets.
+2. PT05B — bulk evolution integration.
+3. Modern moves through Gen 9.
+4. Modern abilities through Gen 9.
+5. Species-data/TM/tutor/forms cleanup.
+6. Build and certify Mercury Modern Platinum 1.0.
+7. Freeze `checkpoint/modern-platinum-1.0-golden`.
+8. Encounter overhaul.
+9. HM-free traversal.
+10. Randomizer.
+11. Item/shop/evolution QoL.
+12. Trainer and boss rebalance.
+13. Megas, Deltas, innate system, UI, customization, quests, and map/story expansion.
+14. Final fresh-save Mercury certification.
+
+---
+
 ## PT01 — Native Platinum Baseline
 - Pin `pret/pokeplatinum`.
 - Reproduce its source build in our own GitHub Actions workflow.
