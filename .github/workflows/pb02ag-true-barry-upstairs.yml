@@ -1,0 +1,147 @@
+name: PB02AG True Barry House To Upstairs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02ag-true-barry-upstairs.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and true post-THUD state
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10793151394/zip > post-thud.zip
+          unzip -q post-thud.zip -d checkpoint
+          test -s checkpoint/true-post-barry-thud.dst
+          test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02ag-venv"
+          . "$RUNNER_TEMP/pb02ag-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Enter house, use proven stair route, finish native upstairs event
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02ag-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/true-post-barry-thud.dst")
+          out=Path("pb02ag-play"); out.mkdir(exist_ok=True)
+
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AG stopped at {frame}")
+
+          def pulse(key,held=12,settle=420):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+              return img
+
+          cap("true-post-thud")
+
+          # PB02AB0 saved after a successful DOWN control probe.
+          # Native coords place the player at (105,878); Barry's door warp is
+          # (105,875), so three UP inputs enter the house.
+          for i in range(1,4):
+              pulse(Keys.KEY_UP,12,500)
+              cap(f"house-entry-up-{i:02d}")
+          run(900); cap("barry-house-1f-stable")
+
+          # This exact interior route already transitioned successfully in PB02Y:
+          # from the 1F entrance: LEFT x3, UP x6, LEFT x1.
+          for _ in range(3): pulse(Keys.KEY_LEFT,12,240)
+          for _ in range(6): pulse(Keys.KEY_UP,12,280)
+          cap("at-proven-stair-approach")
+          pulse(Keys.KEY_LEFT,12,1200)
+          cap("barry-house-2f-arrival")
+          run(900); cap("barry-house-2f-first-message")
+
+          # Native OnFrame script: Take Bag/Journal -> Waiting on Road -> leave.
+          # Each Message may have multiple text pages, so advance generously.
+          for i in range(1,9):
+              pulse(Keys.KEY_A,12,900)
+              if i in (1,2,4,6,8):
+                  cap(f"upstairs-a-{i:02d}")
+
+          run(2600); cap("barry-upstairs-after-departure")
+
+          # Player is moved away from the stairs by the native script. Prove
+          # ReleaseAll by moving once, then save the exact continuation state.
+          pulse(Keys.KEY_DOWN,12,420)
+          cap("post-barry-field-control")
+
+          saved=out/"post-barry-left-home-certified.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02ag-meta.json").write_text(json.dumps({
+              "gate":"PB02AG_TRUE_BARRY_HOUSE_TO_UPSTAIRS",
+              "source_artifact":10793151394,
+              "source_state":"true-post-barry-thud.dst",
+              "exterior_route":"UP x3",
+              "interior_route":"LEFT x3, UP x6, LEFT x1",
+              "expected_native_flags":[
+                  "FLAG_RIVAL_LEFT_HOME",
+                  "VAR_RIVAL_HOUSE_STATE=1",
+                  "VAR_TWINLEAF_TOWN_GUITARIST_TRIGGER_STATE=2"
+              ],
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"PB02AH fast-certify Route 201 starter scene"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AG proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02ag-true-barry-upstairs-proof
+          path: pb02ag-play/
+          if-no-files-found: error
+          retention-days: 14
