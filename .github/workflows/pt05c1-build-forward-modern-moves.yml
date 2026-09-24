@@ -107,11 +107,11 @@ jobs:
 
           moves=Path("vendor/pokeplatinum/generated/moves.txt").read_text().splitlines()
           assert moves[468] == "MOVE_HONE_CLAWS", moves[468]
-          assert moves[922] == "MOVE_MALIGNANT_CHAIN", moves[922]
-          assert moves[923] == "MAX_MOVES", moves[923]
+          assert moves[919] == "MOVE_MALIGNANT_CHAIN", moves[919]
+          assert moves[920] == "MAX_MOVES", moves[920]
 
           report=json.loads(Path("pt05c1-modern-moves.json").read_text())
-          assert report["modern_moves_added"] == 455
+          assert report["modern_moves_added"] == 452
           assert (
               report["modern_moves_immediately_implemented"]
               + report["modern_moves_stubbed_pending_effect_port"]
@@ -176,8 +176,8 @@ jobs:
           deferred="$(jq -r '.modern_moves_stubbed_pending_effect_port' pt05c1-modern-moves.json)"
           {
             echo "PT05C1"
-            echo "Canonical move IDs: 0..922"
-            echo "Modern move constants added: 455"
+            echo "Canonical move IDs: 0..919"
+            echo "Modern move constants added: 452"
             echo "Modern moves currently safe for native-effect learnsets: $implemented"
             echo "Modern moves deferred for effect/target extensions: $deferred"
             echo "Deferred moves are excluded from natural learnsets."
