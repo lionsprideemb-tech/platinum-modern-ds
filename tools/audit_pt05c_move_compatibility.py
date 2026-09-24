@@ -127,9 +127,10 @@ def main() -> None:
     generations = {str(g): {"total": 0, "metadata_compatible": 0, "engine_extension": 0} for g in range(5, 10)}
     new_effect_usage = {}
 
-    for token, move_id in sorted(donor_moves.items(), key=lambda kv: kv[1]):
-        if move_id < 468 or move_id > 922:
+    for token, donor_move_id in sorted(donor_moves.items(), key=lambda kv: kv[1]):
+        if donor_move_id < 471 or donor_move_id > 922:
             continue
+        move_id = donor_move_id - 3
         gen = generation_for_move_id(move_id)
         block = extract_block(moves_c, token)
         if block is None:
@@ -167,6 +168,7 @@ def main() -> None:
 
         rows.append({
             "id": move_id,
+            "donor_id": donor_move_id,
             "generation": gen,
             "move": token,
             "name": name,
@@ -185,8 +187,10 @@ def main() -> None:
 
     report = {
         "gate": "PT05C_MOVE_COMPATIBILITY_AUDIT",
-        "donor_move_range": [468, 922],
-        "canonical_modern_moves_requested": 922 - 468 + 1,
+        "donor_move_range": [471, 922],
+        "canonical_move_range": [468, 919],
+        "donor_dummy_ids_dropped": [468, 469, 470],
+        "canonical_modern_moves_requested": 452,
         "parsed_moves": len(rows),
         "missing_move_data": missing_data,
         "platinum_native_effect_max": native_effect_max,
@@ -209,7 +213,7 @@ def main() -> None:
     if missing_data:
         raise SystemExit(f"move donor parse incomplete: {len(missing_data)} failures")
     if len(rows) != report["canonical_modern_moves_requested"]:
-        raise SystemExit(f"expected 455 modern moves, parsed {len(rows)}")
+        raise SystemExit(f"expected 452 modern moves, parsed {len(rows)}")
 
     print(json.dumps({
         "gate": report["gate"],
