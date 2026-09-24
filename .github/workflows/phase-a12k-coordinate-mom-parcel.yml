@@ -1,0 +1,144 @@
+name: PHASE-A12K Coordinate Mom Parcel
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a12k-coordinate-mom-parcel.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A12H inside-home checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a12h-post-parcel
+          path: checkpoint
+          run-id: 36030277121
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a12k-venv"
+          . "$RUNNER_TEMP/phase-a12k-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Use calibrated coordinates to trigger Mom and Parcel
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a12k-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X1=0x021C5F0E
+          X2=0x021C5F26
+          Z=0x021C5F2E
+
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a12h-post-parcel.dst")
+          out=Path("phase-a12k"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A12K stopped at {frame}")
+
+          def pulse(key,held=10,settle=190):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def coords():
+              return {
+                  "x1":emu.memory.unsigned.read_short(X1),
+                  "x2":emu.memory.unsigned.read_short(X2),
+                  "z":emu.memory.unsigned.read_short(Z),
+              }
+
+          def cap(label):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name,"coords":coords()})
+
+          run(180); cap("inside-start")
+          c=coords()
+
+          # The calibrated player-coordinate copies should both be local-map values.
+          x=c["x1"] if c["x1"] < 32 else c["x2"]
+          z=c["z"]
+          if not (0 <= x < 32 and 0 <= z < 32):
+              raise SystemExit(f"Coordinate calibration not valid indoors: {c}")
+
+          # Stand directly south of Mom (Mom is x=7,z=8), then face north.
+          for _ in range(20):
+              c=coords(); x=c["x1"] if c["x1"] < 32 else c["x2"]
+              if x==7: break
+              pulse(Keys.KEY_LEFT if x>7 else Keys.KEY_RIGHT)
+          for _ in range(20):
+              z=coords()["z"]
+              if z==9: break
+              pulse(Keys.KEY_UP if z>9 else Keys.KEY_DOWN)
+
+          cap("south-of-mom")
+          pulse(Keys.KEY_UP,held=10,settle=260)
+          pulse(Keys.KEY_A,held=12,settle=900)
+          cap("mom-dialogue-triggered")
+
+          for i in range(1,33):
+              pulse(Keys.KEY_A,held=12,settle=500)
+              if i in (8,16,24,32):
+                  cap(f"story-{i:02d}")
+
+          run(1800); cap("post-parcel-stable")
+          saved=out/"phase-a12k-post-parcel.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"phase-a12k-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A12K_COORDINATE_MOM_PARCEL",
+              "coordinate_addresses":{"x1":hex(X1),"x2":hex(X2),"z":hex(Z)},
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A12K evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a12k-post-parcel
+          path: phase-a12k/
+          if-no-files-found: error
+          retention-days: 30
