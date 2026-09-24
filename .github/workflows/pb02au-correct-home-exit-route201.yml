@@ -43,10 +43,13 @@ jobs:
       - name: Verify downloaded inputs
         shell: bash
         run: |
+          set -euxo pipefail
           find rom -maxdepth 2 -type f -print
           find checkpoint -maxdepth 2 -type f -print
-          test -s rom/Pokemon_Mercury_Redux_PB01.nds
-          test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
+          ls -lh rom/Pokemon_Mercury_Redux_PB01.nds checkpoint/post-first-rival-battle.dst
+          actual="$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | cut -d' ' -f1)"
+          echo "PB01_SHA256=$actual"
+          test "$actual" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
           test -s checkpoint/post-first-rival-battle.dst
 
       - name: Install emulator tools
