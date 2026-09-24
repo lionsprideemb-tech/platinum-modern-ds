@@ -1,0 +1,119 @@
+name: PB02AN Finish Rowan Dialogue To Starter Briefcase
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02an-finish-rowan-to-briefcase.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and Route 201 Rowan checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10804557326/zip > route201.zip
+          unzip -q route201.zip -d checkpoint
+          test -s checkpoint/route201-rowan-sequence.dst
+          test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02an-venv"
+          . "$RUNNER_TEMP/pb02an-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Continue native Rowan scene to briefcase control
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02an-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/route201-rowan-sequence.dst")
+          out=Path("pb02an-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AN stopped at frame {frame}")
+
+          def pulse(key, held=12, settle=760):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("route201-rowan-checkpoint")
+
+          # Continue only dialogue. The second YES choice was already accepted
+          # in the source checkpoint; this should carry through Dawn bringing
+          # the briefcase and Barry yielding first choice.
+          for i in range(1,19):
+              pulse(Keys.KEY_A,12,760)
+              if i <= 8 or i in (10,12,14,16,18):
+                  cap(f"rowan-continue-a-{i:02d}")
+
+          run(1800)
+          cap("starter-briefcase-control")
+
+          saved=out/"route201-briefcase-ready.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02an-meta.json").write_text(json.dumps({
+              "gate":"PB02AN_FINISH_ROWAN_TO_STARTER_BRIEFCASE",
+              "source_artifact":10804557326,
+              "source_state":"route201-rowan-sequence.dst",
+              "dialogue_confirmations":18,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"select starter and certify first rival battle"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AN proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02an-rowan-to-briefcase-proof
+          path: pb02an-play/
+          if-no-files-found: error
+          retention-days: 14
