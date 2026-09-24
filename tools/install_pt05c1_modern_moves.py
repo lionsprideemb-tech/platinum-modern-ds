@@ -145,17 +145,22 @@ def c_string(block: str, field: str) -> str | None:
     raw = cap(block, rf"\.{re.escape(field)}\s*=\s*\"((?:\\.|[^\"\\])*)\"")
     if raw is None:
         return None
+
     # Decode escapes without round-tripping UTF-8 bytes through
-    # unicode_escape. That byte-level decode corrupts valid donor characters
-    # such as é and ’ into mojibake that Platinum's msgenc rejects.
+    # unicode_escape. That byte-level decode corrupts valid donor characters.
     try:
-        return json.loads(f'\"{raw}\"')
+        text = json.loads(f'\"{raw}\"')
     except json.JSONDecodeError:
-        return (
+        text = (
             raw.replace(r"\n", "\n")
-               .replace(r'\\"', '"')
+               .replace(r'\\\"', '"')
                .replace(r"\\", "\\")
         )
+
+    # Platinum's English message charmap supports the straight apostrophe but
+    # not U+2019, which appears in several modern move names/descriptions.
+    return text.replace("’", "'")
+
 
 def description_lines(desc: str | None) -> list[str]:
     if not desc:
