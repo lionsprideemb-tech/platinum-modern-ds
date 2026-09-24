@@ -1,0 +1,115 @@
+name: PB02AJ Barry Stair Fourth-Up Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02aj-barry-stair-fourth-up.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and verified near-stair state
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10792752716/zip > state.zip
+          unzip -q state.zip -d checkpoint
+          test -s checkpoint/pb02ac-post-barry-upstairs.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02aj-venv"
+          . "$RUNNER_TEMP/pb02aj-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Cross stair landing with fourth UP
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02aj-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/pb02ac-post-barry-upstairs.dst")
+          out=Path("pb02aj-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running(): raise SystemExit(f"PB02AJ stopped at {frame}")
+
+          def pulse(key, held=12, settle=900):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("near-stair-source")
+          for i in range(1,6):
+              pulse(Keys.KEY_UP,12,1000)
+              cap(f"up-{i:02d}")
+
+          run(1200); cap("post-stair-stable")
+
+          # If 2F OnFrame fired, these advance its two native messages.
+          for i in range(1,5):
+              pulse(Keys.KEY_A,12,1100)
+              cap(f"a-{i:02d}")
+
+          run(2200); cap("final-stable")
+          saved=out/"pb02aj-stair-probe.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02aj-meta.json").write_text(json.dumps({
+              "gate":"PB02AJ_BARRY_STAIR_FOURTH_UP_PROBE",
+              "source_artifact":10792752716,
+              "route":"UP x5 from verified near-stair position",
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AJ proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02aj-barry-stair-fourth-up-proof
+          path: pb02aj-play/
+          if-no-files-found: error
+          retention-days: 14
