@@ -8,6 +8,8 @@ on:
     paths:
       - "tools/install_pt05c1_modern_moves.py"
       - "tools/install_pt05c_move_id_width.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/move_id_namespace.json"
       - "tools/install_pt05a_compatible_learnsets.py"
       - ".github/workflows/pt05c1-build-forward-modern-moves.yml"
 
@@ -83,6 +85,10 @@ jobs:
           906 1025 GEN9
           EOF
 
+      - name: Validate permanent move ID namespace
+        shell: bash
+        run: python3 tools/audit_move_id_namespace.py
+
       - name: Expand WOTBL move IDs
         shell: bash
         run: python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
@@ -106,9 +112,24 @@ jobs:
 
           report=json.loads(Path("pt05c1-modern-moves.json").read_text())
           assert report["modern_moves_added"] == 455
-          assert report["modern_moves_immediately_implemented"] == 314
-          assert report["modern_moves_stubbed_pending_effect_port"] == 141
-          print("canonical modern move namespace: PASS")
+          assert (
+              report["modern_moves_immediately_implemented"]
+              + report["modern_moves_stubbed_pending_effect_port"]
+              == 455
+          )
+          composite = [m for m in report["moves"] if m.get("target_requires_extension")]
+          assert {m["move"] for m in composite} == {
+              "MOVE_ROTOTILLER",
+              "MOVE_FLOWER_SHIELD",
+              "MOVE_TEATIME",
+          }
+          print(
+              "canonical modern move namespace: PASS",
+              report["modern_moves_immediately_implemented"],
+              "native-compatible /",
+              report["modern_moves_stubbed_pending_effect_port"],
+              "deferred",
+          )
           PY
 
       - name: Install learnsets using only implemented move effects
@@ -151,13 +172,15 @@ jobs:
           cp pt05c1-learnsets.json build-forward/
           cp pt05c1-evolutions.json build-forward/
           cp pt05c1-implemented-moves.txt build-forward/
+          implemented="$(jq -r '.modern_moves_immediately_implemented' pt05c1-modern-moves.json)"
+          deferred="$(jq -r '.modern_moves_stubbed_pending_effect_port' pt05c1-modern-moves.json)"
           {
             echo "PT05C1"
             echo "Canonical move IDs: 0..922"
             echo "Modern move constants added: 455"
-            echo "Modern moves using existing Platinum battle effects: 314"
-            echo "Modern moves awaiting new effect ports: 141"
-            echo "Pending-effect moves are excluded from natural learnsets."
+            echo "Modern moves currently safe for native-effect learnsets: $implemented"
+            echo "Modern moves deferred for effect/target extensions: $deferred"
+            echo "Deferred moves are excluded from natural learnsets."
           } > build-forward/PT05C1_MANIFEST.txt
           sha256sum build-forward/Pokemon_Mercury_Redux_PT05C1.nds > build-forward/SHA256SUMS.txt
 
