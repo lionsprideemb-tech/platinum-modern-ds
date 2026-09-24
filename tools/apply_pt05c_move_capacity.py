@@ -317,13 +317,25 @@ void Pokemon_LoadLevelUpMovesOf(int monSpecies, int monForm, SpeciesLearnsetEntr
     result.size++;""",
     )
 
-    # Final invariants: the old 9-bit learnset masks must no longer remain in
-    # the two runtime consumers or the species compiler.
-    for path in (pokemon_c, reminder_c, speciesproc_c):
-        text = path.read_text()
-        for marker in ("0xFE00", "0x1FF", "maxbit(9)"):
-            if marker in text and path.name in {"pokemon.c", "move_reminder_data.c"}:
-                raise SystemExit(f"{path}: legacy move-width marker remains: {marker}")
+    # Final invariants: reject only the old learnset-specific bit packing.
+    pokemon_text = pokemon_c.read_text()
+    reminder_text = reminder_c.read_text()
+    speciesproc_text = speciesproc_c.read_text()
+
+    legacy_needles = [
+        "monLevelUpMoves[i] & 0x1FF",
+        "monLevelUpMoves[*index] & 0x1FF",
+        "monLevelUpMoves[i] & 0xFE00",
+        "monLevelUpMoves[*index] & 0xFE00",
+    ]
+    for marker in legacy_needles:
+        if marker in pokemon_text:
+            raise SystemExit(f"{pokemon_c}: legacy learnset marker remains: {marker}")
+
+    if "GET_LEVEL(move)" in reminder_text or "GET_MOVE(move)" in reminder_text:
+        raise SystemExit(f"{reminder_c}: packed reminder macros remain")
+    if "maxbit(9)" in speciesproc_text:
+        raise SystemExit(f"{speciesproc_c}: 9-bit move packing remains")
 
     print("PT05C move-capacity patch applied: level-up learnsets now store u16 move IDs.")
 
