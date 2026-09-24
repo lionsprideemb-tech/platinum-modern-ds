@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "lane": "community_imports",
+  "start_id": 2048,
+  "source_library": "lionsprideemb-tech/Pokemon-moves",
+  "source_manifest": "manifests/community_moves.csv",
+  "batch": "CM01",
+  "moves": [
+    {
+      "id": 2048,
+      "token": "MOVE_DRACONIC_FANGS",
+      "name": "Draconic Fangs",
+      "type": "TYPE_DRAGON",
+      "class": "CLASS_PHYSICAL",
+      "power": 85,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_FLINCH_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "The target is bitten with\n",
+        "draconic fangs. It may\n",
+        "make the target flinch."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "bite"
+      },
+      "traits": [
+        "strong-jaw"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 2049,
+      "token": "MOVE_AQUA_BASH",
+      "name": "Aqua Bash",
+      "type": "TYPE_WATER",
+      "class": "CLASS_PHYSICAL",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_FLINCH_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "The user bashes the\n",
+        "target with aquatic force.\n",
+        "It may make the target\n",
+        "flinch."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "aqua_tail"
+      },
+      "traits": [
+        "horn"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 2050,
+      "token": "MOVE_ATOMIC_FIRE",
+      "name": "Atomic Fire",
+      "type": "TYPE_FIRE",
+      "class": "CLASS_SPECIAL",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_RECOIL_THIRD",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_BEAUTY"
+      },
+      "description": [
+        "The target is blasted\n",
+        "with overwhelming fire.\n",
+        "The user takes one-third\n",
+        "of the damage as recoil."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "fire_blast"
+      },
+      "traits": [
+        "reckless"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    }
+  ]
+}
