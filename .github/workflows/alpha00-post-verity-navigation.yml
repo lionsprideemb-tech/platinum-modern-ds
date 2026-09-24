@@ -1,0 +1,84 @@
+name: ALPHA00 Post-Verity Navigation Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/alpha00-post-verity-navigation.yml"
+      - "tools/mercury_qa_navigation.py"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Mercury DS alpha branch
+        uses: actions/checkout@v4
+
+      - name: Download known-good PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download certified post-Cyrus checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: pb02ay2-cyrus-fast-proof
+          path: checkpoint
+          run-id: 36009684641
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/mercury-alpha-venv"
+          . "$RUNNER_TEMP/mercury-alpha-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Probe native Platinum field coordinates and walkability
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mercury-alpha-venv/bin/activate"
+          ROM="$(find rom -type f -name '*.nds' -print -quit)"
+          STATE="$(find checkpoint -type f -name 'post-lake-verity-cyrus-fast.dst' -print -quit)"
+          test -n "$ROM"
+          test -n "$STATE"
+          python3 tools/mercury_qa_navigation.py \
+            --rom "$ROM" \
+            --state "$STATE" \
+            --out alpha00-nav \
+            --label post-verity \
+            --probe-steps 16
+          cat alpha00-nav/post-verity-navigation.json
+          {
+            echo "## ALPHA00 navigation probe"
+            echo
+            echo '~~~json'
+            cat alpha00-nav/post-verity-navigation.json
+            echo '~~~'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload ALPHA00 navigation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-alpha00-post-verity-navigation
+          path: alpha00-nav/
+          if-no-files-found: error
+          retention-days: 30
