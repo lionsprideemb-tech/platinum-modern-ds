@@ -1,0 +1,146 @@
+name: PB02AV Finish Route 201 Partner Event
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02av-finish-route201-partner.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download PB02AU Route 201 checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: pb02au-route201-partner-real-proof
+          path: checkpoint
+          run-id: 36006704432
+          github-token: ${{ github.token }}
+
+      - name: Verify inputs
+        shell: bash
+        run: |
+          test -s rom/Pokemon_Mercury_Redux_PB01.nds
+          test -s checkpoint/route201-partner-real.dst
+          actual="$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | cut -d' ' -f1)"
+          test "$actual" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02av-venv"
+          . "$RUNNER_TEMP/pb02av-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Finish Barry partner dialogue and prove free control
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02av-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/route201-partner-real.dst")
+          out=Path("pb02av-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running(): raise SystemExit(f"PB02AV stopped at {frame}")
+
+          def pulse(key,held=12,settle=780):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+              return img
+
+          def text_box_present(img):
+              rgb=img.convert("RGB")
+              total=0; light=0
+              for y in range(148,188,4):
+                  for x in range(4,252,4):
+                      r,g,b=rgb.getpixel((x,y)); total += 1
+                      if r > 205 and g > 205 and b > 205: light += 1
+              return light / total > 0.25
+
+          cap("partner-dialogue-resume")
+
+          released=False
+          for i in range(1,13):
+              pulse(Keys.KEY_A,12,820)
+              img=cap(f"partner-a-{i:02d}")
+              if not text_box_present(img):
+                  released=True
+                  break
+
+          if not released:
+              raise SystemExit("PB02AV partner dialogue did not release")
+
+          run(900); cap("route201-partner-free-control")
+
+          # Prove native control while Barry is attached as partner.
+          pulse(Keys.KEY_LEFT,12,350)
+          cap("route201-left-control")
+          pulse(Keys.KEY_RIGHT,12,350)
+          cap("route201-return-control")
+
+          saved=out/"route201-partner-certified.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02av-meta.json").write_text(json.dumps({
+              "gate":"PB02AV_ROUTE201_PARTNER_CERTIFIED",
+              "source_run":36006704432,
+              "source_artifact":"pb02au-route201-partner-real-proof",
+              "dialogue_released":released,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"PB02AW fast-play west to Verity Lakefront and Lake Verity Cyrus scene"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AV proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02av-route201-partner-certified
+          path: pb02av-play/
+          if-no-files-found: error
+          retention-days: 14
