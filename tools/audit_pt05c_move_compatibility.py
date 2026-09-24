@@ -65,6 +65,22 @@ def canonical_assignment(block: str, field: str, value_pattern: str):
     raise SystemExit(f"could not parse canonical donor value for .{field}: {expr!r}")
 
 
+def canonical_target_assignment(block: str) -> tuple[str | None, str | None]:
+    expr = capture(block, r"\.target\s*=\s*([^,\n]+)")
+    if expr is None:
+        return None, None
+
+    direct = re.fullmatch(r"\s*(RANGE_[A-Z0-9_]+)\s*", expr)
+    if direct:
+        return direct.group(1), None
+
+    composite = re.sub(r"\s+", "", expr)
+    if composite == "RANGE_ALL_ADJACENT|RANGE_USER":
+        return "RANGE_ALL_ADJACENT", expr.strip()
+
+    raise SystemExit(f"could not parse canonical donor value for .target: {expr!r}")
+
+
 def generation_for_move_id(move_id: int) -> int:
     if move_id <= 467:
         return 4
@@ -141,7 +157,7 @@ def main() -> None:
         accuracy = canonical_assignment(block, "accuracy", r"[0-9]+")
         pp = canonical_assignment(block, "pp", r"[0-9]+")
         priority = canonical_assignment(block, "priority", r"-?[0-9]+")
-        target = canonical_assignment(block, "target", r"RANGE_[A-Z0-9_]+")
+        target, donor_target_composite = canonical_target_assignment(block)
 
         lane = "metadata_compatible" if effect_id <= native_effect_max else "engine_extension"
         generations[str(gen)]["total"] += 1
@@ -164,6 +180,7 @@ def main() -> None:
             "pp": int(pp) if pp is not None else None,
             "priority": int(priority) if priority is not None else None,
             "target": target,
+            "donor_target_composite": donor_target_composite,
         })
 
     report = {
