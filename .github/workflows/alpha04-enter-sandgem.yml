@@ -1,0 +1,72 @@
+name: ALPHA04 Enter Sandgem Town
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/alpha04-enter-sandgem.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  enter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Mercury DS alpha branch
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download ALPHA03 checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-alpha03-battle-aware-sandgem
+          path: checkpoint
+          run-id: 36013077739
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/mercury-alpha04-venv"
+          . "$RUNNER_TEMP/mercury-alpha04-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Drop to Route 201 path and enter Sandgem
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mercury-alpha04-venv/bin/activate"
+          ROM="$(find rom -type f -name '*.nds' -print -quit)"
+          python3 tools/mercury_qa_field.py \
+            --rom "$ROM" \
+            --state checkpoint/sandgem-final.dst \
+            --out alpha04-play \
+            --label enter-sandgem \
+            --route "D8,R28"
+
+      - name: Upload ALPHA04 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-alpha04-enter-sandgem
+          path: alpha04-play/
+          if-no-files-found: error
+          retention-days: 30
