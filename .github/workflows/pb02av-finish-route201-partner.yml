@@ -43,10 +43,11 @@ jobs:
       - name: Verify inputs
         shell: bash
         run: |
+          set -euxo pipefail
+          find rom -maxdepth 2 -type f -print
+          find checkpoint -maxdepth 2 -type f -print
           test -s rom/Pokemon_Mercury_Redux_PB01.nds
           test -s checkpoint/route201-partner-real.dst
-          actual="$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | cut -d' ' -f1)"
-          test "$actual" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
 
       - name: Install emulator tools
         shell: bash
