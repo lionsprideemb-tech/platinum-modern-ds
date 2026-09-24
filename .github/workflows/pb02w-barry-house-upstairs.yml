@@ -1,0 +1,106 @@
+name: PB02W Barry House Upstairs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02w-barry-house-upstairs.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download ROM and Barry 1F checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d pb01-artifact
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10789744924/zip > checkpoint.zip
+          unzip -q checkpoint.zip -d checkpoint
+          test -s checkpoint/barry-house-1f.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02w-venv"
+          . "$RUNNER_TEMP/pb02w-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Walk the left stair lane upstairs
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02w-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, hashlib
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/barry-house-1f.dst")
+          out=Path("pb02w-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running(): raise SystemExit(f"stopped at {frame}")
+
+          def pulse(key,held=12,settle=300):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              im=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              im.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("barry-1f-checkpoint")
+          for i in range(1,4):
+              pulse(Keys.KEY_LEFT,12,240); cap(f"left-{i:02d}")
+          for i in range(1,9):
+              pulse(Keys.KEY_UP,12,320); cap(f"up-{i:02d}")
+
+          run(900); cap("upstairs-route-stable")
+
+          upstairs=out/"barry-house-upstairs.dst"
+          emu.savestate.save_file(str(upstairs))
+          (out/"pb02w-meta.json").write_text(json.dumps({
+              "gate":"PB02W_BARRY_HOUSE_UPSTAIRS",
+              "source_checkpoint_artifact":10789744924,
+              "state_file":upstairs.name,
+              "last_resumed_frame":frame,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02W proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02w-barry-house-upstairs-proof
+          path: pb02w-play/
+          if-no-files-found: error
+          retention-days: 14
