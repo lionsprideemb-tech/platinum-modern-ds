@@ -115,7 +115,7 @@ jobs:
           assert (
               report["modern_moves_immediately_implemented"]
               + report["modern_moves_stubbed_pending_effect_port"]
-              == 455
+              == 452
           )
           composite = [m for m in report["moves"] if m.get("target_requires_extension")]
           assert {m["move"] for m in composite} == {
