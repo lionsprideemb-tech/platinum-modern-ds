@@ -1,0 +1,115 @@
+name: PB02AN Barry 2F Exit Combo Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02an-barry-2f-exit-combos.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download ROM and Barry-complete state
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10803922585/zip > state.zip
+          unzip -q state.zip -d checkpoint
+          test -s checkpoint/pb02ak-horizontal-probe.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02an-venv"
+          . "$RUNNER_TEMP/pb02an-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Probe short paths to native 2F warp
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02an-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/pb02ak-horizontal-probe.dst")
+          out=Path("pb02an-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running(): raise SystemExit(f"PB02AN stopped at {frame}")
+
+          def pulse(key, held=12, settle=700):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          tests=[
+              ("left_up", [Keys.KEY_LEFT, Keys.KEY_UP]),
+              ("right_up", [Keys.KEY_RIGHT, Keys.KEY_UP]),
+              ("up_left", [Keys.KEY_UP, Keys.KEY_LEFT]),
+              ("up_right", [Keys.KEY_UP, Keys.KEY_RIGHT]),
+              ("left_up_up", [Keys.KEY_LEFT, Keys.KEY_UP, Keys.KEY_UP]),
+              ("right_up_up", [Keys.KEY_RIGHT, Keys.KEY_UP, Keys.KEY_UP]),
+              ("up_left_up", [Keys.KEY_UP, Keys.KEY_LEFT, Keys.KEY_UP]),
+              ("up_right_up", [Keys.KEY_UP, Keys.KEY_RIGHT, Keys.KEY_UP]),
+          ]
+
+          for label,seq in tests:
+              emu.savestate.load_file(str(state)); run(220)
+              for key in seq: pulse(key)
+              run(650)
+              cap(label)
+
+          (out/"pb02an-meta.json").write_text(json.dumps({
+              "gate":"PB02AN_BARRY_2F_EXIT_COMBO_PROBE",
+              "source_artifact":10803922585,
+              "tests":[x[0] for x in tests],
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02an-barry-2f-exit-combo-proof
+          path: pb02an-play/
+          if-no-files-found: error
+          retention-days: 14
