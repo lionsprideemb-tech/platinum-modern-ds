@@ -24,6 +24,11 @@ from pathlib import Path
 MOVE_DEFINE_RE = re.compile(r"^#define\s+(MOVE_[A-Z0-9_]+)\s+([0-9]+)\s*$", re.M)
 EFFECT_DEFINE_RE = re.compile(r"^#define\s+(MOVE_EFFECT_[A-Z0-9_]+)\s+([0-9]+)\s*$", re.M)
 
+# HG-Engine intentionally preserves the three inaccessible HGSS/Platinum-era
+# move slots immediately after Shadow Force. Keeping these IDs avoids shifting
+# the donor's entire Gen 5-9 namespace, but they are never learnable moves.
+COMPATIBILITY_PLACEHOLDERS = {"MOVE_468", "MOVE_469", "MOVE_470"}
+
 SPLIT_MAP = {
     "SPLIT_PHYSICAL": "CLASS_PHYSICAL",
     "SPLIT_SPECIAL": "CLASS_SPECIAL",
@@ -238,6 +243,7 @@ def main() -> None:
     rows = []
     implemented_modern = []
     stubbed_modern = []
+    reserved_compatibility = []
     generated_dirs = []
 
     for token, donor_move_id, move_id in modern:
@@ -265,7 +271,12 @@ def main() -> None:
         if target not in pt_ranges:
             raise SystemExit(f"{token}: target Platinum build lacks range {target}")
 
-        implemented = effect_id <= native_effect_max and not target_requires_extension
+        is_compatibility_placeholder = token in COMPATIBILITY_PLACEHOLDERS
+        implemented = (
+            effect_id <= native_effect_max
+            and not target_requires_extension
+            and not is_compatibility_placeholder
+        )
 
         flags_expr = cap(block, r"\.flags\s*=\s*([^,\n]+)", "") or ""
         flags = []
@@ -284,7 +295,11 @@ def main() -> None:
         name = c_string(block, "name") or token.removeprefix("MOVE_").replace("_", " ").title()
         desc = c_string(block, "description")
 
-        if implemented:
+        if is_compatibility_placeholder:
+            battle_effect = pt_effects[effect_id]
+            reserved_compatibility.append(token)
+            lane = "reserved_ds_compatibility_slot"
+        elif implemented:
             battle_effect = pt_effects[effect_id]
             implemented_modern.append(token)
             lane = "implemented_native_effect"
@@ -358,7 +373,10 @@ def main() -> None:
         "donor_dummy_ids_dropped": [468, 469, 470],
         "donor_to_canonical_offset": -3,
         "max_move_constant": "MOVE_MALIGNANT_CHAIN",
-        "modern_moves_added": len(modern),
+        "modern_namespace_entries_added": len(modern),
+        "reserved_compatibility_slots": len(reserved_compatibility),
+        "reserved_compatibility_tokens": reserved_compatibility,
+        "modern_moves_added": len(modern) - len(reserved_compatibility),
         "modern_moves_immediately_implemented": len(implemented_modern),
         "modern_moves_stubbed_pending_effect_port": len(stubbed_modern),
         "platinum_native_effect_max": native_effect_max,
@@ -372,7 +390,9 @@ def main() -> None:
 
     print(json.dumps({
         "gate": report["gate"],
-        "modern_moves_added": len(modern),
+        "modern_namespace_entries_added": len(modern),
+        "modern_moves_added": len(modern) - len(reserved_compatibility),
+        "reserved_compatibility_slots": len(reserved_compatibility),
         "implemented_now": len(implemented_modern),
         "stubbed_pending_effects": len(stubbed_modern),
         "final_canonical_move_id": modern[-1][2],
