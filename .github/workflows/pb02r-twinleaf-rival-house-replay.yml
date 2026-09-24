@@ -1,0 +1,148 @@
+name: PB02R Twinleaf Rival House Replay
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02r-twinleaf-rival-house-replay.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download sealed PB01 candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact
+          gh api -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01-artifact.zip
+          unzip -q pb01-artifact.zip -d pb01-artifact
+          test "$(sha256sum pb01-artifact/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02r-venv"
+          . "$RUNNER_TEMP/pb02r-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Replay certified path and explore rival-house route
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02r-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          out=Path("pb02r-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running(): raise SystemExit(f"stopped at {frame}")
+
+          def pulse(key,held=12,settle=300):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def touch(x,y,held=18,settle=180):
+              emu.input.touch_set_pos(x,y); run(held); emu.input.touch_release(); run(settle)
+
+          def cap(label):
+              im=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              im.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          # Replay exact certified PB02P route to Twinleaf exterior.
+          run(16000); pulse(Keys.KEY_START,20,700)
+          for _ in range(6): pulse(Keys.KEY_A,12,300)
+          pulse(Keys.KEY_DOWN,12,120); pulse(Keys.KEY_DOWN,12,120); pulse(Keys.KEY_A,12,420)
+          pulse(Keys.KEY_A,12,320); pulse(Keys.KEY_A,12,320)
+          emu.input.touch_set_pos(128,94); run(30); emu.input.touch_release(); run(600)
+          for _ in range(8): pulse(Keys.KEY_A,12,360)
+          pulse(Keys.KEY_A,12,650); pulse(Keys.KEY_A,12,650); pulse(Keys.KEY_A,12,900)
+          pulse(Keys.KEY_A,12,700); pulse(Keys.KEY_A,12,700); pulse(Keys.KEY_A,12,900)
+          for x,y in [(66,119),(101,99),(154,119),(66,99),(31,139),(154,119),(101,139)]:
+              touch(x,y)
+          touch(224,72,24,700)
+          for _ in range(6): pulse(Keys.KEY_A,12,500)
+          pulse(Keys.KEY_DOWN,12,180); pulse(Keys.KEY_A,12,650)
+          pulse(Keys.KEY_A,12,650); pulse(Keys.KEY_A,12,700)
+          for _ in range(5): pulse(Keys.KEY_A,12,500)
+          run(1600)
+          for _ in range(6): pulse(Keys.KEY_A,12,500)
+          pulse(Keys.KEY_DOWN,12,360)
+          for _ in range(12): pulse(Keys.KEY_A,12,480)
+          run(900)
+          for _ in range(4): pulse(Keys.KEY_RIGHT,12,240)
+          for _ in range(3): pulse(Keys.KEY_UP,12,300)
+          pulse(Keys.KEY_RIGHT,12,900)
+          for _ in range(5): pulse(Keys.KEY_A,12,500)
+          run(700)
+          for _ in range(6): pulse(Keys.KEY_DOWN,12,260)
+          for _ in range(4): pulse(Keys.KEY_LEFT,12,260)
+          for _ in range(4): pulse(Keys.KEY_DOWN,12,320)
+          for _ in range(8): pulse(Keys.KEY_A,12,500)
+          run(700)
+          pulse(Keys.KEY_DOWN,12,1200)
+          run(1200)
+          cap("twinleaf-exterior-certified")
+
+          # Explore westward one tile at a time toward Barry's home.
+          for i in range(1,9):
+              pulse(Keys.KEY_LEFT,12,260)
+              cap(f"west-{i:02d}")
+
+          for i in range(1,5):
+              pulse(Keys.KEY_UP,12,260)
+              cap(f"north-{i:02d}")
+
+          # Cautious interaction/dialogue probes.
+          for i in range(1,7):
+              pulse(Keys.KEY_A,12,420)
+              cap(f"interaction-{i:02d}")
+
+          run(700); cap("route-probe-stable")
+
+          (out/"pb02r-meta.json").write_text(json.dumps({
+              "gate":"PB02R_TWINLEAF_RIVAL_HOUSE_REPLAY",
+              "player_name":"MERCURY",
+              "rival_name":"BARRY",
+              "last_frame":frame,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02R screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02r-twinleaf-rival-house-replay-proof
+          path: pb02r-play/
+          if-no-files-found: warn
+          retention-days: 14
