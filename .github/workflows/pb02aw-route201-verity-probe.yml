@@ -1,0 +1,135 @@
+name: PB02AW Route 201 To Verity Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02aw-route201-verity-probe.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download certified Route 201 partner state
+        uses: actions/download-artifact@v4
+        with:
+          name: pb02av-route201-partner-certified
+          path: checkpoint
+          run-id: 36007613928
+          github-token: ${{ github.token }}
+
+      - name: Verify inputs
+        shell: bash
+        run: |
+          test -s rom/Pokemon_Mercury_Redux_PB01.nds
+          test -s checkpoint/route201-partner-certified.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02aw-venv"
+          . "$RUNNER_TEMP/pb02aw-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Probe efficient paths toward Verity Lakefront
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02aw-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/route201-partner-certified.dst")
+          out=Path("pb02aw-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AW stopped at frame {frame}")
+
+          def pulse(key,held=12,settle=220):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          def reset(label):
+              emu.savestate.load_file(str(state)); run(300); cap(label)
+
+          def move(key,count,label):
+              for _ in range(count): pulse(key)
+              cap(label)
+
+          # Native global-coordinate delta from Route 201 partner area near
+          # (111,857) to Verity Lakefront trigger (80..81,844) is about
+          # 31 west / 13 north. Probe several collision-safe orderings.
+          tests = [
+              ("west_then_north", [(Keys.KEY_LEFT,31,"west31"),(Keys.KEY_UP,13,"north13")]),
+              ("north_then_west", [(Keys.KEY_UP,13,"north13"),(Keys.KEY_LEFT,31,"west31")]),
+              ("split_west", [(Keys.KEY_LEFT,15,"west15"),(Keys.KEY_UP,13,"north13"),(Keys.KEY_LEFT,16,"west16")]),
+              ("split_north", [(Keys.KEY_UP,6,"north6"),(Keys.KEY_LEFT,31,"west31"),(Keys.KEY_UP,7,"north7")]),
+          ]
+
+          for label,seq in tests:
+              reset(label+"-start")
+              for key,count,seg in seq:
+                  move(key,count,label+"-"+seg)
+              run(900)
+              cap(label+"-stable")
+              emu.savestate.save_file(str(out/(label+".dst")))
+
+          (out/"pb02aw-meta.json").write_text(json.dumps({
+              "gate":"PB02AW_ROUTE201_TO_VERITY_PROBE",
+              "source_run":36007613928,
+              "target_native_coords":{"verity_lakefront_trigger_x":[80,81],"z":844},
+              "tests":[t[0] for t in tests],
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"choose successful route and certify Lake Verity Cyrus scene"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AW proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02aw-route201-verity-probe
+          path: pb02aw-play/
+          if-no-files-found: error
+          retention-days: 14
