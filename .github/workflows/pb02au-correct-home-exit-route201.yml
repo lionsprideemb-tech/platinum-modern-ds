@@ -24,7 +24,7 @@ jobs:
       - name: Checkout Mercury DS
         uses: actions/checkout@v4
 
-      - name: Download ROM and post-rival-battle checkpoint
+      - name: Download PB01 ROM
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -32,9 +32,21 @@ jobs:
           mkdir -p rom checkpoint
           gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
           unzip -q pb01.zip -d rom
-          gh run download 36002926406 -n pb02ar-first-rival-battle-proof -D checkpoint
-          test -s checkpoint/post-first-rival-battle.dst
           test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Download post-rival-battle checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: pb02ar-first-rival-battle-proof
+          path: checkpoint
+          run-id: 36002926406
+          github-token: ${{ github.token }}
+
+      - name: Verify post-rival checkpoint
+        shell: bash
+        run: |
+          find checkpoint -maxdepth 2 -type f -print
+          test -s checkpoint/post-first-rival-battle.dst
 
       - name: Install emulator tools
         shell: bash
