@@ -1,0 +1,77 @@
+name: PT01 Native Platinum Baseline
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "upstream/LOCK.json"
+      - "platinum-overlay/**"
+      - ".github/workflows/pt01-platinum-build.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout Mercury DS project
+        uses: actions/checkout@v4
+
+      - name: Install pokeplatinum dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build pkg-config             python3 wget xz-utils libpng-dev
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          POKEPLATINUM_COMMIT="$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$POKEPLATINUM_COMMIT"
+
+      - name: Install MetroSkrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Apply Platinum overlay
+        shell: bash
+        run: |
+          if [ -d platinum-overlay ]; then
+            rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+          fi
+
+      - name: Configure native Platinum build
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build native Platinum runtime
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make rom
+
+      - name: Certify baseline output
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          test -s build/pokeplatinum.us.nds
+          {
+            echo "## PT01 native Platinum build passed"
+            echo
+            echo "- Runtime: `pokeplatinum`"
+            echo "- pokeplatinum commit: `$(git rev-parse HEAD)`"
+            echo "- ROM SHA-1: `$(sha1sum build/pokeplatinum.us.nds | awk '{print $1}')`"
+            echo "- ROM SHA-256: `$(sha256sum build/pokeplatinum.us.nds | awk '{print $1}')`"
+            echo "- ROM bytes: `$(stat -c%s build/pokeplatinum.us.nds)`"
+            echo
+            echo "No commercial ROM artifact is uploaded."
+          } >> "$GITHUB_STEP_SUMMARY"
