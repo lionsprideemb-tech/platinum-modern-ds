@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "architecture": "u16",
+  "move_none_id": 0,
+  "canonical_floor": 922,
+  "sentinel_id": 65535,
+  "usable_id_max": 65534,
+  "ranges": [
+    {
+      "name": "official_canonical",
+      "start": 1,
+      "end": 4095,
+      "purpose": "Official Pokémon moves. IDs 1-922 are the current Gen 1-9 floor; future official generations stay in this lane."
+    },
+    {
+      "name": "community_imports",
+      "start": 4096,
+      "end": 8191,
+      "purpose": "Reusable fan-made/community moves imported into Mercury with provenance and compatibility metadata."
+    },
+    {
+      "name": "mercury_custom",
+      "start": 8192,
+      "end": 12287,
+      "purpose": "Original Mercury Redux moves intended for normal player or trainer use."
+    },
+    {
+      "name": "boss_variant_signature",
+      "start": 12288,
+      "end": 16383,
+      "purpose": "Boss, Mega, Delta, event, alternate-form, and other signature moves that should remain isolated from the general custom pool."
+    },
+    {
+      "name": "experimental_staging",
+      "start": 16384,
+      "end": 32767,
+      "purpose": "Development-only or provisional move IDs. Content must graduate to a permanent lane before a sealed release."
+    },
+    {
+      "name": "future_reserved",
+      "start": 32768,
+      "end": 65534,
+      "purpose": "Reserved for future expansion. 65535 is never usable because it is the learnset sentinel."
+    }
+  ]
+}
