@@ -84,22 +84,28 @@ jobs:
 
           cap("true-post-thud")
 
-          # PB02AB0 saved after a successful DOWN control probe.
-          # Native coords place the player at (105,878); Barry's door warp is
-          # (105,875), so three UP inputs enter the house.
-          for i in range(1,4):
+          # Visual review of the first PB02AG attempt proved UP x3 stops
+          # directly in front of Barry's door. The fourth UP crosses the warp.
+          for i in range(1,5):
               pulse(Keys.KEY_UP,12,500)
               cap(f"house-entry-up-{i:02d}")
-          run(900); cap("barry-house-1f-stable")
+          run(900)
+          one_f=cap("barry-house-1f-stable")
+          r,g,b=one_f.convert("RGB").getpixel((10,50))
+          if not (r < 12 and g < 12 and b < 12):
+              raise SystemExit("PB02AG did not enter Barry house 1F")
 
-          # This exact interior route already transitioned successfully in PB02Y:
+          # This exact interior route transitioned successfully in PB02Y:
           # from the 1F entrance: LEFT x3, UP x6, LEFT x1.
           for _ in range(3): pulse(Keys.KEY_LEFT,12,240)
           for _ in range(6): pulse(Keys.KEY_UP,12,280)
           cap("at-proven-stair-approach")
           pulse(Keys.KEY_LEFT,12,1200)
-          cap("barry-house-2f-arrival")
+          two_f=cap("barry-house-2f-arrival")
           run(900); cap("barry-house-2f-first-message")
+          r,g,b=two_f.convert("RGB").getpixel((50,60))
+          if not (r < 12 and g < 12 and b < 12):
+              raise SystemExit("PB02AG did not transition to Barry house 2F")
 
           # Native OnFrame script: Take Bag/Journal -> Waiting on Road -> leave.
           # Each Message may have multiple text pages, so advance generously.
@@ -122,7 +128,7 @@ jobs:
               "gate":"PB02AG_TRUE_BARRY_HOUSE_TO_UPSTAIRS",
               "source_artifact":10793151394,
               "source_state":"true-post-barry-thud.dst",
-              "exterior_route":"UP x3",
+              "exterior_route":"UP x4",
               "interior_route":"LEFT x3, UP x6, LEFT x1",
               "expected_native_flags":[
                   "FLAG_RIVAL_LEFT_HOME",
