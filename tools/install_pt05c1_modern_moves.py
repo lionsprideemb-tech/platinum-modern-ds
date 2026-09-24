@@ -375,7 +375,7 @@ def main() -> None:
         "modern_moves_added": len(modern),
         "implemented_now": len(implemented_modern),
         "stubbed_pending_effects": len(stubbed_modern),
-        "final_canonical_move_id": modern[-1][1],
+        "final_canonical_move_id": modern[-1][2],
     }, indent=2))
 
 
