@@ -1,0 +1,150 @@
+name: PHASE-A12H Precise Home Entry Parcel
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a12h-precise-home-entry-parcel.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A12G door-search artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a12g-post-parcel
+          path: checkpoint
+          run-id: 36029092417
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a12h-venv"
+          . "$RUNNER_TEMP/phase-a12h-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Enter exact door tile and complete Journal Parcel event
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a12h-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=next(Path("rom").rglob("*.nds"))
+          base=Path("checkpoint/door-base.dst")
+          out=Path("phase-a12h"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A12H stopped at {frame}")
+
+          def pulse(key, held=10, settle=190):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+              return name
+
+          def green_ratio():
+              img=emu.screenshot().convert("RGB"); green=total=0
+              for y in range(0,192,4):
+                  for x in range(0,256,4):
+                      r,g,b=img.getpixel((x,y)); total+=1
+                      if g>=95 and g>r*1.18 and g>b*1.12: green+=1
+              return green/total
+
+          found=None; reports=[]
+          for left_steps in range(0,5):
+              emu.savestate.load_file(str(base)); frame=0; run(120)
+              for _ in range(left_steps):
+                  pulse(Keys.KEY_LEFT)
+              for _ in range(3):
+                  pulse(Keys.KEY_UP,held=10,settle=350)
+                  if green_ratio() < 0.12:
+                      found=left_steps
+                      break
+              shot=cap(f"left-{left_steps}-entry-test")
+              reports.append({"left_steps":left_steps,"green_ratio":green_ratio(),"screenshot":shot})
+              if found is not None:
+                  break
+
+          if found is None:
+              (out/"phase-a12h-meta.json").write_text(json.dumps({
+                  "gate":"PHASE_A12H_PRECISE_DOOR_FAILED",
+                  "reports":reports,
+                  "captures":caps
+              },indent=2)+"\n")
+              raise SystemExit("Precise door search failed")
+
+          run(1000); cap("inside-home")
+
+          # Spawn just inside the south door; approach Mom at (7,8).
+          pulse(Keys.KEY_UP)
+          pulse(Keys.KEY_RIGHT)
+          pulse(Keys.KEY_A,held=12,settle=900)
+          cap("mom-event-start")
+
+          for i in range(1,33):
+              pulse(Keys.KEY_A,held=12,settle=500)
+              if i in (8,16,24,32):
+                  cap(f"story-{i:02d}")
+
+          run(2000); cap("post-parcel-stable")
+          saved=out/"phase-a12h-post-parcel.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"phase-a12h-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A12H_PRECISE_HOME_ENTRY_PARCEL",
+              "winning_left_steps":found,
+              "reports":reports,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A12H evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a12h-post-parcel
+          path: phase-a12h/
+          if-no-files-found: error
+          retention-days: 30
