@@ -1,0 +1,112 @@
+name: PB02AY2 Fast Lake Verity Cutscene Certification
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02ay2-fast-cyrus.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download Lake Verity checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: pb02aw3-visual-route-verity-proof
+          path: checkpoint
+          run-id: 36008822095
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02ay2-venv"
+          . "$RUNNER_TEMP/pb02ay2-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Fast-finish Cyrus and Barry sequence
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02ay2-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/verity-opening-probe.dst")
+          out=Path("pb02ay2-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running(): raise SystemExit(f"PB02AY2 stopped at {frame}")
+
+          def pulse(key,held=12,settle=600):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              img.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("cyrus-final-page")
+
+          for i in range(1,21):
+              pulse(Keys.KEY_A)
+              if i in (1,3,5,7,9,12,15,18,20):
+                  cap(f"cutscene-a-{i:02d}")
+
+          run(1800); cap("cutscene-end-probe")
+          pulse(Keys.KEY_DOWN,12,400); cap("field-control-probe")
+
+          saved=out/"post-lake-verity-cyrus-fast.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"pb02ay2-meta.json").write_text(json.dumps({
+              "gate":"PB02AY2_FAST_LAKE_VERITY_CYRUS",
+              "source_run":36008822095,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AY2 proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02ay2-cyrus-fast-proof
+          path: pb02ay2-play/
+          if-no-files-found: error
+          retention-days: 14
