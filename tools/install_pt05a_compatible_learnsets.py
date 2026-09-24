@@ -126,6 +126,8 @@ def main() -> None:
     total_unsupported_level = 0
     total_supported_egg = 0
     total_supported_tutor = 0
+    total_trimmed_level = 0
+    trimmed_by_species = {}
 
     for dex in range(args.start_dex, args.end_dex + 1):
         species_const = registry[dex - 1]
