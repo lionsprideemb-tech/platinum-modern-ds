@@ -1,0 +1,151 @@
+name: PB02AB0 Finish Barry THUD Event
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02ab0-finish-thud.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and PB02AA checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10790910656/zip > pb02aa.zip
+          unzip -q pb02aa.zip -d checkpoint
+          test -s checkpoint/post-barry-thud-confirmed.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02ab0-venv"
+          . "$RUNNER_TEMP/pb02ab0-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Finish native THUD scene and prove field control
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02ab0-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from PIL import ImageChops, ImageStat
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/post-barry-thud-confirmed.dst")
+          out=Path("pb02ab0-play"); out.mkdir(exist_ok=True)
+
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AB0 emulator stopped at {frame}")
+
+          def pulse(key, held=12, settle=420):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+              return img
+
+          cap("loaded-mid-thud-checkpoint")
+
+          # Let the door/rival movement that was still pending in PB02AA finish.
+          run(1800)
+          cap("thud-scene-visible")
+
+          # There are only three native messages in the THUD script. Extra A
+          # presses after ReleaseAll are harmless here and guarantee all waits
+          # are cleared even if an earlier press landed during movement.
+          for i in range(1,16):
+              pulse(Keys.KEY_A,12,480)
+              if i in (1,3,5,8,12,15):
+                  cap(f"advance-a-{i:02d}")
+
+          run(2600)
+          before=cap("post-thud-before-control-probe")
+
+          # Prove actual field control. Try directions until one causes a clear
+          # visual change; the first successful movement becomes our true state.
+          probe_state=out/"pre-control-probe.dst"
+          emu.savestate.save_file(str(probe_state))
+          moved=False
+          moved_dir=None
+          for label,key in [("DOWN",Keys.KEY_DOWN),("RIGHT",Keys.KEY_RIGHT),("LEFT",Keys.KEY_LEFT)]:
+              emu.savestate.load_file(str(probe_state)); run(120)
+              base=emu.screenshot().convert("RGB")
+              pulse(key,12,520)
+              after=emu.screenshot().convert("RGB")
+              stat=ImageStat.Stat(ImageChops.difference(base,after))
+              mean_diff=sum(stat.mean)/3
+              cap(f"control-probe-{label.lower()}")
+              if mean_diff > 1.5:
+                  moved=True
+                  moved_dir=label
+                  break
+
+          if not moved:
+              raise SystemExit("PB02AB0 could not prove field control after completing THUD inputs")
+
+          saved=out/"true-post-barry-thud.dst"
+          emu.savestate.save_file(str(saved))
+          cap("true-post-thud-stable")
+
+          meta={
+              "gate":"PB02AB0_FINISH_BARRY_THUD_EVENT",
+              "source_checkpoint_artifact":10790910656,
+              "source_state":"post-barry-thud-confirmed.dst",
+              "a_presses":15,
+              "field_control_proved":moved,
+              "movement_probe_that_succeeded":moved_dir,
+              "output_state":saved.name,
+              "captures":caps,
+              "next":"enter Barry house from a genuinely released field state"
+          }
+          (out/"pb02ab0-meta.json").write_text(json.dumps(meta,indent=2)+"\n")
+          print(json.dumps(meta,indent=2))
+          emu.destroy()
+          PY
+
+      - name: Upload true post-THUD state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02ab0-true-post-thud-state
+          path: pb02ab0-play/
+          if-no-files-found: error
+          retention-days: 14
