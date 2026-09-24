@@ -145,8 +145,25 @@ def c_string(block: str, field: str) -> str | None:
     raw = cap(block, rf"\.{re.escape(field)}\s*=\s*\"((?:\\.|[^\"\\])*)\"")
     if raw is None:
         return None
-    # The donor uses C escapes such as \n and occasionally escaped quotes.
-    return bytes(raw, "utf-8").decode("unicode_escape")
+
+    # Decode only the C escapes used by HG-Engine while preserving real UTF-8
+    # characters such as Pokémon's é and the curly apostrophe. Using Python's
+    # unicode_escape codec here corrupts already-decoded UTF-8 into mojibake.
+    escapes = {
+        r"\\": "\\",
+        r"\n": "\n",
+        r"\r": "\r",
+        r"\t": "\t",
+        r'\"': '"',
+    }
+
+    def unescape(match: re.Match[str]) -> str:
+        token = match.group(0)
+        if token not in escapes:
+            raise SystemExit(f"unsupported C string escape in .{field}: {token!r}")
+        return escapes[token]
+
+    return re.sub(r'\\(?:\\|n|r|t|")', unescape, raw)
 
 
 def description_lines(desc: str | None) -> list[str]:
