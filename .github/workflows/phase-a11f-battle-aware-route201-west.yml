@@ -1,0 +1,66 @@
+name: PHASE-A11F Battle-Aware Route 201 West
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a11f-battle-aware-route201-west.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download PHASE-A11D checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a11d-route201-west-side
+          path: checkpoint
+          run-id: 36024285238
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a11f-venv"
+          . "$RUNNER_TEMP/phase-a11f-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Continue west with wild-battle recovery
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a11f-venv/bin/activate"
+          ROM="$(find rom -name '*.nds' -print -quit)"
+          STATE="checkpoint/phase-a11d-route201-west-side.dst"
+          python3 tools/mercury_qa_field.py             --rom "$ROM"             --state "$STATE"             --out phase-a11f             --label phase-a11f-route201-west             --route L14             --held 10             --settle 190
+
+      - name: Upload PHASE-A11F evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a11f-route201-west
+          path: phase-a11f/
+          if-no-files-found: error
+          retention-days: 30
