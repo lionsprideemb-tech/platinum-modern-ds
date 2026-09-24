@@ -1,0 +1,217 @@
+name: PHASE-A13 Parcel To Route 202 Tutorial
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a13-parcel-to-route202.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A12L Parcel checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a12l-parcel-complete
+          path: checkpoint
+          run-id: 36031603671
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a13-venv"
+          . "$RUNNER_TEMP/phase-a13-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Travel to Route 202 and complete catching tutorial
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a13-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E
+          Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a12l-parcel-complete.dst")
+          out=Path("phase-a13"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]; encounters=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A13 stopped at {frame}")
+
+          def xy():
+              return (
+                  emu.memory.unsigned.read_short(X),
+                  emu.memory.unsigned.read_short(Z),
+              )
+
+          def pulse(key,held=10,settle=175):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name,"xy":xy()})
+
+          def lower_stats(img):
+              rgb=img.convert("RGB"); tan=red=total=0
+              for y in range(196,382,4):
+                  for x in range(4,252,4):
+                      r,g,b=rgb.getpixel((x,y)); total+=1
+                      if 120<=r<=220 and 100<=g<=200 and 45<=b<=140 and r>g>b: tan+=1
+                      if r>=165 and g<=115 and b<=115 and r>g*1.45: red+=1
+              return tan/total,red/total
+
+          def is_overworld(img):
+              return lower_stats(img)[0] >= 0.35
+
+          def is_fight_menu(img):
+              return lower_stats(img)[1] >= 0.10
+
+          def tap_run():
+              emu.input.touch_set_pos(128,160); run(16)
+              emu.input.touch_release(); run(650)
+
+          def recover_field():
+              img=emu.screenshot()
+              if is_overworld(img): return
+              run(550)
+              img=emu.screenshot()
+              if is_overworld(img): return
+              enc={"start":frame,"xy":xy(),"attempts":0}
+              cap(f"encounter-{len(encounters)+1:02d}-start")
+              for _ in range(24):
+                  img=emu.screenshot()
+                  if is_overworld(img):
+                      enc["end"]=frame; encounters.append(enc)
+                      cap(f"encounter-{len(encounters):02d}-cleared")
+                      return
+                  if is_fight_menu(img):
+                      enc["attempts"]+=1; tap_run()
+                  else:
+                      pulse(Keys.KEY_A,held=12,settle=420)
+              raise SystemExit("Could not clear field interruption")
+
+          def step_toward(tx,tz,order="xz"):
+              x,z=xy()
+              if x==tx and z==tz: return True
+              axes=order
+              key=None
+              if axes[0]=="x" and x!=tx:
+                  key=Keys.KEY_RIGHT if x<tx else Keys.KEY_LEFT
+              elif axes[0]=="z" and z!=tz:
+                  key=Keys.KEY_DOWN if z<tz else Keys.KEY_UP
+              elif axes[1]=="x" and x!=tx:
+                  key=Keys.KEY_RIGHT if x<tx else Keys.KEY_LEFT
+              elif axes[1]=="z" and z!=tz:
+                  key=Keys.KEY_DOWN if z<tz else Keys.KEY_UP
+              before=xy(); pulse(key); recover_field(); after=xy()
+              if after==before:
+                  return False
+              return True
+
+          def goto(tx,tz,label,order="xz",limit=120):
+              for _ in range(limit):
+                  if xy()==(tx,tz):
+                      cap(label); return
+                  if not step_toward(tx,tz,order):
+                      cap(label+"-blocked")
+                      raise SystemExit(f"Blocked going to {(tx,tz)} from {xy()}")
+              raise SystemExit(f"Waypoint limit hit for {(tx,tz)} at {xy()}")
+
+          run(180); cap("home-start")
+
+          # Exit player house from local-map coordinates.
+          goto(6,9,"inside-door-row","xz",20)
+          pulse(Keys.KEY_DOWN,held=10,settle=900)
+          run(700); cap("twinleaf-outside")
+
+          # Twinleaf: use x=113 to avoid the map sign at x=112,z=878.
+          goto(113,886,"twinleaf-south-road","xz")
+          goto(113,857,"twinleaf-north-exit","xz")
+          pulse(Keys.KEY_UP,held=10,settle=700); recover_field()
+          cap("route201-entered")
+
+          # Route 201: south road east, then north/east to Sandgem boundary.
+          goto(140,856,"route201-east-south","xz")
+          goto(145,843,"route201-north-bend","xz")
+          goto(151,843,"sandgem-west-edge","xz")
+          pulse(Keys.KEY_RIGHT,held=10,settle=700); recover_field()
+          cap("sandgem-entered")
+
+          # Sandgem: travel under houses, then through the Center/Mart gap.
+          goto(152,856,"sandgem-lower-road","zx")
+          goto(184,856,"sandgem-east-road","xz")
+          goto(184,829,"sandgem-north-corridor","zx")
+          cap("route202-approach")
+
+          # Cross into Route 202, then move onto Dawn's trigger strip x=180,z=825..829.
+          for _ in range(4):
+              pulse(Keys.KEY_UP,held=10,settle=300)
+          run(700)
+          goto(180,829,"route202-trigger","xz",30)
+          run(1200); cap("catching-tutorial-triggered")
+
+          # Advance Dawn's intro, demonstration, Poké Ball handoff, and farewell.
+          for i in range(1,25):
+              pulse(Keys.KEY_A,held=12,settle=650)
+              if i in (6,12,18,24): cap(f"tutorial-a-{i:02d}")
+
+          run(2500); cap("route202-post-tutorial-stable")
+          saved=out/"phase-a13-route202-post-tutorial.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"phase-a13-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A13_PARCEL_TO_ROUTE202_TUTORIAL",
+              "coordinate_addresses":{"x":hex(X),"z":hex(Z)},
+              "wild_encounters":encounters,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A13 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a13-route202-post-tutorial
+          path: phase-a13/
+          if-no-files-found: error
+          retention-days: 30
