@@ -1,5 +1,7 @@
 # Milestones
 
+> **Authoritative execution roadmap:** see `docs/MERCURY_FASTEST_PATH_ROADMAP.md`. That document defines the fastest-path order: finish Modern Platinum first, seal a golden baseline, then add Mercury systems one at a time.
+
 > **Authoritative execution order:** see `docs/MERCURY_MASTER_ROADMAP_FASTEST_PATH_2026-09-24.md`.
 >
 > Project strategy as of 2026-09-24: finish and freeze **Mercury Modern Platinum 1.0** first, then layer Mercury features onto that known-complete game in small reversible passes. Long tile-by-tile navigation testing is no longer the normal development method.
