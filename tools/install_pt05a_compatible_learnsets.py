@@ -180,7 +180,7 @@ def main() -> None:
         total_supported_level += len(supported_level)
         total_unsupported_level += len(unsupported)
         total_supported_egg += len(egg)
-        total_supported_tutor += len(tutor)
+        total_supported_tutor += 0
         if unsupported:
             unsupported_by_species[species_const] = sorted(set(unsupported))
 
