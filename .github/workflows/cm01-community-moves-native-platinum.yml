@@ -95,8 +95,8 @@ jobs:
           assert moves[2051] == "MAX_MOVES", moves[2051]
 
           report = json.loads(Path("cm01-community-moves-install.json").read_text())
-          assert report["community_moves_installed"] == 3
-          assert report["reserved_placeholder_count"] == 1128
+          assert report["community_moves_installed_this_pass"] == 3
+          assert report["reserved_placeholder_count_added_this_pass"] == 1128
           print("CM01 registry layout: PASS")
           PY
 
