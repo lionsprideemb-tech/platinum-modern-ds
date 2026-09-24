@@ -32,8 +32,7 @@ jobs:
           mkdir -p rom checkpoint
           gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
           unzip -q pb01.zip -d rom
-          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10809011670/zip > state.zip
-          unzip -q state.zip -d checkpoint
+          gh run download 36002926406 -n pb02ar-first-rival-battle-proof -D checkpoint
           test -s checkpoint/post-first-rival-battle.dst
           test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
 
@@ -144,7 +143,8 @@ jobs:
           emu.savestate.save_file(str(saved))
           (out/"pb02au-meta.json").write_text(json.dumps({
               "gate":"PB02AU_CORRECT_HOME_EXIT_TO_ROUTE201_PARTNER",
-              "source_artifact":10809011670,
+              "source_run":36002926406,
+              "source_artifact_name":"pb02ar-first-rival-battle-proof",
               "running_shoes_cutscene_released":released,
               "corrected_front_door_input":"DOWN x3",
               "output_state":saved.name,
