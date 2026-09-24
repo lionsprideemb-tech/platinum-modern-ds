@@ -1,0 +1,137 @@
+name: PB02AU Correct Home Exit To Route 201 Partner
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02au-correct-home-exit-route201.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download ROM and Running Shoes dialogue checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10809336615/zip > state.zip
+          unzip -q state.zip -d checkpoint
+          test -s checkpoint/route201-barry-partner.dst
+          test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02au-venv"
+          . "$RUNNER_TEMP/pb02au-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Exit home correctly and trigger Barry partner sequence
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02au-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/route201-barry-partner.dst")
+          out=Path("pb02au-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running(): raise SystemExit(f"PB02AU stopped at {frame}")
+
+          def pulse(key,held=12,settle=650):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("running-shoes-dialogue-checkpoint")
+
+          # Visual review of PB02AT proved two A presses release the mother
+          # cutscene, and two DOWN presses only reach the red doormat.
+          pulse(Keys.KEY_A,12,900); cap("mom-final-page")
+          pulse(Keys.KEY_A,12,700); cap("home-free-control")
+
+          # Corrected: three DOWN inputs are required to cross the front-door
+          # warp from this exact state.
+          for i in range(1,4):
+              pulse(Keys.KEY_DOWN,12,650 if i < 3 else 1200)
+              cap(f"home-exit-down-{i:02d}")
+
+          run(800); cap("twinleaf-exterior-confirmed")
+
+          # Native exterior player-house x is 116; central north road is x112.
+          for _ in range(4): pulse(Keys.KEY_LEFT,12,240)
+          cap("twinleaf-central-road")
+
+          # Head north into Route 201. VAR_FOLLOWER_RIVAL_STATE is 2 after the
+          # first rival battle, so coord event script 16 at x109-113,z857
+          # should start Barry's legendary-Pokémon partner sequence.
+          for i in range(1,31):
+              pulse(Keys.KEY_UP,12,250)
+              if i in (10,20,30): cap(f"north-{i:02d}")
+
+          run(1200); cap("route201-partner-event-start")
+
+          for i in range(1,6):
+              pulse(Keys.KEY_A,12,850)
+              cap(f"barry-partner-a-{i:02d}")
+
+          run(1200); cap("route201-partner-free-control")
+
+          saved=out/"route201-partner-real.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02au-meta.json").write_text(json.dumps({
+              "gate":"PB02AU_CORRECT_HOME_EXIT_TO_ROUTE201_PARTNER",
+              "source_artifact":10809336615,
+              "correction":"front door requires DOWN x3 from released Running Shoes state",
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"PB02AV west to Verity Lakefront and Lake Verity opening"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AU proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02au-route201-partner-real-proof
+          path: pb02au-play/
+          if-no-files-found: error
+          retention-days: 14
