@@ -1,0 +1,102 @@
+name: PHASE-A06 Sandgem Tour Complete
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a06-sandgem-tour.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+      - name: Download PHASE-A05 checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a05-lab-exit
+          path: checkpoint
+          run-id: 36017582208
+          github-token: ${{ github.token }}
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a06-venv"
+          . "$RUNNER_TEMP/phase-a06-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+      - name: Exit lab and complete Sandgem tutorial tour
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a06-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a05-lab-exit-ready.dst")
+          out=Path("phase-a06"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running(): raise SystemExit(f"PHASE-A06 stopped at {frame}")
+          def pulse(key,held=12,settle=650):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held); emu.input.keypad_rm_key(m); run(settle)
+          def cap(label):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"; emu.screenshot().save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+          run(180); cap("lab-field-control")
+          # Walk to the south exit from Rowan's lab.
+          for i in range(1,13):
+              pulse(Keys.KEY_DOWN,settle=280)
+              if i in (4,8,12): cap(f"walk-to-lab-exit-{i:02d}")
+          run(1200); cap("sandgem-onframe-start")
+          # Rowan gives TM27, then Dawn gives the Center/Mart tour and tells
+          # the player to inform family. There are no branch choices here.
+          for i in range(1,13):
+              pulse(Keys.KEY_A,settle=1050)
+              if i<=8 or i in (10,12): cap(f"sandgem-tour-a-{i:02d}")
+          run(1600); cap("sandgem-tour-stable")
+          # Prove control is returned after Dawn leaves.
+          pulse(Keys.KEY_LEFT,settle=500); cap("sandgem-field-control-probe")
+          saved=out/"phase-a06-sandgem-tour-complete.dst"; emu.savestate.save_file(str(saved))
+          (out/"phase-a06-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A06_SANDGEM_TOUR_COMPLETE",
+              "source_run":36017582208,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+      - name: Upload PHASE-A06 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a06-sandgem-tour
+          path: phase-a06/
+          if-no-files-found: error
+          retention-days: 30
