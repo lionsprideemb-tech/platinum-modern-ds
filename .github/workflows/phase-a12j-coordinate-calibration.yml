@@ -1,0 +1,139 @@
+name: PHASE-A12J Coordinate Calibration
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a12j-coordinate-calibration.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download PHASE-A12C checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a12c-post-parcel
+          path: checkpoint
+          run-id: 36027624518
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a12j-venv"
+          . "$RUNNER_TEMP/phase-a12j-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Locate live player coordinate RAM
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a12j-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a12c-post-parcel.dst")
+          out=Path("phase-a12j"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom))
+          start=0x021B0000
+          end=0x021E0000
+
+          def run(n):
+              for _ in range(n):
+                  emu.cycle(False)
+                  if not emu.is_running():
+                      raise SystemExit("Emulator stopped")
+
+          def press(key,held=48,settle=600):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def snap():
+              vals={}
+              for addr in range(start,end,2):
+                  vals[addr]=emu.memory.unsigned.read_short(addr)
+              return vals
+
+          emu.savestate.load_file(str(state)); run(180)
+          base=snap()
+          base_shot=out/"00-base.png"; emu.screenshot().save(base_shot)
+
+          press(Keys.KEY_LEFT)
+          left=snap()
+          left_shot=out/"01-left.png"; emu.screenshot().save(left_shot)
+
+          emu.savestate.load_file(str(state)); run(180)
+          press(Keys.KEY_DOWN)
+          down=snap()
+          down_shot=out/"02-down.png"; emu.screenshot().save(down_shot)
+
+          def candidates(other):
+              rows=[]
+              for addr,v in base.items():
+                  w=other[addr]
+                  d=w-v
+                  if 0 <= v <= 2048 and 0 <= w <= 2048 and d != 0 and abs(d) <= 16:
+                      rows.append({"addr":hex(addr),"base":v,"after":w,"delta":d})
+              return rows
+
+          cx=candidates(left)
+          cy=candidates(down)
+
+          # Favor values in the normal overworld coordinate range.
+          cx.sort(key=lambda r:(0 if 50 <= r["base"] <= 1000 else 1,abs(r["delta"]),r["addr"]))
+          cy.sort(key=lambda r:(0 if 50 <= r["base"] <= 1000 else 1,abs(r["delta"]),r["addr"]))
+
+          report={
+              "gate":"PHASE_A12J_COORDINATE_CALIBRATION",
+              "scan_start":hex(start),
+              "scan_end":hex(end),
+              "legacy_probe":{
+                  "x_addr":"0x021c5cce",
+                  "x_value":base.get(0x021c5cce),
+                  "z_addr":"0x021c5cee",
+                  "z_value":base.get(0x021c5cee)
+              },
+              "left_candidates":cx[:300],
+              "down_candidates":cy[:300],
+              "counts":{"left":len(cx),"down":len(cy)}
+          }
+          (out/"coordinate-calibration.json").write_text(json.dumps(report,indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload calibration
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a12j-coordinate-calibration
+          path: phase-a12j/
+          if-no-files-found: error
+          retention-days: 30
