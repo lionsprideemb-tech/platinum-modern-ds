@@ -1,0 +1,144 @@
+name: PB02AG2 Complete Barry THUD Then Upstairs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02ag2-complete-thud-upstairs.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and released pre-THUD state
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10793151394/zip > state.zip
+          unzip -q state.zip -d checkpoint
+          test -s checkpoint/true-post-barry-thud.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02ag2-venv"
+          . "$RUNNER_TEMP/pb02ag2-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Trigger THUD, finish event, enter house, reach Barry 2F
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02ag2-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/true-post-barry-thud.dst")
+          out=Path("pb02ag2-play"); out.mkdir(exist_ok=True)
+
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AG2 stopped at frame {frame}")
+
+          def pulse(key, held=12, settle=700):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("released-state-loaded")
+
+          # This state is free-field immediately south of Barry's THUD trigger.
+          for i in range(1,5):
+              pulse(Keys.KEY_UP,12,450)
+              cap(f"approach-thud-{i:02d}")
+
+          # Finish all three native THUD messages and intervening movements.
+          for i in range(1,9):
+              pulse(Keys.KEY_A,12,1100)
+              cap(f"thud-dialogue-a-{i:02d}")
+
+          run(2400)
+          cap("thud-event-finished")
+
+          # Trigger state is now 1, so crossing (105,876) no longer retriggers.
+          # Two UP inputs should cross the old trigger tile and house warp.
+          pulse(Keys.KEY_UP,12,500); cap("toward-house-1")
+          pulse(Keys.KEY_UP,12,1200); cap("barry-house-1f")
+          run(800); cap("barry-house-1f-stable")
+
+          # Proven PB02Y stair route from 1F entrance.
+          for _ in range(3): pulse(Keys.KEY_LEFT,12,260)
+          for _ in range(6): pulse(Keys.KEY_UP,12,300)
+          cap("stair-approach")
+          pulse(Keys.KEY_LEFT,12,1200)
+          cap("barry-house-2f")
+
+          # 2F OnFrame event starts automatically.
+          run(1000); cap("barry-2f-event-start")
+          for i in range(1,7):
+              pulse(Keys.KEY_A,12,1100)
+              cap(f"barry-2f-a-{i:02d}")
+
+          run(2600)
+          cap("barry-left-home")
+
+          pulse(Keys.KEY_DOWN,12,450)
+          cap("field-control-after-barry")
+
+          saved=out/"post-barry-left-home-certified.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02ag2-meta.json").write_text(json.dumps({
+              "gate":"PB02AG2_COMPLETE_THUD_THEN_UPSTAIRS",
+              "source_artifact":10793151394,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"PB02AH Route 201 / Lake Verity fast certification"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AG2 proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02ag2-complete-thud-upstairs-proof
+          path: pb02ag2-play/
+          if-no-files-found: error
+          retention-days: 14
