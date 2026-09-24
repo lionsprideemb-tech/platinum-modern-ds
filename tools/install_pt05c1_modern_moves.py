@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Install the canonical Gen 5-9 move namespace into Platinum.
 
-PT05C1 establishes stable canonical move IDs 468..922 and immediately enables
+PT05C1 establishes stable canonical move IDs 468..919 and immediately enables
 all moves whose HG-Engine battle-effect ID maps to one of Platinum's existing
 0..276 effect scripts.
 
@@ -209,26 +209,38 @@ def main() -> None:
     if len(existing_moves) != 468:
         raise SystemExit(f"expected 468 native move constants including MOVE_NONE, got {len(existing_moves)}")
 
-    modern = [
-        (token, move_id)
-        for token, move_id in sorted(donor_moves.items(), key=lambda kv: kv[1])
-        if 468 <= move_id <= 922
+    # The pinned HG-Engine preserves three HGSS dummy move slots at donor IDs
+    # 468..470. Main-series canonical Gen-5 numbering starts Hone Claws at 468.
+    # Drop those three placeholders and translate donor IDs 471..922 down by 3
+    # so Mercury uses the official canonical IDs 468..919.
+    donor_modern = [
+        (token, donor_id)
+        for token, donor_id in sorted(donor_moves.items(), key=lambda kv: kv[1])
+        if 471 <= donor_id <= 922
     ]
-    if len(modern) != 455:
-        raise SystemExit(f"expected 455 modern move constants, got {len(modern)}")
-    for expected, (_, move_id) in enumerate(modern, start=468):
-        if move_id != expected:
-            raise SystemExit(f"modern move ID gap: expected {expected}, got {move_id}")
+    modern = [
+        (token, donor_id, donor_id - 3)
+        for token, donor_id in donor_modern
+    ]
+    if len(modern) != 452:
+        raise SystemExit(f"expected 452 canonical Gen 5-9 moves, got {len(modern)}")
+    for expected, (_, donor_id, canonical_id) in enumerate(modern, start=468):
+        if canonical_id != expected:
+            raise SystemExit(
+                f"canonical move ID gap: expected {expected}, got {canonical_id} "
+                f"(donor ID {donor_id})"
+            )
 
-    # Preserve the donor's canonical IDs exactly by adding every constant.
-    moves_txt.write_text("\n".join(existing_moves + [x[0] for x in modern] + ["MAX_MOVES", ""]))
+    moves_txt.write_text(
+        "\n".join(existing_moves + [x[0] for x in modern] + ["MAX_MOVES", ""])
+    )
 
     rows = []
     implemented_modern = []
     stubbed_modern = []
     generated_dirs = []
 
-    for token, move_id in modern:
+    for token, donor_move_id, move_id in modern:
         block = extract_block(moves_c, token)
         effect_token = cap(block, r"\.effect\s*=\s*(MOVE_EFFECT_[A-Z0-9_]+)")
         if not effect_token or effect_token not in donor_effects:
@@ -321,6 +333,7 @@ def main() -> None:
 
         rows.append({
             "id": move_id,
+            "donor_id": donor_move_id,
             "generation": generation_for_move_id(move_id),
             "move": token,
             "name": name,
@@ -340,7 +353,10 @@ def main() -> None:
 
     report = {
         "gate": "PT05C1_CANONICAL_MOVE_NAMESPACE_AND_NATIVE_EFFECT_IMPORT",
-        "canonical_move_range": [0, 922],
+        "canonical_move_range": [0, 919],
+        "donor_move_range": [471, 922],
+        "donor_dummy_ids_dropped": [468, 469, 470],
+        "donor_to_canonical_offset": -3,
         "max_move_constant": "MOVE_MALIGNANT_CHAIN",
         "modern_moves_added": len(modern),
         "modern_moves_immediately_implemented": len(implemented_modern),
