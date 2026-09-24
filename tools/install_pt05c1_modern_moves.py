@@ -157,6 +157,11 @@ def c_string(block: str, field: str) -> str | None:
                .replace(r"\\", "\\")
         )
 
+    # The donor uses a literal \\n sequence inside C strings for message line
+    # breaks. Convert it to a real newline so json.dumps emits Platinum's normal
+    # JSON newline escape instead of a doubled backslash.
+    text = text.replace(r"\\n", "\n")
+
     # Platinum's English message charmap supports the straight apostrophe but
     # not U+2019, which appears in several modern move names/descriptions.
     return text.replace("’", "'")
