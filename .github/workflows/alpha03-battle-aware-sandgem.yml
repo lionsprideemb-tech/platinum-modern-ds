@@ -1,0 +1,75 @@
+name: ALPHA03 Battle-Aware Sprint To Sandgem
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/alpha03-battle-aware-sandgem.yml"
+      - "tools/mercury_qa_field.py"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  sprint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Mercury DS alpha branch
+        uses: actions/checkout@v4
+
+      - name: Download known-good PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download clean pre-detour Route 201 checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-alpha01-sandgem-sprint
+          path: checkpoint
+          run-id: 36011957535
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/mercury-alpha03-venv"
+          . "$RUNNER_TEMP/mercury-alpha03-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Traverse Route 201 with automatic wild-battle escape
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mercury-alpha03-venv/bin/activate"
+          ROM="$(find rom -type f -name '*.nds' -print -quit)"
+          STATE="checkpoint/alpha01-sandgem-approach.dst"
+          python3 tools/mercury_qa_field.py \
+            --rom "$ROM" \
+            --state "$STATE" \
+            --out alpha03-play \
+            --label sandgem \
+            --route "L12,U18,R60"
+          cat alpha03-play/sandgem-meta.json
+
+      - name: Upload ALPHA03 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-alpha03-battle-aware-sandgem
+          path: alpha03-play/
+          if-no-files-found: error
+          retention-days: 30
