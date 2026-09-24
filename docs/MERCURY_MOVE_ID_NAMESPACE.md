@@ -5,7 +5,7 @@
 
 ## Decision
 
-ID **922 is a canonical floor, not Mercury's ceiling**.
+ID **919 is the current normalized Gen 1-9 canonical endpoint, not Mercury's ceiling**.
 
 PT05C0 widens Platinum's packed 9-bit level-up move field to a true `u16`.
 That removes the old 511-move storage limit permanently. The learnset layout is:
@@ -82,7 +82,7 @@ but they are not to be materialized just to create large empty gaps.
 
 ## Why 2047 for official moves?
 
-It gives the current normalized Gen 1-9 move set **1125 additional official IDs** before any
+It gives the current normalized Gen 1-9 move set **1128 additional official IDs** before any
 custom namespace begins, while keeping the first custom lane at 2048 instead of
 jumping thousands of entries higher. That is a much safer fit for Nintendo DS
 memory than treating the full 16-bit address space as a sparse table.
