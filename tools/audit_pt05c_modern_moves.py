@@ -83,7 +83,7 @@ def main() -> None:
         candidate = None
         compatible = False
         if hg_effect:
-            candidate = "BATTLE_" + hg_effect
+            candidate = hg_effect.replace("MOVE_EFFECT_", "BATTLE_EFFECT_", 1)
             compatible = candidate in pt_effects
         if compatible:
             direct_effect += 1
