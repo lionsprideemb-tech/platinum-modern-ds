@@ -145,26 +145,17 @@ def c_string(block: str, field: str) -> str | None:
     raw = cap(block, rf"\.{re.escape(field)}\s*=\s*\"((?:\\.|[^\"\\])*)\"")
     if raw is None:
         return None
-
-    # Decode only the C escapes used by HG-Engine while preserving real UTF-8
-    # characters such as Pokémon's é and the curly apostrophe. Using Python's
-    # unicode_escape codec here corrupts already-decoded UTF-8 into mojibake.
-    escapes = {
-        r"\\": "\\",
-        r"\n": "\n",
-        r"\r": "\r",
-        r"\t": "\t",
-        r'\"': '"',
-    }
-
-    def unescape(match: re.Match[str]) -> str:
-        token = match.group(0)
-        if token not in escapes:
-            raise SystemExit(f"unsupported C string escape in .{field}: {token!r}")
-        return escapes[token]
-
-    return re.sub(r'\\(?:\\|n|r|t|")', unescape, raw)
-
+    # Decode escapes without round-tripping UTF-8 bytes through
+    # unicode_escape. That byte-level decode corrupts valid donor characters
+    # such as é and ’ into mojibake that Platinum's msgenc rejects.
+    try:
+        return json.loads(f'\"{raw}\"')
+    except json.JSONDecodeError:
+        return (
+            raw.replace(r"\n", "\n")
+               .replace(r'\\"', '"')
+               .replace(r"\\", "\\")
+        )
 
 def description_lines(desc: str | None) -> list[str]:
     if not desc:
