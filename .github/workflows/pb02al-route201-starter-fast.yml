@@ -1,0 +1,145 @@
+name: PB02AL Route 201 Starter Scene Fast Pass
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02al-route201-starter-fast.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and Barry-complete state
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10803922585/zip > state.zip
+          unzip -q state.zip -d checkpoint
+          test -s checkpoint/pb02ak-horizontal-probe.dst
+          test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e9e1cf4a03e9110ecdc09dfe91f16"
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02al-venv"
+          . "$RUNNER_TEMP/pb02al-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Exit Barry house and fast-play Route 201 opening
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02al-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/pb02ak-horizontal-probe.dst")
+          out=Path("pb02al-play"); out.mkdir(exist_ok=True)
+
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AL emulator stopped at frame {frame}")
+
+          def pulse(key, held=12, settle=420):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("barry-2f-complete")
+
+          # Native 2F script moved player one tile south of its return stair.
+          pulse(Keys.KEY_UP,12,1100)
+          cap("barry-house-1f-return")
+
+          # Native 1F stair warp is (2,3), front door is (6,10).
+          # Walk the open lower-left aisle to the front door.
+          for _ in range(7): pulse(Keys.KEY_DOWN,12,210)
+          for _ in range(4): pulse(Keys.KEY_RIGHT,12,210)
+          cap("barry-house-front-door")
+          for _ in range(2): pulse(Keys.KEY_DOWN,12,900)
+          cap("twinleaf-exterior-after-barry")
+
+          # Exterior door is (105,875); Route 201 opening event accepts x110-113
+          # at z857. Move onto the central road and head north.
+          for _ in range(5): pulse(Keys.KEY_RIGHT,12,220)
+          cap("twinleaf-central-road")
+          for i in range(1,21):
+              pulse(Keys.KEY_UP,12,250)
+              if i in (5,10,15,20): cap(f"north-to-route201-{i:02d}")
+
+          run(1000)
+          cap("route201-opening-event")
+
+          # Fast-play the untouched Platinum Rowan/Barry opening. Default A on
+          # both yes/no menus is YES. Stop after enough confirmations to reach
+          # the 'choose first' / briefcase phase, but before intentionally
+          # selecting a starter.
+          for i in range(1,23):
+              pulse(Keys.KEY_A,12,850)
+              if i in (2,6,10,14,18,22):
+                  cap(f"route201-dialogue-{i:02d}")
+
+          run(1800)
+          cap("route201-starter-phase-stable")
+
+          saved=out/"route201-starter-phase.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02al-meta.json").write_text(json.dumps({
+              "gate":"PB02AL_ROUTE201_STARTER_SCENE_FAST_PASS",
+              "source_artifact":10803922585,
+              "source_state":"pb02ak-horizontal-probe.dst",
+              "route201_target_trigger":{"x_range":[110,113],"z":857},
+              "dialogue_confirmations":22,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"select starter and certify first rival battle"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AL proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02al-route201-starter-fast-proof
+          path: pb02al-play/
+          if-no-files-found: error
+          retention-days: 14
