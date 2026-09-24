@@ -34,6 +34,23 @@ def capture(block: str, pattern: str) -> str | None:
     return m.group(1) if m else None
 
 
+def canonical_assignment(block: str, field: str, value_pattern: str) -> str | None:
+    expr = capture(block, rf"\.{re.escape(field)}\s*=\s*([^,\n]+)")
+    if expr is None:
+        return None
+    direct = re.fullmatch(rf"\s*({value_pattern})\s*", expr)
+    if direct:
+        return direct.group(1)
+    conditional = re.fullmatch(
+        rf"\s*\(\(CHAMPIONS_[A-Z0-9_]+\)\s*\?\s*\(({value_pattern})\)"
+        rf"\s*:\s*\(({value_pattern})\)\)\s*",
+        expr,
+    )
+    if conditional:
+        return conditional.group(2)
+    raise SystemExit(f"could not parse canonical donor value for .{field}: {expr!r}")
+
+
 def load_lines(path: Path) -> set[str]:
     return {
         line.strip()
@@ -74,11 +91,11 @@ def main() -> None:
             continue
 
         hg_effect = capture(block, r"\.effect\s*=\s*(MOVE_EFFECT_[A-Z0-9_]+)")
-        move_type = capture(block, r"\.type\s*=\s*(TYPE_[A-Z0-9_]+)")
-        split = capture(block, r"\.split\s*=\s*(SPLIT_[A-Z0-9_]+)")
-        power = capture(block, r"\.power\s*=\s*(\d+)")
-        accuracy = capture(block, r"\.accuracy\s*=\s*(\d+)")
-        pp = capture(block, r"\.pp\s*=\s*(\d+)")
+        move_type = canonical_assignment(block, "type", r"TYPE_[A-Z0-9_]+")
+        split = canonical_assignment(block, "split", r"SPLIT_[A-Z0-9_]+")
+        power = canonical_assignment(block, "power", r"\d+")
+        accuracy = canonical_assignment(block, "accuracy", r"\d+")
+        pp = canonical_assignment(block, "pp", r"\d+")
 
         candidate = None
         compatible = False
