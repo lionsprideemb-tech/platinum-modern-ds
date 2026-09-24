@@ -6,7 +6,7 @@ on:
     branches:
       - feature/mercury-build-forward
     paths:
-      - "tools/apply_pt05c_move_capacity.py"
+      - "tools/install_pt05c_move_id_width.py"
       - "tools/audit_pt05c_modern_moves.py"
       - ".github/workflows/pt05c-move-capacity-compat.yml"
 
@@ -77,7 +77,7 @@ jobs:
         shell: bash
         run: |
           rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
-          python3 tools/apply_pt05c_move_capacity.py vendor/pokeplatinum
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
 
       - name: Rebuild modern roster data
         shell: bash
