@@ -1,0 +1,178 @@
+name: PB02 Stair Route Search
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02-stair-route-search.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  search:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download ROM and known Barry 1F checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10789744924/zip > barry1f.zip
+          unzip -q barry1f.zip -d checkpoint
+          test -s checkpoint/barry-house-1f.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/stair-search-venv"
+          . "$RUNNER_TEMP/stair-search-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: BFS search for 1F to 2F transition
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/stair-search-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          from collections import deque
+          import hashlib, json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          start=Path("checkpoint/barry-house-1f.dst")
+          out=Path("stair-search"); out.mkdir(exist_ok=True)
+          states=out/"states"; states.mkdir(exist_ok=True)
+
+          emu=DeSmuME(); emu.open(str(rom))
+          frame=0
+
+          dirs=[
+              ("U",Keys.KEY_UP),
+              ("D",Keys.KEY_DOWN),
+              ("L",Keys.KEY_LEFT),
+              ("R",Keys.KEY_RIGHT),
+          ]
+          opposite={"U":"D","D":"U","L":"R","R":"L"}
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise RuntimeError(f"emulator stopped at frame {frame}")
+
+          def move(key):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(12)
+              emu.input.keypad_rm_key(m); run(150)
+
+          def white_dialogue_ratio(img):
+              im=img.convert("RGB")
+              white=0; total=0
+              for y in range(135,192):
+                  for x in range(256):
+                      r,g,b=im.getpixel((x,y)); total += 1
+                      if r>220 and g>220 and b>220:
+                          white += 1
+              return white/total
+
+          def state_hash(img):
+              small=img.convert("RGB").resize((32,48))
+              return hashlib.sha1(small.tobytes()).hexdigest()
+
+          root=states/"root.dst"
+          root.write_bytes(start.read_bytes())
+          emu.savestate.load_file(str(root)); run(180)
+          root_img=emu.screenshot()
+          root_hash=state_hash(root_img)
+
+          q=deque()
+          q.append(("", root, None, 0))
+          seen={root_hash}
+          explored=[]
+          found=None
+          max_depth=12
+          max_nodes=260
+
+          while q and len(explored)<max_nodes and found is None:
+              path,state_file,last_dir,depth=q.popleft()
+              if depth>=max_depth:
+                  continue
+
+              for label,key in dirs:
+                  if last_dir and opposite[last_dir]==label:
+                      continue
+                  emu.savestate.load_file(str(state_file)); run(80)
+                  move(key)
+                  img=emu.screenshot()
+                  ratio=white_dialogue_ratio(img)
+                  new_path=path+label
+                  rec={"path":new_path,"depth":depth+1,"dialogue_ratio":ratio}
+                  explored.append(rec)
+
+                  if ratio>0.25:
+                      shot=out/f"FOUND-{new_path}.png"
+                      img.save(shot)
+                      found_state=out/"barry-2f-transition-found.dst"
+                      emu.savestate.save_file(str(found_state))
+                      found={"path":new_path,"dialogue_ratio":ratio,"screenshot":shot.name,"state":found_state.name}
+                      break
+
+                  h=state_hash(img)
+                  if h in seen:
+                      continue
+                  seen.add(h)
+                  sf=states/f"n{len(seen):03d}-{new_path}.dst"
+                  emu.savestate.save_file(str(sf))
+                  q.append((new_path,sf,label,depth+1))
+
+          if found is None:
+              # preserve representative frontier screenshots for visual diagnosis
+              emu.savestate.load_file(str(root)); run(100)
+              emu.screenshot().save(out/"root.png")
+              raise SystemExit(f"No stair transition found after {len(explored)} explored moves")
+
+          meta={
+              "gate":"PB02_STAIR_ROUTE_SEARCH",
+              "source_checkpoint_artifact":10789744924,
+              "found":found,
+              "nodes_explored":len(explored),
+              "unique_states":len(seen),
+              "max_depth":max_depth,
+              "first_80_explored":explored[:80],
+          }
+          (out/"stair-search-meta.json").write_text(json.dumps(meta,indent=2)+"\n")
+          print(json.dumps(meta,indent=2))
+          emu.destroy()
+          PY
+
+      - name: Upload route-search proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02-stair-route-search-proof
+          path: |
+            stair-search/F*.png
+            stair-search/root.png
+            stair-search/stair-search-meta.json
+            stair-search/barry-2f-transition-found.dst
+          if-no-files-found: warn
+          retention-days: 14
