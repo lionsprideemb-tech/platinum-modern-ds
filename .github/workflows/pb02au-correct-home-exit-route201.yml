@@ -133,10 +133,11 @@ jobs:
 
           run(700); cap("twinleaf-exterior-confirmed")
 
-          # Player-house exterior x=116; the central road into Route 201 is x112.
-          for _ in range(4):
+          # Player-house exterior x=116. Twinleaf's map sign occupies
+          # (112,878), so x112 is blocked; use x111 to pass it cleanly.
+          for _ in range(5):
               pulse(Keys.KEY_LEFT,12,230)
-          cap("twinleaf-central-road")
+          cap("twinleaf-north-road-x111")
 
           # First rival battle set VAR_FOLLOWER_RIVAL_STATE=2. Enter Route 201
           # through x109..113,z857 to fire the native Barry partner coord event.
@@ -163,6 +164,7 @@ jobs:
               "source_artifact_name":"pb02ar-first-rival-battle-proof",
               "running_shoes_cutscene_released":released,
               "corrected_front_door_input":"DOWN x3",
+              "corrected_twinleaf_north_lane":"x111 to bypass map sign at x112,z878",
               "output_state":saved.name,
               "captures":caps,
               "visual_review_required":True,
