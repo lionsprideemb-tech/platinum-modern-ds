@@ -90,6 +90,10 @@ jobs:
             --start-dex 494 --end-dex 1025 \
             --report pt05c0-evolutions.json
 
+      - name: Validate permanent move ID namespace
+        shell: bash
+        run: python3 tools/audit_move_id_namespace.py
+
       - name: Expand WOTBL move IDs to 16 bits
         shell: bash
         run: |
