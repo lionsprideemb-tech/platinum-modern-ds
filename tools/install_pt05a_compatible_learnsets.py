@@ -106,13 +106,22 @@ def main() -> None:
     ap.add_argument("--start-dex", type=int, default=494)
     ap.add_argument("--end-dex", type=int, default=1025)
     ap.add_argument("--report", type=Path, default=Path("pt05a-compatible-learnsets.json"))
+    ap.add_argument(
+        "--implemented-moves",
+        type=Path,
+        default=None,
+        help="Optional move registry used to exclude constants whose battle effects are not implemented yet.",
+    )
     args = ap.parse_args()
 
     pt = args.pokeplatinum_root.resolve()
     hg = args.hg_engine_root.resolve()
     registry = load_registry(args.registry)
 
-    available_moves = load_constants(pt / "generated/moves.txt")
+    available_moves = load_constants(
+        args.implemented_moves if args.implemented_moves is not None
+        else pt / "generated/moves.txt"
+    )
     donor_path = hg / "data/learnsets/learnsets.json"
     if not donor_path.is_file():
         donor_path = hg / "data/learnsets/base/21_sv.json"
@@ -199,6 +208,7 @@ def main() -> None:
         "gate": "PT05A_COMPATIBLE_MODERN_LEARNSETS",
         "range": [args.start_dex, args.end_dex],
         "donor_source": str(donor_path),
+        "implemented_move_registry": str(args.implemented_moves) if args.implemented_moves else "generated/moves.txt",
         "species_requested": args.end_dex - args.start_dex + 1,
         "species_imported": len(imported),
         "species_missing_donor": missing_donor,
