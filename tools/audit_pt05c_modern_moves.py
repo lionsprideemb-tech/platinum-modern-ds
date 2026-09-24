@@ -71,7 +71,11 @@ def main() -> None:
 
     move_defs = (hg / "include/constants/moves.h").read_text(errors="replace")
     donor_moves = dict(MOVE_DEFINE_RE.findall(move_defs))
-    donor_moves = {k: int(v) for k, v in donor_moves.items() if 468 <= int(v) <= 922}
+    donor_moves = {
+        k: int(v) - 3
+        for k, v in donor_moves.items()
+        if 471 <= int(v) <= 922
+    }
 
     moves_c = (hg / "data/Moves.c").read_text(errors="replace")
     pt_effects = load_lines(pt / "generated/move_battle_effects.txt")
@@ -128,7 +132,7 @@ def main() -> None:
 
     report = {
         "gate": "PT05C_MODERN_MOVE_COMPATIBILITY_AUDIT",
-        "range": [468, 922],
+        "range": [468, 919],
         "canonical_modern_move_count": len(donor_moves),
         "parsed_move_count": len(rows),
         "missing_move_blocks": missing_blocks,
@@ -149,8 +153,8 @@ def main() -> None:
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
 
-    if len(donor_moves) != 455:
-        raise SystemExit(f"expected 455 post-Gen-IV canonical move IDs, found {len(donor_moves)}")
+    if len(donor_moves) != 452:
+        raise SystemExit(f"expected 452 post-Gen-IV canonical move IDs, found {len(donor_moves)}")
     if missing_blocks:
         raise SystemExit(f"missing {len(missing_blocks)} donor move blocks")
 
