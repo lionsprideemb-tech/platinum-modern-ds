@@ -1,0 +1,167 @@
+name: PT05C0 Build-Forward 16-bit Move IDs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-build-forward
+    paths:
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - "tools/install_pt05b_compatible_evolutions.py"
+      - ".github/workflows/pt05c0-build-forward-move-id-width.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  build-forward:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Rebuild 1025-species data layer
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report pt05c0-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --gate "PT05C0_${tag}_RESOURCE_INSTALL" \
+              --report "pt05c0-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report pt05c0-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report pt05c0-evolutions.json
+
+      - name: Expand WOTBL move IDs to 16 bits
+        shell: bash
+        run: |
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          grep -F "u16 move;" vendor/pokeplatinum/include/struct_defs/species.h
+          grep -F "SpeciesLearnsetEntry *monLevelUpMoves" vendor/pokeplatinum/src/pokemon.c
+          if grep -Fq "u16 move : 9" vendor/pokeplatinum/include/struct_defs/species.h; then
+            echo "Legacy 9-bit move field still present" >&2
+            exit 1
+          fi
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt05c0-venv"
+          . "$RUNNER_TEMP/pt05c0-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build normal game ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Audit built learnset member width
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          learn=json.loads(Path("pt05c0-learnsets.json").read_text())
+          evo=json.loads(Path("pt05c0-evolutions.json").read_text())
+          assert learn["species_imported"] >= 500
+          assert evo["species_processed"] >= 500
+
+          species_h=Path("vendor/pokeplatinum/include/struct_defs/species.h").read_text()
+          pokemon_c=Path("vendor/pokeplatinum/src/pokemon.c").read_text()
+          reminder=Path("vendor/pokeplatinum/src/move_reminder_data.c").read_text()
+
+          assert "u16 move;" in species_h
+          assert "u8 level;" in species_h
+          assert "u16 move : 9" not in species_h
+          assert "0xFE00" not in pokemon_c
+          assert "0x1FF" not in pokemon_c
+          assert "GET_MOVE" not in reminder
+          print("PT05C0 16-bit move-ID architecture audit: PASS")
+          PY
+
+      - name: Stage PT05C0 artifact
+        shell: bash
+        run: |
+          mkdir -p build-forward
+          cp "$BUILD/pokeplatinum.us.nds" build-forward/Pokemon_Mercury_Redux_PT05C0.nds
+          cp pt05c0-learnsets.json build-forward/
+          cp pt05c0-evolutions.json build-forward/
+          {
+            echo "PT05C0: 16-bit WOTBL move IDs"
+            echo "Native Platinum limit removed: level-up move IDs are no longer restricted to 0..511."
+            echo "Next gate: import canonical Gen 5 move data/effects."
+          } > build-forward/PT05C0_MANIFEST.txt
+          sha256sum build-forward/Pokemon_Mercury_Redux_PT05C0.nds > build-forward/SHA256SUMS.txt
+
+      - name: Upload PT05C0 build
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-redux-pt05c0-16bit-move-ids
+          path: build-forward/
+          if-no-files-found: error
+          retention-days: 30
