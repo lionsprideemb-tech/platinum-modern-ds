@@ -1,46 +1,54 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "architecture": "u16",
   "move_none_id": 0,
   "canonical_floor": 922,
   "sentinel_id": 65535,
   "usable_id_max": 65534,
+  "runtime_soft_ceiling": 4095,
+  "materialization_policy": "Keep active move IDs compact. Do not jump into the high u16 space merely to separate categories; Platinum indexes and preloads move data by numeric ID.",
   "ranges": [
     {
       "name": "official_canonical",
       "start": 1,
-      "end": 4095,
-      "purpose": "Official Pokémon moves. IDs 1-922 are the current Gen 1-9 floor; future official generations stay in this lane."
+      "end": 2047,
+      "active": true,
+      "purpose": "Official Pokémon moves. IDs 1-922 are the current Gen 1-9 floor. This leaves 1125 additional canonical slots before custom lanes."
     },
     {
       "name": "community_imports",
-      "start": 4096,
-      "end": 8191,
+      "start": 2048,
+      "end": 2559,
+      "active": true,
       "purpose": "Reusable fan-made/community moves imported into Mercury with provenance and compatibility metadata."
     },
     {
       "name": "mercury_custom",
-      "start": 8192,
-      "end": 12287,
+      "start": 2560,
+      "end": 3071,
+      "active": true,
       "purpose": "Original Mercury Redux moves intended for normal player or trainer use."
     },
     {
       "name": "boss_variant_signature",
-      "start": 12288,
-      "end": 16383,
-      "purpose": "Boss, Mega, Delta, event, alternate-form, and other signature moves that should remain isolated from the general custom pool."
+      "start": 3072,
+      "end": 3583,
+      "active": true,
+      "purpose": "Boss, Mega, Delta, event, alternate-form, and other signature moves."
     },
     {
       "name": "experimental_staging",
-      "start": 16384,
-      "end": 32767,
+      "start": 3584,
+      "end": 4095,
+      "active": true,
       "purpose": "Development-only or provisional move IDs. Content must graduate to a permanent lane before a sealed release."
     },
     {
-      "name": "future_reserved",
-      "start": 32768,
+      "name": "inactive_future_space",
+      "start": 4096,
       "end": 65534,
-      "purpose": "Reserved for future expansion. 65535 is never usable because it is the learnset sentinel."
+      "active": false,
+      "purpose": "Architecturally valid u16 space but intentionally not materialized on DS without a separate memory/table audit."
     }
   ]
 }
