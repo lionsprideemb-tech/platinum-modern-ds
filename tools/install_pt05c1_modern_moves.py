@@ -162,9 +162,10 @@ def c_string(block: str, field: str) -> str | None:
     # JSON newline escape instead of a doubled backslash.
     text = text.replace(r"\\n", "\n")
 
-    # Platinum's English message charmap supports the straight apostrophe but
-    # not U+2019, which appears in several modern move names/descriptions.
-    return text.replace("’", "'")
+    # Platinum's message charmap includes U+2019 directly (01B3=’), so keep
+    # the donor's typographic apostrophe intact. The original failure was
+    # mojibake from byte-level unicode_escape decoding, not the character itself.
+    return text
 
 
 def description_lines(desc: str | None) -> list[str]:
