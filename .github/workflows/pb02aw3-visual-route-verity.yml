@@ -1,0 +1,130 @@
+name: PB02AW3 Visual Route To Verity
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02aw3-visual-route-verity.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 and certified Route 201 state
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download Route 201 partner checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: pb02av-route201-partner-certified
+          path: checkpoint
+          run-id: 36007613928
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02aw3-venv"
+          . "$RUNNER_TEMP/pb02aw3-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Follow visually mapped T-junction route
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02aw3-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/route201-partner-certified.dst")
+          out=Path("pb02aw3-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running(): raise SystemExit(f"PB02AW3 stopped at {frame}")
+
+          def pulse(key,held=10,settle=180):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot()
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              img.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("route201-t-junction")
+
+          # Visual proof shows the player just south of a horizontal T-junction.
+          # Step north onto the cross-path before heading west toward Lake Verity.
+          for i in range(1,5):
+              pulse(Keys.KEY_UP)
+              cap(f"north-to-crosspath-{i:02d}")
+
+          for i in range(1,33):
+              pulse(Keys.KEY_LEFT)
+              if i in (8,16,24,32): cap(f"west-{i:02d}")
+
+          # The lake entrance lies north of Route 201's western approach.
+          for i in range(1,13):
+              pulse(Keys.KEY_UP)
+              if i in (4,8,12): cap(f"north-to-lake-{i:02d}")
+
+          run(1000); cap("lakefront-trigger-probe")
+
+          # Advance any automatic Lakefront message/warp and then the opening
+          # Lake Verity Cyrus cutscene far enough to establish the map.
+          for i in range(1,7):
+              pulse(Keys.KEY_A,12,800)
+              cap(f"lakefront-a-{i:02d}")
+
+          run(1600); cap("lake-verity-opening-probe")
+
+          saved=out/"verity-opening-probe.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"pb02aw3-meta.json").write_text(json.dumps({
+              "gate":"PB02AW3_VISUAL_ROUTE_TO_VERITY",
+              "route":"UP x4, LEFT x32, UP x12",
+              "source_artifact":10810553417,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AW3 proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02aw3-visual-route-verity-proof
+          path: pb02aw3-play/
+          if-no-files-found: error
+          retention-days: 14
