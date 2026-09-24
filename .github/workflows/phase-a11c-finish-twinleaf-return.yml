@@ -1,0 +1,115 @@
+name: PHASE-A11C Finish Twinleaf Return
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a11c-finish-twinleaf-return.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download PHASE-A11B checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a11b-twinleaf-entrance
+          path: checkpoint
+          run-id: 36023686979
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a11c-venv"
+          . "$RUNNER_TEMP/phase-a11c-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Rejoin path and enter Twinleaf
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a11c-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a11b-twinleaf-entrance.dst")
+          out=Path("phase-a11c"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A11C stopped at {frame}")
+
+          def hold(key, frames, settle=180):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(frames)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          run(180); cap("route201-south-edge-start")
+          hold(Keys.KEY_UP,48); cap("rejoin-horizontal-path")
+
+          for i in range(1,6):
+              hold(Keys.KEY_LEFT,48)
+              cap(f"west-to-twinleaf-{i:02d}")
+
+          for i in range(1,4):
+              hold(Keys.KEY_DOWN,48)
+              cap(f"south-entry-{i:02d}")
+
+          run(1200); cap("twinleaf-stable")
+          saved=out/"phase-a11c-twinleaf.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"phase-a11c-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A11C_FINISH_TWINLEAF_RETURN",
+              "source_run":36023686979,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A11C evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a11c-twinleaf
+          path: phase-a11c/
+          if-no-files-found: error
+          retention-days: 30
