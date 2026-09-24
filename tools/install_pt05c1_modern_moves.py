@@ -111,6 +111,31 @@ def canonical_assignment(
     raise SystemExit(f"could not parse canonical donor value for .{field}: {expr!r}")
 
 
+def canonical_target_assignment(block: str) -> tuple[str, str | None]:
+    """Return a Platinum-safe target plus any donor composite expression.
+
+    HG-Engine uses bitwise-composed target masks for a few post-Gen-IV moves
+    (Rototiller, Flower Shield, Teatime). Platinum's move metadata expects one
+    range enum. These moves are still excluded from natural learnsets until
+    their modern battle effects are ported, so keep a safe all-adjacent runtime
+    fallback now and preserve the original expression in the import report for
+    PT05C2 targeting work.
+    """
+    expr = cap(block, r"\.target\s*=\s*([^,\n]+)")
+    if expr is None:
+        raise SystemExit("move donor block is missing .target")
+
+    direct = re.fullmatch(r"\s*(RANGE_[A-Z0-9_]+)\s*", expr)
+    if direct:
+        return direct.group(1), None
+
+    composite = re.sub(r"\s+", "", expr)
+    if composite == "RANGE_ALL_ADJACENT|RANGE_USER":
+        return "RANGE_ALL_ADJACENT", expr.strip()
+
+    raise SystemExit(f"could not parse canonical donor value for .target: {expr!r}")
+
+
 def c_string(block: str, field: str) -> str | None:
     raw = cap(block, rf"\.{re.escape(field)}\s*=\s*\"((?:\\.|[^\"\\])*)\"")
     if raw is None:
@@ -213,7 +238,7 @@ def main() -> None:
 
         split = canonical_assignment(block, "split", r"SPLIT_[A-Z]+")
         move_type = canonical_assignment(block, "type", r"TYPE_[A-Z0-9_]+")
-        target = canonical_assignment(block, "target", r"RANGE_[A-Z0-9_]+")
+        target, donor_target_composite = canonical_target_assignment(block)
         power = int(canonical_assignment(block, "power", r"[0-9]+", "0"))
         accuracy = int(canonical_assignment(block, "accuracy", r"[0-9]+", "0"))
         pp = int(canonical_assignment(block, "pp", r"[0-9]+", "1"))
@@ -295,6 +320,8 @@ def main() -> None:
             "donor_effect": effect_token,
             "donor_effect_id": effect_id,
             "stored_effect": battle_effect,
+            "stored_target": target,
+            "donor_target_composite": donor_target_composite,
             "lane": lane,
         })
 
@@ -313,6 +340,7 @@ def main() -> None:
         "platinum_native_effect_max": native_effect_max,
         "implemented_registry": str(args.implemented_registry),
         "placeholder_animation_policy": "no-op animation during engine bring-up",
+        "composite_target_policy": "RANGE_ALL_ADJACENT | RANGE_USER is temporarily stored as RANGE_ALL_ADJACENT while affected moves remain excluded pending PT05C2 effect/target port",
         "contest_policy": "basic contest effect placeholder until contest-fidelity pass",
         "moves": rows,
     }
