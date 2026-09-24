@@ -1,0 +1,126 @@
+name: PB02AT Finish Running Shoes And Reach Route 201
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02at-finish-running-shoes-route201.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download ROM and Running Shoes checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p rom checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d rom
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10809336615/zip > state.zip
+          unzip -q state.zip -d checkpoint
+          test -s checkpoint/route201-barry-partner.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02at-venv"
+          . "$RUNNER_TEMP/pb02at-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Release mom cutscene and reach Barry partner event
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02at-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/route201-barry-partner.dst")
+          out=Path("pb02at-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running(): raise SystemExit(f"PB02AT stopped at {frame}")
+
+          def pulse(key,held=12,settle=700):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              img=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              img.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("running-shoes-instructions")
+
+          # Finish the final Running Shoes instruction page and ReleaseAll.
+          pulse(Keys.KEY_A,12,1000); cap("running-shoes-final-a")
+          pulse(Keys.KEY_A,12,700); cap("home-free-control")
+
+          # Cutscene leaves player at (6,8); front-door warp is (6,10).
+          pulse(Keys.KEY_DOWN,12,280)
+          pulse(Keys.KEY_DOWN,12,1100)
+          cap("twinleaf-exterior")
+
+          # Player-house exterior x116 -> central road x112 (safe four west),
+          # then head north far enough to cross into Route 201.
+          for _ in range(4): pulse(Keys.KEY_LEFT,12,220)
+          cap("central-road")
+          for i in range(1,31):
+              pulse(Keys.KEY_UP,12,240)
+              if i in (10,20,30): cap(f"north-{i:02d}")
+
+          run(1200); cap("route201-barry-trigger")
+
+          # Complete the two-line partner event.
+          for i in range(1,5):
+              pulse(Keys.KEY_A,12,800)
+              cap(f"barry-a-{i:02d}")
+
+          run(1000); cap("route201-partner-control")
+
+          saved=out/"route201-partner-certified.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"pb02at-meta.json").write_text(json.dumps({
+              "gate":"PB02AT_FINISH_RUNNING_SHOES_ROUTE201",
+              "source_artifact":10809336615,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"Verity Lakefront / Lake Verity Cyrus scene"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AT proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02at-route201-partner-certified
+          path: pb02at-play/
+          if-no-files-found: error
+          retention-days: 14
