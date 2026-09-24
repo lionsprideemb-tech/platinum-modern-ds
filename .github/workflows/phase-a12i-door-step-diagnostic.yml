@@ -1,0 +1,114 @@
+name: PHASE-A12I Door Step Diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a12i-door-step-diagnostic.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download PHASE-A12C checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a12c-post-parcel
+          path: checkpoint
+          run-id: 36027624518
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a12i-venv"
+          . "$RUNNER_TEMP/phase-a12i-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Capture exact doorstep movement
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a12i-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a12c-post-parcel.dst")
+          out=Path("phase-a12i"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+          K={"U":Keys.KEY_UP,"D":Keys.KEY_DOWN,"L":Keys.KEY_LEFT,"R":Keys.KEY_RIGHT}
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A12I stopped at {frame}")
+
+          def press(key, held=22, settle=240):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              caps.append({"stage":label,"frame":frame,"file":name})
+
+          run(180)
+          for ch in "LDDDRRRU":
+              press(K[ch])
+          run(500); cap("door-base")
+
+          press(Keys.KEY_LEFT); cap("left-1")
+          press(Keys.KEY_LEFT); cap("left-2")
+
+          for i in range(1,7):
+              press(Keys.KEY_UP,held=48,settle=450)
+              cap(f"up-{i}")
+
+          saved=out/"phase-a12i-final.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"phase-a12i-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A12I_DOOR_STEP_DIAGNOSTIC",
+              "captures":caps,
+              "output_state":saved.name
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A12I evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a12i-door-diagnostic
+          path: phase-a12i/
+          if-no-files-found: error
+          retention-days: 30
