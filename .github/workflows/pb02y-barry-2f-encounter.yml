@@ -1,0 +1,127 @@
+name: PB02Y Barry 2F Encounter
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02y-barry-2f-encounter.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download ROM and Barry 1F checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d pb01-artifact
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10789744924/zip > checkpoint.zip
+          unzip -q checkpoint.zip -d checkpoint
+          test -s checkpoint/barry-house-1f.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02y-venv"
+          . "$RUNNER_TEMP/pb02y-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Use native map warp and talk to Barry upstairs
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02y-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, hashlib
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/barry-house-1f.dst")
+          out=Path("pb02y-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running(): raise SystemExit(f"stopped at {frame}")
+
+          def pulse(key,held=12,settle=320):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              im=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              im.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          # Pinned Platinum map events define the 1F -> 2F warp at x=2,z=3.
+          # From the saved entrance position, L3/U6/L1 reaches that warp.
+          for _ in range(3): pulse(Keys.KEY_LEFT,12,240)
+          for _ in range(6): pulse(Keys.KEY_UP,12,280)
+          cap("at-stair-top")
+          pulse(Keys.KEY_LEFT,12,1200)
+          cap("barry-house-2f-arrival")
+          run(800); cap("barry-house-2f-stable")
+
+          upstairs=out/"barry-house-2f.dst"
+          emu.savestate.save_file(str(upstairs))
+
+          # Pinned 2F events place Barry at x=9,z=5 and the arrival warp at x=3,z=4.
+          for i in range(1,7):
+              pulse(Keys.KEY_RIGHT,12,240)
+              cap(f"toward-barry-right-{i:02d}")
+
+          # Face Barry one tile below without walking through his occupied tile.
+          pulse(Keys.KEY_DOWN,12,300); cap("facing-barry")
+          pulse(Keys.KEY_A,12,600); cap("barry-dialogue-start")
+
+          for i in range(1,9):
+              pulse(Keys.KEY_A,12,480)
+              cap(f"barry-dialogue-a-{i:02d}")
+
+          run(700); cap("barry-dialogue-stable")
+
+          (out/"pb02y-meta.json").write_text(json.dumps({
+              "gate":"PB02Y_BARRY_2F_ENCOUNTER",
+              "source_checkpoint_artifact":10789744924,
+              "map_event_basis":{
+                  "1f_warp":[2,3],
+                  "2f_arrival":[3,4],
+                  "barry":[9,5]
+              },
+              "state_file":upstairs.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02Y proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02y-barry-2f-encounter-proof
+          path: pb02y-play/
+          if-no-files-found: error
+          retention-days: 14
