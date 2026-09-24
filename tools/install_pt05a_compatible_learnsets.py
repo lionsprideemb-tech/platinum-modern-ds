@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install compatible modern level-up/egg/tutor learnsets into Mercury DS.
+"""Install compatible modern level-up and egg learnsets into Mercury DS.
 
 This is a production build step, not a runtime QA harness.
 
@@ -69,6 +69,35 @@ def dedupe_strings(rows: list[str]) -> list[str]:
     return out
 
 
+def cap_level_learnset(rows: list[list[object]], limit: int = 20) -> tuple[list[list[object]], int]:
+    """Fit a modern learnset into Platinum's fixed 20-entry level-up table.
+
+    Keep the first and last moves, then sample the middle evenly so the
+    resulting progression still spans the species' full level curve.
+    """
+    if len(rows) <= limit:
+        return rows, 0
+    if limit < 2:
+        return rows[:limit], len(rows) - limit
+
+    keep = {0, len(rows) - 1}
+    slots = limit - 2
+    if slots:
+        for i in range(1, slots + 1):
+            idx = round(i * (len(rows) - 1) / (slots + 1))
+            keep.add(idx)
+
+    # Rounding can collide on very small ranges; fill from the front if needed.
+    if len(keep) < limit:
+        for idx in range(len(rows)):
+            keep.add(idx)
+            if len(keep) == limit:
+                break
+
+    selected = [row for idx, row in enumerate(rows) if idx in sorted(keep)][:limit]
+    return selected, len(rows) - len(selected)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pokeplatinum_root", type=Path)
@@ -129,20 +158,21 @@ def main() -> None:
             supported_level = [[1, "MOVE_TACKLE"]]
             fallback_tackle.append({"dex": dex, "species": species_const})
 
+        supported_level, trimmed = cap_level_learnset(supported_level, 20)
+        if trimmed:
+            trimmed_by_species[species_const] = trimmed
+            total_trimmed_level += trimmed
+
         egg = dedupe_strings([
             move for move in (source.get("EggMoves", []) or [])
             if move in available_moves
         ])
-        tutor = dedupe_strings([
-            move for move in (source.get("TutorMoves", []) or [])
-            if move in available_moves
-        ])
 
         learnset["by_level"] = supported_level
-        # Keep TM/HM empty for post-Gen-IV species until move -> machine ID
-        # compatibility is imported deliberately.
+        # Keep TM/HM and tutor compatibility empty until their dedicated
+        # importers translate modern move names into Platinum's actual tables.
         learnset["by_tm"] = []
-        learnset["by_tutor"] = tutor
+        learnset["by_tutor"] = []
         learnset["egg_moves"] = egg
 
         path.write_text(json.dumps(data, indent=4, ensure_ascii=False) + "\n")
@@ -159,7 +189,7 @@ def main() -> None:
             "species": species_const,
             "level_moves": len(supported_level),
             "egg_moves": len(egg),
-            "tutor_moves": len(tutor),
+            "tutor_moves": 0,
             "unsupported_level_moves": len(set(unsupported)),
         })
 
@@ -176,11 +206,14 @@ def main() -> None:
             "unsupported_level_moves": total_unsupported_level,
             "supported_egg_moves": total_supported_egg,
             "supported_tutor_moves": total_supported_tutor,
+            "trimmed_level_moves_to_fit_platinum_limit": total_trimmed_level,
         },
         "unsupported_level_moves_by_species": unsupported_by_species,
+        "trimmed_level_moves_by_species": trimmed_by_species,
         "species": imported,
         "deferred": {
             "tm_hm_compatibility": "separate machine-ID import pass",
+            "tutor_compatibility": "separate Platinum tutor-table import pass",
             "unsupported_modern_moves": "requires PT05 move-table expansion",
             "evolution_methods": "next build-forward pass",
         },
