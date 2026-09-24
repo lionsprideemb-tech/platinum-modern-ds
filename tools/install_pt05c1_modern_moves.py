@@ -79,6 +79,38 @@ def cap(block: str, pattern: str, default=None):
     return m.group(1) if m else default
 
 
+def canonical_assignment(
+    block: str,
+    field: str,
+    value_pattern: str,
+    default=None,
+):
+    """Read a donor assignment using the upstream/canonical value.
+
+    HG-Engine carries optional CHAMPIONS_* balance switches in a small number
+    of move-data fields. Mercury's modern-Platinum baseline must import the
+    canonical Pokémon value, which is the false branch of those ternaries,
+    rather than accidentally importing the optional rebalance.
+    """
+    expr = cap(block, rf"\.{re.escape(field)}\s*=\s*([^,\n]+)")
+    if expr is None:
+        return default
+
+    direct = re.fullmatch(rf"\s*({value_pattern})\s*", expr)
+    if direct:
+        return direct.group(1)
+
+    conditional = re.fullmatch(
+        rf"\s*\(\(CHAMPIONS_[A-Z0-9_]+\)\s*\?\s*\(({value_pattern})\)"
+        rf"\s*:\s*\(({value_pattern})\)\)\s*",
+        expr,
+    )
+    if conditional:
+        return conditional.group(2)
+
+    raise SystemExit(f"could not parse canonical donor value for .{field}: {expr!r}")
+
+
 def c_string(block: str, field: str) -> str | None:
     raw = cap(block, rf"\.{re.escape(field)}\s*=\s*\"((?:\\.|[^\"\\])*)\"")
     if raw is None:
@@ -179,14 +211,14 @@ def main() -> None:
         effect_id = donor_effects[effect_token]
         implemented = effect_id <= native_effect_max
 
-        split = cap(block, r"\.split\s*=\s*(SPLIT_[A-Z]+)")
-        move_type = cap(block, r"\.type\s*=\s*(TYPE_[A-Z0-9_]+)")
-        target = cap(block, r"\.target\s*=\s*(RANGE_[A-Z0-9_]+)")
-        power = int(cap(block, r"\.power\s*=\s*([0-9]+)", "0"))
-        accuracy = int(cap(block, r"\.accuracy\s*=\s*([0-9]+)", "0"))
-        pp = int(cap(block, r"\.pp\s*=\s*([0-9]+)", "1"))
-        effect_chance = int(cap(block, r"\.effectChance\s*=\s*([0-9]+)", "0"))
-        priority = int(cap(block, r"\.priority\s*=\s*(-?[0-9]+)", "0"))
+        split = canonical_assignment(block, "split", r"SPLIT_[A-Z]+")
+        move_type = canonical_assignment(block, "type", r"TYPE_[A-Z0-9_]+")
+        target = canonical_assignment(block, "target", r"RANGE_[A-Z0-9_]+")
+        power = int(canonical_assignment(block, "power", r"[0-9]+", "0"))
+        accuracy = int(canonical_assignment(block, "accuracy", r"[0-9]+", "0"))
+        pp = int(canonical_assignment(block, "pp", r"[0-9]+", "1"))
+        effect_chance = int(canonical_assignment(block, "effectChance", r"[0-9]+", "0"))
+        priority = int(canonical_assignment(block, "priority", r"-?[0-9]+", "0"))
 
         if split not in SPLIT_MAP:
             raise SystemExit(f"{token}: unsupported split {split}")
