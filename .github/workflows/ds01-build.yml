@@ -1,13 +1,7 @@
-name: DS01 Engine Build
+name: Legacy HG-Engine Donor Build
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "upstream/LOCK.json"
-      - "engine-overlay/**"
-      - ".github/workflows/ds01-build.yml"
 
 permissions:
   contents: read
@@ -122,7 +116,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## DS01 build passed"
+            echo "## Legacy HG-Engine donor build passed"
             echo
             echo "- HG-Engine: \`$(jq -r '.sources["hg-engine"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")\`"
             echo "- pokeheartgold: \`$(jq -r '.sources["pokeheartgold"].commit' "$GITHUB_WORKSPACE/upstream/LOCK.json")\`"
