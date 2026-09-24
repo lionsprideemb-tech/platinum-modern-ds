@@ -252,6 +252,8 @@ def main() -> None:
         if target not in pt_ranges:
             raise SystemExit(f"{token}: target Platinum build lacks range {target}")
 
+        implemented = effect_id <= native_effect_max and not target_requires_extension
+
         flags_expr = cap(block, r"\.flags\s*=\s*([^,\n]+)", "") or ""
         flags = []
         for donor_flag, pt_flag in FLAG_MAP.items():
@@ -277,7 +279,11 @@ def main() -> None:
             # Keep the ID/data present but do not teach the move yet.
             battle_effect = "BATTLE_EFFECT_DO_NOTHING" if split == "SPLIT_STATUS" else "BATTLE_EFFECT_HIT"
             stubbed_modern.append(token)
-            lane = "stub_waiting_for_effect_port"
+            lane = (
+                "stub_waiting_for_composite_target_port"
+                if target_requires_extension
+                else "stub_waiting_for_effect_port"
+            )
 
         data = {
             "name": name,
