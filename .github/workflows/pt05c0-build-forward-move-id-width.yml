@@ -7,6 +7,8 @@ on:
       - feature/mercury-build-forward
     paths:
       - "tools/install_pt05c_move_id_width.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/move_id_namespace.json"
       - "tools/install_pt05a_compatible_learnsets.py"
       - "tools/install_pt05b_compatible_evolutions.py"
       - ".github/workflows/pt05c0-build-forward-move-id-width.yml"
