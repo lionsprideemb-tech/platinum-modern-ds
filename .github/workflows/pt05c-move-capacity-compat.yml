@@ -1,0 +1,142 @@
+name: PT05C Move Capacity And Compatibility
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-build-forward
+    paths:
+      - "tools/apply_pt05c_move_capacity.py"
+      - "tools/audit_pt05c_modern_moves.py"
+      - ".github/workflows/pt05c-move-capacity-compat.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout pinned move sources
+        shell: bash
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum sparse-checkout init --no-cone
+          git -C vendor/pokeplatinum sparse-checkout set             /generated/move_battle_effects.txt             /generated/pokemon_types.txt
+          git -C vendor/pokeplatinum checkout "$(python3 -c 'import json; print(json.load(open("upstream/LOCK.json"))["sources"]["pokeplatinum"]["commit"])')"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set             /include/constants/moves.h             /data/Moves.c
+          git -C vendor/hg-engine checkout "$(python3 -c 'import json; print(json.load(open("upstream/LOCK.json"))["sources"]["hg-engine"]["commit"])')"
+
+          cp platinum-overlay/generated/pokemon_types.txt vendor/pokeplatinum/generated/pokemon_types.txt
+
+      - name: Audit canonical Gen 5-9 moves
+        shell: bash
+        run: |
+          python3 tools/audit_pt05c_modern_moves.py             vendor/pokeplatinum vendor/hg-engine             --report pt05c-modern-move-audit.json
+
+      - name: Upload audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt05c-modern-move-compatibility-audit
+          path: pt05c-modern-move-audit.json
+          retention-days: 30
+
+  capacity-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-venv python3-pip wget xz-utils             libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and donor
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set             /data/Species.c             /data/BaseExperienceTable.c             /data/IconPaletteTable.c             /data/HeightTable.c             /data/SpriteOffsets.c             /data/Evolutions.c             /data/graphics/sprites/             /data/learnsets/learnsets.json             /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury overlay and move capacity
+        shell: bash
+        run: |
+          rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+          python3 tools/apply_pt05c_move_capacity.py vendor/pokeplatinum
+
+      - name: Rebuild modern roster data
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum             --through 1025             --output vendor/pokeplatinum/generated/species.txt             --report pt05c-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py               vendor/pokeplatinum vendor/hg-engine               --start-dex "$start" --end-dex "$end"               --gate "PT05C_${tag}_RESOURCE_INSTALL"               --report "pt05c-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+          python3 tools/install_pt05a_compatible_learnsets.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 1025             --report pt05c-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 1025             --report pt05c-evolutions.json
+
+      - name: Verify expanded learnset layout
+        shell: bash
+        run: |
+          grep -q "u16 move;" vendor/pokeplatinum/include/struct_defs/species.h
+          grep -q "u8 level;" vendor/pokeplatinum/include/struct_defs/species.h
+          ! grep -q "u16 move : 9" vendor/pokeplatinum/include/struct_defs/species.h
+          ! grep -q "0xFE00" vendor/pokeplatinum/src/move_reminder_data.c
+          ! grep -q "0x1ff" vendor/pokeplatinum/src/move_reminder_data.c
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt05c-venv"
+          . "$RUNNER_TEMP/pt05c-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build normal game ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage capacity proof
+        shell: bash
+        run: |
+          mkdir -p build-forward
+          cp "$BUILD/pokeplatinum.us.nds" build-forward/Pokemon_Mercury_Redux_PT05C_Capacity.nds
+          cp pt05c-learnsets.json build-forward/
+          cp pt05c-evolutions.json build-forward/
+          sha256sum build-forward/Pokemon_Mercury_Redux_PT05C_Capacity.nds > build-forward/SHA256SUMS.txt
+
+      - name: Upload capacity build
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-redux-pt05c-move-capacity
+          path: build-forward/
+          if-no-files-found: error
+          retention-days: 30
