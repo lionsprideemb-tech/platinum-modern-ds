@@ -24,7 +24,7 @@ jobs:
       - name: Checkout Mercury DS
         uses: actions/checkout@v4
 
-      - name: Download ROM and Running Shoes dialogue checkpoint
+      - name: Download ROM and post-rival-battle checkpoint
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -32,9 +32,9 @@ jobs:
           mkdir -p rom checkpoint
           gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
           unzip -q pb01.zip -d rom
-          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10809336615/zip > state.zip
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10809011670/zip > state.zip
           unzip -q state.zip -d checkpoint
-          test -s checkpoint/route201-barry-partner.dst
+          test -s checkpoint/post-first-rival-battle.dst
           test "$(sha256sum rom/Pokemon_Mercury_Redux_PB01.nds | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
 
       - name: Install emulator tools
@@ -46,7 +46,7 @@ jobs:
           . "$RUNNER_TEMP/pb02au-venv/bin/activate"
           pip install --upgrade pip py-desmume Pillow
 
-      - name: Exit home correctly and trigger Barry partner sequence
+      - name: Finish Running Shoes scene, exit home, trigger Barry partner event
         shell: bash
         run: |
           . "$RUNNER_TEMP/pb02au-venv/bin/activate"
@@ -57,7 +57,7 @@ jobs:
           from desmume.controls import keymask, Keys
 
           rom=Path("rom/Pokemon_Mercury_Redux_PB01.nds")
-          state=Path("checkpoint/route201-barry-partner.dst")
+          state=Path("checkpoint/post-first-rival-battle.dst")
           out=Path("pb02au-play"); out.mkdir(exist_ok=True)
           emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
           frame=0; caps=[]
@@ -66,10 +66,12 @@ jobs:
               global frame
               for _ in range(n):
                   emu.cycle(False); frame += 1
-                  if not emu.is_running(): raise SystemExit(f"PB02AU stopped at {frame}")
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AU stopped at frame {frame}")
 
           def pulse(key,held=12,settle=650):
-              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
               emu.input.keypad_rm_key(m); run(settle)
 
           def cap(label):
@@ -77,52 +79,78 @@ jobs:
               name=f"{len(caps):02d}-{label}-{frame:05d}.png"
               img.save(out/name)
               caps.append({"stage":label,"frame":frame,"file":name})
+              return img
 
-          cap("running-shoes-dialogue-checkpoint")
+          def text_box_present(img):
+              # Platinum message boxes occupy most of y=148..188 on the top screen
+              # and are dominated by near-white pixels. This lets us stop pressing
+              # A as soon as the automatic mother cutscene actually releases.
+              rgb=img.convert("RGB")
+              total=0; light=0
+              for y in range(148,188,4):
+                  for x in range(4,252,4):
+                      r,g,b=rgb.getpixel((x,y)); total += 1
+                      if r > 205 and g > 205 and b > 205:
+                          light += 1
+              return light / total > 0.25
 
-          # Visual review of PB02AT proved two A presses release the mother
-          # cutscene, and two DOWN presses only reach the red doormat.
-          pulse(Keys.KEY_A,12,900); cap("mom-final-page")
-          pulse(Keys.KEY_A,12,700); cap("home-free-control")
+          cap("post-rival-home")
 
-          # Corrected: three DOWN inputs are required to cross the front-door
-          # warp from this exact state.
+          # Finish the full post-battle mother/Running Shoes sequence without
+          # over-advancing into a second interaction after ReleaseAll.
+          released=False
+          for i in range(1,21):
+              pulse(Keys.KEY_A,12,780)
+              img=cap(f"mom-running-shoes-a-{i:02d}")
+              if not text_box_present(img):
+                  released=True
+                  break
+          if not released:
+              raise SystemExit("PB02AU mother cutscene did not release within 20 A presses")
+
+          run(700); cap("home-free-control")
+
+          # Visual proof from the previous attempt showed two DOWNs land on the
+          # red doormat. The third DOWN crosses the actual 1F front-door warp.
           for i in range(1,4):
-              pulse(Keys.KEY_DOWN,12,650 if i < 3 else 1200)
+              pulse(Keys.KEY_DOWN,12,500 if i < 3 else 1200)
               cap(f"home-exit-down-{i:02d}")
 
-          run(800); cap("twinleaf-exterior-confirmed")
+          run(700); cap("twinleaf-exterior-confirmed")
 
-          # Native exterior player-house x is 116; central north road is x112.
-          for _ in range(4): pulse(Keys.KEY_LEFT,12,240)
+          # Player-house exterior x=116; the central road into Route 201 is x112.
+          for _ in range(4):
+              pulse(Keys.KEY_LEFT,12,230)
           cap("twinleaf-central-road")
 
-          # Head north into Route 201. VAR_FOLLOWER_RIVAL_STATE is 2 after the
-          # first rival battle, so coord event script 16 at x109-113,z857
-          # should start Barry's legendary-Pokémon partner sequence.
+          # First rival battle set VAR_FOLLOWER_RIVAL_STATE=2. Enter Route 201
+          # through x109..113,z857 to fire the native Barry partner coord event.
           for i in range(1,31):
-              pulse(Keys.KEY_UP,12,250)
-              if i in (10,20,30): cap(f"north-{i:02d}")
+              pulse(Keys.KEY_UP,12,245)
+              if i in (10,20,30):
+                  cap(f"north-{i:02d}")
 
-          run(1200); cap("route201-partner-event-start")
+          run(1000); cap("route201-barry-partner-event")
 
+          # Barry's legendary-Pokémon partner sequence is short; extra A presses
+          # during movement locks are harmless.
           for i in range(1,6):
-              pulse(Keys.KEY_A,12,850)
+              pulse(Keys.KEY_A,12,800)
               cap(f"barry-partner-a-{i:02d}")
 
-          run(1200); cap("route201-partner-free-control")
+          run(900); cap("route201-partner-control")
 
           saved=out/"route201-partner-real.dst"
           emu.savestate.save_file(str(saved))
-
           (out/"pb02au-meta.json").write_text(json.dumps({
               "gate":"PB02AU_CORRECT_HOME_EXIT_TO_ROUTE201_PARTNER",
-              "source_artifact":10809336615,
-              "correction":"front door requires DOWN x3 from released Running Shoes state",
+              "source_artifact":10809011670,
+              "running_shoes_cutscene_released":released,
+              "corrected_front_door_input":"DOWN x3",
               "output_state":saved.name,
               "captures":caps,
               "visual_review_required":True,
-              "next":"PB02AV west to Verity Lakefront and Lake Verity opening"
+              "next":"PB02AV Verity Lakefront / Lake Verity opening"
           },indent=2)+"\n")
           emu.destroy()
           PY
