@@ -84,53 +84,74 @@ jobs:
               emu.input.keypad_rm_key(mask)
               run(settle)
 
-          def cap(label):
+          def capture(label):
               image = emu.screenshot()
               name = f"{len(captures):02d}-{label}-{frame:05d}.png"
               image.save(out / name)
-              captures.append({"stage": label, "frame": frame, "file": name})
+              rec = {
+                  "stage": label,
+                  "frame": frame,
+                  "file": name,
+                  "top_left": list(image.convert("RGB").getpixel((0, 0))),
+              }
+              captures.append(rec)
+              return image
 
-          cap("post-thud-checkpoint")
+          def is_indoor(image):
+              r, g, b = image.convert("RGB").getpixel((0, 0))
+              return r < 8 and g < 8 and b < 8
+
+          capture("post-thud-checkpoint")
           run(400)
 
-          # RivalThud pushes the player one tile SOUTH before the event ends.
-          # Trigger was (105,876), so the sealed PB02AA state is at (105,877).
-          # Two UP steps reach Barry-house exterior warp (105,875).
-          pulse(Keys.KEY_UP, 12, 260)
-          cap("back-on-thud-tile")
-          pulse(Keys.KEY_UP, 12, 1100)
-          cap("barry-house-1f-arrival")
-          run(650)
-          cap("barry-house-1f-stable")
+          # Move north until the actual Barry-house door warp fires. The THUD
+          # scene changes the player's final tile, so detect the indoor map
+          # instead of assuming one fixed number of key pulses.
+          entered = False
+          up_presses = 0
+          for i in range(1, 7):
+              pulse(Keys.KEY_UP, 12, 500)
+              up_presses = i
+              image = capture(f"door-approach-up-{i:02d}")
+              if is_indoor(image):
+                  entered = True
+                  break
 
-          # Proven interior route from the Barry 1F entrance state:
-          # LEFT x3, UP x6, LEFT x1 enters native stair warp (2,3).
+          if not entered:
+              raise SystemExit("PB02AB failed to enter Barry house within six UP inputs")
+
+          run(600)
+          capture("barry-house-1f-stable")
+
+          # Proven 1F route from the entrance checkpoint to the stair warp:
+          # LEFT x3 -> UP x6 -> LEFT x1.
           for _ in range(3):
-              pulse(Keys.KEY_LEFT, 12, 220)
-          cap("barry-1f-stair-lane")
+              pulse(Keys.KEY_LEFT, 12, 240)
+          capture("barry-1f-stair-lane")
 
-          for i in range(1,7):
-              pulse(Keys.KEY_UP, 12, 240)
-              if i in (3,6):
-                  cap(f"barry-1f-up-{i:02d}")
+          for i in range(1, 7):
+              pulse(Keys.KEY_UP, 12, 280)
+              if i in (3, 6):
+                  capture(f"barry-1f-up-{i:02d}")
 
           pulse(Keys.KEY_LEFT, 12, 1200)
-          cap("barry-house-2f-event-entry")
+          capture("barry-house-2f-arrival")
           run(700)
-          cap("barry-upstairs-first-message")
+          capture("barry-upstairs-first-message")
 
-          # The native 2F OnFrame script runs automatically:
-          # bag + Journal -> notices player -> waits on road -> Barry leaves.
-          for i in range(1,5):
+          # The 2F OnFrame script is automatic:
+          # Take Bag and Journal -> notice player -> Waiting on the Road ->
+          # Barry leaves -> FLAG_RIVAL_LEFT_HOME.
+          for i in range(1, 5):
               pulse(Keys.KEY_A, 12, 700)
-              cap(f"barry-upstairs-a-{i:02d}")
+              capture(f"barry-upstairs-a-{i:02d}")
 
           run(2200)
-          cap("barry-upstairs-event-complete")
+          capture("barry-upstairs-event-complete")
 
-          # Field movement after the script proves ReleaseAll was reached.
+          # Movement proves field control has been returned.
           pulse(Keys.KEY_DOWN, 12, 380)
-          cap("barry-2f-field-control")
+          capture("barry-2f-field-control")
 
           saved = out / "post-barry-upstairs-confirmed.dst"
           emu.savestate.save_file(str(saved))
@@ -139,13 +160,11 @@ jobs:
               "gate": "PB02AB_BARRY_HOUSE_UPSTAIRS_EVENT",
               "source_checkpoint_artifact": 10790910656,
               "source_state": "post-barry-thud-confirmed.dst",
-              "corrected_route": {
-                  "post_thud_player_coord": [105,877],
-                  "barry_house_exterior_warp": [105,875],
-                  "exterior_input": "UP x2",
-                  "barry_house_1f_stair_warp": [2,3],
-                  "interior_input": "LEFT x3, UP x6, LEFT x1"
+              "door_entry": {
+                  "detected_by": "black top-left indoor viewport",
+                  "up_presses_required": up_presses,
               },
+              "proven_1f_route": "LEFT x3, UP x6, LEFT x1",
               "upstairs_script_sets": [
                   "FLAG_RIVAL_LEFT_HOME",
                   "VAR_RIVAL_HOUSE_STATE=1",
