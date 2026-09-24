@@ -1,0 +1,224 @@
+name: PHASE-A13B Parcel To Route 202 Robust
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a13b-parcel-route202-robust.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A12L Parcel checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a12l-parcel-complete
+          path: checkpoint
+          run-id: 36031603671
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a13b-venv"
+          . "$RUNNER_TEMP/phase-a13b-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Coordinate-guided return and Route 202 tutorial
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a13b-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E; Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a12l-parcel-complete.dst")
+          out=Path("phase-a13b"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]; encounters=[]; checkpoints=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame+=1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A13B stopped at {frame}")
+
+          def xy():
+              return (emu.memory.unsigned.read_short(X),emu.memory.unsigned.read_short(Z))
+
+          def pulse(key,held=10,settle=175):
+              m=keymask(key)
+              emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def snap(label,save=True):
+              name=f"{len(caps):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              row={"stage":label,"frame":frame,"file":name,"xy":xy()}
+              caps.append(row)
+              if save:
+                  s=out/f"{label}.dst"; emu.savestate.save_file(str(s))
+                  checkpoints.append({"stage":label,"state":s.name,"xy":xy()})
+              return row
+
+          def lower_stats(img):
+              rgb=img.convert("RGB"); tan=red=total=0
+              for yy in range(196,382,4):
+                  for xx in range(4,252,4):
+                      r,g,b=rgb.getpixel((xx,yy)); total+=1
+                      if 120<=r<=220 and 100<=g<=200 and 45<=b<=140 and r>g>b: tan+=1
+                      if r>=165 and g<=115 and b<=115 and r>g*1.45: red+=1
+              return tan/total,red/total
+
+          def is_overworld(img): return lower_stats(img)[0]>=0.35
+          def is_fight_menu(img): return lower_stats(img)[1]>=0.10
+
+          def tap_run():
+              emu.input.touch_set_pos(128,160); run(16)
+              emu.input.touch_release(); run(650)
+
+          def recover_field():
+              if is_overworld(emu.screenshot()): return
+              run(550)
+              if is_overworld(emu.screenshot()): return
+              enc={"start":frame,"xy":xy(),"run_attempts":0}
+              snap(f"encounter-{len(encounters)+1:02d}-start",False)
+              for _ in range(28):
+                  img=emu.screenshot()
+                  if is_overworld(img):
+                      enc["end"]=frame; encounters.append(enc)
+                      snap(f"encounter-{len(encounters):02d}-cleared",False)
+                      return
+                  if is_fight_menu(img):
+                      enc["run_attempts"]+=1; tap_run()
+                  else:
+                      pulse(Keys.KEY_A,12,420)
+              raise SystemExit("Field recovery failed")
+
+          def move_key(key):
+              before=xy(); pulse(key); recover_field(); return before,xy()
+
+          def direct_goto(tx,tz,label,order="xz",limit=160):
+              blocked=0
+              for _ in range(limit):
+                  x,z=xy()
+                  if (x,z)==(tx,tz):
+                      snap(label); return
+                  key=None
+                  if order[0]=="x" and x!=tx: key=Keys.KEY_RIGHT if x<tx else Keys.KEY_LEFT
+                  elif order[0]=="z" and z!=tz: key=Keys.KEY_DOWN if z<tz else Keys.KEY_UP
+                  elif order[1]=="x" and x!=tx: key=Keys.KEY_RIGHT if x<tx else Keys.KEY_LEFT
+                  elif order[1]=="z" and z!=tz: key=Keys.KEY_DOWN if z<tz else Keys.KEY_UP
+                  before,after=move_key(key)
+                  if after==before:
+                      blocked+=1
+                      # One-tile sidestep around static NPC/sign/edge.
+                      alternatives=(Keys.KEY_DOWN,Keys.KEY_UP,Keys.KEY_RIGHT,Keys.KEY_LEFT)
+                      moved=False
+                      for alt in alternatives:
+                          b,a=move_key(alt)
+                          if a!=b:
+                              moved=True; break
+                      if not moved or blocked>8:
+                          snap(label+"-blocked")
+                          raise SystemExit(f"Blocked toward {(tx,tz)} at {xy()}")
+              snap(label+"-limit")
+              raise SystemExit(f"Waypoint limit toward {(tx,tz)} at {xy()}")
+
+          run(180); snap("home-start")
+
+          # Exit: x6,z10 is the mat; a second south step actually crosses the door.
+          direct_goto(6,9,"inside-exit-row","xz",20)
+          for _ in range(4):
+              pulse(Keys.KEY_DOWN,10,500)
+              if max(xy())>100: break
+          run(700)
+          snap("twinleaf-outside")
+          if max(xy())<100:
+              raise SystemExit(f"Did not exit player house; xy={xy()}")
+
+          # Twinleaf southeast house -> north Route 201 boundary.
+          direct_goto(116,889,"twinleaf-clear-house","zx")
+          direct_goto(113,889,"twinleaf-south-road","xz")
+          direct_goto(113,857,"twinleaf-north-exit","zx")
+          for _ in range(3):
+              pulse(Keys.KEY_UP,10,350); recover_field()
+          snap("route201-entered")
+
+          # Route 201 south road, northeast bend, Sandgem boundary.
+          direct_goto(140,856,"route201-east-south","xz")
+          direct_goto(145,843,"route201-north-bend","zx")
+          direct_goto(151,843,"route201-sandgem-edge","xz")
+          for _ in range(3):
+              pulse(Keys.KEY_RIGHT,10,350); recover_field()
+          snap("sandgem-entered")
+
+          # Sandgem: under the homes, east, then north through Center/Mart gap.
+          direct_goto(154,856,"sandgem-west-lower","zx")
+          direct_goto(184,856,"sandgem-east-lower","xz")
+          direct_goto(184,830,"sandgem-north-corridor","zx")
+          snap("route202-approach")
+
+          # Ensure Route 202 header by crossing north of overlap, then step onto x180 trigger.
+          direct_goto(184,824,"route202-inside","zx")
+          direct_goto(180,824,"route202-trigger-column","xz")
+          pulse(Keys.KEY_DOWN,10,500)
+          run(1200); snap("route202-event-start")
+
+          # From here this may be Dawn's full catching tutorial or the family reminder.
+          for i in range(1,31):
+              pulse(Keys.KEY_A,12,600)
+              if i in (6,12,18,24,30): snap(f"route202-story-{i:02d}",False)
+
+          run(2600); snap("route202-story-stable")
+          saved=out/"phase-a13b-route202-stable.dst"
+          emu.savestate.save_file(str(saved))
+          (out/"phase-a13b-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A13B_PARCEL_TO_ROUTE202_ROBUST",
+              "coordinate_addresses":{"x":hex(X),"z":hex(Z)},
+              "wild_encounters":encounters,
+              "checkpoints":checkpoints,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A13B evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a13b-route202-robust
+          path: phase-a13b/
+          if-no-files-found: error
+          retention-days: 30
