@@ -118,7 +118,11 @@ jobs:
           for i in range(1,8):
               pulse(Keys.KEY_UP,12,280)
               if i in (6,7): cap(f"stair-up-{i:02d}")
-          run(1200)
+          # Native warp is (2,3); after LEFT x3 / UP x7 we are at (3,3).
+          # One final LEFT crosses the stair warp.
+          pulse(Keys.KEY_LEFT,12,1200)
+          cap("barry-house-2f-arrival")
+          run(900)
           first=cap("barry-2f-first-message")
           if not textbox(first):
               raise SystemExit("PB02AI: Barry 2F OnFrame message did not begin")
@@ -150,7 +154,7 @@ jobs:
               "source_artifact":10790910656,
               "thud_confirmations":5,
               "house_entry":"UP x2 after THUD",
-              "stair_route":"LEFT x3, UP x7",
+              "stair_route":"LEFT x3, UP x7, LEFT x1",
               "field_control_proved":True,
               "output_state":saved.name,
               "captures":caps,
