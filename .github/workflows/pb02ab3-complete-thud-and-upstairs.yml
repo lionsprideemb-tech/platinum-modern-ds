@@ -1,0 +1,152 @@
+name: PB02AB3 Complete THUD And Barry Upstairs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/playable-baseline
+    paths:
+      - ".github/workflows/pb02ab3-complete-thud-and-upstairs.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Download PB01 ROM and latest safe Twinleaf checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p pb01-artifact checkpoint
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10776204522/zip > pb01.zip
+          unzip -q pb01.zip -d pb01-artifact
+          gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/artifacts/10790910656/zip > checkpoint.zip
+          unzip -q checkpoint.zip -d checkpoint
+          test -s checkpoint/post-barry-thud-confirmed.dst
+
+      - name: Install emulator tools
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/pb02ab3-venv"
+          . "$RUNNER_TEMP/pb02ab3-venv/bin/activate"
+          pip install --upgrade pip py-desmume Pillow
+
+      - name: Complete native THUD event, enter house, trigger upstairs event
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pb02ab3-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom=Path("pb01-artifact/Pokemon_Mercury_Redux_PB01.nds")
+          state=Path("checkpoint/post-barry-thud-confirmed.dst")
+          out=Path("pb02ab3-play"); out.mkdir(exist_ok=True)
+          emu=DeSmuME(); emu.open(str(rom)); emu.savestate.load_file(str(state))
+          frame=0; caps=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False); frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PB02AB3 stopped at {frame}")
+
+          def pulse(key,held=12,settle=500):
+              m=keymask(key); emu.input.keypad_add_key(m); run(held)
+              emu.input.keypad_rm_key(m); run(settle)
+
+          def cap(label):
+              im=emu.screenshot(); name=f"{len(caps):02d}-{label}-{frame:05d}.png"
+              im.save(out/name); caps.append({"stage":label,"frame":frame,"file":name})
+
+          cap("checkpoint")
+
+          # Visual probe proved the native THUD coord is reached by UP x3.
+          for i in range(1,4):
+              pulse(Keys.KEY_UP,12,450)
+              cap(f"approach-up-{i:02d}")
+
+          # Native script has exactly three Message commands:
+          # BigThud -> GoingToSeeProfRowan -> OhJeezForgotSomething.
+          for i in range(1,4):
+              pulse(Keys.KEY_A,12,1200)
+              cap(f"thud-message-{i:02d}-advanced")
+
+          run(1600)
+          cap("thud-event-complete")
+
+          # After Barry goes back inside, walk north into his house.
+          for i in range(1,4):
+              pulse(Keys.KEY_UP,12,600)
+              cap(f"house-entry-up-{i:02d}")
+
+          run(900)
+          cap("barry-house-1f")
+
+          # 1F: exterior door warp maps to local (6,10); 2F stair warp is (2,3).
+          # From the interior entry lane move to x=2, then north to the stair.
+          for i in range(1,5):
+              pulse(Keys.KEY_LEFT,12,250)
+              cap(f"one-f-left-{i:02d}")
+
+          for i in range(1,8):
+              pulse(Keys.KEY_UP,12,260)
+              cap(f"one-f-up-{i:02d}")
+
+          run(1200)
+          cap("barry-house-2f-auto-event")
+
+          # Native upstairs script has two Message commands before Barry leaves.
+          pulse(Keys.KEY_A,12,1200)
+          cap("upstairs-first-message-advanced")
+          pulse(Keys.KEY_A,12,1800)
+          cap("upstairs-second-message-advanced")
+          run(1800)
+          cap("upstairs-event-complete")
+
+          # Prove field input returned and preserve exact continuation state.
+          pulse(Keys.KEY_DOWN,12,350)
+          cap("upstairs-field-control")
+
+          saved=out/"post-barry-upstairs-confirmed.dst"
+          emu.savestate.save_file(str(saved))
+
+          (out/"pb02ab3-meta.json").write_text(json.dumps({
+              "gate":"PB02AB3_COMPLETE_THUD_AND_BARRY_UPSTAIRS",
+              "source_state":"post-barry-thud-confirmed.dst",
+              "corrected_observation":"source state is immediately before the THUD coord event; PB02AB visual review caught this before certification",
+              "native_thud_messages":3,
+              "native_upstairs_messages":2,
+              "output_state":saved.name,
+              "captures":caps,
+              "visual_review_required":True,
+              "next":"fast-certify exit to Route 201 / Lake Verity"
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PB02AB3 proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pb02ab3-complete-thud-upstairs-proof
+          path: pb02ab3-play/
+          if-no-files-found: error
+          retention-days: 14
