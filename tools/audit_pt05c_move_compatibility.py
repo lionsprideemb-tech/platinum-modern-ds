@@ -78,6 +78,9 @@ def main() -> None:
 
     donor_moves = {name: int(num) for name, num in MOVE_DEFINE_RE.findall(move_h)}
     donor_effects = {name: int(num) for name, num in EFFECT_DEFINE_RE.findall(effect_h)}
+    # HG-Engine declares Fillet Away's effect in move_data.h as a guarded
+    # compatibility define rather than in move_effects.h.
+    donor_effects.setdefault("MOVE_EFFECT_ATK_SP_ATK_SPEED_UP_2_LOSE_HALF_MAX_HP", 303)
 
     pt_effect_lines = [
         x.strip()
