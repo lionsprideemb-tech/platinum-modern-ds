@@ -212,7 +212,6 @@ def patch_start_menu(root: Path) -> None:
     )
 
     switch_anchor = """    case PARTY_MENU_EXIT_CODE_SUMMARY:
-        summary = Heap_Alloc(HEAP_ID_FIELD2, sizeof(PokemonSummary));
 """
 
     learner_case = """    case PARTY_MENU_EXIT_CODE_MOVE_LEARNER: {
@@ -253,7 +252,7 @@ def patch_start_menu(root: Path) -> None:
     replace_once(
         path,
         switch_anchor,
-        switch_anchor + learner_case,
+        learner_case + switch_anchor,
         "Move Learner start-menu exit dispatch",
     )
 
