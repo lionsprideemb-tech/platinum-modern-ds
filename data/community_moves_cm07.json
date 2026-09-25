@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "lane": "community_imports",
-  "start_id": 1201,
+  "start_id": 1258,
   "batch": "CM07_CANONICAL_TYPE_RESOLUTION",
   "policy": "Only canonical Pokémon types are permitted in Mercury Redux.",
   "moves": [
     {
-      "id": 1201,
+      "id": 1258,
       "token": "MOVE_DRUMBEAT",
       "name": "Drum Beat",
       "type": "TYPE_NORMAL",
@@ -44,7 +44,7 @@
       "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Normal"
     },
     {
-      "id": 1202,
+      "id": 1259,
       "token": "MOVE_BEATDROP",
       "name": "Beat Drop",
       "type": "TYPE_NORMAL",
@@ -82,7 +82,7 @@
       "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Normal"
     },
     {
-      "id": 1203,
+      "id": 1260,
       "token": "MOVE_STRIDENTSPARK",
       "name": "Strident Spark",
       "type": "TYPE_ELECTRIC",
@@ -119,7 +119,7 @@
       "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Electric; Sound-type matchup rider removed"
     },
     {
-      "id": 1204,
+      "id": 1261,
       "token": "MOVE_RHYTHMICCOMBO",
       "name": "Rhythmic Combo",
       "type": "TYPE_FIGHTING",
@@ -157,7 +157,7 @@
       "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Fighting"
     },
     {
-      "id": 1205,
+      "id": 1262,
       "token": "MOVE_INSTANTWHISTLE",
       "name": "Instant Whistle",
       "type": "TYPE_NORMAL",
@@ -191,7 +191,7 @@
       "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Normal"
     },
     {
-      "id": 1206,
+      "id": 1263,
       "token": "MOVE_DISCORDANTSHRIEK",
       "name": "Discordant Shriek",
       "type": "TYPE_GHOST",
@@ -229,7 +229,7 @@
       "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Ghost"
     },
     {
-      "id": 1207,
+      "id": 1264,
       "token": "MOVE_ATOMICPUNCH",
       "name": "Atomic Punch",
       "type": "TYPE_POISON",
@@ -267,7 +267,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
     },
     {
-      "id": 1208,
+      "id": 1265,
       "token": "MOVE_NUCLEARWASTE",
       "name": "Nuclear Waste",
       "type": "TYPE_POISON",
@@ -303,7 +303,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
     },
     {
-      "id": 1209,
+      "id": 1266,
       "token": "MOVE_GAMMARAY",
       "name": "Gamma Ray",
       "type": "TYPE_POISON",
@@ -339,7 +339,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison; Nuclear type-chart rider removed"
     },
     {
-      "id": 1210,
+      "id": 1267,
       "token": "MOVE_RADIOACID",
       "name": "Radioacid",
       "type": "TYPE_POISON",
@@ -374,7 +374,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
     },
     {
-      "id": 1211,
+      "id": 1268,
       "token": "MOVE_HALFLIFE",
       "name": "Half-life",
       "type": "TYPE_POISON",
@@ -409,7 +409,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
     },
     {
-      "id": 1212,
+      "id": 1269,
       "token": "MOVE_FISSIONBURST",
       "name": "Fission Burst",
       "type": "TYPE_POISON",
@@ -444,7 +444,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
     },
     {
-      "id": 1213,
+      "id": 1270,
       "token": "MOVE_NUCLEARSLASH",
       "name": "Nuclear Slash",
       "type": "TYPE_POISON",
@@ -482,7 +482,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
     },
     {
-      "id": 1214,
+      "id": 1271,
       "token": "MOVE_PROTONBEAM",
       "name": "Proton Beam",
       "type": "TYPE_POISON",
@@ -519,7 +519,7 @@
       "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
     },
     {
-      "id": 1215,
+      "id": 1272,
       "token": "MOVE_CRYSTALRUSH",
       "name": "Crystal Rush",
       "type": "TYPE_ROCK",
@@ -555,7 +555,7 @@
       "provenance": "Pokemon Insurgence community metadata; Mercury retype Crystal -> Rock"
     },
     {
-      "id": 1216,
+      "id": 1273,
       "token": "MOVE_ANATTACK",
       "name": "An Attack",
       "type": "TYPE_NORMAL",
@@ -589,7 +589,7 @@
       "provenance": "Clovermon Showdown metadata; Mercury retype ??? -> Normal"
     },
     {
-      "id": 1217,
+      "id": 1274,
       "token": "MOVE_MEME",
       "name": "Meme",
       "type": "TYPE_NORMAL",
@@ -625,7 +625,7 @@
       "provenance": "Clovermon Showdown metadata; Mercury retype ??? -> Normal"
     },
     {
-      "id": 1218,
+      "id": 1275,
       "token": "MOVE_PATRONAJE",
       "name": "Patterning",
       "type": "TYPE_DARK",

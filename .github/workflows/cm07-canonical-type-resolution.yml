@@ -181,16 +181,16 @@ jobs:
             --output cm06-native-bulk.json \
             --report cm07-cm06-selection.json
 
-          test "$(jq -r '.selected_without_new_mechanics' cm07-cm06-selection.json)" = "153"
+          test "$(jq -r '.selected_without_new_mechanics' cm07-cm06-selection.json)" = "210"
           test "$(jq -r '.first_id' cm07-cm06-selection.json)" = "1048"
-          test "$(jq -r '.last_id' cm07-cm06-selection.json)" = "1200"
+          test "$(jq -r '.last_id' cm07-cm06-selection.json)" = "1257"
 
           python3 tools/install_cm01_community_moves.py \
             vendor/pokeplatinum \
             --batch cm06-native-bulk.json \
             --report cm07-cm06-install.json
 
-          test "$(jq -r '.total_community_moves_materialized' cm07-cm06-install.json)" = "177"
+          test "$(jq -r '.total_community_moves_materialized' cm07-cm06-install.json)" = "234"
 
       - name: Install canonical-type CM07 moves
         shell: bash
@@ -215,17 +215,17 @@ jobs:
           }
 
           assert len(batch["moves"]) == 18
-          assert batch["moves"][0]["id"] == 1201
-          assert batch["moves"][-1]["id"] == 1218
+          assert batch["moves"][0]["id"] == 1258
+          assert batch["moves"][-1]["id"] == 1275
           assert all(m["type"] in canonical_tokens for m in batch["moves"])
           assert install["community_moves_installed_this_pass"] == 18
-          assert install["first_community_id_this_pass"] == 1201
-          assert install["last_community_id_this_pass"] == 1218
-          assert install["total_community_moves_materialized"] == 195
+          assert install["first_community_id_this_pass"] == 1258
+          assert install["last_community_id_this_pass"] == 1275
+          assert install["total_community_moves_materialized"] == 252
 
           for record in batch["moves"]:
               assert moves[record["id"]] == record["token"]
-          assert moves[1219] == "MAX_MOVES"
+          assert moves[1276] == "MAX_MOVES"
           print("CM07 canonical-type registry: PASS")
           PY
 
@@ -261,7 +261,7 @@ jobs:
           python3 tools/install_pt05d_animation_preview_harness.py \
             vendor/pokeplatinum \
             --move MOVE_ATOMICPUNCH \
-            --preview-id cm07_1207 \
+            --preview-id cm07_1264 \
             --report cm07-runtime-harness.json
 
           grep -q 'MOVE_ATOMICPUNCH' vendor/pokeplatinum/src/field_map_change.c
@@ -353,14 +353,14 @@ jobs:
           meta = {
               "gate": "CM07_CANONICAL_TYPE_RUNTIME",
               "runtime": "pokeplatinum",
-              "representative_move_id": 1207,
+              "representative_move_id": 1264,
               "representative_move": "MOVE_ATOMICPUNCH",
               "source_type": "Nuclear",
               "mercury_type": "Poison",
               "canonical_type_resolutions": 32,
               "new_moves_installed": 18,
               "still_deferred_for_mechanics": 14,
-              "total_live_community_moves": 195,
+              "total_live_community_moves": 252,
               "captured_frames": written,
               "emulator_cycles": current,
               "mp4": mp4.name,
@@ -396,7 +396,7 @@ jobs:
             echo "- Non-canonical playable move types remaining: 0"
             echo "- Retyped moves immediately compatible with native Platinum mechanics: 18"
             echo "- Retyped moves still deferred only for mechanic review: 14"
-            echo "- Total live community moves after CM07: 195"
-            echo "- Last live community move ID: 1218"
+            echo "- Total live community moves after CM07: 252"
+            echo "- Last live community move ID: 1275"
             echo "- Atomic Punch received representative native battle runtime proof"
           } >> "$GITHUB_STEP_SUMMARY"
