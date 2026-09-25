@@ -29,7 +29,7 @@
       },
       "description": [
         "Strikes with lightning. It may\n",
-        "raise the user's Speed."
+        "raise the user’s Speed."
       ],
       "animation": {
         "mode": "copy_native_platinum",
