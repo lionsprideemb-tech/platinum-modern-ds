@@ -203,7 +203,7 @@ jobs:
           grep -q 'ABILITY_FLUFFY' "$B"
           grep -q 'ABILITY_ICE_SCALES' "$B"
           grep -q 'MOVE_FLAG_MAKES_CONTACT' "$B"
-          grep -q 'WEATHER_IS_SANDSTORM' "$B"
+          grep -q 'WEATHER_IS_SAND' "$B"
           grep -q 'WEATHER_IS_HAIL' "$B"
           echo "MP05D low-state mechanics source audit: PASS"
 
