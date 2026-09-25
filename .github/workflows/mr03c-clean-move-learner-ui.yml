@@ -176,6 +176,29 @@ jobs:
           grep -q 'PAD_BUTTON_L' vendor/pokeplatinum/src/applications/move_reminder.c
           grep -q 'PAD_BUTTON_R' vendor/pokeplatinum/src/applications/move_reminder.c
 
+      - name: Stage MR03C generated source for diagnostics
+        shell: bash
+        run: |
+          mkdir -p mr03c-artifact
+          cp vendor/pokeplatinum/src/applications/move_reminder.c mr03c-artifact/move_reminder.generated.c
+          cp vendor/pokeplatinum/src/move_reminder_data.c mr03c-artifact/move_reminder_data.generated.c
+          cp mr03c-clean-ui.json mr03c-artifact/
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("vendor/pokeplatinum/src/applications/move_reminder.c")
+          text = p.read_text()
+          names = [
+              "MoveReminder_ListMenuPrintCallback",
+              "MoveReminder_ListMenuCursorCallback",
+              "MoveReminder_DrawMovesInfo",
+              "MoveReminder_InitListMenu",
+              "MoveReminder_GetSelectedMove",
+          ]
+          for name in names:
+              defs = text.count(f"static void {name}(") + text.count(f"static u16 {name}(")
+              print(name, defs)
+          PY
+
       - name: Prove production boot stays normal
         shell: bash
         run: |
