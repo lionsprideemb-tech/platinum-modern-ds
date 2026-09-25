@@ -138,11 +138,11 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         """    [MOVE_REMINDER_WIN_MOVES_NAMES] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 7,
+        .tilemapTop = 8,
         .width = 30,
-        .height = 9,
+        .height = 8,
         .palette = 15,
-        .baseTile = 0x0D3,
+        .baseTile = 0x0F1,
     },""",
         "MR03B bottom move list window",
     )
@@ -164,7 +164,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .tilemapLeft = 1,
         .tilemapTop = 0,
         .width = 30,
-        .height = 7,
+        .height = 8,
         .palette = 15,
         .baseTile = 1,
     },
@@ -173,18 +173,18 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .tilemapLeft = 1,
         .tilemapTop = 16,
         .width = 30,
-        .height = 6,
+        .height = 7,
         .palette = 15,
         .baseTile = 0x1E1,
     },
     [MOVE_REMINDER_WIN_SUB_HELP] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 22,
+        .tilemapTop = 23,
         .width = 30,
-        .height = 2,
+        .height = 1,
         .palette = 15,
-        .baseTile = 0x295,
+        .baseTile = 0x2B3,
     },
     [MOVE_REMINDER_WIN_TOP_PAGE] = {
         .bgLayer = BG_LAYER_MAIN_0,
@@ -455,8 +455,69 @@ static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controll
     MessageLoader_GetString(typeNames, type, controller->string);
     Text_AddPrinterWithParamsAndColor(
         window, FONT_SYSTEM, controller->string,
-        164, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+        118, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
     MessageLoader_Free(typeNames);
+
+    u16 moveClass = MoveTable_LoadParam(move, MOVEATTRIBUTE_CLASS);
+    u32 classMessage = MoveReminder_Text_MercuryClassStatus;
+    if (moveClass == CLASS_PHYSICAL) {
+        classMessage = MoveReminder_Text_MercuryClassPhysical;
+    } else if (moveClass == CLASS_SPECIAL) {
+        classMessage = MoveReminder_Text_MercuryClassSpecial;
+    }
+
+    MessageLoader_GetString(controller->messageLoader, classMessage, controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        190, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+
+    MessageLoader_GetString(
+        controller->messageLoader,
+        MoveReminder_Text_MercuryPowerShort,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        2, 14, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+
+    u32 power = MoveTable_LoadParam(move, MOVEATTRIBUTE_POWER);
+    if (power <= 1) {
+        MessageLoader_GetString(controller->messageLoader, MoveReminder_Text_Dashes, controller->string);
+        Text_AddPrinterWithParamsAndColor(
+            window, FONT_SYSTEM, controller->string,
+            30, 14, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+    } else {
+        MercuryMoveLearner_PrintNumber(controller, window, power, 30, 14);
+    }
+
+    MessageLoader_GetString(
+        controller->messageLoader,
+        MoveReminder_Text_MercuryAccuracyShort,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        70, 14, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+
+    u32 accuracy = MoveTable_LoadParam(move, MOVEATTRIBUTE_ACCURACY);
+    if (accuracy == 0) {
+        MessageLoader_GetString(controller->messageLoader, MoveReminder_Text_Dashes, controller->string);
+        Text_AddPrinterWithParamsAndColor(
+            window, FONT_SYSTEM, controller->string,
+            104, 14, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+    } else {
+        MercuryMoveLearner_PrintNumber(controller, window, accuracy, 104, 14);
+    }
+
+    MessageLoader_GetString(
+        controller->messageLoader,
+        MoveReminder_Text_MercuryPPShort,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        154, 14, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+    MercuryMoveLearner_PrintNumber(
+        controller, window,
+        MoveTable_CalcMaxPP(move, 0),
+        176, 14);
 
     MessageLoader *moveDesc = MessageLoader_Init(
         MSG_LOADER_LOAD_ON_DEMAND,
@@ -466,7 +527,7 @@ static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controll
     MessageLoader_GetString(moveDesc, move, controller->string);
     Text_AddPrinterWithParamsAndColor(
         window, FONT_SYSTEM, controller->string,
-        2, 16, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+        2, 28, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
     MessageLoader_Free(moveDesc);
 
     Window_ScheduleCopyToVRAM(window);
@@ -481,6 +542,9 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
             Window_ClearAndScheduleCopyToVRAM(&controller->windows[i]);
         }
 
+        Window_ClearAndScheduleCopyToVRAM(
+            &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
+
         ManagedSprite_SetDrawFlag(
             controller->managedSprites[MOVE_REMINDER_SPRITE_CATEGORY],
             FALSE);
@@ -491,6 +555,21 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
     MoveReminder_DrawLabelText(controller);
     controller->data->showingContest = 0;
     MoveReminder_DrawMovesInfo(controller);
+
+    Window_FillTilemap(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        15);
+    MoveReminder_SetStringTemplate(
+        controller,
+        MOVE_REMINDER_STR_ASK_TEACH_WHICH_TO_MON);
+    MoveReminder_DrawText(
+        controller,
+        MOVE_REMINDER_WIN_MESSAGE_BOX,
+        FONT_MESSAGE,
+        TEXT_COLOR(1, 2, 15),
+        ALIGN_LEFT);
+    Window_ScheduleCopyToVRAM(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
 }
 
 static void MercuryMoveLearner_PrintMessage(
@@ -690,6 +769,12 @@ def patch_text(root: Path) -> None:
         "MoveReminder_Text_MercuryStatsTitle": "< L   STATS   R >",
         "MoveReminder_Text_MercuryAbilityTitle": "< L   ABILITY   R >",
         "MoveReminder_Text_MercuryInnatesOff": "INNATE ABILITIES: OFF",
+        "MoveReminder_Text_MercuryClassPhysical": "PHYS",
+        "MoveReminder_Text_MercuryClassSpecial": "SPEC",
+        "MoveReminder_Text_MercuryClassStatus": "STATUS",
+        "MoveReminder_Text_MercuryPowerShort": "PWR",
+        "MoveReminder_Text_MercuryAccuracyShort": "ACC",
+        "MoveReminder_Text_MercuryPPShort": "PP",
         "MoveReminder_Text_MercuryLevel": "Lv.",
         "MoveReminder_Text_MercuryHP": "HP",
         "MoveReminder_Text_MercuryAtk": "ATK",
@@ -743,7 +828,10 @@ def main() -> None:
             "white bottom-screen workspace",
             "2x2 current-move grid",
             "learnable-moves heading",
+            "non-overlapping bottom-screen bands",
+            "highlighted move type/category/power/accuracy/PP",
             "framed Stats and Ability cards",
+            "Stats/Ability pages hide the native prompt box",
             "dedicated Nature line",
             "Innate Abilities OFF indicator",
         ],
