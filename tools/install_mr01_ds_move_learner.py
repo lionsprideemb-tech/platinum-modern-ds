@@ -187,7 +187,7 @@ def build_pools(
 
 def emit_pool_source(pt: Path, registry: list[str], pools: list[list[tuple[str, int, int]]]) -> None:
     header = pt / "include/mercury_move_learner_data.h"
-    source = pt / "src/mercury_move_learner_data.c"
+    source_path = pt / "src/mercury_move_learner_data.c"
 
     header.write_text(
         """#ifndef POKEPLATINUM_MERCURY_MOVE_LEARNER_DATA_H
