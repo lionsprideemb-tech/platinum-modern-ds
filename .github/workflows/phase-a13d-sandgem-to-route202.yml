@@ -1,0 +1,247 @@
+name: PHASE-A13D Sandgem To Route 202
+
+on:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a13d-sandgem-to-route202.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download certified A13C Sandgem checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a13c-sandgem-edge
+          path: checkpoint
+          run-id: 36148284926
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a13d-venv"
+          . "$RUNNER_TEMP/phase-a13d-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Cross Sandgem and trigger Route 202 tutorial
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a13d-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E
+          Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a13c-sandgem-edge-cleared.dst")
+          out=Path("phase-a13d")
+          out.mkdir(exist_ok=True)
+
+          emu=DeSmuME()
+          emu.open(str(rom))
+          emu.savestate.load_file(str(state))
+          frame=0
+          captures=[]
+          encounters=[]
+          checkpoints=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False)
+                  frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A13D stopped at {frame}")
+
+          def xy():
+              return (
+                  emu.memory.unsigned.read_short(X),
+                  emu.memory.unsigned.read_short(Z),
+              )
+
+          def pulse(key,held=10,settle=175):
+              m=keymask(key)
+              emu.input.keypad_add_key(m)
+              run(held)
+              emu.input.keypad_rm_key(m)
+              run(settle)
+
+          def snap(label,save=True):
+              name=f"{len(captures):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              row={"stage":label,"frame":frame,"file":name,"xy":xy()}
+              captures.append(row)
+              if save:
+                  state_out=out/f"{label}.dst"
+                  emu.savestate.save_file(str(state_out))
+                  checkpoints.append({
+                      "stage":label,
+                      "state":state_out.name,
+                      "xy":xy(),
+                  })
+              return row
+
+          def lower_stats(img):
+              rgb=img.convert("RGB")
+              tan=red=total=0
+              for yy in range(196,382,4):
+                  for xx in range(4,252,4):
+                      r,g,b=rgb.getpixel((xx,yy))
+                      total += 1
+                      if 120<=r<=220 and 100<=g<=200 and 45<=b<=140 and r>g>b:
+                          tan += 1
+                      if r>=165 and g<=115 and b<=115 and r>g*1.45:
+                          red += 1
+              return tan/total,red/total
+
+          def is_overworld(img):
+              return lower_stats(img)[0] >= 0.35
+
+          def is_fight_menu(img):
+              return lower_stats(img)[1] >= 0.10
+
+          def tap_run():
+              emu.input.touch_set_pos(128,160)
+              run(16)
+              emu.input.touch_release()
+              run(650)
+
+          def recover_field():
+              if is_overworld(emu.screenshot()):
+                  return
+              run(550)
+              if is_overworld(emu.screenshot()):
+                  return
+              enc={"start":frame,"xy":xy(),"run_attempts":0}
+              for _ in range(28):
+                  img=emu.screenshot()
+                  if is_overworld(img):
+                      enc["end"]=frame
+                      encounters.append(enc)
+                      return
+                  if is_fight_menu(img):
+                      enc["run_attempts"] += 1
+                      tap_run()
+                  else:
+                      pulse(Keys.KEY_A,12,420)
+              raise SystemExit("A13D field recovery failed")
+
+          def move_key(key):
+              before=xy()
+              pulse(key)
+              recover_field()
+              return before,xy()
+
+          def direct_goto(tx,tz,label,order="xz",limit=180):
+              blocked=0
+              for _ in range(limit):
+                  x,z=xy()
+                  if (x,z)==(tx,tz):
+                      snap(label)
+                      return
+                  key=None
+                  if order[0]=="x" and x!=tx:
+                      key=Keys.KEY_RIGHT if x<tx else Keys.KEY_LEFT
+                  elif order[0]=="z" and z!=tz:
+                      key=Keys.KEY_DOWN if z<tz else Keys.KEY_UP
+                  elif order[1]=="x" and x!=tx:
+                      key=Keys.KEY_RIGHT if x<tx else Keys.KEY_LEFT
+                  elif order[1]=="z" and z!=tz:
+                      key=Keys.KEY_DOWN if z<tz else Keys.KEY_UP
+
+                  before,after=move_key(key)
+                  if after==before:
+                      blocked += 1
+                      if blocked > 4:
+                          snap(label+"-blocked")
+                          raise SystemExit(
+                              f"Blocked toward {(tx,tz)} at {xy()}"
+                          )
+                  else:
+                      blocked=0
+
+              snap(label+"-limit")
+              raise SystemExit(f"Waypoint limit toward {(tx,tz)} at {xy()}")
+
+          run(180)
+          snap("sandgem-resume")
+          if xy() != (164,846):
+              raise SystemExit(f"Unexpected A13C resume coordinate: {xy()}")
+
+          # Known lower Sandgem corridor: move below the homes, cross east,
+          # then go north through the Pokémon Center / Mart gap.
+          direct_goto(154,856,"sandgem-west-lower","zx")
+          direct_goto(184,856,"sandgem-east-lower","xz")
+          direct_goto(184,830,"sandgem-north-corridor","zx")
+          snap("route202-approach")
+
+          # Cross into Route 202 and touch the vanilla Dawn tutorial trigger.
+          direct_goto(184,824,"route202-inside","zx")
+          direct_goto(180,824,"route202-trigger-column","xz")
+          pulse(Keys.KEY_DOWN,10,500)
+          run(1200)
+          snap("route202-event-start")
+
+          # The catching tutorial is scripted. Advance only dialogue while the
+          # vanilla event owns control; capture milestones for visual review.
+          for i in range(1,31):
+              pulse(Keys.KEY_A,12,600)
+              if i in (5,10,15,20,25,30):
+                  snap(f"route202-story-{i:02d}",False)
+
+          run(2200)
+          snap("route202-story-stable")
+          final_state=out/"phase-a13d-route202-stable.dst"
+          emu.savestate.save_file(str(final_state))
+
+          (out/"phase-a13d-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A13D_SANDGEM_TO_ROUTE202",
+              "source_run":36148284926,
+              "source_state":state.name,
+              "final_xy":xy(),
+              "output_state":final_state.name,
+              "wild_encounters":encounters,
+              "checkpoints":checkpoints,
+              "captures":captures,
+              "visual_review_required":True,
+          },indent=2)+"\n")
+
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A13D evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a13d-route202
+          path: phase-a13d/
+          if-no-files-found: error
+          retention-days: 30
