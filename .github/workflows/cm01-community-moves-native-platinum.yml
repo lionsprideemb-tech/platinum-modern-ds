@@ -96,7 +96,7 @@ jobs:
 
           report = json.loads(Path("cm01-community-moves-install.json").read_text())
           assert report["community_moves_installed_this_pass"] == 3
-          assert report["reserved_placeholder_count_added_this_pass"] == 1128
+          assert report["reserved_placeholder_count_added_this_pass"] == 104
           print("CM01 registry layout: PASS")
           PY
 
@@ -108,7 +108,7 @@ jobs:
           python3 tools/install_pt04c_pc_harness.py             vendor/pokeplatinum --report cm01-base-pc.json
           python3 tools/install_pt04c_battle_harness.py             vendor/pokeplatinum --report cm01-base-battle.json
 
-          python3 tools/install_pt05d_animation_preview_harness.py             vendor/pokeplatinum             --move MOVE_DRACONIC_FANGS             --preview-id cm01_2048             --report cm01-runtime-harness.json
+          python3 tools/install_pt05d_animation_preview_harness.py             vendor/pokeplatinum             --move MOVE_DRACONIC_FANGS             --preview-id cm01_1024             --report cm01-runtime-harness.json
 
           grep -q 'MOVE_DRACONIC_FANGS' vendor/pokeplatinum/src/field_map_change.c
 
@@ -259,6 +259,6 @@ jobs:
             echo "- ID 1024: Draconic Fangs"
             echo "- ID 1025: Aqua Bash"
             echo "- ID 1026: Atomic Fire"
-            echo "- Future official IDs 920-2047 preserved as inert reserved slots"
+            echo "- Future official IDs 920-1023 preserved as inert reserved slots"
             echo "- First new community move exercised in a real native Platinum battle"
           } >> "$GITHUB_STEP_SUMMARY"
