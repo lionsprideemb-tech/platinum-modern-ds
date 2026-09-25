@@ -359,6 +359,12 @@ def main() -> None:
         default="PT04D_GEN5_BATCH_INSTALL",
         help="report gate name for the current canonical batch",
     )
+    parser.add_argument(
+        "--implemented-abilities",
+        type=Path,
+        default=None,
+        help="Optional ability registry used to keep not-yet-ported modern abilities out of live species data.",
+    )
     args = parser.parse_args()
 
     pt = args.pokeplatinum_root.resolve()
@@ -384,7 +390,11 @@ def main() -> None:
     heights = parse_height_table(hg / "data/HeightTable.c")
     sprite_offsets_text = (hg / "data/SpriteOffsets.c").read_text()
 
-    available_abilities = load_generated_constants(pt / "generated/abilities.txt")
+    available_abilities = load_generated_constants(
+        args.implemented_abilities
+        if args.implemented_abilities is not None
+        else pt / "generated/abilities.txt"
+    )
     available_items = load_generated_constants(pt / "generated/items.txt")
     available_types = load_generated_constants(pt / "generated/pokemon_types.txt")
     available_growth = load_generated_constants(pt / "generated/exp_rates.txt")
