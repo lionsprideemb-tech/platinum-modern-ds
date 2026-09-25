@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "policy": "Mercury Redux uses only canonical Pokémon types. Source-library custom types are preserved only as provenance; playable Mercury moves are retyped to canonical types.",
+  "canonical_types": [
+    "Normal",
+    "Fire",
+    "Water",
+    "Electric",
+    "Grass",
+    "Ice",
+    "Fighting",
+    "Poison",
+    "Ground",
+    "Flying",
+    "Psychic",
+    "Bug",
+    "Rock",
+    "Ghost",
+    "Dragon",
+    "Dark",
+    "Steel",
+    "Fairy"
+  ],
+  "resolutions": [
+    {
+      "source_token": "DRUMBEAT",
+      "name": "Drum Beat",
+      "source_type": "Sound",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Canonical sound-based attacks are normally Normal-type."
+    },
+    {
+      "source_token": "BEATDROP",
+      "name": "Beat Drop",
+      "source_type": "Sound",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Canonical sound-based attacks are normally Normal-type."
+    },
+    {
+      "source_token": "STRIDENTSPARK",
+      "name": "Strident Spark",
+      "source_type": "Sound",
+      "mercury_type": "Electric",
+      "action": "retype",
+      "rationale": "Spark/electric identity retained; obsolete bonus versus Sound-type targets is removed.",
+      "behavior_adjustment": "drop_custom_type_matchup"
+    },
+    {
+      "source_token": "RHYTHMICCOMBO",
+      "name": "Rhythmic Combo",
+      "source_type": "Sound",
+      "mercury_type": "Fighting",
+      "action": "retype",
+      "rationale": "Physical rhythmic combo fits Fighting once Sound is removed."
+    },
+    {
+      "source_token": "INSTANTWHISTLE",
+      "name": "Instant Whistle",
+      "source_type": "Sound",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Whistle/redirection move uses canonical Normal typing."
+    },
+    {
+      "source_token": "DISCORDANTSHRIEK",
+      "name": "Discordant Shriek",
+      "source_type": "Sound",
+      "mercury_type": "Ghost",
+      "action": "retype",
+      "rationale": "Chilling supernatural shriek fits Ghost."
+    },
+    {
+      "source_token": "HEARTBEAT",
+      "name": "Heart Beat",
+      "source_type": "Sound",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Heartbeat/sound identity maps cleanly to Normal."
+    },
+    {
+      "source_token": "AUDIOBREAK",
+      "name": "Audio Break",
+      "source_type": "Sound",
+      "mercury_type": "Fighting",
+      "action": "retype",
+      "rationale": "Physical sound-barrier punch fits Fighting."
+    },
+    {
+      "source_token": "UNLEASHEDPOWER",
+      "name": "Unleashed Power",
+      "source_type": "Qmarks",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Base type becomes Normal; its dynamic-type mechanic remains separately deferred."
+    },
+    {
+      "source_token": "BLINDINGSPEED",
+      "name": "Blinding Speed",
+      "source_type": "Qmarks",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Base type becomes Normal; dynamic user-type behavior remains separately deferred."
+    },
+    {
+      "source_token": "DOMAINSHIFT",
+      "name": "Domain Shift",
+      "source_type": "Qmarks",
+      "mercury_type": "Psychic",
+      "action": "retype",
+      "rationale": "Field/domain manipulation fits Psychic."
+    },
+    {
+      "source_token": "TITANSWRATH",
+      "name": "Titan's Wrath",
+      "source_type": "Qmarks",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Base type becomes Normal; dynamic user-type/stat behavior remains separately deferred."
+    },
+    {
+      "source_token": "QUESOBLAST",
+      "name": "Queso Blast",
+      "source_type": "Qmarks",
+      "mercury_type": "Fire",
+      "action": "retype",
+      "rationale": "Molten-cheese projectile fits Fire."
+    },
+    {
+      "source_token": "HARDDRIVECRASH",
+      "name": "Hard Drive Crash",
+      "source_type": "Qmarks",
+      "mercury_type": "Electric",
+      "action": "retype",
+      "rationale": "Digital/electronic attack fits Electric."
+    },
+    {
+      "source_token": "BOOMINSTALL",
+      "name": "Virus Inject",
+      "source_type": "Qmarks",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Virus/toxin identity fits Poison."
+    },
+    {
+      "source_token": "CHTHONICMALADY",
+      "name": "Chthonic Malady",
+      "source_type": "Shadow",
+      "mercury_type": "Ghost",
+      "action": "retype",
+      "rationale": "Chthonic/curse identity fits Ghost."
+    },
+    {
+      "source_token": "PATRONAJE",
+      "name": "Patterning",
+      "source_type": "Shadow",
+      "mercury_type": "Dark",
+      "action": "retype",
+      "rationale": "Shadow-source status move maps to Dark."
+    },
+    {
+      "source_token": "ATOMICPUNCH",
+      "name": "Atomic Punch",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radiation/toxicity identity maps to Poison."
+    },
+    {
+      "source_token": "NUCLEARWASTE",
+      "name": "Nuclear Waste",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Toxic waste maps directly to Poison."
+    },
+    {
+      "source_token": "GAMMARAY",
+      "name": "Gamma Ray",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radiation identity maps to Poison; Nuclear-specific type chart is removed.",
+      "behavior_adjustment": "drop_custom_type_matchup"
+    },
+    {
+      "source_token": "RADIOACID",
+      "name": "Radioacid",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radioactive acid maps directly to Poison."
+    },
+    {
+      "source_token": "HALFLIFE",
+      "name": "Half-life",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radiation identity maps to Poison."
+    },
+    {
+      "source_token": "FISSIONBURST",
+      "name": "Fission Burst",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Nuclear/radiation identity maps to Poison while keeping explosion mechanics."
+    },
+    {
+      "source_token": "NUCLEARSLASH",
+      "name": "Nuclear Slash",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radiation identity maps to Poison."
+    },
+    {
+      "source_token": "EXPUNGE",
+      "name": "Expunge",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radiation identity maps to Poison; bonus versus Nuclear targets is removed.",
+      "behavior_adjustment": "drop_custom_type_matchup"
+    },
+    {
+      "source_token": "FALLOUT",
+      "name": "Fallout",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Base type becomes Poison; Fallout field mechanics remain separately deferred."
+    },
+    {
+      "source_token": "PROTONBEAM",
+      "name": "Proton Beam",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radiation identity maps to Poison."
+    },
+    {
+      "source_token": "QUANTUMLEAP",
+      "name": "Quantum Leap",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Radiation identity maps to Poison; two-turn behavior remains separately audited."
+    },
+    {
+      "source_token": "NUCLEARWIND",
+      "name": "Nuclear Wind",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "action": "retype",
+      "rationale": "Base type becomes Poison; Fallout weather rider remains separately deferred."
+    },
+    {
+      "source_token": "CRYSTALRUSH",
+      "name": "Crystal Rush",
+      "source_type": "Crystal",
+      "mercury_type": "Rock",
+      "action": "retype",
+      "rationale": "Crystal/mineral identity maps directly to Rock."
+    },
+    {
+      "source_token": "ANATTACK",
+      "name": "An Attack",
+      "source_type": "???",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Generic untyped/glitch attack becomes Normal."
+    },
+    {
+      "source_token": "MEME",
+      "name": "Meme",
+      "source_type": "???",
+      "mercury_type": "Normal",
+      "action": "retype",
+      "rationale": "Generic glitch-style attack becomes Normal while retaining its move effect."
+    }
+  ]
+}
