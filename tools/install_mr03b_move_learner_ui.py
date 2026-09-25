@@ -426,7 +426,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
 static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controller, u32 move)
 {
     Window *window = &controller->windows[MOVE_REMINDER_WIN_SUB_DESC];
-    Window_FillTilemap(window, 0);
+    Window_FillTilemap(window, 15);
 
     if (move == MENU_CANCEL || move == LEVEL_UP_MOVESET_TERMINATOR) {
         Window_ScheduleCopyToVRAM(window);
@@ -441,7 +441,7 @@ static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controll
     MessageLoader_GetString(moveNames, move, controller->string);
     Text_AddPrinterWithParamsAndColor(
         window, FONT_SYSTEM, controller->string,
-        2, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+        2, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
     MessageLoader_Free(moveNames);
 
     u16 type = MoveTable_LoadParam(move, MOVEATTRIBUTE_TYPE);
@@ -453,7 +453,7 @@ static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controll
     MessageLoader_GetString(typeNames, type, controller->string);
     Text_AddPrinterWithParamsAndColor(
         window, FONT_SYSTEM, controller->string,
-        164, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+        164, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
     MessageLoader_Free(typeNames);
 
     MessageLoader *moveDesc = MessageLoader_Init(
@@ -464,7 +464,7 @@ static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controll
     MessageLoader_GetString(moveDesc, move, controller->string);
     Text_AddPrinterWithParamsAndColor(
         window, FONT_SYSTEM, controller->string,
-        2, 16, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+        2, 16, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
     MessageLoader_Free(moveDesc);
 
     Window_ScheduleCopyToVRAM(window);
@@ -535,6 +535,8 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
 
     MoveReminder_SetNativeMoveViewVisible(controller, FALSE);
     Window_FillTilemap(page, 15);
+    Window_FillRectWithColor(page, 0, 0, 0, 176, 112);
+    Window_FillRectWithColor(page, 15, 2, 2, 172, 108);
 
     Pokemon *mon = controller->data->mon;
 
@@ -588,13 +590,13 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
             Pokemon_GetValue(mon, MON_DATA_SP_DEF, NULL),
             140, 74);
 
-        MercuryMoveLearner_PrintMessage(controller, page, MoveReminder_Text_MercurySpeed, 8, 92);
+        MercuryMoveLearner_PrintMessage(controller, page, MoveReminder_Text_MercurySpeed, 8, 86);
         MercuryMoveLearner_PrintNumber(
             controller, page,
             Pokemon_GetValue(mon, MON_DATA_SPEED, NULL),
-            52, 92);
+            52, 86);
 
-        MercuryMoveLearner_PrintMessage(controller, page, MoveReminder_Text_MercuryNature, 96, 92);
+        MercuryMoveLearner_PrintMessage(controller, page, MoveReminder_Text_MercuryNature, 8, 100);
         MessageLoader *natureNames = MessageLoader_Init(
             MSG_LOADER_LOAD_ON_DEMAND,
             NARC_INDEX_MSGDATA__PL_MSG,
@@ -606,7 +608,7 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
             controller->string);
         Text_AddPrinterWithParamsAndColor(
             page, FONT_SYSTEM, controller->string,
-            140, 92, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+            62, 100, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         MessageLoader_Free(natureNames);
     } else {
         MercuryMoveLearner_PrintMessage(
@@ -642,6 +644,11 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
             page, FONT_SYSTEM, controller->string,
             8, 64, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         MessageLoader_Free(abilityDesc);
+
+        MercuryMoveLearner_PrintMessage(
+            controller, page,
+            MoveReminder_Text_MercuryInnatesOff,
+            8, 98);
     }
 
     Window_ScheduleCopyToVRAM(page);
@@ -680,6 +687,7 @@ def patch_text(root: Path) -> None:
         "MoveReminder_Text_MercuryLearnerHelp": "L/R: INFO   A: TEACH   B: BACK",
         "MoveReminder_Text_MercuryStatsTitle": "< L   STATS   R >",
         "MoveReminder_Text_MercuryAbilityTitle": "< L   ABILITY   R >",
+        "MoveReminder_Text_MercuryInnatesOff": "INNATE ABILITIES: OFF",
         "MoveReminder_Text_MercuryLevel": "Lv.",
         "MoveReminder_Text_MercuryHP": "HP",
         "MoveReminder_Text_MercuryAtk": "ATK",
@@ -728,6 +736,14 @@ def main() -> None:
             "party-menu launch path",
             "native four-move replacement flow",
             "normal Mercury/Platinum story boot",
+        ],
+        "visual_polish": [
+            "white bottom-screen workspace",
+            "2x2 current-move grid",
+            "learnable-moves heading",
+            "framed Stats and Ability cards",
+            "dedicated Nature line",
+            "Innate Abilities OFF indicator",
         ],
         "deferred_polish": [
             "touchscreen row selection",
