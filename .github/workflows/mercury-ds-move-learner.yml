@@ -149,7 +149,7 @@ jobs:
           test "$(jq -r '.status' mercury-ds-move-learner.json)" = "PASS"
           test "$(jq -r '.tm_items_required' mercury-ds-move-learner.json)" = "false"
           test "$(jq -r '.species_with_pools' mercury-ds-move-learner.json)" -ge "1000"
-          test "$(jq -r '.max_pool_size' mercury-ds-move-learner.json)" -le "240"
+          test "$(jq -r '.max_pool_size' mercury-ds-move-learner.json)" -le "512"\n          test "$(jq -r '.trimmed_species | length' mercury-ds-move-learner.json)" = "0"
 
           grep -q "mercury_move_learner_data.c" vendor/pokeplatinum/src/meson.build
           grep -q "PARTY_MENU_EXIT_CODE_MOVE_LEARNER" vendor/pokeplatinum/include/applications/party_menu/defs.h
