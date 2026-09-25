@@ -1,0 +1,151 @@
+name: Mercury Move Learner Visual Proof
+
+on:
+  push:
+    branches:
+      - feature/ds-move-learner
+    paths:
+      - ".github/workflows/mercury-move-learner-visual-proof.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      DISPLAY: ":99"
+      PROOF_RUN_ID: "36171842032"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install emulator proof dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            desmume xvfb xdotool imagemagick git unzip
+          command -v desmume
+          command -v Xvfb
+          command -v xdotool
+          command -v import
+
+      - name: Download compiled Move Learner ROM
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          mkdir -p runtime
+          gh run download "$PROOF_RUN_ID" \
+            --repo "${{ github.repository }}" \
+            --name mercury-ds-move-learner \
+            --dir runtime
+          test -s runtime/Pokemon_Mercury_DS_Move_Learner.nds
+          sha256sum runtime/Pokemon_Mercury_DS_Move_Learner.nds
+
+      - name: Install compatible completed Platinum save
+        shell: bash
+        run: |
+          git clone --depth 1 \
+            https://github.com/projectpokemon/ProjectCompleteDexSaves.git proof-saves
+
+          SAVE="proof-saves/Gen 4 - Pokemon Platinum (ENG).sav"
+          test -s "$SAVE"
+          test "$(stat -c '%s' "$SAVE")" -ge 524288
+
+          mkdir -p "$HOME/.config/desmume"
+          cp "$SAVE" runtime/Pokemon_Mercury_DS_Move_Learner.sav
+          cp "$SAVE" "$HOME/.config/desmume/Pokemon_Mercury_DS_Move_Learner.sav"
+
+      - name: Boot ROM in DeSmuME
+        shell: bash
+        run: |
+          mkdir -p proof
+          Xvfb :99 -screen 0 900x1000x24 -nolisten tcp >proof/xvfb.log 2>&1 &
+          echo $! > proof/xvfb.pid
+          sleep 2
+
+          desmume --disable-sound --nojoy --scale 2 \
+            runtime/Pokemon_Mercury_DS_Move_Learner.nds \
+            >proof/desmume.log 2>&1 &
+          echo $! > proof/desmume.pid
+
+          for i in $(seq 1 30); do
+            WIN="$(xdotool search --name 'DeSmuME' 2>/dev/null | head -n1 || true)"
+            if [ -n "$WIN" ]; then
+              echo "$WIN" > proof/window.id
+              break
+            fi
+            sleep 1
+          done
+
+          test -s proof/window.id
+          WIN="$(cat proof/window.id)"
+          xdotool windowactivate --sync "$WIN" || true
+          sleep 8
+          import -window "$WIN" proof/00-boot.png
+
+      - name: Navigate to universal Move Learner
+        shell: bash
+        run: |
+          WIN="$(cat proof/window.id)"
+
+          press() {
+            xdotool windowactivate "$WIN" || true
+            xdotool key --window "$WIN" "$1"
+            sleep "${2:-1}"
+          }
+
+          # DeSmuME default keyboard: DS A=X, DS B=Z, DS X=S.
+          # Title -> save select -> overworld.
+          press x 3
+          import -window "$WIN" proof/01-after-title.png
+
+          press x 8
+          import -window "$WIN" proof/02-overworld.png
+
+          # Open field menu with DS X.
+          press s 2
+          import -window "$WIN" proof/03-field-menu.png
+
+          # Pokémon is one slot below Pokédex in the normal field menu.
+          press Down 1
+          press x 3
+          import -window "$WIN" proof/04-party-menu.png
+
+          # Select first party member.
+          press x 2
+          import -window "$WIN" proof/05-party-context.png
+
+          # Mercury inserts MOVE LEARNER directly below SUMMARY.
+          press Down 1
+          press x 4
+          import -window "$WIN" proof/06-move-learner.png
+
+          identify proof/*.png
+
+      - name: Stop emulator
+        if: always()
+        shell: bash
+        run: |
+          if [ -s proof/desmume.pid ]; then
+            kill "$(cat proof/desmume.pid)" 2>/dev/null || true
+          fi
+          if [ -s proof/xvfb.pid ]; then
+            kill "$(cat proof/xvfb.pid)" 2>/dev/null || true
+          fi
+          tail -200 proof/desmume.log 2>/dev/null || true
+
+      - name: Upload runtime screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-move-learner-runtime-proof
+          path: |
+            proof/*.png
+            proof/*.log
+          if-no-files-found: error
+          retention-days: 30
