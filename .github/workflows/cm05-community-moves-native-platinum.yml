@@ -146,7 +146,7 @@ jobs:
           expected = {
               1024: "MOVE_DRACONIC_FANGS",
               1035: "MOVE_PRIMAL_BEAM",
-              1036: "MOVE_PHANTOM_GLOVES",
+              1036: "MOVE_SHOCKING_JAB",
               1041: "MOVE_TECTONIC_FANGS",
               1042: "MOVE_PHANTOM_GLOVES",
               1043: "MOVE_PEBBLE_SHOWER",
@@ -281,7 +281,7 @@ jobs:
               raise SystemExit("CM05 runtime video proof is incomplete")
 
           meta = {
-              "gate": "CM05_SHOCKING_JAB_NATIVE_RUNTIME",
+              "gate": "CM05_PHANTOM_GLOVE_NATIVE_RUNTIME",
               "runtime": "pokeplatinum",
               "move_id": 1042,
               "move": "MOVE_PHANTOM_GLOVES",
