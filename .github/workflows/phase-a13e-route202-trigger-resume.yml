@@ -1,0 +1,146 @@
+name: PHASE-A13E Route 202 Trigger Resume
+
+on:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a13e-route202-trigger-resume.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A13D near-trigger checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a13d-route202
+          path: checkpoint
+          run-id: 36149175301
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a13e-venv"
+          . "$RUNNER_TEMP/phase-a13e-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Trigger and finish Dawn catching tutorial
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a13e-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E
+          Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/route202-trigger-column-blocked.dst")
+          out=Path("phase-a13e")
+          out.mkdir(exist_ok=True)
+
+          emu=DeSmuME()
+          emu.open(str(rom))
+          emu.savestate.load_file(str(state))
+          frame=0
+          captures=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False)
+                  frame+=1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A13E stopped at {frame}")
+
+          def xy():
+              return (
+                  emu.memory.unsigned.read_short(X),
+                  emu.memory.unsigned.read_short(Z),
+              )
+
+          def pulse(key,held=12,settle=550):
+              m=keymask(key)
+              emu.input.keypad_add_key(m)
+              run(held)
+              emu.input.keypad_rm_key(m)
+              run(settle)
+
+          def snap(label):
+              name=f"{len(captures):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              captures.append({
+                  "stage":label,
+                  "frame":frame,
+                  "file":name,
+                  "xy":xy(),
+              })
+
+          run(180)
+          snap("route202-near-trigger")
+          if xy() != (181,824):
+              raise SystemExit(f"Unexpected A13D resume coordinate: {xy()}")
+
+          # The sign blocks the final westward tile.  We are already beside the
+          # vanilla tutorial lane, so step south from x181 instead of trying to
+          # walk through the sign to x180.
+          pulse(Keys.KEY_DOWN,12,900)
+          run(900)
+          snap("tutorial-trigger-attempt")
+
+          for i in range(1,31):
+              pulse(Keys.KEY_A,12,650)
+              if i in (4,8,12,16,20,24,28,30):
+                  snap(f"tutorial-a-{i:02d}")
+
+          run(2200)
+          snap("route202-post-tutorial-stable")
+          final=out/"phase-a13e-route202-post-tutorial.dst"
+          emu.savestate.save_file(str(final))
+
+          (out/"phase-a13e-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A13E_ROUTE202_TUTORIAL_RESUME",
+              "source_run":36149175301,
+              "source_state":state.name,
+              "final_xy":xy(),
+              "output_state":final.name,
+              "captures":captures,
+              "visual_review_required":True,
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A13E evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a13e-route202-tutorial
+          path: phase-a13e/
+          if-no-files-found: error
+          retention-days: 30
