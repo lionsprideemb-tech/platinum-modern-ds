@@ -195,6 +195,7 @@ jobs:
         run: |
           set -euo pipefail
           B=vendor/pokeplatinum/src/battle/battle_lib.c
+          S=vendor/pokeplatinum/src/battle/battle_script.c
 
           grep -q 'ABILITY_SAND_RUSH' "$B"
           grep -q 'ABILITY_SLUSH_RUSH' "$B"
@@ -205,6 +206,7 @@ jobs:
           grep -q 'MOVE_FLAG_MAKES_CONTACT' "$B"
           grep -q 'WEATHER_IS_SAND' "$B"
           grep -q 'WEATHER_IS_HAIL' "$B"
+          grep -q 'ABILITY_SAND_RUSH' "$S"
           echo "MP05D low-state mechanics source audit: PASS"
 
       - name: Generate Mercury title
