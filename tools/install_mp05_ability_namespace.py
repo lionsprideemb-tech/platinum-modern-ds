@@ -155,6 +155,12 @@ def patch_widths(pt: Path) -> list[str]:
         "const u8 maxEncounters, const u8 type, const u16 ability, u8 *encSlot",
         "wild type-match ability parameter",
     )
+    replace_once(
+        wild,
+        "const u8 maxEncounters, const u8 type, const u8 ability, u8 *encounterSlot",
+        "const u8 maxEncounters, const u8 type, const u16 ability, u8 *encounterSlot",
+        "wild type-match ability definition",
+    )
     patched.append(str(wild.relative_to(pt)))
 
     trainer_ai = pt / "src/battle/trainer_ai/trainer_ai.c"
