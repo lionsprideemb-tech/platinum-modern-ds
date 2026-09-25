@@ -58,6 +58,7 @@ def main() -> None:
 
     pt = args.pokeplatinum_root.resolve()
     battle_lib = pt / "src/battle/battle_lib.c"
+    battle_script = pt / "src/battle/battle_script.c"
 
     canonical = load_registry(pt / "generated/abilities.txt")
     implemented = load_registry(args.implemented_registry)
@@ -106,6 +107,21 @@ def main() -> None:
         }
 """
     replace_once(battle_lib, speed_anchor, speed_replacement, "weather speed family")
+
+    # Sand Rush also grants sandstorm chip-damage immunity in modern games.
+    sand_damage_anchor = """            && Battler_Ability(battleCtx, battler) != ABILITY_SAND_VEIL
+            && (battleCtx->battleMons[battler].moveEffectsMask & MOVE_EFFECT_NO_WEATHER_DAMAGE) == FALSE) {
+"""
+    sand_damage_replacement = """            && Battler_Ability(battleCtx, battler) != ABILITY_SAND_VEIL
+            && Battler_Ability(battleCtx, battler) != ABILITY_SAND_RUSH
+            && (battleCtx->battleMons[battler].moveEffectsMask & MOVE_EFFECT_NO_WEATHER_DAMAGE) == FALSE) {
+"""
+    replace_once(
+        battle_script,
+        sand_damage_anchor,
+        sand_damage_replacement,
+        "Sand Rush sandstorm immunity",
+    )
 
     # Tough Claws is a base-power modifier for contact moves.
     claws_anchor = """    for (i = 0; i < NELEMS(sPunchingMoves); i++) {
@@ -193,7 +209,7 @@ def main() -> None:
         "abilities_added_count": len(ABILITIES),
         "implemented_ability_count": len(extended),
         "mechanics": {
-            "ABILITY_SAND_RUSH": "2x Speed in sand while weather is active",
+            "ABILITY_SAND_RUSH": "2x Speed in sand plus sandstorm chip-damage immunity",
             "ABILITY_SLUSH_RUSH": "2x Speed in hail while weather is active",
             "ABILITY_TOUGH_CLAWS": "1.3x base power for contact moves",
             "ABILITY_MERCILESS": "guaranteed critical hit against poisoned targets, subject to anti-critical protections",
