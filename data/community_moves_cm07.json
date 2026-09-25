@@ -1,0 +1,660 @@
+{
+  "schema_version": 1,
+  "lane": "community_imports",
+  "start_id": 1201,
+  "batch": "CM07_CANONICAL_TYPE_RESOLUTION",
+  "policy": "Only canonical Pokémon types are permitted in Mercury Redux.",
+  "moves": [
+    {
+      "id": 1201,
+      "token": "MOVE_DRUMBEAT",
+      "name": "Drum Beat",
+      "type": "TYPE_NORMAL",
+      "class": "CLASS_PHYSICAL",
+      "power": 45,
+      "accuracy": 100,
+      "pp": 25,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user slams the foe\\n",
+        "with its body, creating a\\n",
+        "powerful booming impact."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "strength"
+      },
+      "traits": [
+        "sound"
+      ],
+      "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Normal"
+    },
+    {
+      "id": 1202,
+      "token": "MOVE_BEATDROP",
+      "name": "Beat Drop",
+      "type": "TYPE_NORMAL",
+      "class": "CLASS_PHYSICAL",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_ADJACENT_OPPONENTS",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user slams the ground\\n",
+        "with a deafening impact\\n",
+        "that strikes both foes."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "earthquake"
+      },
+      "traits": [
+        "sound"
+      ],
+      "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Normal"
+    },
+    {
+      "id": 1203,
+      "token": "MOVE_STRIDENTSPARK",
+      "name": "Strident Spark",
+      "type": "TYPE_ELECTRIC",
+      "class": "CLASS_PHYSICAL",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user punches through\\n",
+        "the sound barrier with an\\n",
+        "electrifying impact."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "thunder_punch"
+      },
+      "traits": [
+        "punching"
+      ],
+      "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Electric; Sound-type matchup rider removed"
+    },
+    {
+      "id": 1204,
+      "token": "MOVE_RHYTHMICCOMBO",
+      "name": "Rhythmic Combo",
+      "type": "TYPE_FIGHTING",
+      "class": "CLASS_PHYSICAL",
+      "power": 20,
+      "accuracy": 90,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT_THREE_TIMES",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "A rhythmic combo strikes\\n",
+        "three times, growing more\\n",
+        "powerful with each hit."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "triple_kick"
+      },
+      "traits": [
+        "combo"
+      ],
+      "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Fighting"
+    },
+    {
+      "id": 1205,
+      "token": "MOVE_INSTANTWHISTLE",
+      "name": "Instant Whistle",
+      "type": "TYPE_NORMAL",
+      "class": "CLASS_STATUS",
+      "power": 0,
+      "accuracy": 0,
+      "pp": 20,
+      "effect": {
+        "type": "BATTLE_EFFECT_MAKE_GLOBAL_TARGET",
+        "chance": 0
+      },
+      "range": "RANGE_USER",
+      "priority": 2,
+      "flags": [],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_CUTE"
+      },
+      "description": [
+        "A sudden whistle draws\\n",
+        "attention, redirecting foes’\\n",
+        "moves toward the user."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "follow_me"
+      },
+      "traits": [
+        "sound"
+      ],
+      "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Normal"
+    },
+    {
+      "id": 1206,
+      "token": "MOVE_DISCORDANTSHRIEK",
+      "name": "Discordant Shriek",
+      "type": "TYPE_GHOST",
+      "class": "CLASS_SPECIAL",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_CONTINUE_AND_CONFUSE_SELF",
+        "chance": 0
+      },
+      "range": "RANGE_RANDOM_OPPONENT",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "A chilling shriek attacks\\n",
+        "for two to three turns,\\n",
+        "then confuses the user."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "hyper_voice"
+      },
+      "traits": [
+        "sound"
+      ],
+      "provenance": "Pokemon Vanguard source metadata; Mercury retype Sound -> Ghost"
+    },
+    {
+      "id": 1207,
+      "token": "MOVE_ATOMICPUNCH",
+      "name": "Atomic Punch",
+      "type": "TYPE_POISON",
+      "class": "CLASS_PHYSICAL",
+      "power": 80,
+      "accuracy": 95,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_PARALYZE_HIT",
+        "chance": 15
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "A radiation-charged punch\\n",
+        "hits the target and may\\n",
+        "leave it paralyzed."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "poison_jab"
+      },
+      "traits": [
+        "punching"
+      ],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
+    },
+    {
+      "id": 1208,
+      "token": "MOVE_NUCLEARWASTE",
+      "name": "Nuclear Waste",
+      "type": "TYPE_POISON",
+      "class": "CLASS_STATUS",
+      "power": 0,
+      "accuracy": 85,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_STATUS_BADLY_POISON",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MAGIC_COAT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "Toxic radioactive sludge\\n",
+        "badly poisons the target,\\n",
+        "worsening every turn."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "toxic"
+      },
+      "traits": [],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
+    },
+    {
+      "id": 1209,
+      "token": "MOVE_GAMMARAY",
+      "name": "Gamma Ray",
+      "type": "TYPE_POISON",
+      "class": "CLASS_SPECIAL",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 30,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "A concentrated beam of\\n",
+        "radiation blasts the target."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "signal_beam"
+      },
+      "traits": [
+        "beam"
+      ],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison; Nuclear type-chart rider removed"
+    },
+    {
+      "id": 1210,
+      "token": "MOVE_RADIOACID",
+      "name": "Radioacid",
+      "type": "TYPE_POISON",
+      "class": "CLASS_SPECIAL",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_BURN_HIT",
+        "chance": 30
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "Radioactive acid blasts\\n",
+        "the target and may leave\\n",
+        "it with a burn."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "sludge_bomb"
+      },
+      "traits": [],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
+    },
+    {
+      "id": 1211,
+      "token": "MOVE_HALFLIFE",
+      "name": "Half-life",
+      "type": "TYPE_POISON",
+      "class": "CLASS_SPECIAL",
+      "power": 1,
+      "accuracy": 90,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_HALVE_HP",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "A radioactive pulse cuts\\n",
+        "the target’s current HP\\n",
+        "in half."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "super_fang"
+      },
+      "traits": [],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
+    },
+    {
+      "id": 1212,
+      "token": "MOVE_FISSIONBURST",
+      "name": "Fission Burst",
+      "type": "TYPE_POISON",
+      "class": "CLASS_PHYSICAL",
+      "power": 150,
+      "accuracy": 100,
+      "pp": 5,
+      "effect": {
+        "type": "BATTLE_EFFECT_HALVE_DEFENSE",
+        "chance": 0
+      },
+      "range": "RANGE_ALL_ADJACENT",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "The user erupts in a\\n",
+        "radioactive blast, striking\\n",
+        "nearby Pokémon and fainting."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "explosion"
+      },
+      "traits": [],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
+    },
+    {
+      "id": 1213,
+      "token": "MOVE_NUCLEARSLASH",
+      "name": "Nuclear Slash",
+      "type": "TYPE_POISON",
+      "class": "CLASS_PHYSICAL",
+      "power": 55,
+      "accuracy": 90,
+      "pp": 20,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIGH_CRITICAL",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "A radioactive slash cuts\\n",
+        "the target. Critical hits\\n",
+        "land more easily."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "slash"
+      },
+      "traits": [
+        "blade"
+      ],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
+    },
+    {
+      "id": 1214,
+      "token": "MOVE_PROTONBEAM",
+      "name": "Proton Beam",
+      "type": "TYPE_POISON",
+      "class": "CLASS_SPECIAL",
+      "power": 100,
+      "accuracy": 90,
+      "pp": 5,
+      "effect": {
+        "type": "BATTLE_EFFECT_USER_SP_ATK_DOWN_2",
+        "chance": 100
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_BEAUTY"
+      },
+      "description": [
+        "A proton beam attacks at\\n",
+        "full power, then sharply\\n",
+        "lowers the user’s Sp. Atk."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "flash_cannon"
+      },
+      "traits": [
+        "beam"
+      ],
+      "provenance": "Pokemon Uranium 1.3.1 metadata; Mercury retype Nuclear -> Poison"
+    },
+    {
+      "id": 1215,
+      "token": "MOVE_CRYSTALRUSH",
+      "name": "Crystal Rush",
+      "type": "TYPE_ROCK",
+      "class": "CLASS_PHYSICAL",
+      "power": 45,
+      "accuracy": 100,
+      "pp": 30,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 1,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user rushes forward\\n",
+        "with crystallized force.\\n",
+        "This move usually goes first."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "rock_slide"
+      },
+      "traits": [],
+      "provenance": "Pokemon Insurgence community metadata; Mercury retype Crystal -> Rock"
+    },
+    {
+      "id": 1216,
+      "token": "MOVE_ANATTACK",
+      "name": "An Attack",
+      "type": "TYPE_NORMAL",
+      "class": "CLASS_PHYSICAL",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 5,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "A straightforward but very\\n",
+        "powerful physical attack."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "strength"
+      },
+      "traits": [],
+      "provenance": "Clovermon Showdown metadata; Mercury retype ??? -> Normal"
+    },
+    {
+      "id": 1217,
+      "token": "MOVE_MEME",
+      "name": "Meme",
+      "type": "TYPE_NORMAL",
+      "class": "CLASS_SPECIAL",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 5,
+      "effect": {
+        "type": "BATTLE_EFFECT_RAISE_ALL_STATS_HIT",
+        "chance": 10
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_CUTE"
+      },
+      "description": [
+        "A bizarre attack that may\\n",
+        "raise all of the user’s\\n",
+        "stats at once."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "ancient_power"
+      },
+      "traits": [],
+      "provenance": "Clovermon Showdown metadata; Mercury retype ??? -> Normal"
+    },
+    {
+      "id": 1218,
+      "token": "MOVE_PATRONAJE",
+      "name": "Patterning",
+      "type": "TYPE_DARK",
+      "class": "CLASS_STATUS",
+      "power": 0,
+      "accuracy": 0,
+      "pp": 30,
+      "effect": {
+        "type": "BATTLE_EFFECT_CRIT_UP_2",
+        "chance": 0
+      },
+      "range": "RANGE_USER",
+      "priority": 0,
+      "flags": [],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "The user focuses on a\\n",
+        "shadowy pattern, raising\\n",
+        "its critical-hit ratio."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "focus_energy"
+      },
+      "traits": [],
+      "provenance": "Armonia source metadata; Mercury retype Shadow -> Dark and self-target normalization"
+    }
+  ]
+}
