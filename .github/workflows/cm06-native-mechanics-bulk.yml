@@ -12,6 +12,7 @@ on:
       - "data/community_moves_cm03.json"
       - "data/community_moves_cm04.json"
       - "data/community_moves_cm05.json"
+      - "data/community_move_canonical_type_resolutions.json"
       - ".github/workflows/cm06-native-mechanics-bulk.yml"
 
 permissions:
@@ -151,6 +152,24 @@ jobs:
           test "$first" = "1048"
           test "$last" -le 1599
           test "$(( selected + deferred + 24 ))" = "519"
+          test "$(jq -r '.canonical_type_resolutions_available' cm06-native-selection.json)" = "32"
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          batch = json.loads(Path("cm06-native-bulk.json").read_text())
+          canonical = {
+              "TYPE_NORMAL", "TYPE_FIRE", "TYPE_WATER", "TYPE_ELECTRIC",
+              "TYPE_GRASS", "TYPE_ICE", "TYPE_FIGHTING", "TYPE_POISON",
+              "TYPE_GROUND", "TYPE_FLYING", "TYPE_PSYCHIC", "TYPE_BUG",
+              "TYPE_ROCK", "TYPE_GHOST", "TYPE_DRAGON", "TYPE_DARK",
+              "TYPE_STEEL", "TYPE_FAIRY",
+          }
+          bad = [(m["token"], m["type"]) for m in batch["moves"] if m["type"] not in canonical]
+          assert not bad, bad
+          print("Canonical type gate: PASS")
+          PY
 
           echo "Selected $selected no-new-mechanics moves; deferred $deferred for later mechanics review."
 
@@ -333,5 +352,7 @@ jobs:
             echo "- Total live community moves: $((24 + selected))"
             echo "- Last live community move ID: $last"
             echo "- Deferred for mechanics review: $deferred"
+            echo "- All 32 source-library custom-type moves have canonical Mercury type resolutions"
+            echo "- Canonical type overrides used in this native sweep: $(jq -r '.canonical_type_overrides_applied' cm06-native-selection.json)"
             echo "- Full native Platinum ROM build + representative battle runtime proof required"
           } >> "$GITHUB_STEP_SUMMARY"
