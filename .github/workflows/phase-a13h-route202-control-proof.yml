@@ -1,0 +1,146 @@
+name: PHASE-A13H Route 202 Control Proof
+
+on:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a13h-route202-control-proof.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download completed Route 202 tutorial checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a13g-route202-control
+          path: checkpoint
+          run-id: 36150353863
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a13h-venv"
+          . "$RUNNER_TEMP/phase-a13h-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Prove field control returned after tutorial
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a13h-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E
+          Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a13g-route202-control.dst")
+          out=Path("phase-a13h")
+          out.mkdir(exist_ok=True)
+
+          emu=DeSmuME()
+          emu.open(str(rom))
+          emu.savestate.load_file(str(state))
+          frame=0
+          captures=[]
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False)
+                  frame+=1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A13H stopped at {frame}")
+
+          def xy():
+              return (
+                  emu.memory.unsigned.read_short(X),
+                  emu.memory.unsigned.read_short(Z),
+              )
+
+          def pulse(key,held=10,settle=500):
+              m=keymask(key)
+              emu.input.keypad_add_key(m)
+              run(held)
+              emu.input.keypad_rm_key(m)
+              run(settle)
+
+          def snap(label):
+              name=f"{len(captures):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              captures.append({"stage":label,"frame":frame,"file":name,"xy":xy()})
+
+          run(180)
+          snap("post-tutorial-resume")
+          start=xy()
+
+          attempts=[]
+          for name,key in (
+              ("right",Keys.KEY_RIGHT),
+              ("down",Keys.KEY_DOWN),
+              ("left",Keys.KEY_LEFT),
+              ("up",Keys.KEY_UP),
+          ):
+              before=xy()
+              pulse(key)
+              after=xy()
+              attempts.append({"direction":name,"before":before,"after":after})
+              snap(f"control-{name}")
+              if after!=before:
+                  break
+
+          if not any(a["after"]!=a["before"] for a in attempts):
+              raise SystemExit("Field control did not produce movement in any cardinal direction")
+
+          run(600)
+          snap("route202-control-confirmed")
+          final=out/"phase-a13h-route202-control-confirmed.dst"
+          emu.savestate.save_file(str(final))
+
+          (out/"phase-a13h-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A13H_ROUTE202_CONTROL_PROOF",
+              "source_run":36150353863,
+              "source_state":state.name,
+              "start_xy":start,
+              "attempts":attempts,
+              "final_xy":xy(),
+              "output_state":final.name,
+              "captures":captures,
+              "result":"PASS",
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A13H evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a13h-route202-control-proof
+          path: phase-a13h/
+          if-no-files-found: error
+          retention-days: 30
