@@ -88,11 +88,12 @@ def build_extra_table(
     registry: list[str],
     donor: dict[str, object],
     implemented: set[str],
-) -> tuple[list[int], list[str], dict[str, object]]:
+) -> tuple[list[int], list[str], list[int], dict[str, object]]:
     # Index 0 is unused.  offset[species] is the start and
     # offset[species + 1] is the end for canonical species IDs 1..1025.
     offsets = [0]
     flat: list[str] = []
+    flat_sources: list[int] = []
     missing_species: list[str] = []
     filtered: dict[str, list[str]] = {}
     per_category = {"EggMoves": 0, "MachineMoves": 0, "TutorMoves": 0}
@@ -108,6 +109,11 @@ def build_extra_table(
             missing_species.append(species)
             source = {}
 
+        source_code = {
+            "EggMoves": 1,
+            "MachineMoves": 3,
+            "TutorMoves": 2,
+        }
         for category in ("EggMoves", "MachineMoves", "TutorMoves"):
             accepted_here = 0
             for move in iter_move_names(source.get(category, [])):
@@ -120,6 +126,7 @@ def build_extra_table(
                     continue
                 seen.add(move)
                 extras.append(move)
+                flat_sources.append(source_code[category])
                 accepted_here += 1
             per_category[category] += accepted_here
 
@@ -145,10 +152,12 @@ def build_extra_table(
         "max_extra_pool": max_pool,
         "unsupported_extra_moves_by_species": filtered,
     }
-    return offsets, flat, report
+    if len(flat_sources) != len(flat):
+        raise SystemExit("Move Learner source table length mismatch")
+    return offsets, flat, flat_sources, report
 
 
-def write_generated_header(path: Path, offsets: list[int], flat: list[str]) -> None:
+def write_generated_header(path: Path, offsets: list[int], flat: list[str], flat_sources: list[int]) -> None:
     lines = [
         "#ifndef POKEPLATINUM_GENERATED_MERCURY_MOVE_LEARNER_H",
         "#define POKEPLATINUM_GENERATED_MERCURY_MOVE_LEARNER_H",
@@ -156,6 +165,13 @@ def write_generated_header(path: Path, offsets: list[int], flat: list[str]) -> N
         '#include "generated/moves.h"',
         "",
         f"#define MERCURY_MOVE_LEARNER_SPECIES_MAX {MAX_SPECIES}",
+        "",
+        "enum MercuryMoveLearnerSource {",
+        "    MERCURY_MOVE_SOURCE_LEVEL = 0,",
+        "    MERCURY_MOVE_SOURCE_EGG = 1,",
+        "    MERCURY_MOVE_SOURCE_TUTOR = 2,",
+        "    MERCURY_MOVE_SOURCE_SPECIAL = 3,",
+        "};",
         "",
         "static const u32 sMercuryMoveLearnerExtraOffsets[MERCURY_MOVE_LEARNER_SPECIES_MAX + 2] = {",
     ]
@@ -174,6 +190,16 @@ def write_generated_header(path: Path, offsets: list[int], flat: list[str]) -> N
     lines += [
         "};",
         "",
+        "static const u8 sMercuryMoveLearnerExtraSources[] = {",
+    ]
+    if flat_sources:
+        for i in range(0, len(flat_sources), 24):
+            lines.append("    " + ", ".join(str(v) for v in flat_sources[i:i + 24]) + ",")
+    else:
+        lines.append("    MERCURY_MOVE_SOURCE_SPECIAL,")
+    lines += [
+        "};",
+        "",
         "#endif // POKEPLATINUM_GENERATED_MERCURY_MOVE_LEARNER_H",
         "",
     ]
@@ -188,8 +214,9 @@ def patch_move_backend(root: Path) -> None:
     insert_once(
         header,
         '#include "trainer_info.h"\n',
-        f"\n#define MERCURY_MOVE_LEARNER_MAX_MOVES {MAX_POOL}\n",
-        "Move Learner pool-size declaration",
+        f"\n#define MERCURY_MOVE_LEARNER_MAX_MOVES {MAX_POOL}\n"
+        "u8 MoveReminderData_GetMoveSource(Pokemon *mon, u16 move);\n",
+        "Move Learner pool-size/source declaration",
     )
 
     text = source.read_text()
@@ -295,7 +322,51 @@ u16 *MoveReminderData_GetMoves(Pokemon *mon, enum HeapID heapID)
     return learnerMoves;
 }
 '''
-    source.write_text(text[:start] + replacement + text[end:])
+    text = text[:start] + replacement + text[end:]
+    source.write_text(text)
+
+    source_accessor = r'''
+u8 MoveReminderData_GetMoveSource(Pokemon *mon, u16 move)
+{
+    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+    u8 form = Pokemon_GetValue(mon, MON_DATA_FORM, NULL);
+    u8 level = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
+
+    SpeciesLearnsetEntry *levelUpMoves = Heap_Alloc(
+        HEAP_ID_FIELD1,
+        sizeof(SpeciesLearnset));
+    Pokemon_LoadLevelUpMovesOf(species, form, levelUpMoves);
+
+    for (u16 i = 0; i < MAX_LEARNSET_ENTRIES + 1; i++) {
+        if (LEARNSET_ENTRY_IS_SENTINEL(levelUpMoves[i])) {
+            break;
+        }
+        if (levelUpMoves[i].level <= level && levelUpMoves[i].move == move) {
+            Heap_Free(levelUpMoves);
+            return MERCURY_MOVE_SOURCE_LEVEL;
+        }
+    }
+    Heap_Free(levelUpMoves);
+
+    if (species > SPECIES_NONE && species <= MERCURY_MOVE_LEARNER_SPECIES_MAX) {
+        u32 begin = sMercuryMoveLearnerExtraOffsets[species];
+        u32 finish = sMercuryMoveLearnerExtraOffsets[species + 1];
+
+        for (u32 i = begin; i < finish; i++) {
+            if (sMercuryMoveLearnerExtraMoves[i] == move) {
+                return sMercuryMoveLearnerExtraSources[i];
+            }
+        }
+    }
+
+    return MERCURY_MOVE_SOURCE_SPECIAL;
+}
+'''
+    text = source.read_text()
+    insert_at = text.find("\nBOOL MoveReminderData_HasMoves")
+    if insert_at < 0:
+        raise SystemExit("could not locate MoveReminderData_HasMoves for source accessor")
+    source.write_text(text[:insert_at] + "\n" + source_accessor + text[insert_at:])
 
 
 def patch_move_ui(root: Path) -> None:
@@ -680,7 +751,7 @@ def main() -> None:
     donor = json.loads(donor_path.read_text())
 
     offsets, flat, table_report = build_extra_table(registry, donor, implemented)
-    write_generated_header(root / "generated/mercury_move_learner.h", offsets, flat)
+    write_generated_header(root / "generated/mercury_move_learner.h", offsets, flat, flat_sources)
     patch_move_backend(root)
     patch_move_ui(root)
     patch_free_pastoria_entry(root)
