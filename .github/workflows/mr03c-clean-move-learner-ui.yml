@@ -156,7 +156,11 @@ jobs:
             --report mr03c-party-entry.json
 
           grep -q 'MoveReminderData_GetMoveSource' vendor/pokeplatinum/src/move_reminder_data.c
-          grep -q 'sMercuryMoveLearnerExtraSources' vendor/pokeplatinum/generated/mercury_move_learner.h
+          grep -q 'MERCURY_MOVE_LEARNER_SOURCE_SHIFT 14' vendor/pokeplatinum/generated/mercury_move_learner.h
+          if grep -q 'sMercuryMoveLearnerExtraSources' vendor/pokeplatinum/generated/mercury_move_learner.h; then
+            echo "MR03C source metadata expanded into a separate RAM table" >&2
+            exit 1
+          fi
 
       - name: Install clean MR03C UI
         shell: bash
