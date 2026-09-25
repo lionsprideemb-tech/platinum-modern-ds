@@ -409,12 +409,12 @@ def main() -> None:
         "missing_base_exp": [],
         "unsupported_abilities": [],
         "unsupported_items": [],
+        "missing_cries": [],
         "deferred": {
             "learnsets": "temporary Tackle-only compatibility data until modern move import",
             "evolutions": "deferred to evolution-method import",
             "offspring": "temporarily self; breeding lineage import follows",
             "footprints": "native NONE footprint with footprint.has false",
-            "cries": "native Mew cry placeholder until modern cry import",
             "localized_dex_text": "English compatibility text mirrored to all languages",
         },
     }
@@ -467,8 +467,20 @@ def main() -> None:
             copy_sprite(female_back, dest / "female_back.png")
         shutil.copy2(icon, dest / "icon.png")
         shutil.copy2(pt / "res/pokemon/none/footprint.png", dest / "footprint.png")
+
+        # HG-Engine carries canonical cries as National Dex numbered WAV files.
+        # Keep Platinum's cry metadata format, but use the real modern waveform
+        # wherever the donor contains one. A missing donor cry is explicit and
+        # falls back safely instead of failing the whole bulk species pass.
+        donor_cry = hg / "sound/cries" / f"{dex:03d}.wav"
         shutil.copy2(pt / "res/pokemon/mew/cry.txt", dest / "cry.txt")
-        shutil.copy2(pt / "res/pokemon/mew/cry.wav", dest / "cry.wav")
+        if donor_cry.is_file() and donor_cry.stat().st_size:
+            shutil.copy2(donor_cry, dest / "cry.wav")
+        else:
+            exceptions["missing_cries"].append(
+                {"species": species_const, "dex": dex}
+            )
+            shutil.copy2(pt / "res/pokemon/mew/cry.wav", dest / "cry.wav")
 
         normal_source = male_front or female_front
         shiny_source = male_back or female_back
@@ -550,6 +562,7 @@ def main() -> None:
         "installed_species": report["installed_species"],
         "base_exp_clamped": len(exceptions["clamped_base_exp"]),
         "ability_fallbacks": len(exceptions["unsupported_abilities"]),
+        "missing_cries": len(exceptions["missing_cries"]),
         "item_fallbacks": len(exceptions["unsupported_items"]),
         "status": report["status"],
     }, indent=2))
