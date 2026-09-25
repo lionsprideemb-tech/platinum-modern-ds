@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "lane": "community_imports",
+  "start_id": 1276,
+  "batch": "CM08_SIMPLE_ELECTRIC_MECHANICS",
+  "policy": "First custom-mechanics extension uses small, deterministic battle-script-only effects that directly expand physical Electric move variety without adding a new status, type, weather, or field system.",
+  "moves": [
+    {
+      "id": 1276,
+      "token": "MOVE_LIGHTNING_STRIKE",
+      "name": "Lightning Strike",
+      "type": "TYPE_ELECTRIC",
+      "class": "CLASS_PHYSICAL",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 20,
+      "effect": {
+        "type": "BATTLE_EFFECT_RAISE_SPEED_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "Strikes with lightning. It may\n",
+        "raise the user's Speed."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "thunder_punch",
+        "selection_basis": "provisional-native-platinum-baseline",
+        "provisional_visual": true
+      },
+      "traits": [
+        "physical-electric",
+        "speed-boost",
+        "arrow",
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7",
+      "mechanics_basis": "CM08 battle-script effect: damage with 20% user Speed +1"
+    },
+    {
+      "id": 1277,
+      "token": "MOVE_VOLT_BOLT",
+      "name": "Volt Bolt",
+      "type": "TYPE_ELECTRIC",
+      "class": "CLASS_PHYSICAL",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 20,
+      "effect": {
+        "type": "BATTLE_EFFECT_DOUBLE_POWER_IF_TARGET_PARALYZED",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "A charged bolt that doubles in\n",
+        "power if the target is paralyzed."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "volt_tackle",
+        "selection_basis": "source-native-platinum-reference",
+        "provisional_visual": false
+      },
+      "traits": [
+        "physical-electric",
+        "status-payoff",
+        "arrow"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7",
+      "mechanics_basis": "CM08 battle-script effect: 2x power while target is paralyzed"
+    }
+  ]
+}
