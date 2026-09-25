@@ -79,13 +79,15 @@ def patch_ui(root: Path) -> None:
     # window cannot collide with Platinum's message-box tile storage.
     replace_once(
         source,
-        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_2, &bgMain2, BG_TYPE_STATIC);
-    Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_2);
+        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_SUB_0, &bgSub0, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_SUB_0);
 
     Bg_ClearTilesRange(BG_LAYER_MAIN_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+    Bg_ClearTilesRange(BG_LAYER_SUB_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+    GXLayers_EngineBToggleLayers(GX_PLANEMASK_BG0, TRUE);
 }""",
-        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_2, &bgMain2, BG_TYPE_STATIC);
-    Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_2);
+        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_SUB_0, &bgSub0, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_SUB_0);
 
     BgTemplate bgMain3 = {
         .x = 0,
@@ -104,18 +106,24 @@ def patch_ui(root: Path) -> None:
 
     Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_3, &bgMain3, BG_TYPE_STATIC);
     Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_3);
-    Bg_ClearTilesRange(BG_LAYER_MAIN_3, 32, 0, HEAP_ID_MOVE_REMINDER);
-    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG3, TRUE);
 
     Bg_ClearTilesRange(BG_LAYER_MAIN_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+    Bg_ClearTilesRange(BG_LAYER_MAIN_3, 32, 0, HEAP_ID_MOVE_REMINDER);
+    Bg_ClearTilesRange(BG_LAYER_SUB_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG3, TRUE);
+    GXLayers_EngineBToggleLayers(GX_PLANEMASK_BG0, TRUE);
 }""",
         "MR03C dedicated top BG",
     )
 
     replace_once(
         source,
-        """    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);""",
-        """    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG3, FALSE);
+        """    GXLayers_EngineBToggleLayers(GX_PLANEMASK_BG0, FALSE);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_SUB_0);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);""",
+        """    GXLayers_EngineBToggleLayers(GX_PLANEMASK_BG0, FALSE);
+    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG3, FALSE);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_SUB_0);
     Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_3);
     Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);""",
         "MR03C dedicated top BG teardown",
