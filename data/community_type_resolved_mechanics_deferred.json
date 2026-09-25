@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "policy": "All source custom types are already resolved to canonical Mercury types. These moves remain deferred only because their battle mechanics still need a separate decision/implementation.",
+  "deferred": [
+    {
+      "source_token": "HEARTBEAT",
+      "name": "Heart Beat",
+      "source_type": "Sound",
+      "mercury_type": "Normal",
+      "reason": "2-5 hits plus user Speed +1 and Sp. Def -1 after the sequence"
+    },
+    {
+      "source_token": "AUDIOBREAK",
+      "name": "Audio Break",
+      "source_type": "Sound",
+      "mercury_type": "Fighting",
+      "reason": "damaging screen break plus disables the target's sound moves"
+    },
+    {
+      "source_token": "UNLEASHEDPOWER",
+      "name": "Unleashed Power",
+      "source_type": "Qmarks",
+      "mercury_type": "Normal",
+      "reason": "dynamic Hidden Power typing, dynamic Physical/Special category, screen removal, and source zero-PP/Z-move behavior"
+    },
+    {
+      "source_token": "BLINDINGSPEED",
+      "name": "Blinding Speed",
+      "source_type": "Qmarks",
+      "mercury_type": "Normal",
+      "reason": "dynamic user typing/category plus ally After You-style turn manipulation"
+    },
+    {
+      "source_token": "DOMAINSHIFT",
+      "name": "Domain Shift",
+      "source_type": "Qmarks",
+      "mercury_type": "Psychic",
+      "reason": "random route-dependent field replacement"
+    },
+    {
+      "source_token": "TITANSWRATH",
+      "name": "Titan's Wrath",
+      "source_type": "Qmarks",
+      "mercury_type": "Normal",
+      "reason": "damage uses user's highest non-HP stat and move type changes to user's type"
+    },
+    {
+      "source_token": "QUESOBLAST",
+      "name": "Queso Blast",
+      "source_type": "Qmarks",
+      "mercury_type": "Fire",
+      "reason": "3-5-hit pattern is not a native Platinum multi-hit distribution"
+    },
+    {
+      "source_token": "HARDDRIVECRASH",
+      "name": "Hard Drive Crash",
+      "source_type": "Qmarks",
+      "mercury_type": "Electric",
+      "reason": "damaging attack that removes 3 PP from the target's last move"
+    },
+    {
+      "source_token": "BOOMINSTALL",
+      "name": "Virus Inject",
+      "source_type": "Qmarks",
+      "mercury_type": "Poison",
+      "reason": "custom debuff that increases all damage taken by 25%"
+    },
+    {
+      "source_token": "CHTHONICMALADY",
+      "name": "Chthonic Malady",
+      "source_type": "Shadow",
+      "mercury_type": "Ghost",
+      "reason": "combined -2 Attack/-2 Sp. Atk, Torment timer, Petrification, and protection bypass"
+    },
+    {
+      "source_token": "EXPUNGE",
+      "name": "Expunge",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "reason": "Nuclear-target bonus is removed, but Fallout-specific accuracy behavior still needs a decision"
+    },
+    {
+      "source_token": "FALLOUT",
+      "name": "Fallout",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "reason": "custom five-turn Fallout field/weather effect must be redesigned now that Nuclear typing is removed"
+    },
+    {
+      "source_token": "QUANTUMLEAP",
+      "name": "Quantum Leap",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "reason": "two-turn vanish/invulnerability behavior needs an exact Platinum-state mapping"
+    },
+    {
+      "source_token": "NUCLEARWIND",
+      "name": "Nuclear Wind",
+      "source_type": "Nuclear",
+      "mercury_type": "Poison",
+      "reason": "chance to create Fallout remains a custom field mechanic with conflicting source percentages"
+    }
+  ]
+}
