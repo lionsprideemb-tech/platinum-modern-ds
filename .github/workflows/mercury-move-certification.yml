@@ -1,0 +1,356 @@
+name: Mercury Move Certification
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+    paths:
+      - "data/community_move_certification_request.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mercury-move-certification-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+  COMMUNITY_SOURCE_COMMIT: 4250c4bfbb2e8dddd117160cec9e1e8395dfe9f7
+
+jobs:
+  certify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Validate certification request
+        shell: bash
+        run: |
+          set -euo pipefail
+          REQUEST=data/community_move_certification_request.json
+          jq -e '.schema_version == 1' "$REQUEST" >/dev/null
+          jq -e '.batch_file | type == "string" and length > 0' "$REQUEST" >/dev/null
+          jq -e '.preview_move | test("^MOVE_[A-Z0-9_]+$")' "$REQUEST" >/dev/null
+          jq -e '.preview_id | type == "number"' "$REQUEST" >/dev/null
+          jq -e '.expected_last_id | type == "number"' "$REQUEST" >/dev/null
+          jq -e '.expected_total_community_moves | type == "number"' "$REQUEST" >/dev/null
+          batch_file="$(jq -r '.batch_file' "$REQUEST")"
+          test -f "$batch_file"
+          test "$(jq -r '.moves[-1].id' "$batch_file")" = "$(jq -r '.expected_last_id' "$REQUEST")"
+          test "$(jq -r --arg move "$(jq -r '.preview_move' "$REQUEST")" '.moves[] | select(.token == $move) | .id' "$batch_file")" = "$(jq -r '.preview_id' "$REQUEST")"
+          echo "Certification request validation: PASS"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core ffmpeg
+
+      - name: Checkout pinned Platinum, HG-Engine, and community library
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+          git clone https://github.com/lionsprideemb-tech/Pokemon-moves.git vendor/community-moves
+          git -C vendor/community-moves checkout "$COMMUNITY_SOURCE_COMMIT"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Rebuild complete 1025-species layer
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report certification-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --gate "MOVE_CERT_${tag}_RESOURCE_INSTALL" \
+              --report "certification-${tag}.json"
+          done <<'BATCHES'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          BATCHES
+
+      - name: Restore modern move foundation
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report certification-modern-moves.json \
+            --implemented-registry certification-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves certification-implemented-moves.txt \
+            --report certification-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report certification-evolutions.json
+
+      - name: Restore community move stack
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for batch in 01 02 03 04 05; do
+            python3 tools/install_cm01_community_moves.py \
+              vendor/pokeplatinum \
+              --batch "data/community_moves_cm${batch}.json" \
+              --report "certification-cm${batch}.json"
+          done
+
+          python3 tools/build_cm06_native_community_bulk.py \
+            vendor/community-moves \
+            vendor/pokeplatinum \
+            --mercury-root . \
+            --start-id 1048 \
+            --output certification-cm06.json \
+            --report certification-cm06-selection.json
+
+          test "$(jq -r '.selected_without_new_mechanics' certification-cm06-selection.json)" = "210"
+          test "$(jq -r '.last_id' certification-cm06-selection.json)" = "1257"
+
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch certification-cm06.json \
+            --report certification-cm06-install.json
+
+          python3 - <<'PY'
+          import re
+          import subprocess
+          from pathlib import Path
+
+          data = Path("data")
+          tools = Path("tools")
+          batches = []
+          for path in data.glob("community_moves_cm*.json"):
+              m = re.search(r"cm(\d+)\.json$", path.name)
+              if m and int(m.group(1)) >= 7:
+                  batches.append((int(m.group(1)), path))
+          batches.sort()
+
+          for number, batch_path in batches:
+              for installer in sorted(tools.glob(f"install_cm{number:02d}_*_effects.py")):
+                  subprocess.run([
+                      "python3", str(installer), "vendor/pokeplatinum",
+                      "--report", f"certification-cm{number:02d}-{installer.stem}-effects.json",
+                  ], check=True)
+
+              subprocess.run([
+                  "python3", "tools/install_cm01_community_moves.py",
+                  "vendor/pokeplatinum",
+                  "--batch", str(batch_path),
+                  "--report", f"certification-cm{number:02d}-install.json",
+              ], check=True)
+          PY
+
+      - name: Re-run installed preflight before full ROM
+        shell: bash
+        run: |
+          python3 tools/mercury_move_preflight.py \
+            . vendor/pokeplatinum \
+            --installed \
+            --report certification-preflight-installed.json
+
+          expected_last="$(jq -r '.expected_last_id' data/community_move_certification_request.json)"
+          expected_total="$(jq -r '.expected_total_community_moves' data/community_move_certification_request.json)"
+          test "$(tail -n 2 vendor/pokeplatinum/generated/moves.txt | head -n 1)" != "MAX_MOVES"
+          test "$(grep -n '^MAX_MOVES$' vendor/pokeplatinum/generated/moves.txt | cut -d: -f1)" = "$((expected_last + 2))"
+          actual_total="$((expected_last - 1024 + 1))"
+          test "$actual_total" = "$expected_total"
+          echo "Installed certification state: PASS"
+
+      - name: Install requested runtime proof
+        shell: bash
+        run: |
+          preview_move="$(jq -r '.preview_move' data/community_move_certification_request.json)"
+          preview_id="$(jq -r '.preview_id' data/community_move_certification_request.json)"
+
+          python3 tools/install_pt04c_runtime_harness.py \
+            vendor/pokeplatinum --report certification-base-party.json
+          python3 tools/install_pt04c_summary_harness.py \
+            vendor/pokeplatinum --report certification-base-summary.json
+          python3 tools/install_pt04c_pc_harness.py \
+            vendor/pokeplatinum --report certification-base-pc.json
+          python3 tools/install_pt04c_battle_harness.py \
+            vendor/pokeplatinum --report certification-base-battle.json
+
+          python3 tools/install_pt05d_animation_preview_harness.py \
+            vendor/pokeplatinum \
+            --move "$preview_move" \
+            --preview-id "cert_${preview_id}" \
+            --report certification-runtime-harness.json
+
+          grep -q "$preview_move" vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Build full native Platinum ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Run native DeSmuME proof
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/move-cert-venv"
+          . "$RUNNER_TEMP/move-cert-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          request = json.loads(Path('data/community_move_certification_request.json').read_text())
+          rom = Path('/var/tmp/pokeplatinum/pokeplatinum.us.nds')
+          out = Path('runtime-preview')
+          out.mkdir(exist_ok=True)
+          mp4 = out / 'mercury-move-certification.mp4'
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit('Certified native Platinum ROM did not boot')
+
+          fps = 15
+          sample_every = 4
+          proc = subprocess.Popen([
+              'ffmpeg', '-y', '-loglevel', 'error',
+              '-f', 'rawvideo', '-pix_fmt', 'rgb24',
+              '-s', '256x192', '-r', str(fps), '-i', '-',
+              '-an', '-c:v', 'libx264', '-preset', 'veryfast',
+              '-crf', '25', '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
+              str(mp4)
+          ], stdin=subprocess.PIPE)
+
+          current = 0
+          written = 0
+
+          def cycle(frames):
+              global current, written
+              for _ in range(frames):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f'emulator stopped at frame {current}')
+                  if current % sample_every == 0:
+                      image = emu.screenshot().crop((0, 0, 256, 192)).convert('RGB')
+                      proc.stdin.write(image.tobytes())
+                      written += 1
+
+          def pulse_a(held=20, settle=180):
+              emu.input.keypad_add_key(keymask(Keys.KEY_A))
+              cycle(held)
+              emu.input.keypad_rm_key(keymask(Keys.KEY_A))
+              cycle(settle)
+
+          try:
+              cycle(1500)
+              for _ in range(14):
+                  pulse_a()
+              cycle(800)
+              emu.screenshot().save(out / 'mercury-move-certification-final.png')
+          finally:
+              try:
+                  if proc.stdin is not None:
+                      proc.stdin.close()
+                  rc = proc.wait()
+                  if rc != 0:
+                      raise SystemExit(f'ffmpeg failed with exit code {rc}')
+              finally:
+                  emu.destroy()
+
+          if written < 100 or not mp4.exists() or mp4.stat().st_size < 10_000:
+              raise SystemExit('runtime video proof is incomplete')
+
+          meta = {
+              'gate': 'MERCURY_MOVE_CERTIFICATION',
+              'runtime': 'pokeplatinum',
+              'batch_file': request['batch_file'],
+              'preview_move': request['preview_move'],
+              'preview_id': request['preview_id'],
+              'expected_last_id': request['expected_last_id'],
+              'expected_total_community_moves': request['expected_total_community_moves'],
+              'captured_frames': written,
+              'emulator_cycles': current,
+              'mp4': mp4.name,
+              'mp4_bytes': mp4.stat().st_size,
+          }
+          (out / 'mercury-move-certification-meta.json').write_text(json.dumps(meta, indent=2) + '\n')
+          print(json.dumps(meta, indent=2))
+          PY
+
+      - name: Upload certification proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-move-certification-${{ github.run_id }}
+          path: |
+            data/community_move_certification_request.json
+            certification-preflight-installed.json
+            certification-runtime-harness.json
+            runtime-preview/mercury-move-certification.mp4
+            runtime-preview/mercury-move-certification-final.png
+            runtime-preview/mercury-move-certification-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Certification summary
+        shell: bash
+        run: |
+          {
+            echo "## Mercury move certification"
+            echo
+            echo "- Batch: $(jq -r '.batch_file' data/community_move_certification_request.json)"
+            echo "- Preview: $(jq -r '.preview_move' data/community_move_certification_request.json)"
+            echo "- Last community move ID: $(jq -r '.expected_last_id' data/community_move_certification_request.json)"
+            echo "- Total live community moves: $(jq -r '.expected_total_community_moves' data/community_move_certification_request.json)"
+            echo "- Full native Platinum build: PASS"
+            echo "- DeSmuME runtime proof: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
