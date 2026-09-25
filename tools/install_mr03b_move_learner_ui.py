@@ -582,12 +582,11 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
 }
 
 '''
-    insert_after_once(
-        source,
-        insertion_marker,
-        extra_functions,
-        "MR03B helper functions",
-    )
+    text = source.read_text()
+    if extra_functions.strip() not in text:
+        if text.count(insertion_marker) != 1:
+            raise SystemExit("MR03B helper insertion marker changed")
+        source.write_text(text.replace(insertion_marker, extra_functions + insertion_marker, 1))
 
     # Initialize the new architecture after the normal windows exist.
     replace_once(
@@ -599,7 +598,6 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
         """    MoveReminder_DrawLabelText(controller);
     MoveReminder_DrawSubInfo(controller);
     controller->mercuryPage = 0;
-    MoveReminder_DrawMercuryTopPage(controller);
 
     Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX], 15);""",
         "MR03B initial page draw",
