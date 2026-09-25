@@ -90,6 +90,7 @@ def patch_ui(root: Path) -> None:
     MOVE_REMINDER_WIN_SUB_INFO,
     MOVE_REMINDER_WIN_SUB_DESC,
     MOVE_REMINDER_WIN_SUB_HELP,
+    MOVE_REMINDER_WIN_TOP_MOVE_SIDE,
     MOVE_REMINDER_WIN_TOP_PAGE,
     MAX_MOVE_REMINDER_WIN
 };""",
@@ -115,6 +116,7 @@ def patch_ui(root: Path) -> None:
         source,
         decl_anchor,
         """static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controller, u32 move);
+static void MoveReminder_DrawTopMoveSideCard(MoveReminderController *controller);
 static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller);
 static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *controller, BOOL visible);
 """,
@@ -183,6 +185,15 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .height = 2,
         .palette = 15,
         .baseTile = 0x295,
+    },
+    [MOVE_REMINDER_WIN_TOP_MOVE_SIDE] = {
+        .bgLayer = BG_LAYER_MAIN_1,
+        .tilemapLeft = 21,
+        .tilemapTop = 3,
+        .width = 11,
+        .height = 14,
+        .palette = 15,
+        .baseTile = 0x20C,
     },
     [MOVE_REMINDER_WIN_TOP_PAGE] = {
         .bgLayer = BG_LAYER_MAIN_0,
@@ -405,7 +416,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         controller->string);
     Text_AddPrinterWithParamsAndColor(
         current, FONT_SYSTEM, controller->string,
-        4, 48, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+        4, 40, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
 
     MessageLoader_GetString(
         controller->messageLoader,
@@ -470,6 +481,59 @@ static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controll
     Window_ScheduleCopyToVRAM(window);
 }
 
+static void MoveReminder_DrawTopMoveSideCard(MoveReminderController *controller)
+{
+    Window *window = &controller->windows[MOVE_REMINDER_WIN_TOP_MOVE_SIDE];
+    Window_FillTilemap(window, 15);
+    Window_FillRectWithColor(window, 0, 0, 0, 88, 112);
+    Window_FillRectWithColor(window, 15, 2, 2, 84, 108);
+
+    Pokemon_GetValue(
+        controller->data->mon,
+        MON_DATA_NICKNAME_STRING,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        6, 4, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+
+    MercuryMoveLearner_PrintMessage(
+        controller, window,
+        MoveReminder_Text_MercuryLevel,
+        6, 20);
+    MercuryMoveLearner_PrintNumber(
+        controller, window,
+        Pokemon_GetValue(controller->data->mon, MON_DATA_LEVEL, NULL),
+        34, 20);
+
+    MercuryMoveLearner_PrintMessage(
+        controller, window,
+        MoveReminder_Text_MercuryKnownMoves,
+        6, 38);
+
+    MessageLoader *moveNames = MessageLoader_Init(
+        MSG_LOADER_PRELOAD_ENTIRE_BANK,
+        NARC_INDEX_MSGDATA__PL_MSG,
+        TEXT_BANK_MOVE_NAMES,
+        HEAP_ID_MOVE_REMINDER);
+
+    for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
+        u16 move = Pokemon_GetValue(
+            controller->data->mon,
+            MON_DATA_MOVE1 + i,
+            NULL);
+        if (move != MOVE_NONE) {
+            MessageLoader_GetString(moveNames, move, controller->string);
+            Text_AddPrinterWithParamsAndColor(
+                window, FONT_SYSTEM, controller->string,
+                6, 54 + (i * 14), TEXT_SPEED_NO_TRANSFER,
+                TEXT_COLOR(1, 2, 15), NULL);
+        }
+    }
+
+    MessageLoader_Free(moveNames);
+    Window_ScheduleCopyToVRAM(window);
+}
+
 static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *controller, BOOL visible)
 {
     if (!visible) {
@@ -483,12 +547,15 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
             controller->managedSprites[MOVE_REMINDER_SPRITE_CATEGORY],
             FALSE);
         MoveReminder_DrawTypeIcons(controller);
+        Window_ClearAndScheduleCopyToVRAM(
+            &controller->windows[MOVE_REMINDER_WIN_TOP_MOVE_SIDE]);
         return;
     }
 
     MoveReminder_DrawLabelText(controller);
     controller->data->showingContest = 0;
     MoveReminder_DrawMovesInfo(controller);
+    MoveReminder_DrawTopMoveSideCard(controller);
 }
 
 static void MercuryMoveLearner_PrintMessage(
@@ -648,7 +715,7 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
         MercuryMoveLearner_PrintMessage(
             controller, page,
             MoveReminder_Text_MercuryInnatesOff,
-            8, 98);
+            8, 90);
     }
 
     Window_ScheduleCopyToVRAM(page);
@@ -688,6 +755,7 @@ def patch_text(root: Path) -> None:
         "MoveReminder_Text_MercuryStatsTitle": "< L   STATS   R >",
         "MoveReminder_Text_MercuryAbilityTitle": "< L   ABILITY   R >",
         "MoveReminder_Text_MercuryInnatesOff": "INNATE ABILITIES: OFF",
+        "MoveReminder_Text_MercuryKnownMoves": "KNOWN MOVES",
         "MoveReminder_Text_MercuryLevel": "Lv.",
         "MoveReminder_Text_MercuryHP": "HP",
         "MoveReminder_Text_MercuryAtk": "ATK",
