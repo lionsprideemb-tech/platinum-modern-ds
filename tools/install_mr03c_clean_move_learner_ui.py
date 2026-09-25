@@ -161,7 +161,21 @@ def patch_ui(root: Path) -> None:
     u8 yesNoCallback;
     u8 mercuryPage;
     u8 mercuryFilter;
-} MoveReminderController;""",
+} MoveReminderController;
+
+enum {
+    MERCURY_PAGE_MOVE = 0,
+    MERCURY_PAGE_STATS,
+    MERCURY_PAGE_ABILITY,
+};
+
+enum {
+    MERCURY_FILTER_ALL = 0,
+    MERCURY_FILTER_LEVEL,
+    MERCURY_FILTER_EGG,
+    MERCURY_FILTER_TUTOR,
+    MERCURY_FILTER_SPECIAL,
+};""",
         "MR03C controller state",
     )
 
@@ -353,7 +367,7 @@ static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width
     # Extra metadata on each bottom list row.
     replace_function(
         source,
-        "static void MoveReminder_ListMenuPrintCallback(ListMenu *menu, u32 move, u8 yOffset)",
+        "static void MoveReminder_ListMenuPrintCallback(ListMenu *menu, u32 index, u8 yOffset)",
         r'''static void MoveReminder_ListMenuPrintCallback(ListMenu *menu, u32 move, u8 yOffset)
 {
     if (move == MENU_CANCEL) {
@@ -536,20 +550,6 @@ static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width
     )
 
     helpers = r'''
-enum {
-    MERCURY_PAGE_MOVE = 0,
-    MERCURY_PAGE_STATS,
-    MERCURY_PAGE_ABILITY,
-};
-
-enum {
-    MERCURY_FILTER_ALL = 0,
-    MERCURY_FILTER_LEVEL,
-    MERCURY_FILTER_EGG,
-    MERCURY_FILTER_TUTOR,
-    MERCURY_FILTER_SPECIAL,
-};
-
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height)
 {
     Window_FillRectWithColor(window, 1, x, y, width, 1);
