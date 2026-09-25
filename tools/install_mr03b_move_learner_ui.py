@@ -199,6 +199,40 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         "    .maxDisplay = 4,\n",
         "MR03B bottom list visible rows",
     )
+    replace_once(
+        source,
+        "    .cursorType = 1,\n",
+        "    .cursorType = 0,\n",
+        "MR03B bottom list native text cursor",
+    )
+
+    # The old move selector and scroll arrows are also engine-A sprites. The
+    # sub-screen ListMenu now draws its own native text cursor instead.
+    replace_function(
+        source,
+        "static void MoveReminder_DrawMoveSelector(MoveReminderController *controller, u8 cursorPos, u8 palette)",
+        r'''static void MoveReminder_DrawMoveSelector(MoveReminderController *controller, u8 cursorPos, u8 palette)
+{
+    ManagedSprite_SetDrawFlag(
+        controller->managedSprites[MOVE_REMINDER_SPRITE_MOVE_SELECTOR],
+        FALSE);
+}''',
+        "MR03B hide engine-A selector",
+    )
+    replace_function(
+        source,
+        "static void MoveReminder_DrawArrows(MoveReminderController *controller)",
+        r'''static void MoveReminder_DrawArrows(MoveReminderController *controller)
+{
+    ManagedSprite_SetDrawFlag(
+        controller->managedSprites[MOVE_REMINDER_SPRITE_SCROLL_ARROW_UP],
+        FALSE);
+    ManagedSprite_SetDrawFlag(
+        controller->managedSprites[MOVE_REMINDER_SPRITE_SCROLL_ARROW_DOWN],
+        FALSE);
+}''',
+        "MR03B hide engine-A scroll arrows",
+    )
 
     # The old row type sprites belong to engine A; with the list moved to the
     # sub screen they would float over the top screen. Keep only the selected
@@ -330,7 +364,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
             MON_DATA_MOVE1 + i,
             NULL);
 
-        if (move != MOVE_NONE) {
+        if (move != 0) {
             MessageLoader_GetString(moveNamesLoader, move, controller->string);
             Text_AddPrinterWithParamsAndColor(
                 current, FONT_SYSTEM, controller->string,
