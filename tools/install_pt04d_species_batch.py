@@ -103,6 +103,18 @@ def donor_dirname(species_const: str) -> str:
     return species_const.removeprefix("SPECIES_").lower()
 
 
+def parse_donor_species_ids(path: Path) -> dict[str, int]:
+    text = path.read_text()
+    return {
+        name: int(value)
+        for name, value in re.findall(
+            r"^#define\s+(SPECIES_[A-Z0-9_]+)\s+(\d+)\s*$",
+            text,
+            re.M,
+        )
+    }
+
+
 def existing_png(root: Path, gender: str, stem: str) -> Path | None:
     path = root / gender / f"{stem}.png"
     return path if path.is_file() and path.stat().st_size else None
@@ -386,6 +398,7 @@ def main() -> None:
 
     species_text = (hg / "data/Species.c").read_text()
     base_exp = parse_base_exp(hg / "data/BaseExperienceTable.c")
+    donor_species_ids = parse_donor_species_ids(hg / "include/constants/species.h")
     icon_palettes = parse_simple_index(hg / "data/IconPaletteTable.c")
     heights = parse_height_table(hg / "data/HeightTable.c")
     sprite_offsets_text = (hg / "data/SpriteOffsets.c").read_text()
@@ -472,13 +485,18 @@ def main() -> None:
         # Keep Platinum's cry metadata format, but use the real modern waveform
         # wherever the donor contains one. A missing donor cry is explicit and
         # falls back safely instead of failing the whole bulk species pass.
-        donor_cry = hg / "sound/cries" / f"{dex:03d}.wav"
+        donor_id = donor_species_ids.get(species_const)
+        donor_cry = (
+            hg / "sound/cries" / f"{donor_id:03d}.wav"
+            if donor_id is not None
+            else None
+        )
         shutil.copy2(pt / "res/pokemon/mew/cry.txt", dest / "cry.txt")
-        if donor_cry.is_file() and donor_cry.stat().st_size:
+        if donor_cry is not None and donor_cry.is_file() and donor_cry.stat().st_size:
             shutil.copy2(donor_cry, dest / "cry.wav")
         else:
             exceptions["missing_cries"].append(
-                {"species": species_const, "dex": dex}
+                {"species": species_const, "dex": dex, "donor_id": donor_id}
             )
             shutil.copy2(pt / "res/pokemon/mew/cry.wav", dest / "cry.wav")
 
