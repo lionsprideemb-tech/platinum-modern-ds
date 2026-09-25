@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "batch_file": "data/community_moves_cm10.json",
+  "preview_move": "MOVE_CHEAP_SHOT",
+  "preview_id": 1285,
+  "expected_last_id": 1285,
+  "expected_total_community_moves": 262,
+  "preflight_run_id": 36146852257,
+  "policy": "Certification requested only after the CM10 Mercury Move Preflight completed successfully."
+}
