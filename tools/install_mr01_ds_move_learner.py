@@ -539,6 +539,7 @@ def patch_party_menu_access(pt: Path) -> None:
 
     Menu_Free(application->contextMenu, NULL);
     StringList_Free(application->contextMenuChoices);
+
     *partyMenuState = PARTY_MENU_STATE_FADE_OUT;
 }
 """
@@ -549,6 +550,7 @@ static void PartyMenu_SelectMoveLearner(PartyMenuApplication *application, int *
 
     Menu_Free(application->contextMenu, NULL);
     StringList_Free(application->contextMenuChoices);
+
     *partyMenuState = PARTY_MENU_STATE_FADE_OUT;
 }
 """
