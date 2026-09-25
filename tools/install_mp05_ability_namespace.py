@@ -268,7 +268,7 @@ def patch_widths(pt: Path) -> list[str]:
 ''',
         '''    case MON_DATA_ABILITY: {
         u16 ability = *u16Value;
-        GF_ASSERT(ability <= 0x1FF);
+        GF_ASSERT(ability <= 511);
         monDataBlockA->ability = ability & 0xFF;
         monDataBlockA->markings = (monDataBlockA->markings & ~MERCURY_ABILITY_HIGH_MASK)
             | ((ability >> 1) & MERCURY_ABILITY_HIGH_MASK);
