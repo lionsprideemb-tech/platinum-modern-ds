@@ -24,7 +24,7 @@ import argparse
 import json
 from pathlib import Path
 
-MAX_POOL_MOVES = 240
+MAX_POOL_MOVES = 512
 MOVE_SOURCE_LEVEL = 0
 MOVE_SOURCE_EGG = 1
 MOVE_SOURCE_MACHINE = 2
@@ -304,10 +304,10 @@ def patch_move_backend(pt: Path) -> None:
         currentMoves[i] = Pokemon_GetValue(mon, MON_DATA_MOVE1 + i, NULL);
     }
 
-    u16 *moves = Heap_Alloc(heapID, (240 + 1) * sizeof(u16));
+    u16 *moves = Heap_Alloc(heapID, (512 + 1) * sizeof(u16));
     u16 count = 0;
 
-    for (u16 i = 0; i < pool->count && count < 240; i++) {
+    for (u16 i = 0; i < pool->count && count < 512; i++) {
         const MercuryMoveLearnerEntry *entry = &pool->entries[i];
 
         if (entry->source == MERCURY_MOVE_SOURCE_LEVEL && entry->unlockLevel > level) {
@@ -396,6 +396,24 @@ def patch_move_learner_ui(pt: Path) -> None:
     text_path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     app = pt / "src/applications/move_reminder.c"
+    replace_once(
+        app,
+        "    u8 numMoves;\n",
+        "    u16 numMoves;\n",
+        "move learner count width",
+    )
+    replace_once(
+        app,
+        "    for (i = 0; i < 256; i++) {\n",
+        "    for (i = 0; i < 513; i++) {\n",
+        "move learner scan capacity",
+    )
+    replace_once(
+        app,
+        "    controller->numMoves = (u8)MoveReminder_GetNumMoves(controller) + 1;\n",
+        "    controller->numMoves = (u16)MoveReminder_GetNumMoves(controller) + 1;\n",
+        "move learner list count width",
+    )
     replace_once(
         app,
         """    if (JOY_NEW(PAD_KEY_LEFT | PAD_KEY_RIGHT)) {
