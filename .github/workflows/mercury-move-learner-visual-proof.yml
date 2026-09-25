@@ -64,16 +64,19 @@ jobs:
       - name: Install compatible completed Platinum save
         shell: bash
         run: |
-          git clone --depth 1 \
-            https://github.com/projectpokemon/ProjectCompleteDexSaves.git proof-saves
+          SAVE_URL="https://raw.githubusercontent.com/Xieon/XFork_ProjectCompleteDexSaves/master/Gen%204%20-%20Pokemon%20Platinum%20(ENG).sav"
+          curl -L --fail --retry 3 \
+            "$SAVE_URL" \
+            -o runtime/Pokemon_Mercury_DS_Move_Learner.sav
 
-          SAVE="proof-saves/Gen 4 - Pokemon Platinum (ENG).sav"
+          SAVE="runtime/Pokemon_Mercury_DS_Move_Learner.sav"
           test -s "$SAVE"
           test "$(stat -c '%s' "$SAVE")" -ge 524288
+          sha256sum "$SAVE"
 
-          mkdir -p "$HOME/.config/desmume"
-          cp "$SAVE" runtime/Pokemon_Mercury_DS_Move_Learner.sav
-          cp "$SAVE" "$HOME/.config/desmume/Pokemon_Mercury_DS_Move_Learner.sav"
+          # DeSmuME 0.9.11 will import a raw .sav when the matching .dsv
+          # does not yet exist. Keep the raw save beside the ROM.
+          rm -f runtime/Pokemon_Mercury_DS_Move_Learner.dsv
 
       - name: Boot ROM in DeSmuME
         shell: bash
