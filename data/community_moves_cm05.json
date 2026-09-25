@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "lane": "community_imports",
+  "start_id": 1042,
+  "source_library": "lionsprideemb-tech/Pokemon-moves",
+  "source_manifest": "manifests/community_moves.csv",
+  "batch": "CM05",
+  "moves": [
+    {
+      "id": 1042,
+      "token": "MOVE_DEATHROLL",
+      "name": "Deathroll",
+      "type": "TYPE_WATER",
+      "class": "CLASS_PHYSICAL",
+      "power": 100,
+      "accuracy": 100,
+      "pp": 5,
+      "effect": {
+        "type": "BATTLE_EFFECT_CONFUSE_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "The user violently rolls\n",
+        "the target in its jaws. It\n",
+        "may leave the target confused."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "crunch"
+      },
+      "traits": [
+        "strong-jaw",
+        "ignores-stat-stages"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1043,
+      "token": "MOVE_PHANTOM_GLOVES",
+      "name": "Phantom Glove",
+      "type": "TYPE_GHOST",
+      "class": "CLASS_PHYSICAL",
+      "power": 85,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_SPEED_DOWN_HIT",
+        "chance": 30
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "A spectral glove strikes\n",
+        "the target. It may lower\n",
+        "the target’s Speed."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "shadow_claw"
+      },
+      "traits": [
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1044,
+      "token": "MOVE_PEBBLE_SHOWER",
+      "name": "Pebble Shower",
+      "type": "TYPE_ROCK",
+      "class": "CLASS_SPECIAL",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_FLINCH_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_ADJACENT_OPPONENTS",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "A shower of pebbles pelts\n",
+        "both foes. It may make\n",
+        "the targets flinch."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "rock_slide"
+      },
+      "traits": [],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1045,
+      "token": "MOVE_BIG_BLAST",
+      "name": "Big Bang",
+      "type": "TYPE_NORMAL",
+      "class": "CLASS_SPECIAL",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_BURN_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "A massive blast of energy\n",
+        "strikes the target. It may\n",
+        "leave the target burned."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "hyper_beam"
+      },
+      "traits": [
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1046,
+      "token": "MOVE_DRAGON_DASH",
+      "name": "Dragon Dash",
+      "type": "TYPE_DRAGON",
+      "class": "CLASS_PHYSICAL",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 20,
+      "effect": {
+        "type": "BATTLE_EFFECT_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 1,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user dashes into the\n",
+        "target at blinding speed.\n",
+        "This move usually goes first."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "dragon_rush"
+      },
+      "traits": [],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1047,
+      "token": "MOVE_MERCULIGHT",
+      "name": "Merculight",
+      "type": "TYPE_ELECTRIC",
+      "class": "CLASS_STATUS",
+      "power": 0,
+      "accuracy": 0,
+      "pp": 5,
+      "effect": {
+        "type": "BATTLE_EFFECT_PROTECT",
+        "chance": 0
+      },
+      "range": "RANGE_USER",
+      "priority": 4,
+      "flags": [],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user shields itself\n",
+        "with brilliant light to\n",
+        "block incoming attacks."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "protect"
+      },
+      "traits": [
+        "protection"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    }
+  ]
+}
