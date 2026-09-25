@@ -1,0 +1,227 @@
+name: MP06 DS Move Learner
+
+on:
+  push:
+    branches:
+      - feature/ds-move-learner
+    paths:
+      - ".github/workflows/mp06-ds-move-learner.yml"
+      - "tools/install_mp06_ds_move_learner.py"
+      - "tools/install_mp05_ability_namespace.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - "tools/install_pt05b_compatible_evolutions.py"
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05c1_modern_moves.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/move_id_namespace.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  integrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply sealed Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Python syntax gate
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/install_mp05_ability_namespace.py \
+            tools/install_pt04d_species_batch.py \
+            tools/install_pt05a_compatible_learnsets.py \
+            tools/install_pt05b_compatible_evolutions.py \
+            tools/install_pt05c_move_id_width.py \
+            tools/install_pt05c1_modern_moves.py \
+            tools/install_mp06_ds_move_learner.py
+
+      - name: Restore MP05 ability architecture
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mp06-ability-namespace.json \
+            --implemented-registry mp06-implemented-abilities.txt
+
+          test "$(jq -r '.canonical_ability_count' mp06-ability-namespace.json)" = "311"
+          test "$(jq -r '.save_storage.capacity' mp06-ability-namespace.json)" = "1023"
+
+      - name: Rebuild 1025 species
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report mp06-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --implemented-abilities mp06-implemented-abilities.txt \
+              --gate "MP06_${tag}_RESOURCE_INSTALL" \
+              --report "mp06-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+      - name: Restore modern move foundation
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mp06-modern-moves.json \
+            --implemented-registry mp06-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves mp06-implemented-moves.txt \
+            --report mp06-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report mp06-evolutions.json
+
+      - name: Install Mercury DS Move Learner
+        shell: bash
+        run: |
+          python3 tools/install_mp06_ds_move_learner.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --implemented-moves mp06-implemented-moves.txt \
+            --report mp06-ds-move-learner.json
+
+          test "$(jq -r '.status' mp06-ds-move-learner.json)" = "PASS"
+          test "$(jq -r '.species' mp06-ds-move-learner.json)" = "1025"
+          test "$(jq -r '.tm_items_required' mp06-ds-move-learner.json)" = "false"
+          test "$(jq -r '.heart_scale_required' mp06-ds-move-learner.json)" = "false"
+
+      - name: Static Move Learner integration audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s vendor/pokeplatinum/res/pokemon/mercury_move_learner.h
+          grep -q 'MERCURY_MOVE_LEARNER_SPECIES_MAX 1025' vendor/pokeplatinum/res/pokemon/mercury_move_learner.h
+          grep -q 'PARTY_MENU_EXIT_CODE_MOVE_LEARNER' vendor/pokeplatinum/include/applications/party_menu/defs.h
+          grep -q 'PARTY_MENU_STR_MOVE_LEARNER' vendor/pokeplatinum/include/applications/party_menu/defs.h
+          grep -q 'PartyMenu_SelectMoveLearner' vendor/pokeplatinum/src/applications/party_menu/context_menu.c
+          grep -q 'case PARTY_MENU_EXIT_CODE_MOVE_LEARNER' vendor/pokeplatinum/src/start_menu.c
+          grep -q 'MoveReminderData_GetMoves(mon, HEAP_ID_FIELD2)' vendor/pokeplatinum/src/start_menu.c
+          grep -q '"MOVE LEARNER"' vendor/pokeplatinum/res/text/party_menu.json
+          grep -q '"MOVE LEARNER"' vendor/pokeplatinum/res/text/move_reminder.json
+          echo "DS Move Learner integration audit: PASS"
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mp06-venv"
+          . "$RUNNER_TEMP/mp06-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build complete Mercury Modern Platinum ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage MP06 artifact
+        shell: bash
+        run: |
+          mkdir -p ds-move-learner
+          cp "$BUILD/pokeplatinum.us.nds" ds-move-learner/Pokemon_Mercury_MP06_DS_Move_Learner.nds
+          cp mp06-ds-move-learner.json ds-move-learner/
+          cp mp06-modern-moves.json ds-move-learner/
+          cp mp06-learnsets.json ds-move-learner/
+          cp mp06-evolutions.json ds-move-learner/
+          sha256sum ds-move-learner/Pokemon_Mercury_MP06_DS_Move_Learner.nds > ds-move-learner/SHA256SUMS.txt
+
+          {
+            echo "Mercury MP06 — DS-native Move Learner"
+            echo "UI shell: native Platinum Move Reminder"
+            echo "Access: Party -> Pokemon -> MOVE LEARNER"
+            echo "Sources: level / machine / egg / tutor"
+            echo "Physical TM requirement: removed from Move Learner"
+            echo "Heart Scale requirement: removed from Move Learner"
+            echo "Long runtime playthrough: intentionally skipped"
+          } > ds-move-learner/MP06_MANIFEST.txt
+
+      - name: Upload MP06 DS Move Learner
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mp06-ds-move-learner
+          path: ds-move-learner/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## MP06 DS-native Move Learner"
+            echo
+            echo "- Universal 1025-species legal move pool generated: PASS"
+            echo "- Party menu access: PASS"
+            echo "- Native Platinum move-detail UI reused: PASS"
+            echo "- TM/Heart Scale requirement removed from learner: PASS"
+            echo "- Full ROM compile: PASS"
+            echo "- Long playthrough: skipped by project policy."
+          } >> "$GITHUB_STEP_SUMMARY"
