@@ -1,0 +1,211 @@
+name: Mercury Move Preflight
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feature/mercury-move-preflight
+    paths:
+      - "data/community_moves_cm*.json"
+      - "data/community_move_effect_extensions.json"
+      - "data/move_id_namespace.json"
+      - "tools/install_cm*_effects.py"
+      - "tools/install_cm01_community_moves.py"
+      - "tools/build_cm06_native_community_bulk.py"
+      - "tools/mercury_move_preflight.py"
+      - ".github/workflows/mercury-move-preflight.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mercury-move-preflight-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  COMMUNITY_SOURCE_COMMIT: 4250c4bfbb2e8dddd117160cec9e1e8395dfe9f7
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install lightweight build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 wget xz-utils libpng-dev rsync jq
+
+      - name: Checkout pinned move sources
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/Moves.c
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+          git clone https://github.com/lionsprideemb-tech/Pokemon-moves.git vendor/community-moves
+          git -C vendor/community-moves checkout "$COMMUNITY_SOURCE_COMMIT"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Python syntax gate
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/mercury_move_preflight.py \
+            tools/install_cm01_community_moves.py \
+            tools/build_cm06_native_community_bulk.py \
+            tools/install_cm08_simple_effects.py
+
+      - name: Metadata and Platinum charmap preflight
+        shell: bash
+        run: |
+          python3 tools/mercury_move_preflight.py \
+            . vendor/pokeplatinum \
+            --report preflight-metadata.json
+
+      - name: Reconstruct move namespace only
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report preflight-modern-moves.json \
+            --implemented-registry preflight-implemented-moves.txt
+
+          for batch in 01 02 03 04 05; do
+            python3 tools/install_cm01_community_moves.py \
+              vendor/pokeplatinum \
+              --batch "data/community_moves_cm${batch}.json" \
+              --report "preflight-cm${batch}.json"
+          done
+
+          python3 tools/build_cm06_native_community_bulk.py \
+            vendor/community-moves \
+            vendor/pokeplatinum \
+            --mercury-root . \
+            --start-id 1048 \
+            --output preflight-cm06.json \
+            --report preflight-cm06-selection.json
+
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch preflight-cm06.json \
+            --report preflight-cm06-install.json
+
+          python3 - <<'PY'
+          import re
+          import subprocess
+          from pathlib import Path
+
+          data = Path("data")
+          tools = Path("tools")
+
+          later = []
+          for path in data.glob("community_moves_cm*.json"):
+              m = re.search(r"cm(\d+)\.json$", path.name)
+              if m and int(m.group(1)) >= 7:
+                  later.append((int(m.group(1)), path))
+          later.sort()
+
+          for number, batch_path in later:
+              installers = sorted(tools.glob(f"install_cm{number:02d}_*_effects.py"))
+              for installer in installers:
+                  subprocess.run([
+                      "python3", str(installer), "vendor/pokeplatinum",
+                      "--report", f"preflight-cm{number:02d}-{installer.stem}-effects.json",
+                  ], check=True)
+
+              subprocess.run([
+                  "python3", "tools/install_cm01_community_moves.py",
+                  "vendor/pokeplatinum",
+                  "--batch", str(batch_path),
+                  "--report", f"preflight-cm{number:02d}-install.json",
+              ], check=True)
+          PY
+
+      - name: Installed-resource preflight
+        shell: bash
+        run: |
+          python3 tools/mercury_move_preflight.py \
+            . vendor/pokeplatinum \
+            --installed \
+            --report preflight-installed.json
+
+      - name: Configure Platinum resource build
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+
+      - name: Compile move resources only
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ninja -C "$BUILD" -t targets all > preflight-targets.txt
+
+          build_target() {
+            local target="$1"
+            if ! grep -Fq "$target:" preflight-targets.txt; then
+              echo "Required resource target is missing: $target" >&2
+              exit 1
+            fi
+            ninja -C "$BUILD" "$target"
+          }
+
+          build_target "res/moves/move_data.narc"
+          build_target "res/text/pl_msg.narc.p/move_descriptions"
+          build_target "res/text/pl_msg.narc.p/moves_used_in_battle"
+          build_target "res/battle/scripts/be_seq.narc"
+          build_target "res/battle/scripts/waza_seq.narc"
+          build_target "res/moves/anim_scripts.narc"
+
+          echo "Targeted move-resource compile: PASS"
+
+      - name: Upload preflight proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-move-preflight-proof
+          path: |
+            preflight-metadata.json
+            preflight-installed.json
+            preflight-cm06-selection.json
+            preflight-cm06-install.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Preflight summary
+        shell: bash
+        run: |
+          {
+            echo "## Mercury Move Preflight"
+            echo
+            echo "- JSON / namespace / canonical-type checks: PASS"
+            echo "- Platinum charmap validation: PASS"
+            echo "- Custom effect registry and installer checks: PASS"
+            echo "- Installed move-data and animation-donor verification: PASS"
+            echo "- Targeted move text/data/effect/animation resource compile: PASS"
+            echo
+            echo "Full ROM compilation is now allowed to run after this gate."
+          } >> "$GITHUB_STEP_SUMMARY"
