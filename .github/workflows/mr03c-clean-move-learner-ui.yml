@@ -1,0 +1,361 @@
+name: MR03C Clean Move Learner UI
+# Clean rebuild against the approved mockup; no MR03B visual stacking.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr03c-clean-move-learner-ui
+    paths:
+      - ".github/workflows/mr03c-clean-move-learner-ui.yml"
+      - "tools/install_mr03c_clean_move_learner_ui.py"
+      - "tools/install_mercury_move_learner.py"
+      - "tools/install_mr03_party_move_learner.py"
+      - "tools/install_mr03_party_path_harness.py"
+      - "tools/install_mp05_ability_namespace.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - "tools/install_pt05b_compatible_evolutions.py"
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05c1_modern_moves.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/**"
+      - "platinum-overlay/**"
+      - "assets/title_screen/**"
+      - "tools/generate_mercury_title.py"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mr03c-clean-ui-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  build-and-prove-clean-ui:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply sealed Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Python syntax gate
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/install_mp05_ability_namespace.py \
+            tools/install_pt04d_species_batch.py \
+            tools/install_pt05a_compatible_learnsets.py \
+            tools/install_pt05b_compatible_evolutions.py \
+            tools/install_pt05c_move_id_width.py \
+            tools/install_pt05c1_modern_moves.py \
+            tools/install_mercury_move_learner.py \
+            tools/install_mr03_party_move_learner.py \
+            tools/install_mr03c_clean_move_learner_ui.py \
+            tools/install_mr03_party_path_harness.py
+
+      - name: Restore modern Mercury foundation
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mr03c-abilities.json \
+            --implemented-registry mr03c-implemented-abilities.txt
+
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report mr03c-species.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --implemented-abilities mr03c-implemented-abilities.txt \
+              --gate "MR03C_${tag}" \
+              --report "mr03c-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mr03c-modern-moves.json \
+            --implemented-registry mr03c-implemented-moves.txt
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves mr03c-implemented-moves.txt \
+            --report mr03c-learnsets.json
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report mr03c-evolutions.json
+
+      - name: Install MR03 backend and party entry
+        shell: bash
+        run: |
+          python3 tools/install_mercury_move_learner.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --implemented-moves mr03c-implemented-moves.txt \
+            --report mr03c-move-learner.json
+          python3 tools/install_mr03_party_move_learner.py \
+            vendor/pokeplatinum \
+            --report mr03c-party-entry.json
+
+          grep -q 'MoveReminderData_GetMoveSource' vendor/pokeplatinum/src/move_reminder_data.c
+          grep -q 'sMercuryMoveLearnerExtraSources' vendor/pokeplatinum/generated/mercury_move_learner.h
+
+      - name: Install clean MR03C UI
+        shell: bash
+        run: |
+          python3 tools/install_mr03c_clean_move_learner_ui.py \
+            vendor/pokeplatinum \
+            --report mr03c-clean-ui.json
+
+          test "$(jq -r '.status' mr03c-clean-ui.json)" = "PASS"
+          grep -q 'MOVE_REMINDER_WIN_MERCURY_TOP' vendor/pokeplatinum/src/applications/move_reminder.c
+          grep -q 'MERCURY_FILTER_SPECIAL' vendor/pokeplatinum/src/applications/move_reminder.c
+          grep -q 'PAD_BUTTON_X' vendor/pokeplatinum/src/applications/move_reminder.c
+          grep -q 'PAD_BUTTON_L' vendor/pokeplatinum/src/applications/move_reminder.c
+          grep -q 'PAD_BUTTON_R' vendor/pokeplatinum/src/applications/move_reminder.c
+
+      - name: Prove production boot stays normal
+        shell: bash
+        run: |
+          grep -q 'EnqueueApplication(FS_OVERLAY_ID(game_opening), &gOpeningCutsceneAppTemplate);' vendor/pokeplatinum/src/main.c
+          if grep -q 'CI-only setup' vendor/pokeplatinum/src/field_map_change.c; then
+            echo "CI setup leaked into production workspace" >&2
+            exit 1
+          fi
+
+      - name: Generate Mercury title resources
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mr03c-venv"
+          . "$RUNNER_TEMP/mr03c-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Install Metroskrew and configure
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+
+      - name: Build production MR03C ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage production ROM
+        shell: bash
+        run: |
+          mkdir -p mr03c-artifact
+          cp "$BUILD/pokeplatinum.us.nds" mr03c-artifact/Pokemon_Mercury_MR03C_Clean_Move_Learner.nds
+          sha256sum mr03c-artifact/Pokemon_Mercury_MR03C_Clean_Move_Learner.nds > mr03c-artifact/SHA256SUMS.txt
+          cp mr03c-clean-ui.json mr03c-artifact/
+          cp mr03c-move-learner.json mr03c-artifact/
+
+      - name: Install CI-only party-path setup
+        shell: bash
+        run: |
+          python3 tools/install_mr03_party_path_harness.py \
+            vendor/pokeplatinum \
+            --report mr03c-harness.json
+
+      - name: Rebuild proof ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Exercise MR03C pages and filters in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr03c-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import Keys, keymask
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start MR03C proof ROM")
+
+          frame = 0
+          captures = []
+
+          def cycle(count):
+              global frame
+              for _ in range(count):
+                  emu.cycle(False)
+                  frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"MR03C runtime stopped near frame {frame}")
+
+          def press(key, hold=4, settle=90):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              cycle(hold)
+              emu.input.keypad_rm_key(mask)
+              cycle(settle)
+
+          def snap(label):
+              image = emu.screenshot()
+              path = out / f"mr03c-{len(captures):02d}-{label}-{frame:05d}.png"
+              image.save(path)
+              rgb = image.convert("RGB")
+              colors = rgb.getcolors(maxcolors=256 * 384)
+              unique = len(colors) if colors is not None else 256 * 384
+              captures.append({
+                  "label": label,
+                  "frame": frame,
+                  "file": path.name,
+                  "unique_colors": unique,
+                  "blank_like": unique < 16,
+              })
+
+          try:
+              cycle(3600)
+              press(Keys.KEY_X, settle=120)
+              press(Keys.KEY_A, settle=180)
+              press(Keys.KEY_A, settle=120)
+              press(Keys.KEY_DOWN, settle=45)
+              press(Keys.KEY_A, settle=360)
+
+              snap("move-view-all")
+
+              press(Keys.KEY_R, settle=120)
+              snap("stats-view")
+
+              press(Keys.KEY_R, settle=120)
+              snap("ability-view")
+
+              press(Keys.KEY_L, settle=80)
+              press(Keys.KEY_L, settle=80)
+              snap("move-view-return")
+
+              press(Keys.KEY_X, settle=100)
+              snap("filter-level")
+
+              press(Keys.KEY_X, settle=100)
+              snap("filter-egg")
+
+              press(Keys.KEY_X, settle=100)
+              snap("filter-tutor")
+
+              press(Keys.KEY_X, settle=100)
+              snap("filter-special")
+          finally:
+              emu.destroy()
+
+          meta = {
+              "gate": "MERCURY_MR03C_RUNTIME_UI",
+              "path": "Start Menu -> POKEMON -> Garchomp -> MOVE LEARNER",
+              "top_pages": ["MOVE VIEW", "STATS VIEW", "ABILITY VIEW"],
+              "filters": ["ALL", "LEVEL", "EGG", "TUTOR", "SPECIAL"],
+              "captures": captures,
+          }
+          (out / "mr03c-runtime-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+
+          if len(captures) != 8:
+              raise SystemExit("MR03C did not capture all UI checkpoints")
+          if any(row["blank_like"] for row in captures):
+              raise SystemExit("MR03C contains a blank-like runtime capture")
+          PY
+
+      - name: Stage screenshots
+        if: always()
+        shell: bash
+        run: |
+          cp mr03c-harness.json mr03c-artifact/ 2>/dev/null || true
+          cp runtime-preview/*.png mr03c-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr03c-runtime-meta.json mr03c-artifact/ 2>/dev/null || true
+
+      - name: Upload MR03C
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr03c-clean-move-learner-ui
+          path: mr03c-artifact/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Mercury MR03C Clean Move Learner UI"
+            echo
+            echo "- Rebuilt from MR03 backend, not MR03B visual windows"
+            echo "- Fixed non-overlapping top and bottom regions"
+            echo "- L/R: MOVE / STATS / ABILITY"
+            echo "- X: ALL / LEVEL / EGG / TUTOR / SPECIAL filters"
+            echo "- Native teach/replace flow preserved"
+            echo "- Production story boot preserved"
+          } >> "$GITHUB_STEP_SUMMARY"
