@@ -1,0 +1,251 @@
+name: MR03 Party Path Reproof
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr03-party-move-learner
+    paths:
+      - ".github/workflows/mr03-party-path-reproof.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mr03-party-path-reproof-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  prove-party-path:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core
+
+      - name: Checkout pinned sources
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+          rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Restore modern Mercury foundation
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report reproof-abilities.json \
+            --implemented-registry reproof-implemented-abilities.txt
+
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report reproof-species.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --implemented-abilities reproof-implemented-abilities.txt \
+              --gate "MR03_REPROOF_${tag}" \
+              --report "reproof-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report reproof-modern-moves.json \
+            --implemented-registry reproof-implemented-moves.txt
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves reproof-implemented-moves.txt \
+            --report reproof-learnsets.json
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report reproof-evolutions.json
+
+          python3 tools/install_mercury_move_learner.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --implemented-moves reproof-implemented-moves.txt \
+            --report reproof-move-learner.json
+
+          python3 tools/install_mr03_party_move_learner.py \
+            vendor/pokeplatinum \
+            --report reproof-party-move-learner.json
+
+          python3 tools/install_mr03_party_path_harness.py \
+            vendor/pokeplatinum \
+            --report reproof-party-path-harness.json
+
+      - name: Generate Mercury title resources
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/reproof-venv"
+          . "$RUNNER_TEMP/reproof-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build MR03 proof ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Exercise real Start Menu party path
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/reproof-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import Keys, keymask
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start MR03 reproof ROM")
+
+          frame = 0
+          captures = []
+
+          def cycle(count):
+              global frame
+              for _ in range(count):
+                  emu.cycle(False)
+                  frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"runtime stopped near frame {frame}")
+
+          def press(key, hold=4, settle=60):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              cycle(hold)
+              emu.input.keypad_rm_key(mask)
+              cycle(settle)
+
+          def snap(label):
+              image = emu.screenshot()
+              path = out / f"mr03-reproof-{len(captures):02d}-{label}-{frame:05d}.png"
+              image.save(path)
+              rgb = image.convert("RGB")
+              colors = rgb.getcolors(maxcolors=256 * 384)
+              unique = len(colors) if colors is not None else 256 * 384
+              captures.append({
+                  "label": label,
+                  "frame": frame,
+                  "file": path.name,
+                  "unique_colors": unique,
+                  "blank_like": unique < 16,
+              })
+
+          try:
+              # The native new-save initializer still runs Platinum's opening
+              # Twinleaf TV text. B advances text but is harmless once field
+              # control is restored, so clear the scripted pages first.
+              cycle(3400)
+              for _ in range(5):
+                  press(Keys.KEY_B, settle=120)
+              cycle(120)
+              snap("field-control")
+
+              press(Keys.KEY_X, settle=120)
+              snap("start-menu")
+
+              press(Keys.KEY_A, settle=180)
+              snap("party-menu")
+
+              press(Keys.KEY_A, settle=120)
+              snap("pokemon-context")
+
+              press(Keys.KEY_DOWN, settle=45)
+              snap("move-learner-selected")
+
+              press(Keys.KEY_A, settle=360)
+              snap("move-learner-open")
+          finally:
+              emu.destroy()
+
+          meta = {
+              "gate": "MERCURY_MR03_PARTY_PATH_REPROOF",
+              "input_path": [
+                  "B clears native opening TV text",
+                  "X -> Start Menu",
+                  "A -> POKEMON",
+                  "A -> selected Garchomp",
+                  "DOWN -> MOVE LEARNER",
+                  "A -> open Move Learner",
+              ],
+              "captures": captures,
+          }
+          (out / "mr03-reproof-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+
+          if len(captures) != 6:
+              raise SystemExit("missing reproof checkpoint captures")
+          if any(row["blank_like"] for row in captures):
+              raise SystemExit("blank-like reproof capture")
+          PY
+
+      - name: Upload reproof screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr03-party-path-reproof
+          path: |
+            runtime-preview/*.png
+            runtime-preview/mr03-reproof-meta.json
+          if-no-files-found: error
+          retention-days: 30
