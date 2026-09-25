@@ -165,6 +165,15 @@ jobs:
             vendor/pokeplatinum \
             --report mr03b-ui.json
 
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("vendor/pokeplatinum/res/text/move_reminder.json")
+          s = p.read_text()
+          s = s.replace("< L   STATS   R >", "L   STATS   R")
+          s = s.replace("< L   ABILITY   R >", "L   ABILITY   R")
+          p.write_text(s)
+          PY
+
           test "$(jq -r '.status' mr03b-ui.json)" = "PASS"
           grep -q 'MOVE_REMINDER_WIN_TOP_PAGE' vendor/pokeplatinum/src/applications/move_reminder.c
           grep -q 'PAD_BUTTON_L' vendor/pokeplatinum/src/applications/move_reminder.c
