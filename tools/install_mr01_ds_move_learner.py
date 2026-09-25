@@ -269,7 +269,7 @@ const MercuryMoveLearnerPool *MercuryMoveLearner_GetPool(u16 species);
         "}",
         "",
     ]
-    source.write_text("\n".join(lines), encoding="utf-8")
+    source_path.write_text("\n".join(lines), encoding="utf-8")
 
     meson = pt / "src/meson.build"
     replace_once(
