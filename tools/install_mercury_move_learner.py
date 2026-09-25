@@ -89,6 +89,8 @@ def build_extra_table(
     donor: dict[str, object],
     implemented: set[str],
 ) -> tuple[list[int], list[str], dict[str, object]]:
+    # Index 0 is unused.  offset[species] is the start and
+    # offset[species + 1] is the end for canonical species IDs 1..1025.
     offsets = [0]
     flat: list[str] = []
     missing_species: list[str] = []
@@ -127,9 +129,10 @@ def build_extra_table(
         if len(extras) > max_pool["count"]:
             max_pool = {"species": species, "count": len(extras)}
 
+        # Record this species' start before appending its entries.
+        offsets.append(len(flat))
         # Runtime still owns the final safety cap after level-up moves are added.
         flat.extend(extras)
-        offsets.append(len(flat))
 
     # offset[species + 1] is required for species MAX_SPECIES.
     offsets.append(len(flat))
