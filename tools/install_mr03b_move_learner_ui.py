@@ -138,11 +138,11 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         """    [MOVE_REMINDER_WIN_MOVES_NAMES] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 8,
+        .tilemapTop = 6,
         .width = 30,
         .height = 8,
         .palette = 15,
-        .baseTile = 0x0F1,
+        .baseTile = 0x0B5,
     },""",
         "MR03B bottom move list window",
     )
@@ -164,18 +164,18 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .tilemapLeft = 1,
         .tilemapTop = 0,
         .width = 30,
-        .height = 8,
+        .height = 6,
         .palette = 15,
         .baseTile = 1,
     },
     [MOVE_REMINDER_WIN_SUB_DESC] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 16,
+        .tilemapTop = 14,
         .width = 30,
-        .height = 7,
+        .height = 9,
         .palette = 15,
-        .baseTile = 0x1E1,
+        .baseTile = 0x1A5,
     },
     [MOVE_REMINDER_WIN_SUB_HELP] = {
         .bgLayer = BG_LAYER_SUB_0,
@@ -382,7 +382,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         HEAP_ID_MOVE_REMINDER);
 
     static const u8 moveX[LEARNED_MOVES_MAX] = { 4, 124, 4, 124 };
-    static const u8 moveY[LEARNED_MOVES_MAX] = { 17, 17, 34, 34 };
+    static const u8 moveY[LEARNED_MOVES_MAX] = { 14, 14, 28, 28 };
 
     for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
         u16 move = Pokemon_GetValue(
@@ -542,6 +542,9 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
             Window_ClearAndScheduleCopyToVRAM(&controller->windows[i]);
         }
 
+        Window_EraseMessageBox(
+            &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+            FALSE);
         Window_ClearAndScheduleCopyToVRAM(
             &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
 
@@ -559,6 +562,11 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
     Window_FillTilemap(
         &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
         15);
+    Window_DrawMessageBoxWithScrollCursor(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        0,
+        10,
+        13);
     MoveReminder_SetStringTemplate(
         controller,
         MOVE_REMINDER_STR_ASK_TEACH_WHICH_TO_MON);
@@ -729,7 +737,7 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
         MercuryMoveLearner_PrintMessage(
             controller, page,
             MoveReminder_Text_MercuryInnatesOff,
-            8, 90);
+            8, 104);
     }
 
     Window_ScheduleCopyToVRAM(page);
@@ -828,7 +836,7 @@ def main() -> None:
             "white bottom-screen workspace",
             "2x2 current-move grid",
             "learnable-moves heading",
-            "non-overlapping bottom-screen bands",
+            "non-overlapping bottom-screen bands with 3-line effect room",
             "highlighted move type/category/power/accuracy/PP",
             "framed Stats and Ability cards",
             "Stats/Ability pages hide the native prompt box",
