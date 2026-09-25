@@ -90,7 +90,7 @@ jobs:
 
           test "$(jq -r '.canonical_ability_count' mp05-ability-namespace.json)" = "311"
           test "$(jq -r '.max_canonical_ability' mp05-ability-namespace.json)" = "ABILITY_POISON_PUPPETEER"
-          test "$(jq -r '.save_storage.capacity' mp05-ability-namespace.json)" = "511"
+          test "$(jq -r '.save_storage.capacity' mp05-ability-namespace.json)" = "1023"
           test "$(sed -n '311p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_POISON_PUPPETEER"
           test "$(wc -l < vendor/pokeplatinum/generated/abilities.txt)" = "311"
           test "$(wc -l < mp05-implemented-abilities.txt)" = "124"
@@ -172,9 +172,9 @@ jobs:
           set -euo pipefail
           grep -q 'u16 abilities\[MAX_ABILITIES\]' vendor/pokeplatinum/include/struct_defs/species.h
           grep -q 'u16 ability;' vendor/pokeplatinum/include/battle/battle_mon.h
-          grep -q 'MERCURY_ABILITY_HIGH_MASK 0x80' vendor/pokeplatinum/src/pokemon.c
+          grep -q 'MERCURY_ABILITY_HIGH_MASK 0xC0' vendor/pokeplatinum/src/pokemon.c
           grep -q 'MERCURY_VISIBLE_MARKINGS_MASK 0x3F' vendor/pokeplatinum/src/pokemon.c
-          grep -q 'abilityHigh : 1' vendor/pokeplatinum/include/struct_defs/struct_02078B40.h
+          grep -q 'abilityHigh : 2' vendor/pokeplatinum/include/struct_defs/struct_02078B40.h
           grep -q 'u16 firstMonAbility;' vendor/pokeplatinum/src/overlay006/wild_encounters.c
           echo "Extended ability storage audit: PASS"
 
@@ -212,7 +212,7 @@ jobs:
             echo "Mercury Modern Platinum — MP05 Ability Architecture"
             echo "Canonical ability namespace: 0..310"
             echo "Max canonical ability: ABILITY_POISON_PUPPETEER"
-            echo "Save-compatible ability storage capacity: 0..511"
+            echo "Save-compatible ability storage capacity: 0..1023"
             echo "Native implemented abilities enabled for species: 0..123"
             echo "Modern ability effects: deferred to shared-family ports"
             echo "Unimplemented abilities are not silently approximated."
@@ -236,7 +236,7 @@ jobs:
             echo "- Canonical ability IDs 0..310: PASS"
             echo "- Ability text banks through Poison Puppeteer: PASS"
             echo "- Species/battle ability transport widened: PASS"
-            echo "- BoxPokemon save block size preserved with spare marking bit: PASS"
+            echo "- BoxPokemon save block size preserved with both spare marking bits: PASS"
             echo "- Unported abilities gated out of live species data: PASS"
             echo "- Complete ROM compile: PASS"
             echo "- Long runtime playthrough: intentionally skipped."
