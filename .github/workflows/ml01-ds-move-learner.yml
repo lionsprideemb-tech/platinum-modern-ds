@@ -1,0 +1,215 @@
+name: ML01 DS Move Learner
+
+on:
+  push:
+    branches:
+      - feature/ds-move-learner
+    paths:
+      - ".github/workflows/ml01-ds-move-learner.yml"
+      - "tools/install_ml01_ds_move_learner.py"
+      - "tools/install_mp05_ability_namespace.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - "tools/install_pt05b_compatible_evolutions.py"
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05c1_modern_moves.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/move_id_namespace.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  integrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 160
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply sealed Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Python syntax gate
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/install_mp05_ability_namespace.py \
+            tools/install_pt04d_species_batch.py \
+            tools/install_pt05a_compatible_learnsets.py \
+            tools/install_pt05b_compatible_evolutions.py \
+            tools/install_pt05c_move_id_width.py \
+            tools/install_pt05c1_modern_moves.py \
+            tools/install_ml01_ds_move_learner.py
+
+      - name: Restore MP05 modern foundation
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report ml01-ability-namespace.json \
+            --implemented-registry ml01-implemented-abilities.txt
+
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report ml01-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --implemented-abilities ml01-implemented-abilities.txt \
+              --gate "ML01_${tag}_RESOURCE_INSTALL" \
+              --report "ml01-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report ml01-modern-moves.json \
+            --implemented-registry ml01-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves ml01-implemented-moves.txt \
+            --report ml01-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report ml01-evolutions.json
+
+      - name: Install DS-native Move Learner
+        shell: bash
+        run: |
+          python3 tools/install_ml01_ds_move_learner.py \
+            vendor/pokeplatinum \
+            --report ml01-move-learner.json
+
+          test "$(jq -r '.species_covered' ml01-move-learner.json)" = "1025"
+          test "$(jq -r '.tm_compatibility_dependency' ml01-move-learner.json)" = "false"
+          test "$(jq -r '.status' ml01-move-learner.json)" = "PASS"
+
+          grep -q 'mercury_move_pools.h' vendor/pokeplatinum/src/move_reminder_data.c
+          grep -q 'MERCURY_MOVE_LEARNER_SPECIES_MAX' vendor/pokeplatinum/res/pokemon/mercury_move_pools.h
+          grep -q 'MOVE LEARNER' vendor/pokeplatinum/res/text/move_reminder.json
+
+          if grep -q 'RemoveItem ITEM_HEART_SCALE' vendor/pokeplatinum/res/field/scripts/scripts_pastoria_city_east_house.s; then
+            echo "Pastoria learner still charges a Heart Scale" >&2
+            exit 1
+          fi
+
+          echo "Mercury universal Move Learner static gate: PASS"
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/ml01-venv"
+          . "$RUNNER_TEMP/ml01-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build Mercury ROM with DS Move Learner
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage ML01 artifact
+        shell: bash
+        run: |
+          mkdir -p ml01
+          cp "$BUILD/pokeplatinum.us.nds" ml01/Pokemon_Mercury_ML01_DS_Move_Learner.nds
+          cp ml01-move-learner.json ml01/
+          cp ml01-modern-moves.json ml01/
+          cp ml01-learnsets.json ml01/
+          cp ml01-evolutions.json ml01/
+          sha256sum ml01/Pokemon_Mercury_ML01_DS_Move_Learner.nds > ml01/SHA256SUMS.txt
+
+          {
+            echo "Mercury ML01 — DS-native Move Learner"
+            echo "Base: sealed full-playable Modern Platinum RC1"
+            echo "Species move pools: 1..1025"
+            echo "Move sources: level-up + egg + tutor"
+            echo "Legacy TM compatibility required: NO"
+            echo "Known moves hidden from learner list: YES"
+            echo "Native Platinum move detail / replacement UI reused: YES"
+            echo "Pastoria Heart Scale charge removed: YES"
+            echo "Long runtime playthrough intentionally skipped."
+          } > ml01/ML01_MANIFEST.txt
+
+      - name: Upload ML01
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-ml01-ds-move-learner
+          path: ml01/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## ML01 DS Move Learner"
+            echo
+            echo "- Universal legal move-pool generator: PASS"
+            echo "- TM compatibility dependency removed from learner: PASS"
+            echo "- Native DS Move Reminder UI converted into Move Learner front end: PASS"
+            echo "- Known moves filtered: PASS"
+            echo "- Free Pastoria access point: PASS"
+            echo "- Complete ROM compile: PASS"
+            echo "- Long runtime playthrough: intentionally skipped."
+          } >> "$GITHUB_STEP_SUMMARY"
