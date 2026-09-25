@@ -45,15 +45,15 @@ generated constants.
 ## Proof
 
 GitHub Actions workflow: **Mercury Move Preflight**  
-Run ID: `36144865066`  
+Run ID: `36145347797`  
 Conclusion: **success**
 
 Proof artifact: `mercury-move-preflight-proof`  
-Artifact ID: `10869008671`  
+Artifact ID: `10867949539`  
 Artifact digest:
-`sha256:7a52dcda9e342d593c019a6a4b7aef7b328b6f06e32811991ecbb5df8edd3d9c`
+`sha256:c37c479a5da7659c61f79f3c89086043b01dd65332a5cd4cc33af840caa36ecd`
 
-This gate successfully validated the complete CM01-CM08 move stack.
+This main-line gate successfully validated the complete CM01-CM08 move stack at commit `a43cf7392799bad17c4c5364c93e39a033dfd9e4`.
 
 ## Policy going forward
 
