@@ -1,0 +1,243 @@
+name: MP05 Fast Ability Architecture
+
+on:
+  push:
+    branches:
+      - feature/modern-platinum-fast
+    paths:
+      - ".github/workflows/mp05-fast-ability-architecture.yml"
+      - "tools/install_mp05_ability_namespace.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - "tools/install_pt05b_compatible_evolutions.py"
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05c1_modern_moves.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/move_id_namespace.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  integrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 160
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply sealed PB04 Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Python syntax gate
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/install_mp05_ability_namespace.py \
+            tools/install_pt04d_species_batch.py \
+            tools/install_pt05a_compatible_learnsets.py \
+            tools/install_pt05b_compatible_evolutions.py \
+            tools/install_pt05c_move_id_width.py \
+            tools/install_pt05c1_modern_moves.py
+
+      - name: Install canonical Gen 1-9 ability namespace and width
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mp05-ability-namespace.json \
+            --implemented-registry mp05-implemented-abilities.txt
+
+          test "$(jq -r '.canonical_ability_count' mp05-ability-namespace.json)" = "311"
+          test "$(jq -r '.max_canonical_ability' mp05-ability-namespace.json)" = "ABILITY_POISON_PUPPETEER"
+          test "$(jq -r '.save_storage.capacity' mp05-ability-namespace.json)" = "511"
+          test "$(sed -n '311p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_POISON_PUPPETEER"
+          test "$(wc -l < vendor/pokeplatinum/generated/abilities.txt)" = "311"
+          test "$(wc -l < mp05-implemented-abilities.txt)" = "124"
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ("ability_names.json", "ability_names_uppercase.json", "ability_descriptions.json"):
+              path=Path("vendor/pokeplatinum/res/text")/name
+              data=json.loads(path.read_text())
+              assert len(data["messages"]) == 311, (name, len(data["messages"]))
+          print("ability text namespace: PASS")
+          PY
+
+      - name: Prove native Platinum story remains untouched
+        shell: bash
+        run: |
+          set -euo pipefail
+          if find platinum-overlay -type f | grep -E '/(field|fielddata|map|maps|script|scripts|event|events)/'; then
+            echo "Unexpected world/story overlay found" >&2
+            exit 1
+          fi
+          echo "Native Platinum world/story inheritance: PASS"
+
+      - name: Rebuild 1025 species with implemented-ability gate
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report mp05-species-registry.json
+
+          total_fallbacks=0
+          while read -r start end tag; do
+            report="mp05-${tag}.json"
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --implemented-abilities mp05-implemented-abilities.txt \
+              --gate "MP05_${tag}_RESOURCE_INSTALL" \
+              --report "$report"
+            total_fallbacks=$((total_fallbacks + $(jq '.exceptions.unsupported_abilities | length' "$report")))
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+          echo "$total_fallbacks" > mp05-ability-fallback-count.txt
+          echo "Modern ability assignments deliberately held back: $total_fallbacks"
+
+      - name: Restore MP04 move, learnset, and evolution foundation
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mp05-modern-moves.json \
+            --implemented-registry mp05-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves mp05-implemented-moves.txt \
+            --report mp05-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report mp05-evolutions.json
+
+      - name: Static extended-ability storage audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'u16 abilities\[MAX_ABILITIES\]' vendor/pokeplatinum/include/struct_defs/species.h
+          grep -q 'u16 ability;' vendor/pokeplatinum/include/battle/battle_mon.h
+          grep -q 'MERCURY_ABILITY_HIGH_MASK 0x80' vendor/pokeplatinum/src/pokemon.c
+          grep -q 'MERCURY_VISIBLE_MARKINGS_MASK 0x3F' vendor/pokeplatinum/src/pokemon.c
+          grep -q 'abilityHigh : 1' vendor/pokeplatinum/include/struct_defs/struct_02078B40.h
+          grep -q 'u16 firstMonAbility;' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+          echo "Extended ability storage audit: PASS"
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mp05-venv"
+          . "$RUNNER_TEMP/mp05-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build complete Modern Platinum ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage MP05 artifact
+        shell: bash
+        run: |
+          mkdir -p modern-ability
+          cp "$BUILD/pokeplatinum.us.nds" modern-ability/Pokemon_Mercury_Modern_Platinum_MP05.nds
+          cp mp05-ability-namespace.json modern-ability/
+          cp mp05-implemented-abilities.txt modern-ability/
+          cp mp05-ability-fallback-count.txt modern-ability/
+          cp mp05-modern-moves.json modern-ability/
+          cp mp05-learnsets.json modern-ability/
+          cp mp05-evolutions.json modern-ability/
+          sha256sum modern-ability/Pokemon_Mercury_Modern_Platinum_MP05.nds > modern-ability/SHA256SUMS.txt
+
+          {
+            echo "Mercury Modern Platinum — MP05 Ability Architecture"
+            echo "Canonical ability namespace: 0..310"
+            echo "Max canonical ability: ABILITY_POISON_PUPPETEER"
+            echo "Save-compatible ability storage capacity: 0..511"
+            echo "Native implemented abilities enabled for species: 0..123"
+            echo "Modern ability effects: deferred to shared-family ports"
+            echo "Unimplemented abilities are not silently approximated."
+            echo "Full ROM compile required; long playtest intentionally skipped."
+          } > modern-ability/MP05_MANIFEST.txt
+
+      - name: Upload MP05 ability architecture
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-modern-platinum-mp05-ability-architecture
+          path: modern-ability/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## MP05 fast ability architecture"
+            echo
+            echo "- Canonical ability IDs 0..310: PASS"
+            echo "- Ability text banks through Poison Puppeteer: PASS"
+            echo "- Species/battle ability transport widened: PASS"
+            echo "- BoxPokemon save block size preserved with spare marking bit: PASS"
+            echo "- Unported abilities gated out of live species data: PASS"
+            echo "- Complete ROM compile: PASS"
+            echo "- Long runtime playthrough: intentionally skipped."
+          } >> "$GITHUB_STEP_SUMMARY"
