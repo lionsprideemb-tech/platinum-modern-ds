@@ -1,0 +1,965 @@
+{
+  "schema_version": 1,
+  "architecture": "u8-compact",
+  "rationale": "Preserve Platinum save and battle struct widths while assigning stable internal IDs to every primary/secondary modern ability used by base species #1-1025 that fits the 8-bit budget.",
+  "vanilla_ids": {
+    "start": 0,
+    "end": 123,
+    "policy": "unchanged"
+  },
+  "modern_ids": {
+    "start": 124,
+    "end": 255,
+    "count": 132
+  },
+  "source": "BluRosie/hg-engine pinned by upstream/LOCK.json",
+  "canonical_scope": "Gen 5-9 abilities used in donor primary/secondary species slots for National Dex #1-1025",
+  "deferred_stateful_abilities": [
+    {
+      "token": "ABILITY_HUNGER_SWITCH",
+      "canonical_donor_id": 258,
+      "reason": "form/state-switching mechanic; deferred rather than aliasing"
+    },
+    {
+      "token": "ABILITY_ZERO_TO_HERO",
+      "canonical_donor_id": 278,
+      "reason": "form/state-switching mechanic; deferred rather than aliasing"
+    },
+    {
+      "token": "ABILITY_COMMANDER",
+      "canonical_donor_id": 279,
+      "reason": "special double-battle state mechanic; deferred rather than aliasing"
+    },
+    {
+      "token": "ABILITY_TERA_SHIFT",
+      "canonical_donor_id": 307,
+      "reason": "form/state-switching mechanic; deferred rather than aliasing"
+    }
+  ],
+  "abilities": [
+    {
+      "internal_id": 124,
+      "canonical_donor_id": 124,
+      "token": "ABILITY_PICKPOCKET",
+      "display_name": "Pickpocket",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 125,
+      "canonical_donor_id": 125,
+      "token": "ABILITY_SHEER_FORCE",
+      "display_name": "Sheer Force",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 126,
+      "canonical_donor_id": 126,
+      "token": "ABILITY_CONTRARY",
+      "display_name": "Contrary",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 127,
+      "canonical_donor_id": 127,
+      "token": "ABILITY_UNNERVE",
+      "display_name": "Unnerve",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 128,
+      "canonical_donor_id": 128,
+      "token": "ABILITY_DEFIANT",
+      "display_name": "Defiant",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 129,
+      "canonical_donor_id": 129,
+      "token": "ABILITY_DEFEATIST",
+      "display_name": "Defeatist",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 130,
+      "canonical_donor_id": 130,
+      "token": "ABILITY_CURSED_BODY",
+      "display_name": "Cursed Body",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 131,
+      "canonical_donor_id": 131,
+      "token": "ABILITY_HEALER",
+      "display_name": "Healer",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 132,
+      "canonical_donor_id": 132,
+      "token": "ABILITY_FRIEND_GUARD",
+      "display_name": "Friend Guard",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 133,
+      "canonical_donor_id": 133,
+      "token": "ABILITY_WEAK_ARMOR",
+      "display_name": "Weak Armor",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 134,
+      "canonical_donor_id": 134,
+      "token": "ABILITY_HEAVY_METAL",
+      "display_name": "Heavy Metal",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 135,
+      "canonical_donor_id": 135,
+      "token": "ABILITY_LIGHT_METAL",
+      "display_name": "Light Metal",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 136,
+      "canonical_donor_id": 140,
+      "token": "ABILITY_TELEPATHY",
+      "display_name": "Telepathy",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 137,
+      "canonical_donor_id": 142,
+      "token": "ABILITY_OVERCOAT",
+      "display_name": "Overcoat",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 138,
+      "canonical_donor_id": 143,
+      "token": "ABILITY_POISON_TOUCH",
+      "display_name": "Poison Touch",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 139,
+      "canonical_donor_id": 144,
+      "token": "ABILITY_REGENERATOR",
+      "display_name": "Regenerator",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 140,
+      "canonical_donor_id": 145,
+      "token": "ABILITY_BIG_PECKS",
+      "display_name": "Big Pecks",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 141,
+      "canonical_donor_id": 146,
+      "token": "ABILITY_SAND_RUSH",
+      "display_name": "Sand Rush",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 142,
+      "canonical_donor_id": 147,
+      "token": "ABILITY_WONDER_SKIN",
+      "display_name": "Wonder Skin",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 143,
+      "canonical_donor_id": 149,
+      "token": "ABILITY_ILLUSION",
+      "display_name": "Illusion",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 144,
+      "canonical_donor_id": 151,
+      "token": "ABILITY_INFILTRATOR",
+      "display_name": "Infiltrator",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 145,
+      "canonical_donor_id": 152,
+      "token": "ABILITY_MUMMY",
+      "display_name": "Mummy",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 146,
+      "canonical_donor_id": 153,
+      "token": "ABILITY_MOXIE",
+      "display_name": "Moxie",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 147,
+      "canonical_donor_id": 154,
+      "token": "ABILITY_JUSTIFIED",
+      "display_name": "Justified",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 148,
+      "canonical_donor_id": 155,
+      "token": "ABILITY_RATTLED",
+      "display_name": "Rattled",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 149,
+      "canonical_donor_id": 157,
+      "token": "ABILITY_SAP_SIPPER",
+      "display_name": "Sap Sipper",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 150,
+      "canonical_donor_id": 158,
+      "token": "ABILITY_PRANKSTER",
+      "display_name": "Prankster",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 151,
+      "canonical_donor_id": 159,
+      "token": "ABILITY_SAND_FORCE",
+      "display_name": "Sand Force",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 152,
+      "canonical_donor_id": 160,
+      "token": "ABILITY_IRON_BARBS",
+      "display_name": "Iron Barbs",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 153,
+      "canonical_donor_id": 162,
+      "token": "ABILITY_VICTORY_STAR",
+      "display_name": "Victory Star",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 154,
+      "canonical_donor_id": 163,
+      "token": "ABILITY_TURBOBLAZE",
+      "display_name": "Turboblaze",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 155,
+      "canonical_donor_id": 164,
+      "token": "ABILITY_TERAVOLT",
+      "display_name": "Teravolt",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 156,
+      "canonical_donor_id": 165,
+      "token": "ABILITY_AROMA_VEIL",
+      "display_name": "Aroma Veil",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 157,
+      "canonical_donor_id": 166,
+      "token": "ABILITY_FLOWER_VEIL",
+      "display_name": "Flower Veil",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 158,
+      "canonical_donor_id": 167,
+      "token": "ABILITY_CHEEK_POUCH",
+      "display_name": "Cheek Pouch",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 159,
+      "canonical_donor_id": 169,
+      "token": "ABILITY_FUR_COAT",
+      "display_name": "Fur Coat",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 160,
+      "canonical_donor_id": 170,
+      "token": "ABILITY_MAGICIAN",
+      "display_name": "Magician",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 161,
+      "canonical_donor_id": 171,
+      "token": "ABILITY_BULLETPROOF",
+      "display_name": "Bulletproof",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 162,
+      "canonical_donor_id": 172,
+      "token": "ABILITY_COMPETITIVE",
+      "display_name": "Competitive",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 163,
+      "canonical_donor_id": 173,
+      "token": "ABILITY_STRONG_JAW",
+      "display_name": "Strong Jaw",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 164,
+      "canonical_donor_id": 174,
+      "token": "ABILITY_REFRIGERATE",
+      "display_name": "Refrigerate",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 165,
+      "canonical_donor_id": 175,
+      "token": "ABILITY_SWEET_VEIL",
+      "display_name": "Sweet Veil",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 166,
+      "canonical_donor_id": 176,
+      "token": "ABILITY_STANCE_CHANGE",
+      "display_name": "Stance Change",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 167,
+      "canonical_donor_id": 178,
+      "token": "ABILITY_MEGA_LAUNCHER",
+      "display_name": "Mega Launcher",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 168,
+      "canonical_donor_id": 181,
+      "token": "ABILITY_TOUGH_CLAWS",
+      "display_name": "Tough Claws",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 169,
+      "canonical_donor_id": 183,
+      "token": "ABILITY_GOOEY",
+      "display_name": "Gooey",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 170,
+      "canonical_donor_id": 186,
+      "token": "ABILITY_DARK_AURA",
+      "display_name": "Dark Aura",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 171,
+      "canonical_donor_id": 187,
+      "token": "ABILITY_FAIRY_AURA",
+      "display_name": "Fairy Aura",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 172,
+      "canonical_donor_id": 188,
+      "token": "ABILITY_AURA_BREAK",
+      "display_name": "Aura Break",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 173,
+      "canonical_donor_id": 192,
+      "token": "ABILITY_STAMINA",
+      "display_name": "Stamina",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 174,
+      "canonical_donor_id": 193,
+      "token": "ABILITY_WIMP_OUT",
+      "display_name": "Wimp Out",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 175,
+      "canonical_donor_id": 194,
+      "token": "ABILITY_EMERGENCY_EXIT",
+      "display_name": "Emergency Exit",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 176,
+      "canonical_donor_id": 195,
+      "token": "ABILITY_WATER_COMPACTION",
+      "display_name": "Water Compaction",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 177,
+      "canonical_donor_id": 196,
+      "token": "ABILITY_MERCILESS",
+      "display_name": "Merciless",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 178,
+      "canonical_donor_id": 197,
+      "token": "ABILITY_SHIELDS_DOWN",
+      "display_name": "Shields Down",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 179,
+      "canonical_donor_id": 198,
+      "token": "ABILITY_STAKEOUT",
+      "display_name": "Stakeout",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 180,
+      "canonical_donor_id": 199,
+      "token": "ABILITY_WATER_BUBBLE",
+      "display_name": "Water Bubble",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 181,
+      "canonical_donor_id": 200,
+      "token": "ABILITY_STEELWORKER",
+      "display_name": "Steelworker",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 182,
+      "canonical_donor_id": 201,
+      "token": "ABILITY_BERSERK",
+      "display_name": "Berserk",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 183,
+      "canonical_donor_id": 202,
+      "token": "ABILITY_SLUSH_RUSH",
+      "display_name": "Slush Rush",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 184,
+      "canonical_donor_id": 205,
+      "token": "ABILITY_TRIAGE",
+      "display_name": "Triage",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 185,
+      "canonical_donor_id": 208,
+      "token": "ABILITY_SCHOOLING",
+      "display_name": "Schooling",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 186,
+      "canonical_donor_id": 209,
+      "token": "ABILITY_DISGUISE",
+      "display_name": "Disguise",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 187,
+      "canonical_donor_id": 212,
+      "token": "ABILITY_CORROSION",
+      "display_name": "Corrosion",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 188,
+      "canonical_donor_id": 213,
+      "token": "ABILITY_COMATOSE",
+      "display_name": "Comatose",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 189,
+      "canonical_donor_id": 214,
+      "token": "ABILITY_QUEENLY_MAJESTY",
+      "display_name": "Queenly Majesty",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 190,
+      "canonical_donor_id": 215,
+      "token": "ABILITY_INNARDS_OUT",
+      "display_name": "Innards Out",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 191,
+      "canonical_donor_id": 216,
+      "token": "ABILITY_DANCER",
+      "display_name": "Dancer",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 192,
+      "canonical_donor_id": 217,
+      "token": "ABILITY_BATTERY",
+      "display_name": "Battery",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 193,
+      "canonical_donor_id": 218,
+      "token": "ABILITY_FLUFFY",
+      "display_name": "Fluffy",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 194,
+      "canonical_donor_id": 219,
+      "token": "ABILITY_DAZZLING",
+      "display_name": "Dazzling",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 195,
+      "canonical_donor_id": 220,
+      "token": "ABILITY_SOUL_HEART",
+      "display_name": "Soul-Heart",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 196,
+      "canonical_donor_id": 222,
+      "token": "ABILITY_RECEIVER",
+      "display_name": "Receiver",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 197,
+      "canonical_donor_id": 224,
+      "token": "ABILITY_BEAST_BOOST",
+      "display_name": "Beast Boost",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 198,
+      "canonical_donor_id": 225,
+      "token": "ABILITY_RKS_SYSTEM",
+      "display_name": "RKS System",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 199,
+      "canonical_donor_id": 226,
+      "token": "ABILITY_ELECTRIC_SURGE",
+      "display_name": "Electric Surge",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 200,
+      "canonical_donor_id": 227,
+      "token": "ABILITY_PSYCHIC_SURGE",
+      "display_name": "Psychic Surge",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 201,
+      "canonical_donor_id": 228,
+      "token": "ABILITY_MISTY_SURGE",
+      "display_name": "Misty Surge",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 202,
+      "canonical_donor_id": 229,
+      "token": "ABILITY_GRASSY_SURGE",
+      "display_name": "Grassy Surge",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 203,
+      "canonical_donor_id": 230,
+      "token": "ABILITY_FULL_METAL_BODY",
+      "display_name": "Full Metal Body",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 204,
+      "canonical_donor_id": 231,
+      "token": "ABILITY_SHADOW_SHIELD",
+      "display_name": "Shadow Shield",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 205,
+      "canonical_donor_id": 232,
+      "token": "ABILITY_PRISM_ARMOR",
+      "display_name": "Prism Armor",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 206,
+      "canonical_donor_id": 234,
+      "token": "ABILITY_INTREPID_SWORD",
+      "display_name": "Intrepid Sword",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 207,
+      "canonical_donor_id": 235,
+      "token": "ABILITY_DAUNTLESS_SHIELD",
+      "display_name": "Dauntless Shield",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 208,
+      "canonical_donor_id": 237,
+      "token": "ABILITY_BALL_FETCH",
+      "display_name": "Ball Fetch",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 209,
+      "canonical_donor_id": 238,
+      "token": "ABILITY_COTTON_DOWN",
+      "display_name": "Cotton Down",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 210,
+      "canonical_donor_id": 241,
+      "token": "ABILITY_GULP_MISSILE",
+      "display_name": "Gulp Missile",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 211,
+      "canonical_donor_id": 243,
+      "token": "ABILITY_STEAM_ENGINE",
+      "display_name": "Steam Engine",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 212,
+      "canonical_donor_id": 244,
+      "token": "ABILITY_PUNK_ROCK",
+      "display_name": "Punk Rock",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 213,
+      "canonical_donor_id": 245,
+      "token": "ABILITY_SAND_SPIT",
+      "display_name": "Sand Spit",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 214,
+      "canonical_donor_id": 247,
+      "token": "ABILITY_RIPEN",
+      "display_name": "Ripen",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 215,
+      "canonical_donor_id": 248,
+      "token": "ABILITY_ICE_FACE",
+      "display_name": "Ice Face",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 216,
+      "canonical_donor_id": 249,
+      "token": "ABILITY_POWER_SPOT",
+      "display_name": "Power Spot",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 217,
+      "canonical_donor_id": 251,
+      "token": "ABILITY_SCREEN_CLEANER",
+      "display_name": "Screen Cleaner",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 218,
+      "canonical_donor_id": 254,
+      "token": "ABILITY_WANDERING_SPIRIT",
+      "display_name": "Wandering Spirit",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 219,
+      "canonical_donor_id": 256,
+      "token": "ABILITY_NEUTRALIZING_GAS",
+      "display_name": "Neutralizing Gas",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 220,
+      "canonical_donor_id": 260,
+      "token": "ABILITY_UNSEEN_FIST",
+      "display_name": "Unseen Fist",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 221,
+      "canonical_donor_id": 262,
+      "token": "ABILITY_TRANSISTOR",
+      "display_name": "Transistor",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 222,
+      "canonical_donor_id": 263,
+      "token": "ABILITY_DRAGONS_MAW",
+      "display_name": "Dragon’s Maw",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 223,
+      "canonical_donor_id": 264,
+      "token": "ABILITY_CHILLING_NEIGH",
+      "display_name": "Chilling Neigh",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 224,
+      "canonical_donor_id": 265,
+      "token": "ABILITY_GRIM_NEIGH",
+      "display_name": "Grim Neigh",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 225,
+      "canonical_donor_id": 268,
+      "token": "ABILITY_LINGERING_AROMA",
+      "display_name": "Lingering Aroma",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 226,
+      "canonical_donor_id": 269,
+      "token": "ABILITY_SEED_SOWER",
+      "display_name": "Seed Sower",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 227,
+      "canonical_donor_id": 270,
+      "token": "ABILITY_THERMAL_EXCHANGE",
+      "display_name": "Thermal Exchange",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 228,
+      "canonical_donor_id": 271,
+      "token": "ABILITY_ANGER_SHELL",
+      "display_name": "Anger Shell",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 229,
+      "canonical_donor_id": 272,
+      "token": "ABILITY_PURIFYING_SALT",
+      "display_name": "Purifying Salt",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 230,
+      "canonical_donor_id": 273,
+      "token": "ABILITY_WELL_BAKED_BODY",
+      "display_name": "Well Baked Body",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 231,
+      "canonical_donor_id": 274,
+      "token": "ABILITY_WIND_RIDER",
+      "display_name": "Wind Rider",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 232,
+      "canonical_donor_id": 275,
+      "token": "ABILITY_GUARD_DOG",
+      "display_name": "Guard Dog",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 233,
+      "canonical_donor_id": 277,
+      "token": "ABILITY_WIND_POWER",
+      "display_name": "Wind Power",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 234,
+      "canonical_donor_id": 280,
+      "token": "ABILITY_ELECTROMORPHOSIS",
+      "display_name": "Electromorphosis",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 235,
+      "canonical_donor_id": 281,
+      "token": "ABILITY_PROTOSYNTHESIS",
+      "display_name": "Protosynthesis",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 236,
+      "canonical_donor_id": 282,
+      "token": "ABILITY_QUARK_DRIVE",
+      "display_name": "Quark Drive",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 237,
+      "canonical_donor_id": 283,
+      "token": "ABILITY_GOOD_AS_GOLD",
+      "display_name": "Good As Gold",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 238,
+      "canonical_donor_id": 284,
+      "token": "ABILITY_VESSEL_OF_RUIN",
+      "display_name": "Vessel Of Ruin",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 239,
+      "canonical_donor_id": 285,
+      "token": "ABILITY_SWORD_OF_RUIN",
+      "display_name": "Sword Of Ruin",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 240,
+      "canonical_donor_id": 286,
+      "token": "ABILITY_TABLETS_OF_RUIN",
+      "display_name": "Tablets Of Ruin",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 241,
+      "canonical_donor_id": 287,
+      "token": "ABILITY_BEADS_OF_RUIN",
+      "display_name": "Beads Of Ruin",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 242,
+      "canonical_donor_id": 288,
+      "token": "ABILITY_ORICHALCUM_PULSE",
+      "display_name": "Orichalcum Pulse",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 243,
+      "canonical_donor_id": 289,
+      "token": "ABILITY_HADRON_ENGINE",
+      "display_name": "Hadron Engine",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 244,
+      "canonical_donor_id": 290,
+      "token": "ABILITY_OPPORTUNIST",
+      "display_name": "Opportunist",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 245,
+      "canonical_donor_id": 291,
+      "token": "ABILITY_CUD_CHEW",
+      "display_name": "Cud Chew",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 246,
+      "canonical_donor_id": 292,
+      "token": "ABILITY_SHARPNESS",
+      "display_name": "Sharpness",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 247,
+      "canonical_donor_id": 293,
+      "token": "ABILITY_SUPREME_OVERLORD",
+      "display_name": "Supreme Overlord",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 248,
+      "canonical_donor_id": 295,
+      "token": "ABILITY_TOXIC_DEBRIS",
+      "display_name": "Toxic Debris",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 249,
+      "canonical_donor_id": 296,
+      "token": "ABILITY_ARMOR_TAIL",
+      "display_name": "Armor Tail",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 250,
+      "canonical_donor_id": 297,
+      "token": "ABILITY_EARTH_EATER",
+      "display_name": "Earth Eater",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 251,
+      "canonical_donor_id": 298,
+      "token": "ABILITY_MYCELIUM_MIGHT",
+      "display_name": "Mycelium Might",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 252,
+      "canonical_donor_id": 299,
+      "token": "ABILITY_HOSPITALITY",
+      "display_name": "Hospitality",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 253,
+      "canonical_donor_id": 305,
+      "token": "ABILITY_TOXIC_CHAIN",
+      "display_name": "Toxic Chain",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 254,
+      "canonical_donor_id": 306,
+      "token": "ABILITY_SUPERSWEET_SYRUP",
+      "display_name": "Supersweet Syrup",
+      "mechanics_status": "pending"
+    },
+    {
+      "internal_id": 255,
+      "canonical_donor_id": 310,
+      "token": "ABILITY_POISON_PUPPETEER",
+      "display_name": "Poison Puppeteer",
+      "mechanics_status": "pending"
+    }
+  ]
+}
