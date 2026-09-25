@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "lane": "community_imports",
+  "start_id": 2054,
+  "source_library": "lionsprideemb-tech/Pokemon-moves",
+  "source_manifest": "manifests/community_moves.csv",
+  "batch": "CM03",
+  "moves": [
+    {
+      "id": 2054,
+      "token": "MOVE_SHOCKING_EDGE",
+      "name": "Shocking Edge",
+      "type": "TYPE_ELECTRIC",
+      "class": "CLASS_PHYSICAL",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_PARALYZE_HIT",
+        "chance": 10
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user cuts with an\n",
+        "electrified edge. It may\n",
+        "paralyze the target."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "slash"
+      },
+      "traits": [
+        "keen-edge"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 2055,
+      "token": "MOVE_KINETIC_BARRAGE",
+      "name": "Kinetic Barrage",
+      "type": "TYPE_PSYCHIC",
+      "class": "CLASS_PHYSICAL",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 20,
+      "effect": {
+        "type": "BATTLE_EFFECT_CONFUSE_HIT",
+        "chance": 30
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_SMART"
+      },
+      "description": [
+        "A burst of psychic force\n",
+        "slams the target. It may\n",
+        "leave the target confused."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "strength"
+      },
+      "traits": [
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 2056,
+      "token": "MOVE_FAIRY_SPHERES",
+      "name": "Fairy Spheres",
+      "type": "TYPE_FAIRY",
+      "class": "CLASS_PHYSICAL",
+      "power": 20,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_MULTI_HIT",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_CUTE"
+      },
+      "description": [
+        "The target is struck by\n",
+        "fairy-charged spheres two\n",
+        "to five times in a row."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "double_slap"
+      },
+      "traits": [
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 2057,
+      "token": "MOVE_ZEPHYR_RUSH",
+      "name": "Zephyr Rush",
+      "type": "TYPE_FLYING",
+      "class": "CLASS_PHYSICAL",
+      "power": 100,
+      "accuracy": 95,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_CRASH_ON_MISS",
+        "chance": 0
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "The user rushes through\n",
+        "the air at the target. A\n",
+        "miss causes crash damage."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "jump_kick"
+      },
+      "traits": [
+        "air",
+        "reckless",
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 2058,
+      "token": "MOVE_SEISMIC_FIST",
+      "name": "Seismic Fist",
+      "type": "TYPE_GROUND",
+      "class": "CLASS_PHYSICAL",
+      "power": 85,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_LOWER_DEFENSE_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "The user drives a seismic\n",
+        "fist into the target. It\n",
+        "may lower Defense."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "rock_smash"
+      },
+      "traits": [
+        "iron-fist"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 2059,
+      "token": "MOVE_PRIMAL_BEAM",
+      "name": "Primal Beam",
+      "type": "TYPE_DRAGON",
+      "class": "CLASS_PHYSICAL",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_RAISE_ATTACK_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "Primal force crashes into\n",
+        "the target. It may raise\n",
+        "the user's Attack."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "dragon_pulse"
+      },
+      "traits": [
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    }
+  ]
+}
