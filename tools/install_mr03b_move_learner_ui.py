@@ -46,11 +46,15 @@ def insert_after_once(path: Path, anchor: str, insertion: str, label: str) -> No
 
 def replace_function(path: Path, signature: str, replacement: str, label: str) -> None:
     text = path.read_text()
-    start = text.find(signature)
+    # Function names also appear in the forward-declaration block near
+    # the top of move_reminder.c.  Use the final occurrence so we patch the
+    # actual definition rather than consuming everything from a prototype to
+    # the next unrelated brace.
+    start = text.rfind(signature)
     if start < 0:
-        raise SystemExit(f"{label}: function signature not found in {path}")
+        raise SystemExit(f"{label}: function definition not found in {path}")
 
-    brace = text.find("{", start)
+    brace = text.find("{", start + len(signature))
     if brace < 0:
         raise SystemExit(f"{label}: opening brace not found in {path}")
 
