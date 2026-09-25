@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "lane": "community_imports",
-  "start_id": 2051,
+  "start_id": 1027,
   "source_library": "lionsprideemb-tech/Pokemon-moves",
   "source_manifest": "manifests/community_moves.csv",
   "batch": "CM02",
   "moves": [
     {
-      "id": 2051,
+      "id": 1027,
       "token": "MOVE_LIGHTNING_BULLET",
       "name": "Lightning Bullet",
       "type": "TYPE_ELECTRIC",
@@ -46,7 +46,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2052,
+      "id": 1028,
       "token": "MOVE_VENOM_BOLT",
       "name": "Venom Bolt",
       "type": "TYPE_POISON",
@@ -84,7 +84,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2053,
+      "id": 1029,
       "token": "MOVE_SMOLDER_BASH",
       "name": "Smolder Bash",
       "type": "TYPE_FIRE",

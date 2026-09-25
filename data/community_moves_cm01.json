@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "lane": "community_imports",
-  "start_id": 2048,
+  "start_id": 1024,
   "source_library": "lionsprideemb-tech/Pokemon-moves",
   "source_manifest": "manifests/community_moves.csv",
   "batch": "CM01",
   "moves": [
     {
-      "id": 2048,
+      "id": 1024,
       "token": "MOVE_DRACONIC_FANGS",
       "name": "Draconic Fangs",
       "type": "TYPE_DRAGON",
@@ -45,7 +45,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2049,
+      "id": 1025,
       "token": "MOVE_AQUA_BASH",
       "name": "Aqua Bash",
       "type": "TYPE_WATER",
@@ -84,7 +84,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2050,
+      "id": 1026,
       "token": "MOVE_ATOMIC_FIRE",
       "name": "Atomic Fire",
       "type": "TYPE_FIRE",

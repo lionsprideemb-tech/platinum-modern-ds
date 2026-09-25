@@ -1,56 +1,59 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "architecture": "u16",
   "move_none_id": 0,
   "canonical_floor": 919,
   "sentinel_id": 65535,
   "usable_id_max": 65534,
-  "runtime_soft_ceiling": 4095,
-  "materialization_policy": "Keep active move IDs compact. Do not jump into the high u16 space merely to separate categories; Platinum indexes and preloads move data by numeric ID.",
+  "runtime_soft_ceiling": 2047,
+  "materialization_policy": "Keep active move IDs compact. Reserve only a small official-growth buffer before community content; Platinum indexes and preloads move data by numeric ID.",
   "ranges": [
     {
       "name": "official_canonical",
       "start": 1,
-      "end": 2047,
+      "end": 1023,
       "active": true,
-      "purpose": "Official Pokémon moves. IDs 1-919 cover the pinned Gen 1-9 canonical set after removing HG-Engine's three dummy slots. Future official moves stay in this lane."
+      "purpose": "Official Pokémon moves. IDs 1-919 cover the pinned Gen 1-9 canonical set. IDs 920-1023 are a compact 104-slot buffer for future official additions."
     },
     {
       "name": "community_imports",
-      "start": 2048,
-      "end": 2559,
+      "start": 1024,
+      "end": 1599,
       "active": true,
-      "purpose": "Reusable fan-made/community moves imported into Mercury with provenance and compatibility metadata."
+      "purpose": "Reusable fan-made/community moves. Capacity 576: enough for the current 519-candidate library plus 57 spare slots."
     },
     {
       "name": "mercury_custom",
-      "start": 2560,
-      "end": 3071,
+      "start": 1600,
+      "end": 1791,
       "active": true,
       "purpose": "Original Mercury Redux moves intended for normal player or trainer use."
     },
     {
       "name": "boss_variant_signature",
-      "start": 3072,
-      "end": 3583,
+      "start": 1792,
+      "end": 1919,
       "active": true,
       "purpose": "Boss, Mega, Delta, event, alternate-form, and other signature moves."
     },
     {
       "name": "experimental_staging",
-      "start": 3584,
-      "end": 4095,
+      "start": 1920,
+      "end": 2047,
       "active": true,
       "purpose": "Development-only or provisional move IDs. Content must graduate to a permanent lane before a sealed release."
     },
     {
       "name": "inactive_future_space",
-      "start": 4096,
+      "start": 2048,
       "end": 65534,
       "active": false,
       "purpose": "Architecturally valid u16 space but intentionally not materialized on DS without a separate memory/table audit."
     }
   ],
   "donor_compatibility_max_id": 922,
-  "donor_id_note": "Pinned HG-Engine keeps three HGSS dummy slots at 468-470, so its modern move IDs are +3 versus canonical main-series IDs. Mercury drops those dummies when importing."
+  "donor_id_note": "Pinned HG-Engine keeps three HGSS dummy slots at 468-470, so its modern move IDs are +3 versus canonical main-series IDs. Mercury drops those dummies when importing.",
+  "community_capacity": 576,
+  "current_community_candidate_count": 519,
+  "community_spare_slots": 57
 }

@@ -84,7 +84,7 @@ jobs:
         run: |
           python3 tools/install_cm01_community_moves.py             vendor/pokeplatinum             --batch data/community_moves_cm01.json             --report cm02-cm01-restore.json
           test "$(jq -r '.community_moves_installed_this_pass' cm02-cm01-restore.json)" = "3"
-          test "$(jq -r '.last_community_id_this_pass' cm02-cm01-restore.json)" = "2050"
+          test "$(jq -r '.last_community_id_this_pass' cm02-cm01-restore.json)" = "1026"
 
       - name: Install CM02 community moves
         shell: bash
@@ -96,12 +96,12 @@ jobs:
           from pathlib import Path
 
           moves = Path("vendor/pokeplatinum/generated/moves.txt").read_text().splitlines()
-          assert moves[2048] == "MOVE_DRACONIC_FANGS", moves[2048]
-          assert moves[2050] == "MOVE_ATOMIC_FIRE", moves[2050]
-          assert moves[2051] == "MOVE_LIGHTNING_BULLET", moves[2051]
-          assert moves[2052] == "MOVE_VENOM_BOLT", moves[2052]
-          assert moves[2053] == "MOVE_SMOLDER_BASH", moves[2053]
-          assert moves[2054] == "MAX_MOVES", moves[2054]
+          assert moves[1024] == "MOVE_DRACONIC_FANGS", moves[1024]
+          assert moves[1026] == "MOVE_ATOMIC_FIRE", moves[1026]
+          assert moves[1027] == "MOVE_LIGHTNING_BULLET", moves[1027]
+          assert moves[1028] == "MOVE_VENOM_BOLT", moves[1028]
+          assert moves[1029] == "MOVE_SMOLDER_BASH", moves[1029]
+          assert moves[1030] == "MAX_MOVES", moves[1030]
 
           report = json.loads(Path("cm02-community-moves-install.json").read_text())
           assert report["community_moves_installed_this_pass"] == 3
@@ -216,7 +216,7 @@ jobs:
           meta = {
               "gate": "CM02_LIGHTNING_BULLET_NATIVE_RUNTIME",
               "runtime": "pokeplatinum",
-              "move_id": 2051,
+              "move_id": 1027,
               "move": "MOVE_LIGHTNING_BULLET",
               "mechanics": {
                   "type": "Electric",
@@ -258,9 +258,9 @@ jobs:
             echo "## CM02 community move implementation"
             echo
             echo "- Native runtime: pokeplatinum"
-            echo "- CM01 retained at IDs 2048-2050"
-            echo "- ID 2051: Lightning Bullet"
-            echo "- ID 2052: Venom Bolt"
-            echo "- ID 2053: Smolder Bash"
+            echo "- CM01 retained at IDs 1024-1026"
+            echo "- ID 1027: Lightning Bullet"
+            echo "- ID 1028: Venom Bolt"
+            echo "- ID 1029: Smolder Bash"
             echo "- Lightning Bullet exercised in a real native Platinum battle"
           } >> "$GITHUB_STEP_SUMMARY"

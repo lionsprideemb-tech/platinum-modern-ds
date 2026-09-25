@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Install the first curated community-move batch into native pokeplatinum.
 
-Community moves use Mercury's locked 2048-2559 lane. IDs 920-2047 remain
-reserved for future official moves, so this build materializes inert placeholders
-for those IDs before appending the curated community records. The placeholders
+Community moves use Mercury's compact 1024-1599 lane. IDs 920-1023 remain
+reserved for near-term official moves, so this build materializes only 104 inert
+placeholders before appending the curated community records. The placeholders
 are build-time resources only; they are not teachable and have no gameplay use.
 """
 
@@ -14,8 +14,9 @@ import json
 import shutil
 from pathlib import Path
 
-COMMUNITY_START = 2048
-OFFICIAL_RESERVED_END = 2047
+COMMUNITY_START = 1024
+COMMUNITY_END = 1599
+OFFICIAL_RESERVED_END = 1023
 
 
 def write_move_dir(root: Path, stem: str, data: dict, anim_text: str) -> None:
@@ -119,8 +120,8 @@ def main() -> None:
         raise SystemExit(
             f"next community ID must be {expected_first_id}, got {records[0]['id']}"
         )
-    if records[-1]["id"] > 2559:
-        raise SystemExit("community batch exceeds the locked 2048-2559 lane")
+    if records[-1]["id"] > COMMUNITY_END:
+        raise SystemExit("community batch exceeds the locked 1024-1599 lane")
 
     installed = []
     for record in records:
@@ -180,7 +181,7 @@ def main() -> None:
         "official_canonical_end": 919,
         "reserved_official_materialized": [920, OFFICIAL_RESERVED_END],
         "reserved_placeholder_count_added_this_pass": len(reserved_tokens),
-        "community_lane": [2048, 2559],
+        "community_lane": [COMMUNITY_START, COMMUNITY_END],
         "community_moves_installed_this_pass": len(installed),
         "first_community_id_this_pass": installed[0]["id"],
         "last_community_id_this_pass": installed[-1]["id"],
@@ -188,8 +189,8 @@ def main() -> None:
         "total_community_moves_materialized": max(0, len(existing) - COMMUNITY_START),
         "moves": installed,
         "policy": (
-            "reserved 920-2047 entries are inert build-time placeholders; "
-            "community moves begin at the locked ID 2048 lane"
+            "reserved 920-1023 entries are inert build-time placeholders; "
+            "community moves begin at compact ID 1024"
         ),
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

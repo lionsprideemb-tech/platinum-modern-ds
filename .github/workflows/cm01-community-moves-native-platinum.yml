@@ -89,10 +89,10 @@ jobs:
 
           moves = Path("vendor/pokeplatinum/generated/moves.txt").read_text().splitlines()
           assert moves[919] == "MOVE_MALIGNANT_CHAIN", moves[919]
-          assert moves[2048] == "MOVE_DRACONIC_FANGS", moves[2048]
-          assert moves[2049] == "MOVE_AQUA_BASH", moves[2049]
-          assert moves[2050] == "MOVE_ATOMIC_FIRE", moves[2050]
-          assert moves[2051] == "MAX_MOVES", moves[2051]
+          assert moves[1024] == "MOVE_DRACONIC_FANGS", moves[1024]
+          assert moves[1025] == "MOVE_AQUA_BASH", moves[1025]
+          assert moves[1026] == "MOVE_ATOMIC_FIRE", moves[1026]
+          assert moves[1027] == "MAX_MOVES", moves[1027]
 
           report = json.loads(Path("cm01-community-moves-install.json").read_text())
           assert report["community_moves_installed_this_pass"] == 3
@@ -215,7 +215,7 @@ jobs:
           meta = {
               "gate": "CM01_DRACONIC_FANGS_NATIVE_RUNTIME",
               "runtime": "pokeplatinum",
-              "move_id": 2048,
+              "move_id": 1024,
               "move": "MOVE_DRACONIC_FANGS",
               "mechanics": {
                   "power": 85,
@@ -256,9 +256,9 @@ jobs:
             echo "## CM01 community move implementation"
             echo
             echo "- Native runtime: pokeplatinum"
-            echo "- ID 2048: Draconic Fangs"
-            echo "- ID 2049: Aqua Bash"
-            echo "- ID 2050: Atomic Fire"
+            echo "- ID 1024: Draconic Fangs"
+            echo "- ID 1025: Aqua Bash"
+            echo "- ID 1026: Atomic Fire"
             echo "- Future official IDs 920-2047 preserved as inert reserved slots"
             echo "- First new community move exercised in a real native Platinum battle"
           } >> "$GITHUB_STEP_SUMMARY"

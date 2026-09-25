@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "lane": "community_imports",
-  "start_id": 2054,
+  "start_id": 1030,
   "source_library": "lionsprideemb-tech/Pokemon-moves",
   "source_manifest": "manifests/community_moves.csv",
   "batch": "CM03",
   "moves": [
     {
-      "id": 2054,
+      "id": 1030,
       "token": "MOVE_SHOCKING_EDGE",
       "name": "Shocking Edge",
       "type": "TYPE_ELECTRIC",
@@ -45,7 +45,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2055,
+      "id": 1031,
       "token": "MOVE_KINETIC_BARRAGE",
       "name": "Kinetic Barrage",
       "type": "TYPE_PSYCHIC",
@@ -83,7 +83,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2056,
+      "id": 1032,
       "token": "MOVE_FAIRY_SPHERES",
       "name": "Fairy Spheres",
       "type": "TYPE_FAIRY",
@@ -122,7 +122,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2057,
+      "id": 1033,
       "token": "MOVE_ZEPHYR_RUSH",
       "name": "Zephyr Rush",
       "type": "TYPE_FLYING",
@@ -163,7 +163,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2058,
+      "id": 1034,
       "token": "MOVE_SEISMIC_FIST",
       "name": "Seismic Fist",
       "type": "TYPE_GROUND",
@@ -202,7 +202,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 2059,
+      "id": 1035,
       "token": "MOVE_PRIMAL_BEAM",
       "name": "Primal Beam",
       "type": "TYPE_DRAGON",

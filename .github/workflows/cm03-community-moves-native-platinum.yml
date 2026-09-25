@@ -119,13 +119,13 @@ jobs:
             vendor/pokeplatinum \
             --batch data/community_moves_cm01.json \
             --report cm03-cm01-restore.json
-          test "$(jq -r '.last_community_id_this_pass' cm03-cm01-restore.json)" = "2050"
+          test "$(jq -r '.last_community_id_this_pass' cm03-cm01-restore.json)" = "1026"
 
           python3 tools/install_cm01_community_moves.py \
             vendor/pokeplatinum \
             --batch data/community_moves_cm02.json \
             --report cm03-cm02-restore.json
-          test "$(jq -r '.last_community_id_this_pass' cm03-cm02-restore.json)" = "2053"
+          test "$(jq -r '.last_community_id_this_pass' cm03-cm02-restore.json)" = "1029"
           test "$(jq -r '.total_community_moves_materialized' cm03-cm02-restore.json)" = "6"
 
       - name: Install CM03 community moves
@@ -142,17 +142,17 @@ jobs:
 
           moves = Path("vendor/pokeplatinum/generated/moves.txt").read_text().splitlines()
           expected = {
-              2048: "MOVE_DRACONIC_FANGS",
-              2050: "MOVE_ATOMIC_FIRE",
-              2051: "MOVE_LIGHTNING_BULLET",
-              2053: "MOVE_SMOLDER_BASH",
-              2054: "MOVE_SHOCKING_EDGE",
-              2055: "MOVE_KINETIC_BARRAGE",
-              2056: "MOVE_FAIRY_SPHERES",
-              2057: "MOVE_ZEPHYR_RUSH",
-              2058: "MOVE_SEISMIC_FIST",
-              2059: "MOVE_PRIMAL_BEAM",
-              2060: "MAX_MOVES",
+              1024: "MOVE_DRACONIC_FANGS",
+              1026: "MOVE_ATOMIC_FIRE",
+              1027: "MOVE_LIGHTNING_BULLET",
+              1029: "MOVE_SMOLDER_BASH",
+              1030: "MOVE_SHOCKING_EDGE",
+              1031: "MOVE_KINETIC_BARRAGE",
+              1032: "MOVE_FAIRY_SPHERES",
+              1033: "MOVE_ZEPHYR_RUSH",
+              1034: "MOVE_SEISMIC_FIST",
+              1035: "MOVE_PRIMAL_BEAM",
+              1036: "MAX_MOVES",
           }
           for move_id, token in expected.items():
               assert moves[move_id] == token, (move_id, moves[move_id], token)
@@ -281,7 +281,7 @@ jobs:
           meta = {
               "gate": "CM03_SHOCKING_EDGE_NATIVE_RUNTIME",
               "runtime": "pokeplatinum",
-              "move_id": 2054,
+              "move_id": 1030,
               "move": "MOVE_SHOCKING_EDGE",
               "mechanics": {
                   "type": "Electric",
@@ -323,8 +323,8 @@ jobs:
             echo "## CM03 community move implementation"
             echo
             echo "- Native runtime: pokeplatinum"
-            echo "- CM01 + CM02 retained at IDs 2048-2053"
-            echo "- Six new moves installed at IDs 2054-2059"
+            echo "- CM01 + CM02 retained at IDs 1024-1029"
+            echo "- Six new moves installed at IDs 1030-1035"
             echo "- All six animation sources verified against native Platinum donors"
             echo "- Shocking Edge exercised in a real native Platinum battle"
             echo "- Community move total: 12"
