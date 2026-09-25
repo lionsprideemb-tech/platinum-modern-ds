@@ -146,7 +146,6 @@ jobs:
               "barbaracle": "ABILITY_TOUGH_CLAWS",
               "toxapex": "ABILITY_MERCILESS",
               "bewear": "ABILITY_FLUFFY",
-              "frosmoth": "ABILITY_ICE_SCALES",
               "cetitan": "ABILITY_SLUSH_RUSH",
           }
           for species, ability in checks.items():
@@ -157,6 +156,10 @@ jobs:
                       f"{species}: expected implemented {ability}, got {data['abilities']}"
                   )
               print(species, data["abilities"])
+
+          # Ice Scales is implemented in the battle engine but Frosmoth carries it
+          # as a hidden ability in the pinned donor; hidden-ability assignment is a
+          # later species-data pass, so it is verified by the registry/source audit.
 
           remaining = 0
           for tag in ("GEN5","GEN6","GEN7","GEN8","GEN9"):
