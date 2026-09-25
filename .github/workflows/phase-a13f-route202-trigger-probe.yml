@@ -1,0 +1,169 @@
+name: PHASE-A13F Route 202 Trigger Probe
+
+on:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a13f-route202-trigger-probe.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A13E Route 202 checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a13e-route202-tutorial
+          path: checkpoint
+          run-id: 36149528000
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a13f-venv"
+          . "$RUNNER_TEMP/phase-a13f-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Probe Route 202 Dawn trigger lanes
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a13f-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E
+          Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/phase-a13e-route202-post-tutorial.dst")
+          out=Path("phase-a13f")
+          out.mkdir(exist_ok=True)
+
+          emu=DeSmuME()
+          emu.open(str(rom))
+          frame=0
+          captures=[]
+
+          keymap={
+              "U":Keys.KEY_UP,
+              "D":Keys.KEY_DOWN,
+              "L":Keys.KEY_LEFT,
+              "R":Keys.KEY_RIGHT,
+          }
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False)
+                  frame+=1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A13F stopped at {frame}")
+
+          def xy():
+              return (
+                  emu.memory.unsigned.read_short(X),
+                  emu.memory.unsigned.read_short(Z),
+              )
+
+          def pulse(key,held=10,settle=350):
+              m=keymask(key)
+              emu.input.keypad_add_key(m)
+              run(held)
+              emu.input.keypad_rm_key(m)
+              run(settle)
+
+          def snap(label):
+              name=f"{len(captures):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              row={"stage":label,"frame":frame,"file":name,"xy":xy()}
+              captures.append(row)
+              return row
+
+          def load_base():
+              global frame
+              emu.savestate.load_file(str(state))
+              frame=0
+              run(160)
+
+          candidates=[
+              ("left8",[("L",8)]),
+              ("down1-left8",[("D",1),("L",8)]),
+              ("down2-left8",[("D",2),("L",8)]),
+              ("down3-left8",[("D",3),("L",8)]),
+              ("left4-down3-left4",[("L",4),("D",3),("L",4)]),
+          ]
+
+          results=[]
+          for label,segments in candidates:
+              load_base()
+              start=xy()
+              trace=[start]
+              for direction,count in segments:
+                  for step in range(1,count+1):
+                      before=xy()
+                      pulse(keymap[direction])
+                      after=xy()
+                      trace.append(after)
+                      snap(f"{label}-{direction}{step:02d}")
+                      # If an event seized control, repeated movement may stop;
+                      # still preserve the screen so visual review can identify it.
+                      if after==before:
+                          run(700)
+                          snap(f"{label}-stopped")
+                          break
+              final_state=out/f"{label}.dst"
+              emu.savestate.save_file(str(final_state))
+              results.append({
+                  "label":label,
+                  "segments":segments,
+                  "start":start,
+                  "end":xy(),
+                  "trace":trace,
+                  "state":final_state.name,
+              })
+
+          (out/"phase-a13f-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A13F_ROUTE202_TRIGGER_PROBE",
+              "source_run":36149528000,
+              "source_state":state.name,
+              "results":results,
+              "captures":captures,
+              "visual_review_required":True,
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A13F evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a13f-route202-trigger-probe
+          path: phase-a13f/
+          if-no-files-found: error
+          retention-days: 30
