@@ -251,7 +251,7 @@ jobs:
           cp mp06-missing-cries.txt modern-species/
           cp mp06b-base-exp.json modern-species/
           cp mp06c-breeding.json modern-species/
-          sha256sum modern-species/Pokemon_Mercury_Modern_Platinum_MP05.nds > modern-species/SHA256SUMS.txt
+          sha256sum modern-species/Pokemon_Mercury_Modern_Platinum_MP06C.nds > modern-species/SHA256SUMS.txt
 
           {
             echo "Mercury Modern Platinum — MP06C Modern Species Breeding Integration"
@@ -265,7 +265,7 @@ jobs:
             echo "Canonical breeding offspring for #494-1025: installed"
             echo "Unimplemented abilities are not silently approximated."
             echo "Full ROM compile required; long playtest intentionally skipped."
-          } > modern-species/MP05_MANIFEST.txt
+          } > modern-species/MP06C_MANIFEST.txt
 
       - name: Upload MP06C modern species breeding build
         uses: actions/upload-artifact@v4
