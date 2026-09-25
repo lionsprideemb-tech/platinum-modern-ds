@@ -1068,6 +1068,7 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     replace_once(
         source,
         """    MoveReminder_DrawLabelText(controller);
+    MoveReminder_DrawSubInfo(controller);
 
     Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX], 15);""",
         """    Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX], 15);""",
