@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - feature/mercury-move-preflight
+      - "feature/**"
     paths:
       - "data/community_moves_cm*.json"
       - "data/community_move_effect_extensions.json"
