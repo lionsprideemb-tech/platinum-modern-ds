@@ -116,6 +116,8 @@ def patch_ui(root: Path) -> None:
         source,
         decl_anchor,
         """static void MoveReminder_DrawSubMoveDescription(MoveReminderController *controller, u32 move);
+static void MercuryMoveLearner_PrintMessage(MoveReminderController *controller, Window *window, u32 messageID, u32 x, u32 y);
+static void MercuryMoveLearner_PrintNumber(MoveReminderController *controller, Window *window, u32 value, u32 x, u32 y);
 static void MoveReminder_DrawTopMoveSideCard(MoveReminderController *controller);
 static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller);
 static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *controller, BOOL visible);
@@ -521,7 +523,7 @@ static void MoveReminder_DrawTopMoveSideCard(MoveReminderController *controller)
             controller->data->mon,
             MON_DATA_MOVE1 + i,
             NULL);
-        if (move != MOVE_NONE) {
+        if (move != 0) {
             MessageLoader_GetString(moveNames, move, controller->string);
             Text_AddPrinterWithParamsAndColor(
                 window, FONT_SYSTEM, controller->string,
