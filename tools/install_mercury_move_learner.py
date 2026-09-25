@@ -333,7 +333,7 @@ u8 MoveReminderData_GetMoveSource(Pokemon *mon, u16 move)
     u8 level = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
 
     SpeciesLearnsetEntry *levelUpMoves = Heap_Alloc(
-        HEAP_ID_FIELD1,
+        HEAP_ID_MOVE_REMINDER,
         sizeof(SpeciesLearnset));
     Pokemon_LoadLevelUpMovesOf(species, form, levelUpMoves);
 
