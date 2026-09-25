@@ -3,7 +3,7 @@ name: Mercury Move Learner Visual Proof
 on:
   push:
     branches:
-      - feature/ds-move-learner
+      - feature/ds-move-learner-complete
     paths:
       - ".github/workflows/mercury-move-learner-visual-proof.yml"
 
@@ -118,11 +118,13 @@ jobs:
             sleep "${2:-1}"
           }
 
-          # DeSmuME default keyboard: DS A=X, DS B=Z, DS X=S.
-          press x 3
+          # DeSmuME default keyboard: Start=Return, DS A=X, DS B=Z, DS X=S.
+          # Platinum's title screen requires START, not A.
+          press Return 3
           import -window "$WIN" proof/01-continue-menu.png
 
-          press x 10
+          # Select CONTINUE and wait for the save to enter the overworld.
+          press x 12
           import -window "$WIN" proof/02-overworld.png
 
           # Open field menu with DS X.
