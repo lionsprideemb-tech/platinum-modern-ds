@@ -1,0 +1,379 @@
+name: CM09 Shared Speed Boost Family
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feature/cm09-speed-boost-family
+    paths:
+      - "data/community_moves_cm08.json"
+      - "data/community_moves_cm09.json"
+      - "tools/install_cm08_simple_effects.py"
+      - ".github/workflows/cm09-speed-boost-family.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cm09-speed-boost-family-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+  COMMUNITY_SOURCE_COMMIT: 4250c4bfbb2e8dddd117160cec9e1e8395dfe9f7
+
+jobs:
+  build-and-prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core ffmpeg
+
+      - name: Checkout pinned Platinum, HG-Engine, and community library
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+          git clone https://github.com/lionsprideemb-tech/Pokemon-moves.git vendor/community-moves
+          git -C vendor/community-moves checkout "$COMMUNITY_SOURCE_COMMIT"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Rebuild complete 1025-species layer
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report cm09-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --gate "CM09_${tag}_RESOURCE_INSTALL" \
+              --report "cm09-${tag}.json"
+          done <<'BATCHES'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          BATCHES
+
+      - name: Restore certified Gen 5-9 move foundation
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report cm09-modern-moves.json \
+            --implemented-registry cm09-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves cm09-implemented-moves.txt \
+            --report cm09-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report cm09-evolutions.json
+
+      - name: Restore CM01 through CM05
+        shell: bash
+        run: |
+          for batch in 01 02 03 04 05; do
+            python3 tools/install_cm01_community_moves.py \
+              vendor/pokeplatinum \
+              --batch "data/community_moves_cm${batch}.json" \
+              --report "cm09-cm${batch}-restore.json"
+          done
+          test "$(jq -r '.last_community_id_this_pass' cm09-cm05-restore.json)" = "1047"
+          test "$(jq -r '.total_community_moves_materialized' cm09-cm05-restore.json)" = "24"
+
+      - name: Reconstruct certified CM06 native mechanics bulk
+        shell: bash
+        run: |
+          python3 tools/build_cm06_native_community_bulk.py \
+            vendor/community-moves \
+            vendor/pokeplatinum \
+            --mercury-root . \
+            --start-id 1048 \
+            --output cm06-native-bulk.json \
+            --report cm09-cm06-selection.json
+
+          test "$(jq -r '.selected_without_new_mechanics' cm09-cm06-selection.json)" = "210"
+          test "$(jq -r '.last_id' cm09-cm06-selection.json)" = "1257"
+
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch cm06-native-bulk.json \
+            --report cm09-cm06-install.json
+
+          test "$(jq -r '.total_community_moves_materialized' cm09-cm06-install.json)" = "234"
+
+      - name: Restore certified CM07 canonical-type batch
+        shell: bash
+        run: |
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch data/community_moves_cm07.json \
+            --report cm09-cm07-install.json
+          test "$(jq -r '.last_community_id_this_pass' cm09-cm07-install.json)" = "1275"
+          test "$(jq -r '.total_community_moves_materialized' cm09-cm07-install.json)" = "252"
+
+      - name: Restore certified CM08 effects and moves
+        shell: bash
+        run: |
+          python3 tools/install_cm08_simple_effects.py \
+            vendor/pokeplatinum \
+            --report cm09-cm08-effects.json
+
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch data/community_moves_cm08.json \
+            --report cm09-cm08-install.json
+
+          test "$(jq -r '.effect_count_after' cm09-cm08-effects.json)" = "279"
+          test "$(jq -r '.last_community_id_this_pass' cm09-cm08-install.json)" = "1277"
+          test "$(jq -r '.total_community_moves_materialized' cm09-cm08-install.json)" = "254"
+
+      - name: Install CM09 shared Speed boost family
+        shell: bash
+        run: |
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch data/community_moves_cm09.json \
+            --report cm09-community-install.json
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          batch = json.loads(Path('data/community_moves_cm09.json').read_text())
+          report = json.loads(Path('cm09-community-install.json').read_text())
+          moves = Path('vendor/pokeplatinum/generated/moves.txt').read_text().splitlines()
+
+          expected_tokens = [
+              'MOVE_ZAP_JIVE',
+              'MOVE_HEX_TROT',
+              'MOVE_FROSTWALKER',
+              'MOVE_ENIGMATICDASH',
+              'MOVE_LLUVIAPUNOS',
+              'MOVE_VIRAZON',
+          ]
+          assert [m['id'] for m in batch['moves']] == list(range(1278, 1284))
+          assert [m['token'] for m in batch['moves']] == expected_tokens
+          assert report['community_moves_installed_this_pass'] == 6
+          assert report['first_community_id_this_pass'] == 1278
+          assert report['last_community_id_this_pass'] == 1283
+          assert report['total_community_moves_materialized'] == 260
+          for idx, token in enumerate(expected_tokens, start=1278):
+              assert moves[idx] == token
+          assert moves[1284] == 'MAX_MOVES'
+
+          for record in batch['moves']:
+              assert record['effect']['type'] == 'BATTLE_EFFECT_RAISE_SPEED_HIT'
+              assert record['effect']['chance'] in (50, 100)
+
+          print('CM09 registry and shared-effect checks: PASS')
+          PY
+
+      - name: Verify CM09 native animation donors
+        shell: bash
+        run: |
+          cmp vendor/pokeplatinum/res/moves/zap_jive/anim.s vendor/pokeplatinum/res/moves/thunderbolt/anim.s
+          cmp vendor/pokeplatinum/res/moves/hex_trot/anim.s vendor/pokeplatinum/res/moves/shadow_ball/anim.s
+          cmp vendor/pokeplatinum/res/moves/frostwalker/anim.s vendor/pokeplatinum/res/moves/ice_punch/anim.s
+          cmp vendor/pokeplatinum/res/moves/enigmaticdash/anim.s vendor/pokeplatinum/res/moves/quick_attack/anim.s
+          cmp vendor/pokeplatinum/res/moves/lluviapunos/anim.s vendor/pokeplatinum/res/moves/mach_punch/anim.s
+          cmp vendor/pokeplatinum/res/moves/virazon/anim.s vendor/pokeplatinum/res/moves/aqua_jet/anim.s
+          echo "CM09 native animation donor verification: PASS"
+
+      - name: Install Frost Walker runtime proof
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_runtime_harness.py \
+            vendor/pokeplatinum --report cm09-base-party.json
+          python3 tools/install_pt04c_summary_harness.py \
+            vendor/pokeplatinum --report cm09-base-summary.json
+          python3 tools/install_pt04c_pc_harness.py \
+            vendor/pokeplatinum --report cm09-base-pc.json
+          python3 tools/install_pt04c_battle_harness.py \
+            vendor/pokeplatinum --report cm09-base-battle.json
+
+          python3 tools/install_pt05d_animation_preview_harness.py \
+            vendor/pokeplatinum \
+            --move MOVE_FROSTWALKER \
+            --preview-id cm09_1280 \
+            --report cm09-runtime-harness.json
+
+          grep -q 'MOVE_FROSTWALKER' vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Build native Platinum with CM09 family
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Run Frost Walker native runtime proof
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/cm09-venv"
+          . "$RUNNER_TEMP/cm09-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom = Path('/var/tmp/pokeplatinum/pokeplatinum.us.nds')
+          out = Path('runtime-preview')
+          out.mkdir(exist_ok=True)
+          mp4 = out / 'cm09-frost-walker-native-platinum.mp4'
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit('CM09 native Platinum ROM did not boot')
+
+          fps = 15
+          sample_every = 4
+          proc = subprocess.Popen([
+              'ffmpeg', '-y', '-loglevel', 'error',
+              '-f', 'rawvideo', '-pix_fmt', 'rgb24',
+              '-s', '256x192', '-r', str(fps), '-i', '-',
+              '-an', '-c:v', 'libx264', '-preset', 'veryfast',
+              '-crf', '25', '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
+              str(mp4)
+          ], stdin=subprocess.PIPE)
+
+          current = 0
+          written = 0
+
+          def cycle(frames):
+              global current, written
+              for _ in range(frames):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f'CM09 emulator stopped at frame {current}')
+                  if current % sample_every == 0:
+                      image = emu.screenshot().crop((0, 0, 256, 192)).convert('RGB')
+                      proc.stdin.write(image.tobytes())
+                      written += 1
+
+          def pulse_a(held=20, settle=180):
+              emu.input.keypad_add_key(keymask(Keys.KEY_A))
+              cycle(held)
+              emu.input.keypad_rm_key(keymask(Keys.KEY_A))
+              cycle(settle)
+
+          try:
+              cycle(1500)
+              for _ in range(14):
+                  pulse_a()
+              cycle(800)
+              emu.screenshot().save(out / 'cm09-frost-walker-final.png')
+          finally:
+              try:
+                  if proc.stdin is not None:
+                      proc.stdin.close()
+                  rc = proc.wait()
+                  if rc != 0:
+                      raise SystemExit(f'ffmpeg failed with exit code {rc}')
+              finally:
+                  emu.destroy()
+
+          if written < 100 or not mp4.exists() or mp4.stat().st_size < 10_000:
+              raise SystemExit('CM09 runtime video proof is incomplete')
+
+          meta = {
+              'gate': 'CM09_SHARED_SPEED_BOOST_RUNTIME',
+              'runtime': 'pokeplatinum',
+              'new_move_ids': [1278, 1279, 1280, 1281, 1282, 1283],
+              'representative_move': 'MOVE_FROSTWALKER',
+              'representative_move_id': 1280,
+              'shared_effect': 'BATTLE_EFFECT_RAISE_SPEED_HIT',
+              'total_live_community_moves': 260,
+              'max_moves': 1284,
+              'captured_frames': written,
+              'emulator_cycles': current,
+              'mp4': mp4.name,
+              'mp4_bytes': mp4.stat().st_size,
+          }
+          (out / 'cm09-meta.json').write_text(json.dumps(meta, indent=2) + '\n')
+          print(json.dumps(meta, indent=2))
+          PY
+
+      - name: Upload CM09 proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: cm09-shared-speed-boost-family-proof
+          path: |
+            data/community_moves_cm09.json
+            cm09-community-install.json
+            cm09-runtime-harness.json
+            runtime-preview/cm09-frost-walker-native-platinum.mp4
+            runtime-preview/cm09-frost-walker-final.png
+            runtime-preview/cm09-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: CM09 summary
+        shell: bash
+        run: |
+          {
+            echo "## CM09 shared Speed boost family"
+            echo
+            echo "- Reused the certified CM08 BATTLE_EFFECT_RAISE_SPEED_HIT mechanic"
+            echo "- Added 6 community moves at IDs 1278-1283"
+            echo "- Zap Jive / Hex Trot / Rain of Fists use a 50% Speed +1 chance"
+            echo "- Frost Walker / Enigmatic Dash / Sea Breeze use guaranteed Speed +1"
+            echo "- Total live community moves: 260"
+            echo "- MAX_MOVES: 1284"
+            echo "- Frost Walker received native Platinum build + DeSmuME runtime proof"
+          } >> "$GITHUB_STEP_SUMMARY"
