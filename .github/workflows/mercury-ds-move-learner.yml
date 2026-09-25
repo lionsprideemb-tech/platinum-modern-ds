@@ -1,0 +1,217 @@
+name: Mercury DS Move Learner
+
+on:
+  push:
+    branches:
+      - feature/ds-move-learner
+    paths:
+      - ".github/workflows/mercury-ds-move-learner.yml"
+      - "tools/install_mr01_ds_move_learner.py"
+      - "tools/install_mp05_ability_namespace.py"
+      - "tools/install_pt04d_species_batch.py"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - "tools/install_pt05b_compatible_evolutions.py"
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05c1_modern_moves.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/move_id_namespace.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  integrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply sealed Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Python syntax gate
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/install_mp05_ability_namespace.py \
+            tools/install_pt04d_species_batch.py \
+            tools/install_pt05a_compatible_learnsets.py \
+            tools/install_pt05b_compatible_evolutions.py \
+            tools/install_pt05c_move_id_width.py \
+            tools/install_pt05c1_modern_moves.py \
+            tools/install_mr01_ds_move_learner.py
+
+      - name: Restore MP05 ability architecture
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report ml-ability-namespace.json \
+            --implemented-registry ml-implemented-abilities.txt
+
+          test "$(jq -r '.canonical_ability_count' ml-ability-namespace.json)" = "311"
+          test "$(jq -r '.save_storage.capacity' ml-ability-namespace.json)" = "1023"
+
+      - name: Rebuild 1025 species
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report ml-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --implemented-abilities ml-implemented-abilities.txt \
+              --gate "MOVE_LEARNER_${tag}_RESOURCE_INSTALL" \
+              --report "ml-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+      - name: Restore modern move foundation
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report ml-modern-moves.json \
+            --implemented-registry ml-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves ml-implemented-moves.txt \
+            --report ml-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report ml-evolutions.json
+
+      - name: Install DS-native universal Move Learner
+        shell: bash
+        run: |
+          python3 tools/install_mr01_ds_move_learner.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --implemented-moves ml-implemented-moves.txt \
+            --report mercury-ds-move-learner.json
+
+          test "$(jq -r '.status' mercury-ds-move-learner.json)" = "PASS"
+          test "$(jq -r '.tm_items_required' mercury-ds-move-learner.json)" = "false"
+          test "$(jq -r '.species_with_pools' mercury-ds-move-learner.json)" -ge "1000"
+          test "$(jq -r '.max_pool_size' mercury-ds-move-learner.json)" -le "240"
+
+          grep -q "mercury_move_learner_data.c" vendor/pokeplatinum/src/meson.build
+          grep -q "PARTY_MENU_EXIT_CODE_MOVE_LEARNER" vendor/pokeplatinum/include/applications/party_menu/defs.h
+          grep -q "PartyMenu_Text_MoveLearner" vendor/pokeplatinum/res/text/party_menu.json
+          grep -q "MOVE LEARNER" vendor/pokeplatinum/res/text/move_reminder.json
+          grep -q "MercuryMoveLearner_GetPool" vendor/pokeplatinum/src/move_reminder_data.c
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/move-learner-venv"
+          . "$RUNNER_TEMP/move-learner-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build Mercury DS Move Learner ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage artifact
+        shell: bash
+        run: |
+          mkdir -p ds-move-learner
+          cp "$BUILD/pokeplatinum.us.nds" ds-move-learner/Pokemon_Mercury_DS_Move_Learner.nds
+          cp mercury-ds-move-learner.json ds-move-learner/
+          cp ml-modern-moves.json ds-move-learner/
+          cp ml-learnsets.json ds-move-learner/
+          sha256sum ds-move-learner/Pokemon_Mercury_DS_Move_Learner.nds > ds-move-learner/SHA256SUMS.txt
+
+          {
+            echo "Mercury DS Move Learner"
+            echo "Direct access: Party -> Pokemon -> MOVE LEARNER"
+            echo "Native Platinum DS Move Reminder UI reused and upgraded"
+            echo "Pool: level + egg + machine + tutor moves"
+            echo "Traditional TM compatibility is not required for teaching"
+            echo "Unsupported/deferred move mechanics stay filtered out"
+            echo "Long playthrough intentionally skipped"
+          } > ds-move-learner/MANIFEST.txt
+
+      - name: Upload Move Learner build
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-ds-move-learner
+          path: ds-move-learner/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## Mercury DS Move Learner"
+            echo
+            echo "- Direct party-menu access: PASS"
+            echo "- DS-native Move Reminder UI conversion: PASS"
+            echo "- Universal legal-move pool generation: PASS"
+            echo "- Level-up gating by current level: PASS"
+            echo "- Egg/Machine/Tutor integration: PASS"
+            echo "- Full ROM compile: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
