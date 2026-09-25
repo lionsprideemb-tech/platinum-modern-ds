@@ -1,4 +1,5 @@
 name: MR03B Move Learner UI
+# Production UI proof: MOVE / STATS / ABILITY + sub-screen workspace
 
 on:
   workflow_dispatch:
