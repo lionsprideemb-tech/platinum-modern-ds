@@ -153,6 +153,22 @@ EXPLICIT_EFFECT_MAP = {
     "EFFECT_CLOSE_COMBAT": "BATTLE_EFFECT_DEF_SPD_DOWN_HIT",
     "EFFECT_SUCKER_PUNCH": "BATTLE_EFFECT_HIT_FIRST_IF_TARGET_ATTACKING",
     "EFFECT_DEFOG": "BATTLE_EFFECT_REMOVE_HAZARDS_SCREENS_EVA_DOWN",
+    "EFFECT_SP_ATTACK_UP_HIT": "BATTLE_EFFECT_RAISE_SP_ATK_HIT",
+    "RemoveScreens": "BATTLE_EFFECT_REMOVE_SCREENS",
+    "LowerTargetSpeed1": "BATTLE_EFFECT_LOWER_SPEED_HIT",
+    "LowerTargetSpAtk1": "BATTLE_EFFECT_LOWER_SP_ATK_HIT",
+    "LowerTargetAttack1": "BATTLE_EFFECT_LOWER_ATTACK_HIT",
+    "LowerTargetDefense1": "BATTLE_EFFECT_LOWER_DEFENSE_HIT",
+    "LowerTargetSpDef1": "BATTLE_EFFECT_LOWER_SP_DEF_HIT",
+    "LowerTargetSpDef2": "BATTLE_EFFECT_LOWER_SP_DEF_2_HIT",
+    "SwitchOutUserDamagingMove": "BATTLE_EFFECT_SWITCH_HIT",
+    "HealUserByHalfOfDamageDone": "BATTLE_EFFECT_RECOVER_HALF_DAMAGE_DEALT",
+    "Rampages for 2–3 turns, then confuses the user": "BATTLE_EFFECT_CONTINUE_AND_CONFUSE_SELF",
+    "Drains 50% of damage dealt to a sleeping target": "BATTLE_EFFECT_RECOVER_DAMAGE_SLEEP",
+    "High-power damage; sharply lowers the user's Sp. Atk": "BATTLE_EFFECT_USER_SP_ATK_DOWN_2",
+    "Damages and lowers Speed": "BATTLE_EFFECT_LOWER_SPEED_HIT",
+    "Damage; lowers the user's Speed": "BATTLE_EFFECT_USER_SPEED_DOWN_HIT",
+    "Hits 2–5 times": "BATTLE_EFFECT_MULTI_HIT",
 }
 
 EFFECT_ALLOWED_DETAIL = {
@@ -195,6 +211,13 @@ EFFECT_ALLOWED_DETAIL = {
     "BATTLE_EFFECT_HIT_FIRST_IF_TARGET_ATTACKING": set(),
     "BATTLE_EFFECT_STEALTH_ROCK": {"field_weather_terrain_behavior"},
     "BATTLE_EFFECT_REMOVE_HAZARDS_SCREENS_EVA_DOWN": {"stat_changes", "field_weather_terrain_behavior"},
+    "BATTLE_EFFECT_LOWER_SP_DEF_2_HIT": {"stat_changes"},
+    "BATTLE_EFFECT_USER_SPEED_DOWN_HIT": {"stat_changes"},
+    "BATTLE_EFFECT_CONTINUE_AND_CONFUSE_SELF": set(),
+    "BATTLE_EFFECT_RECOVER_DAMAGE_SLEEP": {"drain_or_healing"},
+    "BATTLE_EFFECT_SP_ATK_UP": {"stat_changes"},
+    "BATTLE_EFFECT_TRANSFORM": set(),
+    "BATTLE_EFFECT_THAW_AND_BURN_HIT": {"status_effects"},
 }
 
 DETAIL_FIELDS = (
@@ -352,6 +375,9 @@ def chance_for(source: dict[str, str], detail: dict[str, str], effect: str) -> i
         "BATTLE_EFFECT_HIT_FIRST_IF_TARGET_ATTACKING",
         "BATTLE_EFFECT_STEALTH_ROCK",
         "BATTLE_EFFECT_REMOVE_HAZARDS_SCREENS_EVA_DOWN",
+        "BATTLE_EFFECT_CONTINUE_AND_CONFUSE_SELF",
+        "BATTLE_EFFECT_RECOVER_DAMAGE_SLEEP",
+        "BATTLE_EFFECT_TRANSFORM",
     }:
         return 0
 
@@ -527,6 +553,138 @@ def infer_generic_effect(detail: dict[str, str]) -> tuple[str | None, str]:
             return "BATTLE_EFFECT_SET_SPIKES", "inferred-native-hazard"
 
     return None, "no-native-match"
+
+
+def infer_audited_native_effect(
+    source: dict[str, str],
+    detail: dict[str, str],
+) -> tuple[str | None, str]:
+    """Map audited cross-project wording to an exact native Platinum effect."""
+
+    primary = source.get("primary_effect", "").strip()
+    secondary = source.get("secondary_effect", "").strip()
+    what = detail.get("what_it_does", "").strip()
+    source_desc = detail.get("source_description", "").strip()
+    flags = detail.get("move_flags", "")
+    category = detail.get("category", "")
+    hit = category != "Status"
+    text = " ".join(
+        [
+            primary,
+            secondary,
+            what,
+            source_desc,
+            detail.get("status_effects", ""),
+            detail.get("stat_changes", ""),
+            detail.get("multi_hit_or_duration", ""),
+            detail.get("recoil", ""),
+            detail.get("drain_or_healing", ""),
+            detail.get("switching_behavior", ""),
+        ]
+    )
+    low = text.lower()
+
+    prefix_rules = (
+        ("functioncode burntarget", "BATTLE_EFFECT_BURN_HIT"),
+        ("functioncode flinchtarget", "BATTLE_EFFECT_FLINCH_HIT"),
+        ("functioncode lowertargetspeed1", "BATTLE_EFFECT_LOWER_SPEED_HIT"),
+        ("functioncode lowertargetattack1", "BATTLE_EFFECT_LOWER_ATTACK_HIT"),
+        ("functioncode lowertargetdefense1", "BATTLE_EFFECT_LOWER_DEFENSE_HIT"),
+        ("functioncode lowertargetspatk1", "BATTLE_EFFECT_LOWER_SP_ATK_HIT"),
+        ("functioncode lowertargetspdef1", "BATTLE_EFFECT_LOWER_SP_DEF_HIT"),
+        ("functioncode healuserbyhalfofdamagedone", "BATTLE_EFFECT_RECOVER_HALF_DAMAGE_DEALT"),
+    )
+    for prefix, effect in prefix_rules:
+        if low.startswith(prefix):
+            return effect, "audited-native-source-function"
+
+    if low.startswith("functioncode raiseuserspatk1") and category == "Status":
+        return "BATTLE_EFFECT_SP_ATK_UP", "audited-native-source-function"
+
+    if (
+        hit
+        and ("thawsuser" in flags.lower() or "thaw" in low)
+        and re.search(r"(?:chance to|may(?: also)?|functioncode )burn", low)
+    ):
+        return "BATTLE_EFFECT_THAW_AND_BURN_HIT", "audited-native-thaw-burn"
+
+    if hit and re.search(r"rampages? for 2.?3 turns.*confus", low):
+        return "BATTLE_EFFECT_CONTINUE_AND_CONFUSE_SELF", "audited-native-rampage"
+
+    if hit and re.search(r"drains? 50%.*sleep|sleeping target.*(?:drain|restore|heal)", low):
+        return "BATTLE_EFFECT_RECOVER_DAMAGE_SLEEP", "audited-native-dream-eater"
+
+    if hit and re.search(r"(?:heal|restore).*half.*damage|drains? 50% of damage", low):
+        if not re.search(r"sleep|weather|terrain|berry|random", low):
+            return "BATTLE_EFFECT_RECOVER_HALF_DAMAGE_DEALT", "audited-native-drain"
+
+    if hit and re.search(r"(?:switch(?:es)? the user out|user.*switch(?:es)? out|hit and run)", low):
+        return "BATTLE_EFFECT_SWITCH_HIT", "audited-native-switch-hit"
+
+    if hit and re.search(r"(?:break|remove).*(?:light screen|reflect|barrier)", low):
+        return "BATTLE_EFFECT_REMOVE_SCREENS", "audited-native-screen-break"
+
+    if hit and re.search(r"sharply lowers? the user.?s sp\.? atk|user sp\.? atk -2", low):
+        return "BATTLE_EFFECT_USER_SP_ATK_DOWN_2", "audited-native-overheat"
+
+    if hit and re.search(r"lowers? the user.?s speed(?: by 1 stage)?|user speed -1", low):
+        return "BATTLE_EFFECT_USER_SPEED_DOWN_HIT", "audited-native-user-speed-drop"
+
+    if hit and re.search(r"(?:hits?|attack).*2.?5 (?:times|hits)|hits 2.?5 times", low):
+        if not re.search(r"(?:raise|lower|burn|poison|paraly|freeze|confus|flinch).*each hit", low):
+            return "BATTLE_EFFECT_MULTI_HIT", "audited-native-multihit"
+
+    if hit:
+        status_rules = (
+            (r"(?:chance to|may(?: also)?|functioncode )burn", "BATTLE_EFFECT_BURN_HIT"),
+            (r"(?:chance to|may(?: also)?|functioncode )paraly", "BATTLE_EFFECT_PARALYZE_HIT"),
+            (r"(?:chance to|may(?: also)?|functioncode )poison", "BATTLE_EFFECT_POISON_HIT"),
+            (r"(?:chance to|may(?: also)?|functioncode )confus", "BATTLE_EFFECT_CONFUSE_HIT"),
+            (r"(?:chance to|may(?: also)?|functioncode )flinch", "BATTLE_EFFECT_FLINCH_HIT"),
+        )
+        status_words = sum(
+            1
+            for needle in ("burn", "paraly", "poison", "confus", "freeze", "frostbite", "bleed")
+            if needle in low
+        )
+        if status_words <= 1:
+            for pattern, effect in status_rules:
+                if re.search(pattern, low):
+                    return effect, "audited-native-secondary-status"
+
+        stat_rules = (
+            (r"(?:chance to )?lower(?:s)? (?:the )?target.?s? attack(?: by 1 stage)?|target attack -1", "BATTLE_EFFECT_LOWER_ATTACK_HIT"),
+            (r"(?:chance to )?lower(?:s)? (?:the )?target.?s? defense(?: by 1 stage)?|target defense -1", "BATTLE_EFFECT_LOWER_DEFENSE_HIT"),
+            (r"(?:chance to )?lower(?:s)? (?:the )?target.?s? speed(?: by 1 stage)?|target speed -1", "BATTLE_EFFECT_LOWER_SPEED_HIT"),
+            (r"(?:chance to )?lower(?:s)? (?:the )?target.?s? sp\.? atk(?: by 1 stage)?|target sp\.? atk -1", "BATTLE_EFFECT_LOWER_SP_ATK_HIT"),
+            (r"(?:chance to )?lower(?:s)? (?:the )?target.?s? sp\.? def(?: by 1 stage)?|target sp\.? def -1", "BATTLE_EFFECT_LOWER_SP_DEF_HIT"),
+            (r"(?:chance to )?lower(?:s)? (?:the )?target.?s? accuracy(?: by 1 stage)?|target accuracy -1", "BATTLE_EFFECT_LOWER_ACCURACY_HIT"),
+        )
+        for pattern, effect in stat_rules:
+            if re.search(pattern, low):
+                return effect, "audited-native-secondary-stat"
+
+        if re.search(r"target.?s? sp\.? def.*(?:-2|2 stages)|lower.*sp\.? def.*2 stages", low):
+            return "BATTLE_EFFECT_LOWER_SP_DEF_2_HIT", "audited-native-secondary-stat"
+
+        if re.search(r"raise(?:s)? all (?:of )?the user.?s stats|raise all.*stats", low):
+            return "BATTLE_EFFECT_RAISE_ALL_STATS_HIT", "audited-native-omni-boost"
+
+        if re.search(r"critical hits? land more easily|high critical(?:-hit)? ratio|high crit", low):
+            if not re.search(r"burn|poison|paraly|freeze|frostbite|confus", low):
+                return "BATTLE_EFFECT_HIGH_CRITICAL", "audited-native-high-crit"
+
+    if category == "Status":
+        if re.search(r"raise(?:s)? (?:the )?user.?s? sp\.? atk(?: by 1 stage)?|user sp\.? atk \+1", low):
+            if not re.search(r"(?:and|also).*(?:attack|defense|speed|sp\.? def)", low):
+                return "BATTLE_EFFECT_SP_ATK_UP", "audited-native-status-stat"
+        if re.search(r"morphs? into the target|transform(?:s)? into the target", low):
+            return "BATTLE_EFFECT_TRANSFORM", "audited-native-transform"
+
+    if re.fullmatch(r"damage; priority [-+]?\d+", primary, re.I) and clean_empty(secondary):
+        return "BATTLE_EFFECT_HIT", "audited-native-priority-hit"
+
+    return None, "no-audited-native-match"
 
 
 def detailed_fields_fit(effect: str, detail: dict[str, str]) -> tuple[bool, str]:
@@ -710,6 +868,9 @@ def main() -> None:
             if direct in native_effects:
                 effect = direct
                 basis = "direct-native-effect"
+
+        if effect is None:
+            effect, basis = infer_audited_native_effect(source, detail)
 
         if effect is None:
             if primary.startswith("EFFECT_") and primary not in EXPLICIT_EFFECT_MAP:
