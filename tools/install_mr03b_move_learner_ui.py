@@ -138,11 +138,11 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         """    [MOVE_REMINDER_WIN_MOVES_NAMES] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 6,
+        .tilemapTop = 7,
         .width = 30,
-        .height = 8,
+        .height = 7,
         .palette = 15,
-        .baseTile = 0x0B5,
+        .baseTile = 0x0D3,
     },""",
         "MR03B bottom move list window",
     )
@@ -164,7 +164,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .tilemapLeft = 1,
         .tilemapTop = 0,
         .width = 30,
-        .height = 6,
+        .height = 7,
         .palette = 15,
         .baseTile = 1,
     },
@@ -173,18 +173,18 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .tilemapLeft = 1,
         .tilemapTop = 14,
         .width = 30,
-        .height = 9,
+        .height = 8,
         .palette = 15,
         .baseTile = 0x1A5,
     },
     [MOVE_REMINDER_WIN_SUB_HELP] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 23,
+        .tilemapTop = 22,
         .width = 30,
-        .height = 1,
+        .height = 2,
         .palette = 15,
-        .baseTile = 0x2B3,
+        .baseTile = 0x285,
     },
     [MOVE_REMINDER_WIN_TOP_PAGE] = {
         .bgLayer = BG_LAYER_MAIN_0,
@@ -382,7 +382,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         HEAP_ID_MOVE_REMINDER);
 
     static const u8 moveX[LEARNED_MOVES_MAX] = { 4, 124, 4, 124 };
-    static const u8 moveY[LEARNED_MOVES_MAX] = { 14, 14, 28, 28 };
+    static const u8 moveY[LEARNED_MOVES_MAX] = { 15, 15, 30, 30 };
 
     for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
         u16 move = Pokemon_GetValue(
@@ -407,7 +407,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         controller->string);
     Text_AddPrinterWithParamsAndColor(
         current, FONT_SYSTEM, controller->string,
-        4, 40, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+        4, 43, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
 
     MessageLoader_GetString(
         controller->messageLoader,
@@ -710,6 +710,11 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
             page, FONT_SYSTEM, controller->string,
             8, 20, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
 
+        MercuryMoveLearner_PrintMessage(
+            controller, page,
+            MoveReminder_Text_MercuryInnatesOff,
+            96, 20);
+
         u16 ability = Pokemon_GetValue(mon, MON_DATA_ABILITY, NULL);
 
         MessageLoader *abilityNames = MessageLoader_Init(
@@ -734,10 +739,6 @@ static void MoveReminder_DrawMercuryTopPage(MoveReminderController *controller)
             8, 64, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         MessageLoader_Free(abilityDesc);
 
-        MercuryMoveLearner_PrintMessage(
-            controller, page,
-            MoveReminder_Text_MercuryInnatesOff,
-            8, 104);
     }
 
     Window_ScheduleCopyToVRAM(page);
@@ -776,7 +777,7 @@ def patch_text(root: Path) -> None:
         "MoveReminder_Text_MercuryLearnerHelp": "L/R: INFO   A: TEACH   B: BACK",
         "MoveReminder_Text_MercuryStatsTitle": "< L   STATS   R >",
         "MoveReminder_Text_MercuryAbilityTitle": "< L   ABILITY   R >",
-        "MoveReminder_Text_MercuryInnatesOff": "INNATE ABILITIES: OFF",
+        "MoveReminder_Text_MercuryInnatesOff": "INNATES: OFF",
         "MoveReminder_Text_MercuryClassPhysical": "PHYS",
         "MoveReminder_Text_MercuryClassSpecial": "SPEC",
         "MoveReminder_Text_MercuryClassStatus": "STATUS",
@@ -836,12 +837,12 @@ def main() -> None:
             "white bottom-screen workspace",
             "2x2 current-move grid",
             "learnable-moves heading",
-            "non-overlapping bottom-screen bands with 3-line effect room",
+            "non-overlapping current/list/details/footer bands",
             "highlighted move type/category/power/accuracy/PP",
             "framed Stats and Ability cards",
             "Stats/Ability pages hide the native prompt box",
             "dedicated Nature line",
-            "Innate Abilities OFF indicator",
+            "header-level Innates OFF indicator",
         ],
         "deferred_polish": [
             "touchscreen row selection",
