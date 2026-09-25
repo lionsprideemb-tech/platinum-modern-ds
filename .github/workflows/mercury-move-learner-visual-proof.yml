@@ -86,7 +86,7 @@ jobs:
           echo $! > proof/xvfb.pid
           sleep 2
 
-          "$EMU" --disable-sound --nojoy --scale 2 \
+          "$EMU" --disable-sound --nojoy=1 \
             runtime/Pokemon_Mercury_DS_Move_Learner.nds \
             >proof/desmume.log 2>&1 &
           echo $! > proof/desmume.pid
