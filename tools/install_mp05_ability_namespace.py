@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the canonical Gen 5-9 ability namespace and 9-bit runtime storage.
+"""Install the canonical Gen 5-9 ability namespace and 10-bit runtime storage.
 
 MP05A establishes stable canonical ability IDs 0..310 without pretending that
 all modern battle hooks are already implemented. Species importers receive a
@@ -7,7 +7,7 @@ separate implemented-ability registry so unported abilities continue to fall
 back to ABILITY_NONE until their real mechanics are added.
 
 The save format stays the same size. Platinum uses only six visible marking
-bits, so bit 7 of the existing markings byte stores ability bit 8.
+bits, so bits 6-7 of the existing markings byte store ability bits 8-9.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from pathlib import Path
 
 CANONICAL_MAX = 310
 NATIVE_MAX = 123
-ABILITY_HIGH_MASK = "0x80"
+ABILITY_HIGH_MASK = "0xC0"
 VISIBLE_MARKINGS_MASK = "0x3F"
 
 DEFINE_RE = re.compile(r"^#define\s+(ABILITY_[A-Z0-9_]+)\s+(\d+)\s*$", re.M)
@@ -221,8 +221,8 @@ def patch_widths(pt: Path) -> list[str]:
         '''    u16 partyDecrypted : 1;
     u16 boxDecrypted : 1;
     u16 checksumFailed : 1;
-    u16 abilityHigh : 1;
-    u16 : 12;
+    u16 abilityHigh : 2;
+    u16 : 11;
 ''',
         "battle-recording spare ability bit",
     )
@@ -234,9 +234,9 @@ def patch_widths(pt: Path) -> list[str]:
         "#define FATEFUL_ENCOUNTER_LOCATION 3002\n",
         '''#define FATEFUL_ENCOUNTER_LOCATION 3002
 
-// Platinum exposes six marking bits. Mercury reserves bit 7 of the same saved
-// byte for ability bit 8, preserving the encrypted BoxPokemon block size.
-#define MERCURY_ABILITY_HIGH_MASK 0x80
+// Platinum exposes six marking bits. Mercury reserves bits 6-7 of the same saved
+// byte for ability bits 8-9, preserving the encrypted BoxPokemon block size.
+#define MERCURY_ABILITY_HIGH_MASK 0xC0
 #define MERCURY_VISIBLE_MARKINGS_MASK 0x3F
 ''',
         "extended ability masks",
@@ -253,7 +253,7 @@ def patch_widths(pt: Path) -> list[str]:
 ''',
         '''    case MON_DATA_ABILITY:
         result = monDataBlockA->ability
-            | ((monDataBlockA->markings & MERCURY_ABILITY_HIGH_MASK) << 1);
+            | ((monDataBlockA->markings & MERCURY_ABILITY_HIGH_MASK) << 2);
         break;
 
     case MON_DATA_MARKINGS:
@@ -274,10 +274,10 @@ def patch_widths(pt: Path) -> list[str]:
 ''',
         '''    case MON_DATA_ABILITY: {
         u16 ability = *u16Value;
-        GF_ASSERT(ability <= 511);
+        GF_ASSERT(ability <= 1023);
         monDataBlockA->ability = ability & 0xFF;
         monDataBlockA->markings = (monDataBlockA->markings & ~MERCURY_ABILITY_HIGH_MASK)
-            | ((ability >> 1) & MERCURY_ABILITY_HIGH_MASK);
+            | ((ability >> 2) & MERCURY_ABILITY_HIGH_MASK);
         break;
     }
 
@@ -292,7 +292,7 @@ def patch_widths(pt: Path) -> list[str]:
         pokemon_c,
         "    param1->ability = monDataBlockA->ability;\n",
         '''    param1->ability = monDataBlockA->ability;
-    param1->abilityHigh = (monDataBlockA->markings & MERCURY_ABILITY_HIGH_MASK) != 0;
+    param1->abilityHigh = (monDataBlockA->markings & MERCURY_ABILITY_HIGH_MASK) >> 6;
 ''',
         "recording ability export",
     )
@@ -301,7 +301,7 @@ def patch_widths(pt: Path) -> list[str]:
         "    monDataBlockA->ability = param0->ability;\n",
         '''    monDataBlockA->ability = param0->ability;
     monDataBlockA->markings = (monDataBlockA->markings & ~MERCURY_ABILITY_HIGH_MASK)
-        | (param0->abilityHigh ? MERCURY_ABILITY_HIGH_MASK : 0);
+        | ((param0->abilityHigh << 6) & MERCURY_ABILITY_HIGH_MASK);
 ''',
         "recording ability import",
     )
@@ -401,9 +401,9 @@ def main() -> None:
         "max_canonical_ability": donor[CANONICAL_MAX],
         "save_storage": {
             "ability_low_bits": "PokemonDataBlockA.ability",
-            "ability_bit_8": "PokemonDataBlockA.markings bit 7",
+            "ability_bits_8_9": "PokemonDataBlockA.markings bits 6-7",
             "visible_markings_bits": "0..5",
-            "capacity": 511,
+            "capacity": 1023,
             "box_block_size_changed": False,
         },
         "species_data_ability_width": "u16",
