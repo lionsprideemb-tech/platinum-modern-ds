@@ -205,9 +205,26 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
     )
     replace_once(
         source,
+        "    .textColorBg = 0,\n",
+        "    .textColorBg = 15,\n",
+        "MR03B bottom list white background",
+    )
+    replace_once(
+        source,
         "    .cursorType = 1,\n",
         "    .cursorType = 0,\n",
         "MR03B bottom list native text cursor",
+    )
+    replace_once(
+        source,
+        """    controller->listMenu = ListMenu_New(&template, controller->data->listPos, controller->data->cursorPos, HEAP_ID_MOVE_REMINDER);
+
+    Window_ScheduleCopyToVRAM(&controller->windows[MOVE_REMINDER_WIN_MOVES_NAMES]);""",
+        """    Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MOVES_NAMES], 15);
+    controller->listMenu = ListMenu_New(&template, controller->data->listPos, controller->data->cursorPos, HEAP_ID_MOVE_REMINDER);
+
+    Window_ScheduleCopyToVRAM(&controller->windows[MOVE_REMINDER_WIN_MOVES_NAMES]);""",
+        "MR03B white list fill",
     )
 
     # The old move selector and scroll arrows are also engine-A sprites. The
