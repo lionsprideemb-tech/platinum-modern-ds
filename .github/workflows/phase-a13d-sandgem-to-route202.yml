@@ -196,10 +196,11 @@ jobs:
           if xy() != (164,846):
               raise SystemExit(f"Unexpected A13C resume coordinate: {xy()}")
 
-          # Known lower Sandgem corridor: move below the homes, cross east,
-          # then go north through the Pokémon Center / Mart gap.
-          direct_goto(154,856,"sandgem-west-lower","zx")
-          direct_goto(184,856,"sandgem-east-lower","xz")
+          # A13C resumes on the east-west Sandgem path at (164,846).
+          # Going south here is blocked by the tree line, so stay on the
+          # visible path: cross east first, then turn north through the
+          # Pokémon Center / Mart corridor toward Route 202.
+          direct_goto(184,846,"sandgem-east-mid","xz")
           direct_goto(184,830,"sandgem-north-corridor","zx")
           snap("route202-approach")
 
