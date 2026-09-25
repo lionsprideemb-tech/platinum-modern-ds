@@ -174,16 +174,31 @@ jobs:
               pulse(Keys.KEY_UP,10,350); recover_field()
           snap("route201-entered")
 
-          # Route 201 south road, northeast bend, Sandgem boundary.
+          # Route 201 south road to the already-proven north-bend checkpoint.
           direct_goto(140,856,"route201-east-south","xz")
           direct_goto(145,843,"route201-north-bend","zx")
-          direct_goto(151,843,"route201-sandgem-edge","xz")
-          for _ in range(3):
-              pulse(Keys.KEY_RIGHT,10,350); recover_field()
+
+          # Reuse the route that already passed ALPHA02/03/04.  A straight
+          # east coordinate walk is invalid here because the Route 201 ledge
+          # blocks it.  Detour west through grass, go north past the ledge,
+          # return east, then drop onto the lower path and enter Sandgem.
+          def march(key,count,label,marks=()):
+              for i in range(1,count+1):
+                  pulse(key,10,175)
+                  recover_field()
+                  if i in marks:
+                      snap(f"{label}-{i:02d}",False)
+
+          march(Keys.KEY_LEFT,12,"ledge-detour-west",(6,12))
+          march(Keys.KEY_UP,18,"ledge-detour-north",(9,18))
+          march(Keys.KEY_RIGHT,60,"sandgem-approach-east",(20,40,60))
+          march(Keys.KEY_DOWN,8,"sandgem-entry-down",(8,))
+          march(Keys.KEY_RIGHT,28,"sandgem-entry-east",(14,28))
+          run(700)
           snap("sandgem-entered")
 
-          # Sandgem: under the homes, east, then north through Center/Mart gap.
-          direct_goto(154,856,"sandgem-west-lower","zx")
+          # From the proven Sandgem entry state, use the calibrated town
+          # coordinates to approach Route 202.
           direct_goto(184,856,"sandgem-east-lower","xz")
           direct_goto(184,830,"sandgem-north-corridor","zx")
           snap("route202-approach")
