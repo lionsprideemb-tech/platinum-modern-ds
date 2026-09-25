@@ -75,6 +75,52 @@ def patch_ui(root: Path) -> None:
         "MR03C item-name include",
     )
 
+    # Give the custom top page its own character/tilemap layer so its 30x22
+    # window cannot collide with Platinum's message-box tile storage.
+    replace_once(
+        source,
+        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_2, &bgMain2, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_2);
+
+    Bg_ClearTilesRange(BG_LAYER_MAIN_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+}""",
+        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_2, &bgMain2, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_2);
+
+    BgTemplate bgMain3 = {
+        .x = 0,
+        .y = 0,
+        .bufferSize = 0x800,
+        .baseTile = 0,
+        .screenSize = BG_SCREEN_SIZE_256x256,
+        .colorMode = GX_BG_COLORMODE_16,
+        .screenBase = GX_BG_SCRBASE_0xd800,
+        .charBase = GX_BG_CHARBASE_0x08000,
+        .bgExtPltt = GX_BG_EXTPLTT_01,
+        .priority = 1,
+        .areaOver = 0,
+        .mosaic = FALSE,
+    };
+
+    Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_3, &bgMain3, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_3);
+    Bg_ClearTilesRange(BG_LAYER_MAIN_3, 32, 0, HEAP_ID_MOVE_REMINDER);
+    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG3, TRUE);
+
+    Bg_ClearTilesRange(BG_LAYER_MAIN_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+}""",
+        "MR03C dedicated top BG",
+    )
+
+    replace_once(
+        source,
+        """    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);""",
+        """    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG3, FALSE);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_3);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);""",
+        "MR03C dedicated top BG teardown",
+    )
+
     # Dedicated MR03C windows.  Existing native windows remain available only
     # for the confirmation/replace-move state machine.
     replace_once(
@@ -176,13 +222,13 @@ static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width
         .baseTile = 1,
     },
     [MOVE_REMINDER_WIN_MERCURY_TOP] = {
-        .bgLayer = BG_LAYER_MAIN_0,
+        .bgLayer = BG_LAYER_MAIN_3,
         .tilemapLeft = 1,
         .tilemapTop = 1,
         .width = 30,
         .height = 22,
         .palette = 15,
-        .baseTile = 0x040,
+        .baseTile = 0x001,
     },
     [MOVE_REMINDER_WIN_MERCURY_FILTER] = {
         .bgLayer = BG_LAYER_SUB_0,
