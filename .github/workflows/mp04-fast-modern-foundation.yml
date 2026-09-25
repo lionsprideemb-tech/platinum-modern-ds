@@ -1,0 +1,171 @@
+name: MP04 Fast Modern Foundation
+
+on:
+  push:
+    branches:
+      - feature/modern-platinum-fast
+    paths:
+      - ".github/workflows/mp04-fast-modern-foundation.yml"
+      - "tools/install_pt05a_compatible_learnsets.py"
+      - "tools/install_pt05b_compatible_evolutions.py"
+      - "tools/install_pt05c_move_id_width.py"
+      - "tools/install_pt05c1_modern_moves.py"
+      - "tools/audit_move_id_namespace.py"
+      - "data/move_id_namespace.json"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  integrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-venv python3-pip wget xz-utils             libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set             /include/constants/moves.h             /include/constants/move_effects.h             /data/Moves.c             /data/Species.c             /data/BaseExperienceTable.c             /data/IconPaletteTable.c             /data/HeightTable.c             /data/SpriteOffsets.c             /data/Evolutions.c             /data/graphics/sprites/             /data/learnsets/learnsets.json             /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply sealed PB04 Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Prove native Platinum story remains untouched
+        shell: bash
+        run: |
+          set -euo pipefail
+          if find platinum-overlay -type f | grep -E '/(field|fielddata|map|maps|script|scripts|event|events)/'; then
+            echo "Unexpected world/story overlay found" >&2
+            exit 1
+          fi
+          echo "Native Platinum world/story inheritance: PASS"
+
+      - name: Rebuild canonical 1025-species layer
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum             --through 1025             --output vendor/pokeplatinum/generated/species.txt             --report mp04-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py               vendor/pokeplatinum vendor/hg-engine               --start-dex "$start" --end-dex "$end"               --gate "MP04_${tag}_RESOURCE_INSTALL"               --report "mp04-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+      - name: Install canonical Gen 5-9 move namespace
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py             vendor/pokeplatinum vendor/hg-engine             --report mp04-modern-moves.json             --implemented-registry mp04-implemented-moves.txt
+
+          test "$(jq -r '.modern_moves_added' mp04-modern-moves.json)" = "452"
+          test "$(jq -r '.modern_moves_immediately_implemented' mp04-modern-moves.json)" = "308"
+          test "$(jq -r '.modern_moves_stubbed_pending_effect_port' mp04-modern-moves.json)" = "144"
+
+      - name: Install modern learnsets and evolutions in bulk
+        shell: bash
+        run: |
+          python3 tools/install_pt05a_compatible_learnsets.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 1025             --implemented-moves mp04-implemented-moves.txt             --report mp04-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py             vendor/pokeplatinum vendor/hg-engine             --start-dex 494 --end-dex 1025             --report mp04-evolutions.json
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          moves=json.loads(Path("mp04-modern-moves.json").read_text())
+          learn=json.loads(Path("mp04-learnsets.json").read_text())
+          evo=json.loads(Path("mp04-evolutions.json").read_text())
+
+          assert moves["modern_moves_added"] == 452
+          assert learn["species_imported"] >= 500
+          assert evo["species_processed"] >= 500
+          assert evo["total_evolution_entries"] > 200
+          print("MP02/MP03/MP04 bulk integration checks: PASS")
+          PY
+
+      - name: Generate Mercury title
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mp04-venv"
+          . "$RUNNER_TEMP/mp04-venv/bin/activate"
+          pip install --upgrade pip Pillow
+          python3 tools/generate_mercury_title.py vendor/pokeplatinum
+
+      - name: Build complete Modern Platinum ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage MP04 artifact
+        shell: bash
+        run: |
+          mkdir -p modern-foundation
+          cp "$BUILD/pokeplatinum.us.nds" modern-foundation/Pokemon_Mercury_Modern_Platinum_MP04.nds
+          cp mp04-modern-moves.json modern-foundation/
+          cp mp04-learnsets.json modern-foundation/
+          cp mp04-evolutions.json modern-foundation/
+          cp mp04-implemented-moves.txt modern-foundation/
+          sha256sum modern-foundation/Pokemon_Mercury_Modern_Platinum_MP04.nds > modern-foundation/SHA256SUMS.txt
+
+          {
+            echo "Mercury Modern Platinum — MP04"
+            echo "Native Platinum world/story: inherited"
+            echo "Canonical species capacity: 1025"
+            echo "Canonical Gen 5-9 moves added: 452"
+            echo "Modern moves immediately usable: 308"
+            echo "Modern moves deferred for effect ports: 144"
+            echo "Modern learnsets: bulk imported"
+            echo "Modern evolutions: bulk imported with documented fallbacks"
+            echo "Runtime playtest: intentionally skipped by project decision"
+          } > modern-foundation/MP04_MANIFEST.txt
+
+      - name: Upload MP04 modern foundation
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-modern-platinum-mp04
+          path: modern-foundation/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## MP04 fast modern foundation"
+            echo
+            echo "- Complete native Platinum story/world retained: PASS"
+            echo "- 1025-species resource layer rebuilt: PASS"
+            echo "- Compatible modern learnsets imported: PASS"
+            echo "- Compatible modern evolutions imported: PASS"
+            echo "- Canonical Gen 5-9 move namespace through ID 919: PASS"
+            echo "- Full ROM compile: PASS"
+            echo "- Long runtime playthrough: intentionally skipped."
+          } >> "$GITHUB_STEP_SUMMARY"
