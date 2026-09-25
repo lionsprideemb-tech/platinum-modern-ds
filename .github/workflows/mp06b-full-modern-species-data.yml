@@ -49,6 +49,7 @@ jobs:
           git -C vendor/hg-engine sparse-checkout init --no-cone
           git -C vendor/hg-engine sparse-checkout set \
             /include/constants/ability.h \
+            /include/constants/species.h \
             /include/constants/moves.h \
             /include/constants/move_effects.h \
             /data/text/720.txt \
