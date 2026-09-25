@@ -173,18 +173,18 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .tilemapLeft = 1,
         .tilemapTop = 14,
         .width = 30,
-        .height = 8,
+        .height = 10,
         .palette = 15,
         .baseTile = 0x1A5,
     },
     [MOVE_REMINDER_WIN_SUB_HELP] = {
         .bgLayer = BG_LAYER_SUB_0,
-        .tilemapLeft = 1,
-        .tilemapTop = 22,
-        .width = 30,
-        .height = 2,
+        .tilemapLeft = 31,
+        .tilemapTop = 23,
+        .width = 1,
+        .height = 1,
         .palette = 15,
-        .baseTile = 0x285,
+        .baseTile = 0x2D1,
     },
     [MOVE_REMINDER_WIN_TOP_PAGE] = {
         .bgLayer = BG_LAYER_MAIN_0,
@@ -414,8 +414,8 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         MoveReminder_Text_MercuryLearnerHelp,
         controller->string);
     Text_AddPrinterWithParamsAndColor(
-        help, FONT_SYSTEM, controller->string,
-        2, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+        current, FONT_SYSTEM, controller->string,
+        132, 43, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
 
     Window_ScheduleCopyToVRAM(current);
     Window_ScheduleCopyToVRAM(help);
@@ -774,7 +774,7 @@ def patch_text(root: Path) -> None:
     replacements = {
         "MoveReminder_Text_MercuryLearnerCurrentMoves": "CURRENT MOVES",
         "MoveReminder_Text_MercuryLearnerLearnable": "LEARNABLE MOVES",
-        "MoveReminder_Text_MercuryLearnerHelp": "L/R: INFO   A: TEACH   B: BACK",
+        "MoveReminder_Text_MercuryLearnerHelp": "A:TEACH  B:BACK",
         "MoveReminder_Text_MercuryStatsTitle": "< L   STATS   R >",
         "MoveReminder_Text_MercuryAbilityTitle": "< L   ABILITY   R >",
         "MoveReminder_Text_MercuryInnatesOff": "INNATES: OFF",
@@ -837,7 +837,7 @@ def main() -> None:
             "white bottom-screen workspace",
             "2x2 current-move grid",
             "learnable-moves heading",
-            "non-overlapping current/list/details/footer bands",
+            "non-overlapping current/list/details bands",
             "highlighted move type/category/power/accuracy/PP",
             "framed Stats and Ability cards",
             "Stats/Ability pages hide the native prompt box",
