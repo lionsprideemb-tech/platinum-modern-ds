@@ -184,21 +184,18 @@ def write_generated_header(path: Path, offsets: list[int], flat: list[str], flat
     ]
     if flat:
         for i in range(0, len(flat), 8):
-            lines.append("    " + ", ".join(flat[i:i + 8]) + ",")
+            packed = [
+                f"({move} | ({source} << 14))"
+                for move, source in zip(flat[i:i + 8], flat_sources[i:i + 8])
+            ]
+            lines.append("    " + ", ".join(packed) + ",")
     else:
         lines.append("    MOVE_NONE,")
     lines += [
         "};",
         "",
-        "static const u8 sMercuryMoveLearnerExtraSources[] = {",
-    ]
-    if flat_sources:
-        for i in range(0, len(flat_sources), 24):
-            lines.append("    " + ", ".join(str(v) for v in flat_sources[i:i + 24]) + ",")
-    else:
-        lines.append("    MERCURY_MOVE_SOURCE_SPECIAL,")
-    lines += [
-        "};",
+        "#define MERCURY_MOVE_LEARNER_MOVE_MASK 0x3FFF",
+        "#define MERCURY_MOVE_LEARNER_SOURCE_SHIFT 14",
         "",
         "#endif // POKEPLATINUM_GENERATED_MERCURY_MOVE_LEARNER_H",
         "",
@@ -313,7 +310,7 @@ u16 *MoveReminderData_GetMoves(Pokemon *mon, enum HeapID heapID)
                 learnerMoves,
                 &moveCount,
                 currentMoves,
-                sMercuryMoveLearnerExtraMoves[i]);
+                sMercuryMoveLearnerExtraMoves[i] & MERCURY_MOVE_LEARNER_MOVE_MASK);
         }
     }
 
@@ -353,8 +350,9 @@ u8 MoveReminderData_GetMoveSource(Pokemon *mon, u16 move)
         u32 finish = sMercuryMoveLearnerExtraOffsets[species + 1];
 
         for (u32 i = begin; i < finish; i++) {
-            if (sMercuryMoveLearnerExtraMoves[i] == move) {
-                return sMercuryMoveLearnerExtraSources[i];
+            u16 packed = sMercuryMoveLearnerExtraMoves[i];
+            if ((packed & MERCURY_MOVE_LEARNER_MOVE_MASK) == move) {
+                return (u8)(packed >> MERCURY_MOVE_LEARNER_SOURCE_SHIFT);
             }
         }
     }
