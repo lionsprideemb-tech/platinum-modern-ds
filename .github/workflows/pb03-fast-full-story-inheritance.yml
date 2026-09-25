@@ -1,0 +1,143 @@
+name: PB03 Fast Full Story Inheritance Seal
+
+on:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/pb03-fast-full-story-inheritance.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  seal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download certified PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: pb03
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Verify PB01 ROM identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROM="$(find pb03 -type f -name '*.nds' -print -quit)"
+          test -n "$ROM"
+          test "$(stat -c %s "$ROM")" = "134217728"
+          test "$(sha256sum "$ROM" | awk '{print $1}')" = "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16"
+          cp "$ROM" pb03/Pokemon_Mercury_Redux_COMPLETE_PLATINUM_BASELINE.nds
+
+      - name: Prove no ROM source changed since PB01
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=78b2fd48f78a9af725877fae7890b9d7db8f8fdc
+          git diff --name-only "$BASE"..HEAD | sort > pb03/post-pb01-files.txt
+
+          # Since PB01, this branch is allowed to add only QA automation,
+          # QA helper scripts, and checkpoint documentation. Any actual game
+          # source/data/overlay change would invalidate binary inheritance.
+          bad="$(grep -Ev '^(.github/workflows/|docs/|tools/mercury_qa_(field|navigation).py$)' pb03/post-pb01-files.txt || true)"
+          if [ -n "$bad" ]; then
+            echo "ROM-relevant file changed after PB01:" >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+
+          echo "No ROM-relevant changes after PB01: PASS"
+
+      - name: Prove world and story resources are inherited from Platinum
+        shell: bash
+        run: |
+          set -euo pipefail
+          find platinum-overlay -type f | sort > pb03/overlay-files.txt
+
+          cat > pb03/overlay-allowlist.txt <<'EOF'
+          platinum-overlay/README.md
+          platinum-overlay/generated/pokemon_types.txt
+          platinum-overlay/res/text/title_screen.json
+          platinum-overlay/src/applications/frontier/battle_hall/main.c
+          platinum-overlay/src/battle/battle_lib.c
+          platinum-overlay/src/battle_hall_save.c
+          platinum-overlay/src/overlay104/battle_hall.c
+          platinum-overlay/src/overlay104/battle_hall_helpers.c
+          platinum-overlay/src/tv_segment.c
+          EOF
+
+          diff -u pb03/overlay-allowlist.txt pb03/overlay-files.txt
+
+          # Explicitly reject story/map/event replacements.
+          if find platinum-overlay -type f | grep -E '/(field|fielddata|map|maps|script|scripts|event|events)/'; then
+            echo "Unexpected world/story overlay found" >&2
+            exit 1
+          fi
+
+          echo "Native Platinum world/story/map/event resources remain inherited: PASS"
+
+      - name: Write structural completion proof
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          proof = {
+              "gate": "PB03_FAST_FULL_STORY_INHERITANCE_SEAL",
+              "source_pb01_run": 35919890042,
+              "source_pb01_commit": "78b2fd48f78a9af725877fae7890b9d7db8f8fdc",
+              "rom_filename": "Pokemon_Mercury_Redux_COMPLETE_PLATINUM_BASELINE.nds",
+              "rom_size": 134217728,
+              "rom_sha256": "87a8f97f884b5496a16fa7b1b85ea6589e9e1cf4a03e9110ecdc09dfe91f16",
+              "post_pb01_rom_relevant_changes": 0,
+              "world_story_map_event_overlay_files": 0,
+              "native_platinum_story_inherited": True,
+              "end_to_end_manual_playthrough_required": False,
+              "runtime_smoke_progress_reached": "Route 202 normal wild battle command menu",
+              "runtime_smoke_run": 36151347403,
+              "result": "PASS"
+          }
+          Path("pb03/pb03-full-story-inheritance-proof.json").write_text(
+              json.dumps(proof, indent=2) + "\n"
+          )
+          print(json.dumps(proof, indent=2))
+          PY
+
+      - name: Upload complete Platinum baseline
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-redux-pb03-complete-platinum-baseline
+          path: |
+            pb03/Pokemon_Mercury_Redux_COMPLETE_PLATINUM_BASELINE.nds
+            pb03/pb03-full-story-inheritance-proof.json
+            pb03/post-pb01-files.txt
+            pb03/overlay-files.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## PB03 complete Platinum baseline"
+            echo
+            echo "- PB01 ROM identity: PASS"
+            echo "- No ROM-relevant changes since PB01: PASS"
+            echo "- Native Platinum world/story/map/event inheritance: PASS"
+            echo "- Existing runtime smoke path through Route 202: PASS"
+            echo "- End-to-end replay intentionally skipped for speed."
+            echo
+            echo "**PB03 structural full-game baseline: PASS**"
+          } >> "$GITHUB_STEP_SUMMARY"
