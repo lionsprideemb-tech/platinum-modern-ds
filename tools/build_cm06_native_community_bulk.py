@@ -793,6 +793,19 @@ def main() -> None:
 
     detail_by_token = {row["move_id"]: row for row in details}
 
+    type_resolution_path = mercury / "data" / "community_move_canonical_type_resolutions.json"
+    type_resolution_payload = json.loads(type_resolution_path.read_text(encoding="utf-8"))
+    canonical_type_resolutions = {
+        row["source_token"]: row
+        for row in type_resolution_payload.get("resolutions", [])
+    }
+    for row in canonical_type_resolutions.values():
+        if row["mercury_type"] not in TYPE_MAP:
+            raise SystemExit(
+                f"non-canonical Mercury type resolution for {row['source_token']}: "
+                f"{row['mercury_type']}"
+            )
+
     existing_tokens: set[str] = set()
     for path in sorted((mercury / "data").glob("community_moves_cm*.json")):
         if path.name == args.output.name:
@@ -836,9 +849,26 @@ def main() -> None:
         if detail.get("mechanics_audit_status", "") != "complete":
             deferred.append({"token": token, "name": name, "reason": "mechanics-audit-not-complete"})
             continue
-        if detail["type"] not in TYPE_MAP:
-            deferred.append({"token": token, "name": name, "reason": "custom-type"})
-            continue
+
+        source_type = detail["type"]
+        type_resolution = canonical_type_resolutions.get(source_token)
+        if source_type not in TYPE_MAP:
+            if type_resolution is None:
+                deferred.append({
+                    "token": token,
+                    "name": name,
+                    "reason": "custom-type-without-resolution",
+                    "source_type": source_type,
+                })
+                continue
+            if type_resolution.get("source_type") != source_type:
+                raise SystemExit(
+                    f"type resolution source mismatch for {source_token}: "
+                    f"{type_resolution.get('source_type')} != {source_type}"
+                )
+            detail = dict(detail)
+            detail["type"] = type_resolution["mercury_type"]
+
         if detail["category"] not in CLASS_MAP:
             deferred.append({"token": token, "name": name, "reason": "unknown-category"})
             continue
@@ -998,6 +1028,12 @@ def main() -> None:
                 ).strip(),
                 "mechanics_basis": basis,
                 "source_token": source_token,
+                "source_type": source_type,
+                "mercury_type_resolution": (
+                    type_resolution["mercury_type"]
+                    if type_resolution is not None and source_type not in TYPE_MAP
+                    else None
+                ),
             }
         )
         seen_tokens.add(token)
@@ -1037,6 +1073,10 @@ def main() -> None:
         "last_id": selected[-1]["id"],
         "deferred_for_review": len(deferred),
         "deferred_reason_counts": dict(sorted(reason_counts.items())),
+        "canonical_type_resolutions_available": len(canonical_type_resolutions),
+        "canonical_type_overrides_applied": sum(
+            1 for row in selected if row.get("mercury_type_resolution") is not None
+        ),
         "selected": [
             {
                 "id": row["id"],
