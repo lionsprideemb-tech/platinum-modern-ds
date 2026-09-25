@@ -108,7 +108,7 @@ jobs:
 
           test -s proof/window.id
           WIN="$(cat proof/window.id)"
-          xdotool windowactivate --sync "$WIN" || true
+          xdotool windowfocus --sync "$WIN"
           # Let Platinum's full startup/title animation settle before sending input.
           sleep 40
           import -window "$WIN" proof/00-title-ready.png
@@ -119,8 +119,8 @@ jobs:
           WIN="$(cat proof/window.id)"
 
           press() {
-            xdotool windowactivate "$WIN" || true
-            xdotool key --window "$WIN" "$1"
+            xdotool windowfocus --sync "$WIN"
+            xdotool key --clearmodifiers "$1"
             sleep "${2:-1}"
           }
 
