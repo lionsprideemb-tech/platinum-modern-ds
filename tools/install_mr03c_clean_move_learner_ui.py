@@ -41,13 +41,16 @@ def insert_after_once(path: Path, anchor: str, insertion: str, label: str) -> No
 
 def replace_function(path: Path, signature: str, replacement: str, label: str) -> None:
     text = path.read_text()
-    start = text.rfind(signature)
-    if start < 0:
-        raise SystemExit(f"{label}: definition not found in {path}")
 
-    brace = text.find("{", start + len(signature))
-    if brace < 0:
-        raise SystemExit(f"{label}: opening brace not found in {path}")
+    # A prototype may use different parameter names from the real definition.
+    # Never patch from a prototype: require the signature to be followed
+    # immediately by the function body opening brace.
+    needle = signature + "\n{"
+    start = text.rfind(needle)
+    if start < 0:
+        raise SystemExit(f"{label}: exact function definition not found in {path}: {signature}")
+
+    brace = start + len(signature) + 1
 
     depth = 0
     end = None
