@@ -108,7 +108,7 @@ def parse_donor_species_ids(path: Path) -> dict[str, int]:
     return {
         name: int(value)
         for name, value in re.findall(
-            r"^#define\s+(SPECIES_[A-Z0-9_]+)\s+(\d+)\s*$",
+            r"^#define\s+(SPECIES_[A-Z0-9_]+)\s+(\d+)(?:\s+//.*)?\s*$",
             text,
             re.M,
         )
