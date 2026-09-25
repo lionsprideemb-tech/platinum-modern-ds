@@ -140,7 +140,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .tilemapLeft = 1,
         .tilemapTop = 7,
         .width = 30,
-        .height = 7,
+        .height = 6,
         .palette = 15,
         .baseTile = 0x0D3,
     },""",
@@ -171,9 +171,9 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
     [MOVE_REMINDER_WIN_SUB_DESC] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 14,
+        .tilemapTop = 13,
         .width = 30,
-        .height = 10,
+        .height = 11,
         .palette = 15,
         .baseTile = 0x1A5,
     },
@@ -184,7 +184,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         .width = 1,
         .height = 1,
         .palette = 15,
-        .baseTile = 0x2D1,
+        .baseTile = 0x2EF,
     },
     [MOVE_REMINDER_WIN_TOP_PAGE] = {
         .bgLayer = BG_LAYER_MAIN_0,
@@ -202,7 +202,7 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
     replace_once(
         source,
         "    .maxDisplay = 7,\n",
-        "    .maxDisplay = 4,\n",
+        "    .maxDisplay = 3,\n",
         "MR03B bottom list visible rows",
     )
     replace_once(
@@ -837,6 +837,7 @@ def main() -> None:
             "white bottom-screen workspace",
             "2x2 current-move grid",
             "learnable-moves heading",
+            "three-row scroll list prioritizing full effect text",
             "non-overlapping current/list/details bands",
             "highlighted move type/category/power/accuracy/PP",
             "framed Stats and Ability cards",
