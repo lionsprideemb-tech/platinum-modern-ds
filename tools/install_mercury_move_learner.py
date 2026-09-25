@@ -750,7 +750,7 @@ def main() -> None:
         raise SystemExit(f"missing pinned merged learnset donor: {donor_path}")
     donor = json.loads(donor_path.read_text())
 
-    offsets, flat, table_report = build_extra_table(registry, donor, implemented)
+    offsets, flat, flat_sources, table_report = build_extra_table(registry, donor, implemented)
     write_generated_header(root / "generated/mercury_move_learner.h", offsets, flat, flat_sources)
     patch_move_backend(root)
     patch_move_ui(root)
