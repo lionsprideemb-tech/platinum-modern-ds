@@ -362,8 +362,8 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
     Window *current = &controller->windows[MOVE_REMINDER_WIN_SUB_INFO];
     Window *help = &controller->windows[MOVE_REMINDER_WIN_SUB_HELP];
 
-    Window_FillTilemap(current, 0);
-    Window_FillTilemap(help, 0);
+    Window_FillTilemap(current, 15);
+    Window_FillTilemap(help, 15);
 
     MessageLoader_GetString(
         controller->messageLoader,
@@ -371,13 +371,16 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
         controller->string);
     Text_AddPrinterWithParamsAndColor(
         current, FONT_SYSTEM, controller->string,
-        4, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+        4, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
 
     MessageLoader *moveNamesLoader = MessageLoader_Init(
         MSG_LOADER_PRELOAD_ENTIRE_BANK,
         NARC_INDEX_MSGDATA__PL_MSG,
         TEXT_BANK_MOVE_NAMES,
         HEAP_ID_MOVE_REMINDER);
+
+    static const u8 moveX[LEARNED_MOVES_MAX] = { 4, 124, 4, 124 };
+    static const u8 moveY[LEARNED_MOVES_MAX] = { 17, 17, 34, 34 };
 
     for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
         u16 move = Pokemon_GetValue(
@@ -389,8 +392,8 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
             MessageLoader_GetString(moveNamesLoader, move, controller->string);
             Text_AddPrinterWithParamsAndColor(
                 current, FONT_SYSTEM, controller->string,
-                18, 12 + (i * 11), TEXT_SPEED_NO_TRANSFER,
-                TEXT_COLOR(1, 2, 0), NULL);
+                moveX[i], moveY[i], TEXT_SPEED_NO_TRANSFER,
+                TEXT_COLOR(1, 2, 15), NULL);
         }
     }
 
@@ -398,11 +401,19 @@ static void MoveReminder_SetNativeMoveViewVisible(MoveReminderController *contro
 
     MessageLoader_GetString(
         controller->messageLoader,
+        MoveReminder_Text_MercuryLearnerLearnable,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        current, FONT_SYSTEM, controller->string,
+        4, 48, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+
+    MessageLoader_GetString(
+        controller->messageLoader,
         MoveReminder_Text_MercuryLearnerHelp,
         controller->string);
     Text_AddPrinterWithParamsAndColor(
         help, FONT_SYSTEM, controller->string,
-        2, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+        2, 0, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
 
     Window_ScheduleCopyToVRAM(current);
     Window_ScheduleCopyToVRAM(help);
@@ -665,6 +676,7 @@ def patch_text(root: Path) -> None:
 
     replacements = {
         "MoveReminder_Text_MercuryLearnerCurrentMoves": "CURRENT MOVES",
+        "MoveReminder_Text_MercuryLearnerLearnable": "LEARNABLE MOVES",
         "MoveReminder_Text_MercuryLearnerHelp": "L/R: INFO   A: TEACH   B: BACK",
         "MoveReminder_Text_MercuryStatsTitle": "< L   STATS   R >",
         "MoveReminder_Text_MercuryAbilityTitle": "< L   ABILITY   R >",
