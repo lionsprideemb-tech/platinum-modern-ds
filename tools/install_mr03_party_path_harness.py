@@ -85,8 +85,8 @@ def main() -> None:
     insert_include_once(
         field_map_change_c,
         '#include "player_avatar.h"\n',
-        '#include "pokedex.h"\n#include "party.h"\n',
-        "party/Pokedex includes",
+        '#include "pokedex.h"\n#include "party.h"\n#include "system_vars.h"\n',
+        "party/Pokedex/system-vars includes",
     )
     insert_include_once(
         field_map_change_c,
@@ -119,9 +119,38 @@ def main() -> None:
             SaveData_GetPokedex(fieldSystem->saveData),
             SPECIES_GARCHOMP));
 
+        // Make the normal Start Menu expose POKEMON. The production build
+        // reaches this state through the ordinary starter flow.
+        GF_ASSERT(SystemVars_SetPlayerStarter(
+            SaveData_GetVarsFlags(fieldSystem->saveData),
+            SPECIES_GARCHOMP));
+
         (*state)++;
         break;"""
     replace_once(field_map_change_c, old_case0, new_case0, "Garchomp insertion")
+
+    # The direct-new-save harness enters Twinleaf 2F before the opening TV
+    # script has completed. Suppress that one CI-only on-frame message so the
+    # proof starts from genuine free-field control rather than mistaking a
+    # story textbox for a usable overworld state.
+    house_script = root / "res/field/scripts/scripts_twinleaf_town_player_house_2f.s"
+    old_tv = """TwinleafTownPlayerHouse2F_OnFrame_ConcludeSpecialProgram:
+    LockAll
+    SetVar VAR_PLAYER_HOUSE_SPECIAL_PROGRAM_STATE, 1
+    Message TwinleafTownPlayerHouse2F_Text_ConcludesSpecialProgram
+    PlayFanfare SEQ_TV_END_sseq
+    Message TwinleafTownPlayerHouse2F_Text_SeeYouNextWeek
+    WaitFanfare
+    CloseMessage
+    PlayDefaultMusic
+    ReleaseAll
+    End
+"""
+    new_tv = """TwinleafTownPlayerHouse2F_OnFrame_ConcludeSpecialProgram:
+    SetVar VAR_PLAYER_HOUSE_SPECIAL_PROGRAM_STATE, 1
+    End
+"""
+    replace_once(house_script, old_tv, new_tv, "CI opening-TV suppression")
 
     report = {
         "gate": "MERCURY_MR03_PARTY_PATH_HARNESS",
@@ -130,6 +159,8 @@ def main() -> None:
         "setup_only": True,
         "species": "SPECIES_GARCHOMP",
         "level": 50,
+        "starter_menu_unlock": "SystemVars_SetPlayerStarter(SPECIES_GARCHOMP)",
+        "opening_tv_script_suppressed": True,
         "direct_party_launch": False,
         "direct_move_learner_launch": False,
         "required_runtime_input_path": [
