@@ -1,0 +1,267 @@
+name: PHASE-A13C Clear Route 201 Sandgem Edge
+
+on:
+  push:
+    branches:
+      - feature/mercury-full-playable-alpha
+    paths:
+      - ".github/workflows/phase-a13c-clear-sandgem-edge.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  play:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PB01 ROM
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-redux-pb01-playable-candidate
+          path: rom
+          run-id: 35919890042
+          github-token: ${{ github.token }}
+
+      - name: Download A13B blocked checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-phase-a13b-route202-robust
+          path: checkpoint
+          run-id: 36032416920
+          github-token: ${{ github.token }}
+
+      - name: Install emulator tooling
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends libsdl2-2.0-0 python3-venv
+          python3 -m venv "$RUNNER_TEMP/phase-a13c-venv"
+          . "$RUNNER_TEMP/phase-a13c-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Search around Route 201 sign and enter Sandgem
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/phase-a13c-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          X=0x021C5F0E
+          Z=0x021C5F2E
+          rom=next(Path("rom").rglob("*.nds"))
+          state=Path("checkpoint/route201-sandgem-edge-blocked.dst")
+          out=Path("phase-a13c")
+          out.mkdir(exist_ok=True)
+
+          emu=DeSmuME()
+          emu.open(str(rom))
+          frame=0
+          captures=[]
+          encounters=[]
+
+          keymap={
+              "U":Keys.KEY_UP,
+              "D":Keys.KEY_DOWN,
+              "L":Keys.KEY_LEFT,
+              "R":Keys.KEY_RIGHT,
+          }
+
+          def run(n):
+              global frame
+              for _ in range(n):
+                  emu.cycle(False)
+                  frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"PHASE-A13C stopped at {frame}")
+
+          def xy():
+              return (
+                  emu.memory.unsigned.read_short(X),
+                  emu.memory.unsigned.read_short(Z),
+              )
+
+          def pulse(key,held=10,settle=175):
+              m=keymask(key)
+              emu.input.keypad_add_key(m)
+              run(held)
+              emu.input.keypad_rm_key(m)
+              run(settle)
+
+          def snap(label):
+              name=f"{len(captures):02d}-{label}-{frame:06d}.png"
+              emu.screenshot().save(out/name)
+              row={"stage":label,"frame":frame,"file":name,"xy":xy()}
+              captures.append(row)
+              return row
+
+          def lower_stats(img):
+              rgb=img.convert("RGB")
+              tan=red=total=0
+              for yy in range(196,382,4):
+                  for xx in range(4,252,4):
+                      r,g,b=rgb.getpixel((xx,yy))
+                      total += 1
+                      if 120<=r<=220 and 100<=g<=200 and 45<=b<=140 and r>g>b:
+                          tan += 1
+                      if r>=165 and g<=115 and b<=115 and r>g*1.45:
+                          red += 1
+              return tan/total,red/total
+
+          def is_overworld(img):
+              return lower_stats(img)[0] >= 0.35
+
+          def is_fight_menu(img):
+              return lower_stats(img)[1] >= 0.10
+
+          def tap_run():
+              emu.input.touch_set_pos(128,160)
+              run(16)
+              emu.input.touch_release()
+              run(650)
+
+          def recover_field():
+              if is_overworld(emu.screenshot()):
+                  return
+              run(550)
+              if is_overworld(emu.screenshot()):
+                  return
+              enc={"start":frame,"xy":xy(),"run_attempts":0}
+              for _ in range(28):
+                  img=emu.screenshot()
+                  if is_overworld(img):
+                      enc["end"]=frame
+                      encounters.append(enc)
+                      return
+                  if is_fight_menu(img):
+                      enc["run_attempts"] += 1
+                      tap_run()
+                  else:
+                      pulse(Keys.KEY_A,12,420)
+              raise SystemExit("A13C field recovery failed")
+
+          def load_base():
+              global frame
+              emu.savestate.load_file(str(state))
+              frame=0
+              run(120)
+              recover_field()
+
+          def walk(sequence):
+              moved=0
+              blocked=0
+              max_x=xy()[0]
+              trace=[xy()]
+              for direction,count in sequence:
+                  for _ in range(count):
+                      before=xy()
+                      pulse(keymap[direction])
+                      recover_field()
+                      after=xy()
+                      trace.append(after)
+                      max_x=max(max_x,after[0])
+                      if after==before:
+                          blocked += 1
+                      else:
+                          moved += 1
+              return moved,blocked,max_x,trace
+
+          candidates=[
+              ("down1-right8",[("D",1),("R",8)]),
+              ("down2-right8",[("D",2),("R",8)]),
+              ("down3-right9",[("D",3),("R",9)]),
+              ("down4-right10",[("D",4),("R",10)]),
+              ("left1-down3-right11",[("L",1),("D",3),("R",11)]),
+              ("down2-left1-down2-right11",[("D",2),("L",1),("D",2),("R",11)]),
+          ]
+
+          results=[]
+          best=None
+
+          for label,sequence in candidates:
+              load_base()
+              start=xy()
+              moved,blocked,max_x,trace=walk(sequence)
+              end=xy()
+              shot=snap(f"candidate-{label}")
+              state_out=out/f"candidate-{label}.dst"
+              emu.savestate.save_file(str(state_out))
+              row={
+                  "label":label,
+                  "sequence":sequence,
+                  "start":start,
+                  "end":end,
+                  "moved":moved,
+                  "blocked":blocked,
+                  "max_x":max_x,
+                  "trace":trace,
+                  "screenshot":shot["file"],
+                  "state":state_out.name,
+              }
+              results.append(row)
+              score=(max_x,end[0],moved,-blocked)
+              if best is None or score>best[0]:
+                  best=(score,row)
+
+          if best is None:
+              raise SystemExit("No A13C route candidates executed")
+
+          best_row=best[1]
+          best_state=out/best_row["state"]
+          emu.savestate.load_file(str(best_state))
+          run(160)
+          recover_field()
+          snap("best-route-loaded")
+
+          # Continue east a few tiles after clearing the sign. The stock Route
+          # 201 -> Sandgem connection is directly east of this obstruction.
+          for _ in range(6):
+              before=xy()
+              pulse(Keys.KEY_RIGHT,10,260)
+              recover_field()
+              if xy()==before:
+                  break
+
+          run(700)
+          final=snap("sandgem-edge-cleared")
+          final_state=out/"phase-a13c-sandgem-edge-cleared.dst"
+          emu.savestate.save_file(str(final_state))
+
+          if final["xy"][0] <= 150 and best_row["max_x"] <= 150:
+              raise SystemExit(
+                  f"Could not clear Route 201 sign; best={best_row['label']} "
+                  f"end={best_row['end']} max_x={best_row['max_x']}"
+              )
+
+          (out/"phase-a13c-meta.json").write_text(json.dumps({
+              "gate":"PHASE_A13C_CLEAR_ROUTE201_SANDGEM_EDGE",
+              "source_state":state.name,
+              "candidate_results":results,
+              "selected_candidate":best_row["label"],
+              "final_xy":final["xy"],
+              "output_state":final_state.name,
+              "wild_encounters":encounters,
+              "captures":captures,
+              "visual_review_required":True,
+          },indent=2)+"\n")
+          emu.destroy()
+          PY
+
+      - name: Upload PHASE-A13C evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-phase-a13c-sandgem-edge
+          path: phase-a13c/
+          if-no-files-found: error
+          retention-days: 30
