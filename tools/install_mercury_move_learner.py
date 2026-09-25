@@ -300,7 +300,28 @@ u16 *MoveReminderData_GetMoves(Pokemon *mon, enum HeapID heapID)
 
 def patch_move_ui(root: Path) -> None:
     source = root / "src/applications/move_reminder.c"
+
+    # Widen the list and add a real second-screen information panel.  The main
+    # screen remains Platinum's battle-move browser; the DS sub screen shows the
+    # learner identity, move sources, current four moves, and controls.
     replace_once(source, "    u8 numMoves;\n", "    u16 numMoves;\n", "Move Learner list count width")
+
+    replace_once(
+        source,
+        "    MOVE_REMINDER_WIN_YES_NO_MENU,\n    MAX_MOVE_REMINDER_WIN\n};",
+        "    MOVE_REMINDER_WIN_YES_NO_MENU,\n"
+        "    MOVE_REMINDER_WIN_SUB_INFO,\n"
+        "    MAX_MOVE_REMINDER_WIN\n};",
+        "Move Learner sub-screen window enum",
+    )
+
+    replace_once(
+        source,
+        "static void MoveReminder_DrawLabelText(MoveReminderController *controller);\n",
+        "static void MoveReminder_DrawLabelText(MoveReminderController *controller);\n"
+        "static void MoveReminder_DrawSubInfo(MoveReminderController *controller);\n",
+        "Move Learner sub-screen declaration",
+    )
     replace_once(
         source,
         "    for (i = 0; i < 256; i++) {\n",
@@ -313,6 +334,177 @@ def patch_move_ui(root: Path) -> None:
         "    controller->numMoves = (u16)MoveReminder_GetNumMoves(controller) + 1;\n",
         "Move Learner list count assignment",
     )
+
+    replace_once(
+        source,
+        """    [MOVE_REMINDER_WIN_YES_NO_MENU] = {
+        .bgLayer = BG_LAYER_MAIN_0,
+        .tilemapLeft = 23,
+        .tilemapTop = 13,
+        .width = 7,
+        .height = 4,
+        .palette = 14,
+        .baseTile = 0x2A6,
+    }
+};""",
+        """    [MOVE_REMINDER_WIN_YES_NO_MENU] = {
+        .bgLayer = BG_LAYER_MAIN_0,
+        .tilemapLeft = 23,
+        .tilemapTop = 13,
+        .width = 7,
+        .height = 4,
+        .palette = 14,
+        .baseTile = 0x2A6,
+    },
+    [MOVE_REMINDER_WIN_SUB_INFO] = {
+        .bgLayer = BG_LAYER_SUB_0,
+        .tilemapLeft = 1,
+        .tilemapTop = 1,
+        .width = 30,
+        .height = 22,
+        .palette = 15,
+        .baseTile = 1,
+    }
+};""",
+        "Move Learner sub-screen window template",
+    )
+
+    replace_once(
+        source,
+        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_2, &bgMain2, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_2);
+
+    Bg_ClearTilesRange(BG_LAYER_MAIN_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+}""",
+        """    Bg_InitFromTemplate(bgConfig, BG_LAYER_MAIN_2, &bgMain2, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_MAIN_2);
+
+    BgTemplate bgSub0 = {
+        .x = 0,
+        .y = 0,
+        .bufferSize = 0x800,
+        .baseTile = 0,
+        .screenSize = BG_SCREEN_SIZE_256x256,
+        .colorMode = GX_BG_COLORMODE_16,
+        .screenBase = GX_BG_SCRBASE_0xf800,
+        .charBase = GX_BG_CHARBASE_0x00000,
+        .bgExtPltt = GX_BG_EXTPLTT_01,
+        .priority = 0,
+        .areaOver = 0,
+        .mosaic = FALSE,
+    };
+
+    Bg_InitFromTemplate(bgConfig, BG_LAYER_SUB_0, &bgSub0, BG_TYPE_STATIC);
+    Bg_ClearTilemap(bgConfig, BG_LAYER_SUB_0);
+
+    Bg_ClearTilesRange(BG_LAYER_MAIN_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+    Bg_ClearTilesRange(BG_LAYER_SUB_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+    GXLayers_EngineBToggleLayers(GX_PLANEMASK_BG0, TRUE);
+}""",
+        "Move Learner sub-screen BG",
+    )
+
+    replace_once(
+        source,
+        """    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG0 | GX_PLANEMASK_BG1 | GX_PLANEMASK_BG2 | GX_PLANEMASK_OBJ, FALSE);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);""",
+        """    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG0 | GX_PLANEMASK_BG1 | GX_PLANEMASK_BG2 | GX_PLANEMASK_OBJ, FALSE);
+    GXLayers_EngineBToggleLayers(GX_PLANEMASK_BG0, FALSE);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_SUB_0);
+    Bg_FreeTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);""",
+        "Move Learner sub-screen BG teardown",
+    )
+
+    replace_once(
+        source,
+        "    Graphics_LoadPaletteFromOpenNARC(narc, 12, 0, 0, 0, HEAP_ID_MOVE_REMINDER);\n",
+        "    Graphics_LoadPaletteFromOpenNARC(narc, 12, PAL_LOAD_MAIN_BG, 0, 0, HEAP_ID_MOVE_REMINDER);\n"
+        "    Graphics_LoadPaletteFromOpenNARC(narc, 12, PAL_LOAD_SUB_BG, 0, 0, HEAP_ID_MOVE_REMINDER);\n",
+        "Move Learner sub-screen palette",
+    )
+
+    replace_once(
+        source,
+        "    MoveReminder_DrawLabelText(controller);\n\n"
+        "    Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX], 15);",
+        "    MoveReminder_DrawLabelText(controller);\n"
+        "    MoveReminder_DrawSubInfo(controller);\n\n"
+        "    Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX], 15);",
+        "Move Learner sub-screen draw hook",
+    )
+
+    sub_info_function = r'''
+static void MoveReminder_DrawSubInfo(MoveReminderController *controller)
+{
+    Window *window = &controller->windows[MOVE_REMINDER_WIN_SUB_INFO];
+    Window_FillTilemap(window, 0);
+
+    MessageLoader_GetString(
+        controller->messageLoader,
+        MoveReminder_Text_MercuryLearnerSubTitle,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        8, 4, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+
+    MessageLoader_GetString(
+        controller->messageLoader,
+        MoveReminder_Text_MercuryLearnerSources,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        8, 24, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+
+    MessageLoader_GetString(
+        controller->messageLoader,
+        MoveReminder_Text_MercuryLearnerCurrentMoves,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        8, 52, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+
+    MessageLoader *moveNamesLoader = MessageLoader_Init(
+        MSG_LOADER_PRELOAD_ENTIRE_BANK,
+        NARC_INDEX_MSGDATA__PL_MSG,
+        TEXT_BANK_MOVE_NAMES,
+        HEAP_ID_MOVE_REMINDER);
+
+    for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
+        u16 move = Pokemon_GetValue(
+            controller->data->mon,
+            MON_DATA_MOVE1 + i,
+            NULL);
+
+        if (move != 0) {
+            MessageLoader_GetString(moveNamesLoader, move, controller->string);
+            Text_AddPrinterWithParamsAndColor(
+                window, FONT_SYSTEM, controller->string,
+                20, 72 + (i * 20), TEXT_SPEED_NO_TRANSFER,
+                TEXT_COLOR(1, 2, 0), NULL);
+        }
+    }
+
+    MessageLoader_Free(moveNamesLoader);
+
+    MessageLoader_GetString(
+        controller->messageLoader,
+        MoveReminder_Text_MercuryLearnerHelp,
+        controller->string);
+    Text_AddPrinterWithParamsAndColor(
+        window, FONT_SYSTEM, controller->string,
+        8, 160, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 0), NULL);
+
+    Window_ScheduleCopyToVRAM(window);
+}
+'''
+
+    marker = "static u32 MoveReminder_GetNumMoves(MoveReminderController *controller)\n"
+    text = source.read_text()
+    if sub_info_function.strip() not in text:
+        if text.count(marker) != 1:
+            raise SystemExit("Move Learner sub-screen function insertion marker changed")
+        text = text.replace(marker, sub_info_function + "\n" + marker, 1)
+        source.write_text(text)
 
     text_path = root / "res/text/move_reminder.json"
     data = json.loads(text_path.read_text())
@@ -332,7 +524,21 @@ def patch_move_ui(root: Path) -> None:
             "{STRVAR_1 1, 0, 0}?"
         ],
         "MoveReminder_Text_Tutor_Payment": "No item is required.",
+        "MoveReminder_Text_MercuryLearnerSubTitle": "MERCURY MOVE LEARNER",
+        "MoveReminder_Text_MercuryLearnerSources": "LEVEL / EGG / MACHINE / TUTOR",
+        "MoveReminder_Text_MercuryLearnerCurrentMoves": "CURRENT MOVES",
+        "MoveReminder_Text_MercuryLearnerHelp": "D-PAD: SELECT   A: TEACH   B: BACK",
     }
+    existing_ids = {msg.get("id") for msg in data["messages"]}
+    for msg_id in (
+        "MoveReminder_Text_MercuryLearnerSubTitle",
+        "MoveReminder_Text_MercuryLearnerSources",
+        "MoveReminder_Text_MercuryLearnerCurrentMoves",
+        "MoveReminder_Text_MercuryLearnerHelp",
+    ):
+        if msg_id not in existing_ids:
+            data["messages"].append({"id": msg_id, "en_US": replacements[msg_id]})
+
     found: set[str] = set()
     for msg in data["messages"]:
         msg_id = msg.get("id")
