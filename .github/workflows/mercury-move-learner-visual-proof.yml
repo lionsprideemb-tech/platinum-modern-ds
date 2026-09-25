@@ -103,8 +103,9 @@ jobs:
           test -s proof/window.id
           WIN="$(cat proof/window.id)"
           xdotool windowactivate --sync "$WIN" || true
-          sleep 8
-          import -window "$WIN" proof/00-boot.png
+          # Let Platinum's full startup/title animation settle before sending input.
+          sleep 40
+          import -window "$WIN" proof/00-title-ready.png
 
       - name: Navigate to universal Move Learner
         shell: bash
@@ -119,9 +120,9 @@ jobs:
 
           # DeSmuME default keyboard: DS A=X, DS B=Z, DS X=S.
           press x 3
-          import -window "$WIN" proof/01-after-title.png
+          import -window "$WIN" proof/01-continue-menu.png
 
-          press x 8
+          press x 10
           import -window "$WIN" proof/02-overworld.png
 
           # Open field menu with DS X.
