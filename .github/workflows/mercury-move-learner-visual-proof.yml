@@ -74,9 +74,15 @@ jobs:
           test "$(stat -c '%s' "$SAVE")" -ge 524288
           sha256sum "$SAVE"
 
-          # DeSmuME 0.9.11 will import a raw .sav when the matching .dsv
-          # does not yet exist. Keep the raw save beside the ROM.
+          # The Ubuntu GTK build keeps battery data under ~/.config/desmume.
+          # Seed both known locations so the raw Platinum save is available
+          # before the ROM creates its first .dsv.
+          mkdir -p "$HOME/.config/desmume" "$HOME/.config/desmume/Battery"
+          cp "$SAVE" "$HOME/.config/desmume/Pokemon_Mercury_DS_Move_Learner.sav"
+          cp "$SAVE" "$HOME/.config/desmume/Battery/Pokemon_Mercury_DS_Move_Learner.sav"
           rm -f runtime/Pokemon_Mercury_DS_Move_Learner.dsv
+          rm -f "$HOME/.config/desmume/Pokemon_Mercury_DS_Move_Learner.dsv"
+          rm -f "$HOME/.config/desmume/Battery/Pokemon_Mercury_DS_Move_Learner.dsv"
 
       - name: Boot ROM in DeSmuME
         shell: bash
