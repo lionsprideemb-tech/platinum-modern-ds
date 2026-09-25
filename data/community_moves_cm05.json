@@ -8,45 +8,6 @@
   "moves": [
     {
       "id": 1042,
-      "token": "MOVE_DEATHROLL",
-      "name": "Deathroll",
-      "type": "TYPE_WATER",
-      "class": "CLASS_PHYSICAL",
-      "power": 100,
-      "accuracy": 100,
-      "pp": 5,
-      "effect": {
-        "type": "BATTLE_EFFECT_CONFUSE_HIT",
-        "chance": 20
-      },
-      "range": "RANGE_SINGLE_TARGET",
-      "priority": 0,
-      "flags": [
-        "MOVE_FLAG_MAKES_CONTACT",
-        "MOVE_FLAG_CAN_PROTECT",
-        "MOVE_FLAG_CAN_MIRROR_MOVE"
-      ],
-      "contest": {
-        "effect": "CONTEST_EFFECT_BASIC",
-        "type": "CONTEST_TYPE_TOUGH"
-      },
-      "description": [
-        "The user violently rolls\n",
-        "the target in its jaws. It\n",
-        "may leave the target confused."
-      ],
-      "animation": {
-        "mode": "copy_native_platinum",
-        "donor_move": "crunch"
-      },
-      "traits": [
-        "strong-jaw",
-        "ignores-stat-stages"
-      ],
-      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
-    },
-    {
-      "id": 1043,
       "token": "MOVE_PHANTOM_GLOVES",
       "name": "Phantom Glove",
       "type": "TYPE_GHOST",
@@ -84,7 +45,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 1044,
+      "id": 1043,
       "token": "MOVE_PEBBLE_SHOWER",
       "name": "Pebble Shower",
       "type": "TYPE_ROCK",
@@ -119,7 +80,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 1045,
+      "id": 1044,
       "token": "MOVE_BIG_BLAST",
       "name": "Big Bang",
       "type": "TYPE_NORMAL",
@@ -156,7 +117,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 1046,
+      "id": 1045,
       "token": "MOVE_DRAGON_DASH",
       "name": "Dragon Dash",
       "type": "TYPE_DRAGON",
@@ -191,7 +152,7 @@
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     },
     {
-      "id": 1047,
+      "id": 1046,
       "token": "MOVE_MERCULIGHT",
       "name": "Merculight",
       "type": "TYPE_ELECTRIC",
@@ -222,6 +183,41 @@
       "traits": [
         "protection"
       ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1047,
+      "token": "MOVE_SPREAD_BOMB",
+      "name": "Spread Bomb",
+      "type": "TYPE_FIRE",
+      "class": "CLASS_PHYSICAL",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_BURN_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_ALL_ADJACENT",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "A fiery blast engulfs all\\n",
+        "nearby Pokémon. It may\\n",
+        "leave the targets burned."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "explosion"
+      },
+      "traits": [],
       "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
     }
   ]
