@@ -124,13 +124,13 @@ jobs:
             sleep "${2:-1}"
           }
 
-          # DeSmuME default keyboard: Start=Return, DS A=X, DS B=Z, DS X=S.
+          # Debian DeSmuME GTK defaults: Start=Return, DS A=Z, DS B=X, DS X=S.
           # Platinum's title screen requires START, not A.
           press Return 3
           import -window "$WIN" proof/01-continue-menu.png
 
           # Select CONTINUE and wait for the save to enter the overworld.
-          press x 12
+          press z 12
           import -window "$WIN" proof/02-overworld.png
 
           # Open field menu with DS X.
@@ -139,16 +139,16 @@ jobs:
 
           # Pokemon is one slot below Pokedex in the normal field menu.
           press Down 1
-          press x 3
+          press z 3
           import -window "$WIN" proof/04-party-menu.png
 
           # Select first party member.
-          press x 2
+          press z 2
           import -window "$WIN" proof/05-party-context.png
 
           # Mercury inserts MOVE LEARNER directly into this context menu.
           press Down 1
-          press x 4
+          press z 4
           import -window "$WIN" proof/06-move-learner.png
 
           identify proof/*.png
