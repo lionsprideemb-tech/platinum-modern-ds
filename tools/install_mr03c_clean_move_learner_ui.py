@@ -132,6 +132,17 @@ def patch_ui(root: Path) -> None:
         "MR03C dedicated top BG teardown",
     )
 
+    # MR03C carries a larger filtered move list, extra windows and an 80x80
+    # Pokemon portrait decode buffer. Platinum's original 0x20000 app heap is
+    # too tight once those coexist; give this standalone application 64 KiB
+    # more working room.
+    replace_once(
+        source,
+        "    Heap_Create(HEAP_ID_APPLICATION, HEAP_ID_MOVE_REMINDER, 0x20000);\n",
+        "    Heap_Create(HEAP_ID_APPLICATION, HEAP_ID_MOVE_REMINDER, 0x30000);\n",
+        "MR03C Move Reminder heap expansion",
+    )
+
     # Dedicated MR03C windows.  Existing native windows remain available only
     # for the confirmation/replace-move state machine.
     replace_once(
@@ -1358,7 +1369,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "Mercury blue palette, tab/card styling, and task-free BG Pokemon portrait renderer",
+        "visual_pass": "Mercury blue palette, tab/card styling, task-free BG Pokemon portrait, expanded app heap",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
