@@ -1,0 +1,230 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "design_source": "Pokemon Platinum / Sinnoh",
+  "engine_note": "Current Safari-zone map constants are temporary internal implementation slots only and are not player-facing design sources.",
+  "areas": [
+    {
+      "area": 1,
+      "identity": "Canopy Fen",
+      "signature": [
+        "Tropius",
+        "Tangela",
+        "Yanma",
+        "Toedscool",
+        "Carnivine",
+        "Kecleon",
+        "Kangaskhan"
+      ],
+      "foreign_safari_rares": [
+        {
+          "species": "Treecko",
+          "chance_percent": 4
+        },
+        {
+          "species": "Slakoth",
+          "chance_percent": 4
+        },
+        {
+          "species": "Oranguru",
+          "chance_percent": 1
+        },
+        {
+          "species": "Pinsir",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 2,
+      "identity": "Poison Mire",
+      "signature": [
+        "Croagunk",
+        "Skorupi",
+        "Gulpin",
+        "Paldean Wooper",
+        "Toxicroak",
+        "Drapion",
+        "Clodsire"
+      ],
+      "foreign_safari_rares": [
+        {
+          "species": "Seviper",
+          "chance_percent": 4
+        },
+        {
+          "species": "Alolan Grimer",
+          "chance_percent": 4
+        },
+        {
+          "species": "Galarian Slowpoke",
+          "chance_percent": 1
+        },
+        {
+          "species": "Shroodle",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 3,
+      "identity": "Dragonfly Reeds",
+      "signature": [
+        "Yanma",
+        "Surskit",
+        "Dewpider",
+        "Tadbulb",
+        "Araquanid",
+        "Yanmega",
+        "Drampa"
+      ],
+      "foreign_safari_rares": [
+        {
+          "species": "Goomy",
+          "chance_percent": 4
+        },
+        {
+          "species": "Dreepy",
+          "chance_percent": 4
+        },
+        {
+          "species": "Joltik",
+          "chance_percent": 1
+        },
+        {
+          "species": "Galarian Stunfisk",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 4,
+      "identity": "Flowering Wetland",
+      "signature": [
+        "Roselia",
+        "Tangela",
+        "Paras",
+        "Shroomish",
+        "Exeggcute",
+        "Carnivine",
+        "Kangaskhan"
+      ],
+      "foreign_safari_rares": [
+        {
+          "species": "Chikorita",
+          "chance_percent": 4
+        },
+        {
+          "species": "Comfey",
+          "chance_percent": 4
+        },
+        {
+          "species": "Oricorio (Pa'u)",
+          "chance_percent": 1
+        },
+        {
+          "species": "Sprigatito",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 5,
+      "identity": "Mudflat Pools",
+      "signature": [
+        "Shellos",
+        "Barboach",
+        "Paldean Wooper",
+        "Stunfisk",
+        "Clodsire",
+        "Gastrodon"
+      ],
+      "foreign_safari_rares": [
+        {
+          "species": "Mudkip",
+          "chance_percent": 4
+        },
+        {
+          "species": "Froakie",
+          "chance_percent": 4
+        },
+        {
+          "species": "Shelmet",
+          "chance_percent": 1
+        },
+        {
+          "species": "Karrablast",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 6,
+      "identity": "Open Marsh",
+      "signature": [
+        "Tropius",
+        "Yanma",
+        "Flamigo",
+        "Croagunk",
+        "Skorupi",
+        "Carnivine",
+        "Drampa"
+      ],
+      "foreign_safari_rares": [
+        {
+          "species": "Snivy",
+          "chance_percent": 4
+        },
+        {
+          "species": "Skarmory",
+          "chance_percent": 4
+        },
+        {
+          "species": "Magby",
+          "chance_percent": 1
+        },
+        {
+          "species": "Kangaskhan",
+          "chance_percent": 1
+        }
+      ]
+    }
+  ],
+  "daily_rng_policy": {
+    "enabled": false,
+    "binoculars_role": "informational discovery / area preview only; never gates species availability",
+    "permanent_platinum_binocular_species": [
+      "Roselia",
+      "Staravia",
+      "Skorupi",
+      "Drapion",
+      "Croagunk",
+      "Toxicroak",
+      "Carnivine",
+      "Paras",
+      "Exeggcute",
+      "Kangaskhan",
+      "Shroomish",
+      "Gulpin",
+      "Kecleon"
+    ]
+  },
+  "time_of_day": [
+    "Morning",
+    "Day",
+    "Evening",
+    "Night"
+  ],
+  "safari_exclusive_policy": {
+    "ordinary_route_exclusive": true,
+    "daily_rng_gate": false,
+    "rare_slot_total_percent": 10,
+    "slot_weights_percent": [
+      4,
+      4,
+      1,
+      1
+    ],
+    "purpose": "Each Great Marsh biome has a distinct pool of foreign Safari rares unavailable on ordinary authored Sinnoh routes."
+  }
+}
