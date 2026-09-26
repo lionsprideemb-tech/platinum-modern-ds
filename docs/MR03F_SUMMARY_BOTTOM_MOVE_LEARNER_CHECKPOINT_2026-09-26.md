@@ -67,29 +67,33 @@ Subsequent MR03F work preserved the architecture and added only targeted cleanup
 
 These later changes were not required to stop the original crash.
 
-Pre-checkpoint branch head after diagnostics:
+After diagnostics, two presentation-only MR03F polish commits were added:
 
-`1998fe67a54649c70f390dc80123567cc4d07d08`
+- `5092729d59604fd16ad2c05eafc698fd19629e6f` — fix learner tile overlap and cancel redraw
+- `21bd37c1453b9e35df1cf3ca1a138757371e118f` — fix native move-select presentation
 
-The only change after the successful MR03F proof commit was diagnostic-workflow-only; no gameplay or renderer code was altered.
+These preserve the locked architecture and were re-proven by the full MR03F workflow.
 
 ## Final runtime proof
 
-Successful full proof workflow:
+Latest successful full proof workflow:
 
-- Run ID: **36251147467**
+- Head commit: `21bd37c1453b9e35df1cf3ca1a138757371e118f`
+- Run ID: **36253028584**
 - Job: `prove-summary-bottom-learner`
 - Conclusion: **success**
+- `Build one MR03F proof ROM`: **PASS**
+- `Capture full DS Move Learner proof`: **PASS**
 - Artifact: `mercury-mr03f-summary-bottom-move-learner`
-- Artifact ID: **10909415926**
+- Artifact ID: **10909672176**
 
-Proof ROM SHA-256:
+Latest proof ROM SHA-256:
 
-`642fca962a2ebc75c91ec59940b42ebbf224b63154229d847e5b15c1a66e5d49`
+`08140fd3ac221447fb1e978464106c4ca0b0a5b802b6d6ec8c0bd6d2bc5c3a80`
 
 ## Visual verification
 
-The successful artifact was manually reviewed.
+The latest polished artifact was manually reviewed.
 
 Captured runtime states:
 
