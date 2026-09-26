@@ -85,16 +85,59 @@ def patch_ui(root: Path) -> None:
         "MR03D Platinum Summary graphics include",
     )
 
-    # Give the custom top page its own character/tilemap layer so its 30x22
-    # window cannot collide with Platinum's message-box tile storage.
-    #
-    # IMPORTANT: BG3's tilemap lives at 0x7800 and its character data starts
-    # at 0x8000.  The 30x22 top window consumes tiles 0x001..0x294, and the
-    # 10x10 portrait immediately follows at 0x295..0x2F8.  This keeps all
-    # portrait character data below 0xE000, where Platinum's BG2 screen map
-    # begins.  The old 0xD800 screen base overlapped the portrait tiles and
-    # produced the striped/shredded Pokemon image even when tile order was
-    # otherwise correct.
+    # MR03D uses Platinum Summary's native BG3 VRAM contract. Keep the
+    # Move Reminder's text/message layers in the upper 64 KiB character block
+    # so they cannot overwrite Summary tiles in the lower block.
+    replace_once(
+        source,
+        """    BgTemplate bgMain0 = {
+        .x = 0,
+        .y = 0,
+        .bufferSize = 0x800,
+        .baseTile = 0,
+        .screenSize = BG_SCREEN_SIZE_256x256,
+        .colorMode = GX_BG_COLORMODE_16,
+        .screenBase = GX_BG_SCRBASE_0xf800,
+        .charBase = GX_BG_CHARBASE_0x00000,""",
+        """    BgTemplate bgMain0 = {
+        .x = 0,
+        .y = 0,
+        .bufferSize = 0x800,
+        .baseTile = 0,
+        .screenSize = BG_SCREEN_SIZE_256x256,
+        .colorMode = GX_BG_COLORMODE_16,
+        .screenBase = GX_BG_SCRBASE_0xf800,
+        .charBase = GX_BG_CHARBASE_0x10000,""",
+        "MR03D message layer char base",
+    )
+
+    replace_once(
+        source,
+        """    BgTemplate bgMain1 = {
+        .x = 0,
+        .y = 0,
+        .bufferSize = 0x800,
+        .baseTile = 0,
+        .screenSize = BG_SCREEN_SIZE_256x256,
+        .colorMode = GX_BG_COLORMODE_16,
+        .screenBase = GX_BG_SCRBASE_0xf000,
+        .charBase = GX_BG_CHARBASE_0x00000,""",
+        """    BgTemplate bgMain1 = {
+        .x = 0,
+        .y = 0,
+        .bufferSize = 0x800,
+        .baseTile = 0,
+        .screenSize = BG_SCREEN_SIZE_256x256,
+        .colorMode = GX_BG_COLORMODE_16,
+        .screenBase = GX_BG_SCRBASE_0xf000,
+        .charBase = GX_BG_CHARBASE_0x10000,""",
+        "MR03D overlay layer char base",
+    )
+
+    # Reserve BG3 for the real Platinum Summary page. It uses the same
+    # screen/character bases as the retail Summary application (d000/00000).
+    # Mercury's text and Pokemon portrait live on transparent BG1 at char base
+    # 10000, while native message boxes use BG0 in that same upper block.
     replace_once(
         source,
         """    Bg_InitFromTemplate(bgConfig, BG_LAYER_SUB_0, &bgSub0, BG_TYPE_STATIC);
@@ -114,8 +157,8 @@ def patch_ui(root: Path) -> None:
         .baseTile = 0,
         .screenSize = BG_SCREEN_SIZE_256x256,
         .colorMode = GX_BG_COLORMODE_16,
-        .screenBase = GX_BG_SCRBASE_0x7800,
-        .charBase = GX_BG_CHARBASE_0x08000,
+        .screenBase = GX_BG_SCRBASE_0xd000,
+        .charBase = GX_BG_CHARBASE_0x00000,
         .bgExtPltt = GX_BG_EXTPLTT_01,
         .priority = 3,
         .areaOver = 0,
@@ -128,6 +171,7 @@ def patch_ui(root: Path) -> None:
     Bg_ClearTilesRange(BG_LAYER_MAIN_0, 32, 0, HEAP_ID_MOVE_REMINDER);
     Bg_ClearTilesRange(BG_LAYER_MAIN_3, 32, 0, HEAP_ID_MOVE_REMINDER);
     Bg_ClearTilesRange(BG_LAYER_SUB_0, 32, 0, HEAP_ID_MOVE_REMINDER);
+    GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG2, FALSE);
     GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG3, TRUE);
     GXLayers_EngineBToggleLayers(GX_PLANEMASK_BG0, TRUE);
 }""",
@@ -760,14 +804,9 @@ static void MercuryMoveLearner_LoadPalette(void)
 
 static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *controller)
 {
-    // BG3's character data begins at 0x8000 and its tilemap begins at 0xD800.
-    // A standalone 10x10 portrait at base tile 0x2A0 crosses that boundary:
-    //   0x8000 + (0x2A0 * 32) = 0xD400
-    // so tiles 32..99 overwrite the BG tilemap. That is the real cause of
-    // the intact top of the Pokemon followed by the vertical "shredded" rows.
-    //
-    // Reuse the tiles already owned by the 30x22 Mercury top window instead.
-    // This keeps every portrait tile below the 0xD800 screen-base boundary.
+    // MR03D reserves BG3 for Platinum's authored Summary graphics. The
+    // Pokemon portrait is composited into the transparent BG1 data overlay
+    // at char base 0x10000, isolated from BG3 and the screen-map region.
     Window *window = &controller->windows[MOVE_REMINDER_WIN_MERCURY_TOP];
     Pokemon *mon = controller->data->mon;
     PokemonSpriteTemplate spriteTemplate;
@@ -1507,7 +1546,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "MR03D D1: real Platinum Summary tiles/palette/tilemaps on the top screen with transparent BG1 data overlay; bottom screen remains prototype pending D3",
+        "visual_pass": "MR03D D1b: native Platinum Summary VRAM layout on BG3; transparent Mercury overlay isolated on BG1; legacy BG2 hidden while browsing",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
