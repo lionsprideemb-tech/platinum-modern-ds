@@ -437,7 +437,7 @@ jobs:
           test "$(jq -r '.resource_count' mr05j-identified-maps-port.json)" = "14"
           test "$(jq -r '.full_tod_area_count_added' mr05j-identified-maps-port.json)" = "7"
           test "$(jq -r '.full_tod_slot_count_added' mr05j-identified-maps-port.json)" = "336"
-          test "$(jq -r '.water_resource_count' mr05j-identified-maps-port.json)" = "11"
+          test "$(jq -r '.water_resource_count' mr05j-identified-maps-port.json)" = "12"
           test "$(jq -r '.great_marsh_lookout_certified' mr05j-identified-maps-port.json)" = "true"
           test "$(jq -r '.great_marsh_lookout_changed' mr05j-identified-maps-port.json)" = "false"
           test "$(jq -r '.lake_verity_early_game_levels_preserved' mr05j-identified-maps-port.json)" = "true"
