@@ -455,6 +455,217 @@ def patch_full_tod_runtime(root: Path, route_specs: dict[str, Any]) -> int:
     return installed
 
 
+
+RUNTIME_MAP_HEADERS = {
+    "gTwinleafTown": ["MAP_HEADER_TWINLEAF_TOWN"],
+    "gRoute201": ["MAP_HEADER_ROUTE_201"],
+    "gRoute202": ["MAP_HEADER_ROUTE_202"],
+    "gLakeVerity": ["MAP_HEADER_LAKE_VERITY", "MAP_HEADER_LAKE_VERITY_LOW_WATER"],
+    "gRoute203": ["MAP_HEADER_ROUTE_203"],
+    "gRoute204South": ["MAP_HEADER_ROUTE_204_SOUTH"],
+    "gRoute204North": ["MAP_HEADER_ROUTE_204_NORTH"],
+    "gValleyWindworksApproach": ["MAP_HEADER_VALLEY_WINDWORKS_OUTSIDE"],
+    "gRoute205South": ["MAP_HEADER_ROUTE_205_SOUTH"],
+    "gEternaForest": ["MAP_HEADER_ETERNA_FOREST"],
+    "gRoute206": ["MAP_HEADER_ROUTE_206"],
+    "gRoute207": ["MAP_HEADER_ROUTE_207"],
+    "gRoute208Shared": ["MAP_HEADER_ROUTE_208"],
+    "gRoute209": ["MAP_HEADER_ROUTE_209"],
+    "gRoute210SouthShared": ["MAP_HEADER_ROUTE_210_SOUTH"],
+    "gRoute212North": ["MAP_HEADER_ROUTE_212_NORTH"],
+    "gRoute212South": ["MAP_HEADER_ROUTE_212_SOUTH"],
+    "gTrophyGarden": ["MAP_HEADER_TROPHY_GARDEN"],
+    "gRoute213": ["MAP_HEADER_ROUTE_213"],
+    "gValorLakefront": ["MAP_HEADER_VALOR_LAKEFRONT"],
+    "gRoute214": ["MAP_HEADER_ROUTE_214"],
+    "gRoute215": ["MAP_HEADER_ROUTE_215"],
+    "gGreatMarshArea1": ["MAP_HEADER_GREAT_MARSH_1"],
+    "gGreatMarshArea2": ["MAP_HEADER_GREAT_MARSH_2"],
+    "gGreatMarshArea3": ["MAP_HEADER_GREAT_MARSH_3"],
+    "gGreatMarshArea4": ["MAP_HEADER_GREAT_MARSH_4"],
+    "gGreatMarshArea5": ["MAP_HEADER_GREAT_MARSH_5"],
+    "gGreatMarshArea6": ["MAP_HEADER_GREAT_MARSH_6"],
+    "gOreburghGate": ["MAP_HEADER_OREBURGH_GATE_1F"],
+    "gOreburghMine_1": ["MAP_HEADER_OREBURGH_MINE_B1F"],
+    "gOreburghMine_3": ["MAP_HEADER_OREBURGH_MINE_B2F"],
+    "gMtCoronetFirstCrossing": ["MAP_HEADER_MT_CORONET_1F_SOUTH"],
+    "gLostTower_1F": ["MAP_HEADER_ROUTE_209_LOST_TOWER_1F"],
+    "gLostTower_2F": ["MAP_HEADER_ROUTE_209_LOST_TOWER_2F"],
+    "gLostTower_3F": ["MAP_HEADER_ROUTE_209_LOST_TOWER_3F"],
+    "gLostTower_4F": ["MAP_HEADER_ROUTE_209_LOST_TOWER_4F"],
+    "gRuinManiacTunnel": [
+        "MAP_HEADER_RUIN_MANIAC_CAVE_SHORT",
+        "MAP_HEADER_RUIN_MANIAC_CAVE_LONG",
+        "MAP_HEADER_MANIAC_TUNNEL",
+    ],
+}
+
+
+def runtime_period_records(stem: str, records: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    periods = {}
+    for period in ("Morning", "Day", "Evening", "Night"):
+        row = records.get(f"{stem}_{period}")
+        if row is not None and row.get("land_mons"):
+            periods[period] = row
+
+    if periods:
+        if len(periods) != 4:
+            raise SystemExit(f"{stem}: incomplete four-period runtime source")
+        return periods
+
+    static = records.get(stem)
+    if static is None or not static.get("land_mons"):
+        raise SystemExit(f"{stem}: missing authored land source")
+    return {period: static for period in ("Morning", "Day", "Evening", "Night")}
+
+
+def write_runtime_header(root: Path, records: dict[str, dict[str, Any]]) -> int:
+    profiles = []
+    for stem, headers in RUNTIME_MAP_HEADERS.items():
+        period_rows = runtime_period_records(stem, records)
+        period_slots = {}
+        for period, row in period_rows.items():
+            mons = row["land_mons"]["mons"]
+            if len(mons) != 12:
+                raise SystemExit(f"{stem} {period}: expected 12 land slots")
+            period_slots[period] = [
+                {
+                    "species": species(mon["species"]),
+                    "min_level": int(mon["min_level"]),
+                    "max_level": int(mon["max_level"]),
+                }
+                for mon in mons
+            ]
+        for header in headers:
+            profiles.append((header, stem, period_slots))
+
+    out = root / "include/generated/mercury_authored_encounters.h"
+    lines = [
+        "#ifndef POKEPLATINUM_GENERATED_MERCURY_AUTHORED_ENCOUNTERS_H",
+        "#define POKEPLATINUM_GENERATED_MERCURY_AUTHORED_ENCOUNTERS_H",
+        "",
+        '#include "generated/map_headers.h"',
+        "",
+        "typedef struct MercuryEncounterSourceSlot {",
+        "    u16 species;",
+        "    u8 minLevel;",
+        "    u8 maxLevel;",
+        "} MercuryEncounterSourceSlot;",
+        "",
+    ]
+
+    for i, (_header, stem, period_slots) in enumerate(profiles):
+        lines.append(
+            f"static const MercuryEncounterSourceSlot sMercuryLandProfile{i}[4][MAX_GRASS_ENCOUNTERS] = {{"
+        )
+        for pidx, period in enumerate(("Morning", "Day", "Evening", "Night")):
+            lines.append(f"    [{pidx}] = {{ // {period}: {stem}")
+            for slot in period_slots[period]:
+                lines.append(
+                    f"        {{ {slot['species']}, {slot['min_level']}, {slot['max_level']} }},"
+                )
+            lines.append("    },")
+        lines += ["};", ""]
+
+    lines += [
+        "static u8 MercuryEncounters_GetAuthoredPeriod(void)",
+        "{",
+        "    switch (GetTimeOfDay()) {",
+        "    case TIMEOFDAY_MORNING:",
+        "        return 0;",
+        "    case TIMEOFDAY_DAY:",
+        "        return 1;",
+        "    case TIMEOFDAY_TWILIGHT:",
+        "        return 2;",
+        "    case TIMEOFDAY_NIGHT:",
+        "    case TIMEOFDAY_LATE_NIGHT:",
+        "    default:",
+        "        return 3;",
+        "    }",
+        "}",
+        "",
+        "static BOOL MercuryEncounters_ApplyAuthoredLand(",
+        "    const enum MapHeaderID mapHeaderID, EncounterSlot *encounterTable)",
+        "{",
+        "    const MercuryEncounterSourceSlot (*profile)[MAX_GRASS_ENCOUNTERS] = NULL;",
+        "    switch (mapHeaderID) {",
+    ]
+    for i, (header, _stem, _period_slots) in enumerate(profiles):
+        lines += [
+            f"    case {header}:",
+            f"        profile = sMercuryLandProfile{i};",
+            "        break;",
+        ]
+    lines += [
+        "    default:",
+        "        return FALSE;",
+        "    }",
+        "",
+        "    const u8 period = MercuryEncounters_GetAuthoredPeriod();",
+        "    for (u8 i = 0; i < MAX_GRASS_ENCOUNTERS; i++) {",
+        "        encounterTable[i].species = profile[period][i].species;",
+        "        encounterTable[i].minLevel = profile[period][i].minLevel;",
+        "        encounterTable[i].maxLevel = profile[period][i].maxLevel;",
+        "    }",
+        "    return TRUE;",
+        "}",
+        "",
+        "#endif",
+        "",
+    ]
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines))
+    return len(profiles)
+
+
+def patch_runtime_selector(root: Path) -> None:
+    path = root / "src/overlay006/wild_encounters.c"
+    text = path.read_text()
+
+    typedef = """typedef struct EncounterSlot {
+    int species;
+    u16 maxLevel;
+    u16 minLevel;
+} EncounterSlot;
+"""
+    include = '\n#include "generated/mercury_authored_encounters.h"\n'
+    if include.strip() not in text:
+        if text.count(typedef) != 1:
+            raise SystemExit("MR05B runtime selector: EncounterSlot typedef anchor mismatch")
+        text = text.replace(typedef, typedef + include, 1)
+
+    old = """        WildEncounters_ReplaceTimedEncounters(encounterData, &encounterTable[2].species, &encounterTable[3].species);
+        WildEncounters_ReplaceSwarmEncounters(fieldSystem, encounterData, &encounterTable[0].species, &encounterTable[1].species);
+        WildEncounters_ReplaceTrophyGardenEncounters(fieldSystem, nationalDexObtained, &encounterTable[6].species, &encounterTable[7].species);
+        WildEncounters_ReplaceDualSlotEncounters(encounterData, nationalDexObtained, &encounterTable[8].species, &encounterTable[9].species);
+
+        if (!withPartner) {
+            WildEncounters_ReplaceGreatMarshDailyEncounters(fieldSystem, safariGameActive, nationalDexObtained, encounterTable);
+"""
+    new = """        BOOL mercuryAuthoredLand = MercuryEncounters_ApplyAuthoredLand(
+            fieldSystem->location->mapHeaderID,
+            encounterTable);
+
+        if (mercuryAuthoredLand == FALSE) {
+            WildEncounters_ReplaceTimedEncounters(encounterData, &encounterTable[2].species, &encounterTable[3].species);
+            WildEncounters_ReplaceSwarmEncounters(fieldSystem, encounterData, &encounterTable[0].species, &encounterTable[1].species);
+            WildEncounters_ReplaceTrophyGardenEncounters(fieldSystem, nationalDexObtained, &encounterTable[6].species, &encounterTable[7].species);
+            WildEncounters_ReplaceDualSlotEncounters(encounterData, nationalDexObtained, &encounterTable[8].species, &encounterTable[9].species);
+        }
+
+        if (!withPartner) {
+            if (mercuryAuthoredLand == FALSE) {
+                WildEncounters_ReplaceGreatMarshDailyEncounters(fieldSystem, safariGameActive, nationalDexObtained, encounterTable);
+            }
+"""
+    if "MercuryEncounters_ApplyAuthoredLand" not in text[text.find("if (encounterType == ENCOUNTER_TYPE_GRASS"):]:
+        if text.count(old) != 1:
+            raise SystemExit("MR05B runtime selector: vanilla replacement anchor mismatch")
+        text = text.replace(old, new, 1)
+
+    path.write_text(text)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pokeplatinum_root", type=Path)
@@ -476,6 +687,9 @@ def main() -> None:
 
     route_specs = json.loads(args.route_specs.read_text())
     full_tod_area_count = patch_full_tod_runtime(root, route_specs)
+
+    runtime_profile_count = write_runtime_header(root, records)
+    patch_runtime_selector(root)
 
     changed = [r["area"] for r in results if r["changed"]]
     report = {
