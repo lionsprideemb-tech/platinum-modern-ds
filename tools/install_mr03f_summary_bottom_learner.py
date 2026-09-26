@@ -106,6 +106,17 @@ def patch_main(root: Path) -> None:
         "MR03F Move Learner backend include",
     )
 
+    # Native Summary already uses a large application heap. The bottom-screen
+    # learner adds four window pixel buffers, a 512-entry move pool, and an
+    # additional message loader. Keep headroom rather than reproducing the
+    # MR03C low-heap runtime crash pattern.
+    replace_once(
+        path,
+        "#define HEAP_ALLOCATION_SIZE 0x40000\n",
+        "#define HEAP_ALLOCATION_SIZE 0x50000\n",
+        "MR03F Summary heap headroom",
+    )
+
     insert_after_once(
         path,
         "static int TryFeedPoffin(PokemonSummaryScreen *summaryScreen);\n",
