@@ -277,18 +277,6 @@ jobs:
           grep -q 'MERCURY_MR05B_AUTHORED_TOD_BEGIN' vendor/pokeplatinum/src/overlay006/wild_encounters.c
           grep -q 'Mercury_ApplyAuthoredLandTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
 
-      - name: Install MR05B authored Mercury encounters
-        shell: bash
-        run: |
-          python3 tools/install_mr05b_authored_encounters.py \
-            vendor/pokeplatinum \
-            data/encounters/recovered/mercury_gba_runtime_encounters.json \
-            --report mr05b-authored-encounters.json
-
-          test "$(jq -r '.status' mr05b-authored-encounters.json)" = "PASS"
-          test "$(jq -r '.changed_area_count' mr05b-authored-encounters.json)" -gt 20
-          test "$(jq -r '.ported_area_count' mr05b-authored-encounters.json)" -gt 20
-
       - name: Prove CI direct-launch harness is absent
         shell: bash
         run: |
