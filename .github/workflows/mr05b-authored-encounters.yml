@@ -266,8 +266,8 @@ jobs:
 
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "25"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "1200"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "26"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "1248"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
           grep -q 'mercuryTimedGrassMagic' vendor/pokeplatinum/include/overlay006/wild_encounters.h
