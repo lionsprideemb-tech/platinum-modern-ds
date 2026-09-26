@@ -1,0 +1,60 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "scope": "Pre-League Legendary Titan ruins: Regirock / Regice / Registeel + Regigigas activation loop",
+  "status": "STAGED_FOR_FINAL_SINNOH_MAPS_AND_STATIC_SCRIPTS",
+  "design_source": "Pokemon Platinum / Sinnoh ruins and seven-dot statue puzzles, adapted only where required to satisfy Mercury pre-League availability",
+  "source_rule": "Platinum/Sinnoh defines each ruin room, puzzle, legendary identity, and story landmark. Emerald-derived engine content is not a design source.",
+  "unlock": {
+    "trigger": "After earning the Icicle Badge, Snowpoint Temple becomes explorable before the League. Reaching dormant Regigigas on B5F activates the Titan Tablet story flag.",
+    "titan_tablet": "Mercury key-story device replacing Platinum's external/fateful-encounter Regigigas requirement. It activates the seven-dot patterns/statues in all three ruins without requiring an event Pokemon.",
+    "why": "Avoids Platinum's circular/event-only access while preserving the original three ruin puzzles and Regigigas requirement."
+  },
+  "ruins": {
+    "ROCK_PEAK_RUINS": {
+      "species": "SPECIES_REGIROCK",
+      "level": 55,
+      "random_encounters": false,
+      "platinum_identity": "Use the Platinum Rock Peak Ruins room, seven floor dots, rear statue, Hard Stone flavor/reward, and Regirock encounter behavior.",
+      "mercury_access": "The ruin chamber is accessed pre-League from a newly uncovered branch of the Route 214 Ruin Maniac Tunnel rather than requiring postgame Route 228. Only the entrance connection changes; the Rock Peak Ruins room/puzzle remains Platinum-derived.",
+      "activation": "Titan Tablet active -> step on all seven dots -> tremor -> interact with statue.",
+      "respawn": "If KOed or fled, Regirock returns after leaving/re-entering the ruin until caught."
+    },
+    "ICEBERG_RUINS": {
+      "species": "SPECIES_REGICE",
+      "level": 55,
+      "random_encounters": false,
+      "platinum_identity": "Keep the Platinum Iceberg Ruins inside northern Mt. Coronet near the Route 216 exit, including the seven-dot floor puzzle and statue.",
+      "mercury_access": "Available pre-League once the Titan Tablet is active; no Hall of Fame, National Dex, or external event Regigigas.",
+      "activation": "Titan Tablet active -> step on all seven dots -> tremor -> interact with statue.",
+      "respawn": "If KOed or fled, Regice returns after leaving/re-entering the ruin until caught."
+    },
+    "IRON_RUINS": {
+      "species": "SPECIES_REGISTEEL",
+      "level": 55,
+      "random_encounters": false,
+      "platinum_identity": "Keep the Platinum Iron Ruins on Iron Island near the exit, including the seven-dot floor puzzle and statue.",
+      "mercury_access": "Available pre-League once the Titan Tablet is active; Iron Island remains the canonical location.",
+      "activation": "Titan Tablet active -> step on all seven dots -> tremor -> interact with statue.",
+      "respawn": "If KOed or fled, Registeel returns after leaving/re-entering the ruin until caught."
+    }
+  },
+  "regigigas": {
+    "species": "SPECIES_REGIGIGAS",
+    "level": 1,
+    "location": "Snowpoint Temple B5F",
+    "random_encounters": false,
+    "requirement": "Regirock, Regice, and Registeel must all be in the party.",
+    "platinum_identity": "Preserve Platinum's Level 1 Regigigas gimmick and Snowpoint Temple location.",
+    "mercury_access": "No National Dex or Hall of Fame requirement. Once the trio is caught, return to B5F and interact with dormant Regigigas.",
+    "respawn": "If KOed or fled, Regigigas remains available after leaving/re-entering B5F until caught."
+  },
+  "implementation_rules": [
+    "Do not add generic random encounters inside any of the three Titan Ruins.",
+    "Do not open Route 228/Battle Zone early merely to reach Regirock.",
+    "Do not require an external event Regigigas, Pal Park transfer, or National Dex.",
+    "Use a dedicated story flag/key-item state for Titan Tablet activation; exact item constant may be allocated during final map/script implementation.",
+    "Legendary catches are once-per-save after successful capture, but KO/flee must never permanently lose them.",
+    "The Regi trio and Regigigas are all obtainable before the Pokemon League."
+  ]
+}
