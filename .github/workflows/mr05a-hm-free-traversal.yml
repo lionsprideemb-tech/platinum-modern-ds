@@ -130,7 +130,7 @@ jobs:
               vendor/pokeplatinum vendor/hg-engine \
               --start-dex "$start" --end-dex "$end" \
               --implemented-abilities mr04-implemented-abilities.txt \
-              --gate "MR04_${tag}_RESOURCE_INSTALL" \
+              --gate "MR05A_${tag}_RESOURCE_INSTALL" \
               --report "mr04-${tag}.json"
           done <<'EOF'
           494 649 GEN5
@@ -313,7 +313,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr04-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05a-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -327,8 +327,8 @@ jobs:
         run: |
           mkdir -p mr05a-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05a-artifact/Pokemon_Mercury_MR04_Player_Build.nds
-            sha256sum mr05a-artifact/Pokemon_Mercury_MR04_Player_Build.nds > mr05a-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05a-artifact/Pokemon_Mercury_MR05A_HM_Free.nds
+            sha256sum mr05a-artifact/Pokemon_Mercury_MR05A_HM_Free.nds > mr05a-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05a-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05a-artifact/ 2>/dev/null || true
@@ -338,7 +338,7 @@ jobs:
           cp mr04-summary-bottom-learner.json mr05a-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05a-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05a-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr04-normal-boot-meta.json mr05a-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05a-normal-boot-meta.json mr05a-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
@@ -365,5 +365,5 @@ jobs:
             echo "- Mercury title resources included"
             echo "- Full ROM compile required"
             echo "- Real DeSmuME normal-boot screenshots required"
-            echo "- Player-ready ROM staged as Pokemon_Mercury_MR04_Player_Build.nds"
+            echo "- HM-free ROM staged as Pokemon_Mercury_MR05A_HM_Free.nds"
           } >> "$GITHUB_STEP_SUMMARY"
