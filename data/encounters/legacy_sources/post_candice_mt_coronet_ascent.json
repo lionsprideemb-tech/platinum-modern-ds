@@ -1,0 +1,1072 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "scope": "Post-Candice Mt. Coronet ascent + B1F Feebas lake + Spear Pillar encounter policy",
+  "status": "STAGED_FOR_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum / Sinnoh, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography, encounter anchors, ecology, and progression. Emerald-derived engine IDs are hidden implementation infrastructure only and are not content sources.",
+  "runtime_note": "The cumulative source does not yet contain the finished player-facing Platinum-derived upper Mt. Coronet / Spear Pillar maps. These are authoritative staged encounter specifications and must only be wired when those real Sinnoh maps exist.",
+  "design_rules": [
+    "Preserve Platinum Mt. Coronet anchors such as Clefairy, Golbat, Machoke, Graveler, Nosepass, Medicham, Chingling/Chimecho, Bronzong, Snover, and Abomasnow.",
+    "Different Coronet floors must have distinct sub-identities rather than cloning one cave roster at higher levels.",
+    "The snowy mountainside uses Morning/Day/Evening/Night turnover because it is outdoors.",
+    "B1F Feebas lake keeps Feebas tied to Mt. Coronet but removes the tiny-tile lottery; Feebas is a permanent rare fishing target.",
+    "Spear Pillar has no generic random wild encounter table; story/static legendary encounters remain scripted content."
+  ],
+  "areas": {
+    "MT_CORONET_B1F_FEEBAS_LAKE": {
+      "identity": "Hidden subterranean lake. Platinum cave anchors remain, but the water/fishing ecology is authored around Barboach/Whiscash and permanent Feebas availability instead of a special-tile lottery.",
+      "land": [
+        {
+          "species": "SPECIES_CLEFAIRY",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 51,
+          "max_level": 53,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_NOSEPASS",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 51,
+          "max_level": 53,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_CARBINK",
+          "min_level": 51,
+          "max_level": 53,
+          "weight": 3
+        },
+        {
+          "species": "SPECIES_ELGYEM",
+          "min_level": 52,
+          "max_level": 53,
+          "weight": 2
+        },
+        {
+          "species": "SPECIES_ABSOL",
+          "min_level": 52,
+          "max_level": 53,
+          "weight": 1
+        }
+      ],
+      "surf": [
+        {
+          "species": "SPECIES_BARBOACH",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 40
+        },
+        {
+          "species": "SPECIES_WHISCASH",
+          "min_level": 51,
+          "max_level": 53,
+          "weight": 30
+        },
+        {
+          "species": "SPECIES_CHINCHOU",
+          "min_level": 50,
+          "max_level": 52,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_TYNAMO",
+          "min_level": 51,
+          "max_level": 53,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_FEEBAS",
+          "min_level": 52,
+          "max_level": 53,
+          "weight": 5
+        }
+      ],
+      "fishing": {
+        "Old Rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 25,
+            "max_level": 30,
+            "weight": 70
+          },
+          {
+            "species": "SPECIES_BARBOACH",
+            "min_level": 28,
+            "max_level": 32,
+            "weight": 30
+          }
+        ],
+        "Good Rod": [
+          {
+            "species": "SPECIES_BARBOACH",
+            "min_level": 45,
+            "max_level": 48,
+            "weight": 50
+          },
+          {
+            "species": "SPECIES_WHISCASH",
+            "min_level": 47,
+            "max_level": 50,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_FEEBAS",
+            "min_level": 48,
+            "max_level": 50,
+            "weight": 20
+          }
+        ],
+        "Super Rod": [
+          {
+            "species": "SPECIES_WHISCASH",
+            "min_level": 52,
+            "max_level": 55,
+            "weight": 45
+          },
+          {
+            "species": "SPECIES_GYARADOS",
+            "min_level": 52,
+            "max_level": 55,
+            "weight": 35
+          },
+          {
+            "species": "SPECIES_FEEBAS",
+            "min_level": 53,
+            "max_level": 56,
+            "weight": 19
+          },
+          {
+            "species": "SPECIES_MILOTIC",
+            "min_level": 56,
+            "max_level": 58,
+            "weight": 1
+          }
+        ]
+      },
+      "special_rule": "Feebas is always present in the lake's fishing pool. No daily tile roll or hidden 4-tile requirement."
+    },
+    "MT_CORONET_ASCENT_2F": {
+      "identity": "First serious post-Galactic-HQ ascent floor; Platinum mineral/fairy/psychic anchors with new crystal and magnetic species.",
+      "land": [
+        {
+          "species": "SPECIES_CLEFAIRY",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MEDICHAM",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_NOSEPASS",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_CARBINK",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_TINKATUFF",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 54,
+          "max_level": 55,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_MINIOR",
+          "min_level": 54,
+          "max_level": 55,
+          "weight": 1
+        }
+      ]
+    },
+    "MT_CORONET_ASCENT_3F": {
+      "identity": "Higher magnetic cavern; evolved psychic/steel and magnetic species become more prominent.",
+      "land": [
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MEDICHAM",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHIMECHO",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PROBOPASS",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_CARBINK",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAGNEZONE",
+          "min_level": 55,
+          "max_level": 56,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_GLIMMET",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SOLROCK",
+          "min_level": 55,
+          "max_level": 56,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_LUNATONE",
+          "min_level": 55,
+          "max_level": 56,
+          "weight": 1
+        }
+      ]
+    },
+    "MT_CORONET_MOUNTAINSIDE": {
+      "identity": "Snow-covered exterior between interior ascent chambers. Platinum Snover/Abomasnow and mountain anchors remain; clock-based ecology is meaningful because this section is outdoors.",
+      "time_of_day_land": {
+        "Morning": [
+          {
+            "species": "SPECIES_SNOVER",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_CLEFAIRY",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_MACHOKE",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MEDICHAM",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CHINGLING",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_BRONZONG",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_ABOMASNOW",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_GLIGAR",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MINIOR",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_SOLROCK",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_LUNATONE",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 1
+          },
+          {
+            "species": "SPECIES_CLEFABLE",
+            "min_level": 57,
+            "max_level": 57,
+            "weight": 1
+          }
+        ],
+        "Day": [
+          {
+            "species": "SPECIES_SNOVER",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_ABOMASNOW",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_MACHOKE",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MEDICHAM",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CLEFAIRY",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_BRONZONG",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_GLIGAR",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_CHINGLING",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MINIOR",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_SOLROCK",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_CLEFABLE",
+            "min_level": 57,
+            "max_level": 57,
+            "weight": 1
+          },
+          {
+            "species": "SPECIES_MAGNEZONE",
+            "min_level": 57,
+            "max_level": 57,
+            "weight": 1
+          }
+        ],
+        "Evening": [
+          {
+            "species": "SPECIES_SNOVER",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_CLEFAIRY",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_MEDICHAM",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_BRONZONG",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_GLIGAR",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_ABOMASNOW",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_CHINGLING",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MINIOR",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_LUNATONE",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_CLEFABLE",
+            "min_level": 57,
+            "max_level": 57,
+            "weight": 1
+          },
+          {
+            "species": "SPECIES_CROBAT",
+            "min_level": 57,
+            "max_level": 57,
+            "weight": 1
+          }
+        ],
+        "Night": [
+          {
+            "species": "SPECIES_SNOVER",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_NOCTOWL",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MEDICHAM",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_BRONZONG",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CLEFAIRY",
+            "min_level": 54,
+            "max_level": 56,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_ABOMASNOW",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_GLIGAR",
+            "min_level": 55,
+            "max_level": 57,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_LUNATONE",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_MINIOR",
+            "min_level": 56,
+            "max_level": 57,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_CLEFABLE",
+            "min_level": 57,
+            "max_level": 57,
+            "weight": 1
+          },
+          {
+            "species": "SPECIES_CROBAT",
+            "min_level": 57,
+            "max_level": 57,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    "MT_CORONET_4F_ROOM1_CRYSTAL_GALLERY": {
+      "identity": "Crystal/mineral gallery; mineral Pok\u00e9mon become much more prominent than on lower floors.",
+      "land": [
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_CLEFAIRY",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CARBINK",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GLIMMET",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_NOSEPASS",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_TINKATUFF",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MINIOR",
+          "min_level": 56,
+          "max_level": 57,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 57,
+          "max_level": 57,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_CLEFABLE",
+          "min_level": 57,
+          "max_level": 57,
+          "weight": 1
+        }
+      ]
+    },
+    "MT_CORONET_4F_ROOM2_WATERFALL_SHRINE": {
+      "identity": "Quiet waterfall/orb chamber; psychic, fairy, ghost, and ancient-feeling species replace some of the heavy mineral emphasis.",
+      "land": [
+        {
+          "species": "SPECIES_CLEFAIRY",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MEDICHAM",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 55,
+          "max_level": 57,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHIMECHO",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CARBINK",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ELGYEM",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_FRIGIBAX",
+          "min_level": 57,
+          "max_level": 58,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MINIOR",
+          "min_level": 57,
+          "max_level": 58,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 58,
+          "max_level": 58,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_CLEFABLE",
+          "min_level": 58,
+          "max_level": 58,
+          "weight": 1
+        }
+      ],
+      "waterfall_pool": [
+        {
+          "species": "SPECIES_BARBOACH",
+          "min_level": 52,
+          "max_level": 54,
+          "weight": 40
+        },
+        {
+          "species": "SPECIES_WHISCASH",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 30
+        },
+        {
+          "species": "SPECIES_FEEBAS",
+          "min_level": 54,
+          "max_level": 56,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_CHINCHOU",
+          "min_level": 53,
+          "max_level": 55,
+          "weight": 10
+        }
+      ]
+    },
+    "MT_CORONET_4F_ROOM3_GALACTIC_TUNNEL": {
+      "identity": "Narrow final interior approach used by Galactic; darker/steel cave species fit the disturbed tunnel environment.",
+      "land": [
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PAWNIARD",
+          "min_level": 56,
+          "max_level": 58,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLANG",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_TINKATUFF",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_ABSOL",
+          "min_level": 58,
+          "max_level": 59,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 59,
+          "max_level": 59,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_METANG",
+          "min_level": 59,
+          "max_level": 59,
+          "weight": 1
+        }
+      ]
+    },
+    "MT_CORONET_5F_CELESTIAL_CHAMBER": {
+      "identity": "High celestial cavern near the summit; Platinum fairy/psychic/steel anchors combine with sun/moon/cosmic species.",
+      "land": [
+        {
+          "species": "SPECIES_CLEFAIRY",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_CHIMECHO",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MEDICHAM",
+          "min_level": 57,
+          "max_level": 59,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_SOLROCK",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_LUNATONE",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MINIOR",
+          "min_level": 59,
+          "max_level": 60,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_ELGYEM",
+          "min_level": 59,
+          "max_level": 60,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_CLEFABLE",
+          "min_level": 60,
+          "max_level": 60,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_METANG",
+          "min_level": 60,
+          "max_level": 60,
+          "weight": 1
+        }
+      ]
+    },
+    "MT_CORONET_6F_SUMMIT_GATE": {
+      "identity": "Final cave floor before Spear Pillar; stronger evolved forms signal the summit and late-story difficulty.",
+      "land": [
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_CLEFABLE",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MEDICHAM",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MAGNEZONE",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_PROBOPASS",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_CHIMECHO",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_METANG",
+          "min_level": 60,
+          "max_level": 61,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_CROBAT",
+          "min_level": 61,
+          "max_level": 61,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_MACHAMP",
+          "min_level": 61,
+          "max_level": 61,
+          "weight": 1
+        }
+      ]
+    },
+    "SPEAR_PILLAR": {
+      "identity": "Sacred summit ruins and Galactic climax area.",
+      "random_wild_encounters": false,
+      "static_policy": [
+        "No generic random wild encounters.",
+        "Platinum story climax routes into Giratina / Distortion World rather than making Dialga or Palkia ordinary random encounters.",
+        "Dialga/Palkia portal encounters, if retained, remain later scripted static encounters tied to their proper orb/story conditions.",
+        "Any Mercury-specific legendary additions must be authored as static/story content, never grass/cave random slots."
+      ]
+    }
+  },
+  "reference_notes": {
+    "Platinum Mt. Coronet reference": "https://bulbapedia.bulbagarden.net/wiki/Mt._Coronet",
+    "Platinum Mt. Coronet Pokearth reference": "https://www.serebii.net/pokearth/sinnoh/4th/mt.coronet.shtml",
+    "Platinum Spear Pillar reference": "https://www.serebii.net/pokearth/sinnoh/4th/spearpillar.shtml",
+    "Feebas source note": "In Platinum, Feebas is restricted to four daily-changing fishing tiles in Mt. Coronet B1F; Mercury deliberately removes that tile lottery while keeping Feebas tied to the same lake."
+  }
+}
