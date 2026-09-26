@@ -265,11 +265,17 @@ jobs:
           python3 tools/install_mr05b_authored_encounters.py \
             vendor/pokeplatinum \
             data/encounters/recovered_mercury_gba_runtime.json \
+            --route-specs data/encounters/mercury_ds_route_specs.json \
             --report mr05b-authored-encounters.json
 
           test "$(jq -r '.status' mr05b-authored-encounters.json)" = "PASS"
           test "$(jq -r '.changed_area_count' mr05b-authored-encounters.json)" -gt 0
           test "$(jq -r '.ported_area_count' mr05b-authored-encounters.json)" -ge 37
+          test "$(jq -r '.full_four_period_runtime_selector_pending' mr05b-authored-encounters.json)" = "false"
+          test "$(jq -r '.full_four_period_runtime_area_count' mr05b-authored-encounters.json)" = "32"
+          test "$(jq -r '.water_only_authored_routes | length' mr05b-authored-encounters.json)" = "3"
+          grep -q 'MERCURY_MR05B_AUTHORED_TOD_BEGIN' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+          grep -q 'Mercury_ApplyAuthoredLandTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
 
       - name: Prove CI direct-launch harness is absent
         shell: bash
