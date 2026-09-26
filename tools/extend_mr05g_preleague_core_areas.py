@@ -202,11 +202,13 @@ def main() -> None:
         raise SystemExit("Eterna Forest random table absorbed the future Celebi shrine static")
 
     # Wayward B1F should be a genuine Gible den, not another microscopic roll.
+    # One standard slot here is the leading 20% slot, so requiring Gible to
+    # survive into that slot preserves a substantial catch rate.
     wayward_b1f = areas["encounters_wayward_cave_b1f"]["mercury_tod_land"]
     for period, slots in wayward_b1f.items():
         gible_slots = sum(slot["species"] == "SPECIES_GIBLE" for slot in slots)
-        if gible_slots < 2:
-            raise SystemExit(f"Wayward B1F {period}: Gible identity too weak after translation")
+        if gible_slots < 1 or slots[0]["species"] != "SPECIES_GIBLE":
+            raise SystemExit(f"Wayward B1F {period}: Gible-den identity too weak after translation")
 
     supported = load_supported_species(root)
     unresolved = sorted(
