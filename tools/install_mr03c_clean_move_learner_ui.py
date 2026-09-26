@@ -80,6 +80,14 @@ def patch_ui(root: Path) -> None:
 
     # Give the custom top page its own character/tilemap layer so its 30x22
     # window cannot collide with Platinum's message-box tile storage.
+    #
+    # IMPORTANT: BG3's tilemap lives at 0x7800 and its character data starts
+    # at 0x8000.  The 30x22 top window consumes tiles 0x001..0x294, and the
+    # 10x10 portrait immediately follows at 0x295..0x2F8.  This keeps all
+    # portrait character data below 0xE000, where Platinum's BG2 screen map
+    # begins.  The old 0xD800 screen base overlapped the portrait tiles and
+    # produced the striped/shredded Pokemon image even when tile order was
+    # otherwise correct.
     replace_once(
         source,
         """    Bg_InitFromTemplate(bgConfig, BG_LAYER_SUB_0, &bgSub0, BG_TYPE_STATIC);
@@ -99,7 +107,7 @@ def patch_ui(root: Path) -> None:
         .baseTile = 0,
         .screenSize = BG_SCREEN_SIZE_256x256,
         .colorMode = GX_BG_COLORMODE_16,
-        .screenBase = GX_BG_SCRBASE_0xd800,
+        .screenBase = GX_BG_SCRBASE_0x7800,
         .charBase = GX_BG_CHARBASE_0x08000,
         .bgExtPltt = GX_BG_EXTPLTT_01,
         .priority = 1,
@@ -276,7 +284,7 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         .width = 10,
         .height = 10,
         .palette = 14,
-        .baseTile = 0x2A0,
+        .baseTile = 0x295,
     },
     [MOVE_REMINDER_WIN_MERCURY_FILTER] = {
         .bgLayer = BG_LAYER_SUB_0,
