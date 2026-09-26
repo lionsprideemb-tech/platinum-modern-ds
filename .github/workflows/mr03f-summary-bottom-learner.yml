@@ -286,9 +286,13 @@ jobs:
               press(Keys.KEY_A, settle=180)
               press(Keys.KEY_A, settle=120)
               press(Keys.KEY_DOWN, settle=60)
-              press(Keys.KEY_A, settle=360)
+              snap("pre-open-context")
 
+              # Capture earlier than the prior crash frame so a failed open
+              # still leaves a visual breadcrumb in the artifact.
+              press(Keys.KEY_A, settle=150)
               snap("browse")
+              cycle(90)
 
               press(Keys.KEY_DOWN, settle=80)
               press(Keys.KEY_DOWN, settle=80)
@@ -312,7 +316,7 @@ jobs:
           }
           (out / "mr03f-runtime-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
-          if len(captures) != 5:
+          if len(captures) != 6:
               raise SystemExit("MR03F did not capture every proof state")
           PY
 
