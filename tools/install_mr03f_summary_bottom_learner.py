@@ -46,7 +46,7 @@ def patch_text(root: Path) -> None:
         "PokemonSummary_Text_MercuryLearnerTitle": "MOVE LEARNER",
         "PokemonSummary_Text_MercuryLearnerAvailable": "AVAILABLE MOVES",
         "PokemonSummary_Text_MercuryLearnerRow": "  {STRVAR_1 6, 0, 0}",
-        "PokemonSummary_Text_MercuryLearnerRowSelected": "> {STRVAR_1 6, 0, 0}",
+        "PokemonSummary_Text_MercuryLearnerRowSelected": "  {STRVAR_1 6, 0, 0}",
         "PokemonSummary_Text_MercuryLearnerStats": "POWER     ACC.      PP",
         "PokemonSummary_Text_MercuryLearnerNumber": "{STRVAR_1 52, 0, 0}",
         "PokemonSummary_Text_MercuryLearnerHelp": "D-PAD:SELECT  A:TEACH  L/R:PAGE  B:BACK",
@@ -433,7 +433,7 @@ static void MercuryMoveLearner_PrintMoveRow(
         8,
         y,
         TEXT_SPEED_NO_TRANSFER,
-        SUMMARY_TEXT_BLACK,
+        selected ? SUMMARY_TEXT_BLUE : SUMMARY_TEXT_BLACK,
         NULL);
 }
 
