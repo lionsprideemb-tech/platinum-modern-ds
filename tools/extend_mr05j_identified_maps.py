@@ -239,8 +239,8 @@ def main() -> None:
 
     if len(full_tod_resources) != 7:
         raise SystemExit(f"MR05J expected 7 new full-TOD land resources, found {len(full_tod_resources)}")
-    if len(water_resources) != 11:
-        raise SystemExit(f"MR05J expected 11 authored water resources, found {len(water_resources)}")
+    if len(water_resources) != 12:
+        raise SystemExit(f"MR05J expected 12 authored water resources, found {len(water_resources)}")
 
     output["description"] = (
         "Mercury Redux authored Sinnoh encounter overrides through MR05J: "
