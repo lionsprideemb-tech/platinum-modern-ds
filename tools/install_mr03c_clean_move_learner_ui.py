@@ -154,7 +154,6 @@ def patch_ui(root: Path) -> None:
         """    MOVE_REMINDER_WIN_YES_NO_MENU,
     MOVE_REMINDER_WIN_SUB_INFO,
     MOVE_REMINDER_WIN_MERCURY_TOP,
-    MOVE_REMINDER_WIN_MERCURY_PORTRAIT,
     MOVE_REMINDER_WIN_MERCURY_FILTER,
     MOVE_REMINDER_WIN_MERCURY_CURRENT,
     MOVE_REMINDER_WIN_MERCURY_LIST,
@@ -176,6 +175,7 @@ def patch_ui(root: Path) -> None:
     u8 yesNoCallback;
     u8 mercuryPage;
     u8 mercuryFilter;
+    u8 *mercuryPreviewState;
 } MoveReminderController;
 
 enum {
@@ -209,7 +209,6 @@ static void MercuryMoveLearner_PrintMoveName(MoveReminderController *controller,
 static void MercuryMoveLearner_PrintTypeName(MoveReminderController *controller, Window *window, u16 type, u32 x, u32 y);
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height);
 static void MercuryMoveLearner_LoadPalette(void);
-static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *controller);
 """,
         "MR03C declarations",
     )
@@ -268,15 +267,6 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         .height = 22,
         .palette = 15,
         .baseTile = 0x001,
-    },
-    [MOVE_REMINDER_WIN_MERCURY_PORTRAIT] = {
-        .bgLayer = BG_LAYER_MAIN_3,
-        .tilemapLeft = 2,
-        .tilemapTop = 5,
-        .width = 10,
-        .height = 10,
-        .palette = 14,
-        .baseTile = 0x2A0,
     },
     [MOVE_REMINDER_WIN_MERCURY_FILTER] = {
         .bgLayer = BG_LAYER_SUB_0,
@@ -602,70 +592,6 @@ static void MercuryMoveLearner_LoadPalette(void)
 
     GX_LoadBGPltt(palette, 15 * PALETTE_SIZE_BYTES, PALETTE_SIZE_BYTES);
     GXS_LoadBGPltt(palette, 15 * PALETTE_SIZE_BYTES, PALETTE_SIZE_BYTES);
-}
-
-static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *controller)
-{
-    Window *portrait = &controller->windows[MOVE_REMINDER_WIN_MERCURY_PORTRAIT];
-    Pokemon *mon = controller->data->mon;
-    PokemonSpriteTemplate spriteTemplate;
-
-    Window_FillTilemap(portrait, 0);
-
-    Pokemon_BuildSpriteTemplate(&spriteTemplate, mon, FACE_FRONT);
-
-    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
-    u32 personality = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
-    u8 *buffer = Heap_Alloc(HEAP_ID_MOVE_REMINDER, 0xC80);
-
-    // Platinum's Pokemon helper emits the 10x10 frame in DS OAM region order.
-    // Preserve that correct Pokemon decoding (including Spinda spots), then
-    // invert the six-region packing into the row-major tile order a BG Window
-    // expects.
-    CharacterSprite_LoadPokemonSpriteRect(
-        spriteTemplate.narcID,
-        spriteTemplate.character,
-        HEAP_ID_MOVE_REMINDER,
-        0,
-        0,
-        10,
-        10,
-        buffer,
-        personality,
-        FALSE,
-        FACE_FRONT,
-        species);
-
-    static const u8 regionX[6] = { 0, 8, 8, 0, 4, 8 };
-    static const u8 regionY[6] = { 0, 0, 4, 8, 8, 8 };
-    static const u8 regionW[6] = { 8, 2, 2, 4, 4, 2 };
-    static const u8 regionH[6] = { 8, 4, 4, 2, 2, 2 };
-
-    u32 srcTile = 0;
-    for (u32 region = 0; region < 6; region++) {
-        for (u32 y = 0; y < regionH[region]; y++) {
-            for (u32 x = 0; x < regionW[region]; x++) {
-                u32 dstTile = ((regionY[region] + y) * 10) + regionX[region] + x;
-                MI_CpuCopy8(
-                    buffer + srcTile * TILE_SIZE_4BPP,
-                    (u8 *)portrait->pixels + dstTile * TILE_SIZE_4BPP,
-                    TILE_SIZE_4BPP);
-                srcTile++;
-            }
-        }
-    }
-
-    Heap_Free(buffer);
-
-    Graphics_LoadPalette(
-        spriteTemplate.narcID,
-        spriteTemplate.palette,
-        PAL_LOAD_MAIN_BG,
-        14 * PALETTE_SIZE_BYTES,
-        PALETTE_SIZE_BYTES,
-        HEAP_ID_MOVE_REMINDER);
-
-    Window_ScheduleCopyToVRAM(portrait);
 }
 
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height)
@@ -1185,7 +1111,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     }
 
     Window_ScheduleCopyToVRAM(window);
-    MercuryMoveLearner_DrawPokemonPortrait(controller);
 }
 '''
 
@@ -1209,6 +1134,23 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
 
     MercuryMoveLearner_LoadPalette();
 
+    LoadStandardWindowGraphics(
+        controller->bgConfig,
+        BG_LAYER_MAIN_3,
+        0x2A0,
+        14,
+        STANDARD_WINDOW_SYSTEM,
+        HEAP_ID_MOVE_REMINDER);
+    controller->mercuryPreviewState = DrawPokemonPreviewFromStruct(
+        controller->bgConfig,
+        BG_LAYER_MAIN_3,
+        2,
+        5,
+        14,
+        0x2A0,
+        controller->data->mon,
+        HEAP_ID_MOVE_REMINDER);
+
     for (u32 i = MOVE_REMINDER_WIN_LABEL_BATTLE_MOVES;
          i <= MOVE_REMINDER_WIN_MOVES_NAMES;
          i++) {
@@ -1224,6 +1166,38 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     MercuryMoveLearner_DrawBottomChrome(controller);
     MoveReminder_DrawMovesInfo(controller);""",
         "MR03C setup",
+    )
+
+    replace_once(
+        source,
+        """static int MoveReminder_State_FadeToExit(MoveReminderController *controller)
+{
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        """static int MoveReminder_State_FadeToExit(MoveReminderController *controller)
+{
+    if (controller->mercuryPreviewState != NULL) {
+        *controller->mercuryPreviewState = PREVIEW_STATE_REMOVE;
+        controller->mercuryPreviewState = NULL;
+    }
+
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        "MR03C native preview cleanup on exit",
+    )
+
+    replace_once(
+        source,
+        """static int MoveReminder_State_FadeToSummaryScreen(MoveReminderController *controller)
+{
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        """static int MoveReminder_State_FadeToSummaryScreen(MoveReminderController *controller)
+{
+    if (controller->mercuryPreviewState != NULL) {
+        *controller->mercuryPreviewState = PREVIEW_STATE_REMOVE;
+        controller->mercuryPreviewState = NULL;
+    }
+
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        "MR03C native preview cleanup on summary",
     )
 
     # Free-list callback is unchanged, but a filter switch resets list/cursor
@@ -1333,7 +1307,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "dark Mercury blue palette, tab/card styling, BG-compatible front portrait, expanded app heap",
+        "visual_pass": "dark Mercury blue palette, tab/card styling, native animated Pokemon preview, expanded app heap",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
