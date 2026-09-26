@@ -332,10 +332,54 @@ def install_areas(root: Path, data_path: Path) -> dict[str, Any]:
     }
 
 
+def audit_runtime_tables(root: Path) -> dict[str, Any]:
+    encounter_dir = root / "res/field/encounters"
+    authored = []
+    slots = 0
+
+    for path in sorted(encounter_dir.glob("encounters_*.json")):
+        data = json.loads(path.read_text())
+        tables = data.get("mercury_tod_land")
+        if tables is None:
+            continue
+
+        for period in PERIODS:
+            period_slots = tables.get(period)
+            if not isinstance(period_slots, list) or len(period_slots) != 12:
+                raise SystemExit(
+                    f"{path.stem}: mercury_tod_land.{period} must contain exactly 12 slots"
+                )
+            for i, slot in enumerate(period_slots):
+                lo = slot.get("level_min")
+                hi = slot.get("level_max")
+                species = slot.get("species")
+                if not isinstance(lo, int) or not isinstance(hi, int) or not 1 <= lo <= hi <= 100:
+                    raise SystemExit(
+                        f"{path.stem}: mercury_tod_land.{period}[{i}] invalid levels {lo}-{hi}"
+                    )
+                if not isinstance(species, str) or not species.startswith("SPECIES_"):
+                    raise SystemExit(
+                        f"{path.stem}: mercury_tod_land.{period}[{i}] invalid species {species!r}"
+                    )
+            slots += len(period_slots)
+        authored.append(path.stem)
+
+    if not authored:
+        raise SystemExit("MR05B runtime-only mode found no mercury_tod_land encounter tables")
+
+    return {
+        "changed_areas": authored,
+        "slot_count": slots,
+        "source_blob": None,
+        "fallbacks": [],
+    }
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pokeplatinum_root", type=Path)
-    ap.add_argument("authored_data", type=Path)
+    ap.add_argument("authored_data", type=Path, nargs="?")
+    ap.add_argument("--runtime-only", action="store_true")
     ap.add_argument("--report", type=Path, default=Path("mr05b-authored-encounters.json"))
     args = ap.parse_args()
 
@@ -343,15 +387,24 @@ def main() -> None:
     patch_wild_encounter_header(root)
     patch_converter(root)
     patch_runtime(root)
-    installed = install_areas(root, args.authored_data)
+
+    if args.runtime_only:
+        installed = audit_runtime_tables(root)
+    else:
+        if args.authored_data is None:
+            raise SystemExit("authored_data is required unless --runtime-only is used")
+        installed = install_areas(root, args.authored_data)
+        installed["slot_count"] = len(installed["changed_areas"]) * len(PERIODS) * 12
 
     report = {
         "gate": "MERCURY_MR05B_AUTHORED_ENCOUNTERS",
         "status": "PASS",
+        "mode": "runtime-only" if args.runtime_only else "install-and-runtime",
         "four_period_full_land_tables": True,
         "periods": list(PERIODS),
         "changed_area_count": len(installed["changed_areas"]),
         "changed_areas": installed["changed_areas"],
+        "full_tod_slot_count": installed["slot_count"],
         "source_blob": installed["source_blob"],
         "runtime_fallbacks": installed["fallbacks"],
         "vanilla_special_replacements_bypassed_for_mercury_tables": True,
