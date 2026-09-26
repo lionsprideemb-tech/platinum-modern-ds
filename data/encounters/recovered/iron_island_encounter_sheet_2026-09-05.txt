@@ -1,0 +1,184 @@
+POKEMON MERCURY REDUX — IRON ISLAND ENCOUNTER SHEET
+Date: 2026-09-05
+
+DESIGN SOURCE
+Pokemon Platinum / Sinnoh. Mercury expands the Platinum Iron Island ecology; internal engine identifiers are implementation-only and are not content sources.
+
+IMPLEMENTATION STATUS
+STAGED FOR FINAL SINNOH MAPS — The finished player-facing Iron Island maps are not yet constructed in this cumulative source, so these tables are intentionally not attached to unrelated engine geography.
+
+CORE RULES
+- Iron Island is an abandoned ore mine / training ground, not a generic cave.
+- Each floor has its own encounter identity.
+- Platinum anchors (Geodude/Graveler, Zubat/Golbat, Onix, later Steelix) remain recognizable.
+- Riolu is NOT a random encounter here. Riley keeps the special Riolu Egg reward; earlier Mercury Riolu availability remains intact.
+- While Riley is partnered in B2F, wild battles should become Double Battles and he heals the party after battles.
+
+OUTSIDE — COASTAL WATER
+No ordinary land encounter table.
+
+Surf
+Pokemon | Levels | Chance
+---|---:|---:
+Wingull | 41-44 | 35%
+Tentacool | 41-44 | 25%
+Pelipper | 42-45 | 15%
+Tentacruel | 42-45 | 10%
+Mantine | 43-45 | 15%
+
+Old Rod
+Pokemon | Levels | Chance
+---|---:|---:
+Magikarp | 20-30 | 100%
+
+Good Rod
+Pokemon | Levels | Chance
+---|---:|---:
+Magikarp | 31-38 | 45%
+Finneon | 32-39 | 35%
+Remoraid | 33-40 | 20%
+
+Super Rod
+Pokemon | Levels | Chance
+---|---:|---:
+Gyarados | 42-47 | 35%
+Lumineon | 42-47 | 25%
+Qwilfish | 42-47 | 15%
+Octillery | 43-47 | 10%
+Mantine | 43-47 | 10%
+Relicanth | 45-47 | 5%
+
+1F
+Identity: Abandoned mine entrance; Platinum Geodude/Graveler/Zubat/Golbat/Onix backbone with light ore-processing and Steel-type expansion.
+Pokemon | Levels | Chance
+---|---:|---:
+Graveler | 42-44 | 20%
+Geodude | 42-43 | 10%
+Golbat | 42-44 | 10%
+Onix | 42-44 | 10%
+Aron | 42-43 | 15%
+Klink | 42-43 | 15%
+Rolycoly | 42-44 | 5%
+Cufant | 43-44 | 5%
+Ferroseed | 43-44 | 5%
+Varoom | 43-44 | 3%
+Tinkatuff | 44-45 | 1%
+Mawile | 44-45 | 1%
+
+B1F Left Ore Vein
+Identity: Old ore vein; denser mineral, crystal, and digging ecology.
+Pokemon | Levels | Chance
+---|---:|---:
+Graveler | 43-45 | 20%
+Golbat | 43-45 | 10%
+Onix | 43-45 | 10%
+Lairon | 43-45 | 10%
+Klang | 43-45 | 10%
+Carkol | 43-45 | 10%
+Drilbur | 43-45 | 10%
+Carbink | 44-46 | 5%
+Sableye | 44-46 | 5%
+Mawile | 44-46 | 4%
+Orthworm | 44-46 | 4%
+Durant | 45-46 | 2%
+
+B1F Right Training Gallery
+Identity: Trainer-used gallery; Platinum mine anchors remain, but hardy Fighting/Steel species become more common.
+Pokemon | Levels | Chance
+---|---:|---:
+Graveler | 43-45 | 20%
+Golbat | 43-45 | 10%
+Onix | 43-45 | 10%
+Machoke | 43-45 | 20%
+Medicham | 43-45 | 10%
+Gurdurr | 43-45 | 10%
+Pawniard | 44-45 | 5%
+Tinkatuff | 44-45 | 5%
+Falinks | 44-46 | 4%
+Sableye | 44-46 | 2%
+Mawile | 44-46 | 2%
+Varoom | 44-46 | 2%
+
+B2F Left Riley Section
+Identity: Riley partnership zone; Steelix enters as in Platinum and industrial/mining species become heavier. Wild battles become doubles while Riley accompanies the player.
+Pokemon | Levels | Chance
+---|---:|---:
+Graveler | 44-46 | 15%
+Golbat | 44-46 | 10%
+Onix | 44-46 | 10%
+Steelix | 45-47 | 10%
+Lairon | 44-46 | 10%
+Klang | 44-46 | 10%
+Bronzong | 45-47 | 10%
+Cufant | 44-46 | 10%
+Excadrill | 45-47 | 5%
+Gurdurr | 45-47 | 4%
+Sableye | 45-47 | 3%
+Mawile | 45-47 | 3%
+
+B2F Right Iron Chamber
+Identity: Iron-rich chamber; fewer basic rocks, more developed Steel species and abandoned-mine specialists.
+Pokemon | Levels | Chance
+---|---:|---:
+Steelix | 45-48 | 20%
+Graveler | 45-47 | 10%
+Golbat | 45-47 | 10%
+Onix | 45-47 | 10%
+Lairon | 45-47 | 10%
+Klang | 45-47 | 10%
+Ferrothorn | 46-48 | 10%
+Orthworm | 46-48 | 7%
+Durant | 46-48 | 5%
+Tinkatuff | 46-48 | 4%
+Mawile | 46-48 | 3%
+Beldum | 47-48 | 1%
+
+B3F Final Mine
+Identity: Deepest abandoned mine before the exit/ruins; strongest Steel/mineral ecology with Steelix as the major Platinum anchor.
+Pokemon | Levels | Chance
+---|---:|---:
+Steelix | 46-49 | 20%
+Golbat | 46-48 | 10%
+Graveler | 46-48 | 10%
+Aggron | 47-49 | 10%
+Klang | 46-48 | 10%
+Bronzong | 47-49 | 10%
+Excadrill | 47-49 | 8%
+Ferrothorn | 47-49 | 8%
+Orthworm | 47-49 | 5%
+Mawile | 47-49 | 4%
+Sableye | 47-49 | 4%
+Beldum | 48-49 | 1%
+
+ROCK SMASH — UPPER MINE
+Pokemon | Levels | Chance
+---|---:|---:
+Geodude | 42-44 | 50%
+Roggenrola | 42-44 | 20%
+Aron | 43-44 | 15%
+Nosepass | 43-45 | 10%
+Carbink | 44-45 | 4%
+Tinkatink | 44-45 | 1%
+
+ROCK SMASH — DEEP MINE
+Pokemon | Levels | Chance
+---|---:|---:
+Graveler | 45-47 | 40%
+Lairon | 45-47 | 20%
+Nosepass | 45-47 | 15%
+Carbink | 46-48 | 10%
+Glimmet | 46-48 | 10%
+Tinkatuff | 46-48 | 4%
+Beldum | 47-48 | 1%
+
+RILEY / RIOLU
+- Riley joins in B2F.
+- Wild battles become doubles while he is partnered.
+- Riley heals the party after battles.
+- After the Galactic encounter, Riley gives a Riolu Egg.
+- If the party is full, Mercury should send the Egg to the PC rather than require a Canalave backtrack.
+- Riolu remains absent from random Iron Island encounters so the gift stays meaningful.
+
+IRON RUINS
+No random wild encounter table. Preserve the Platinum Registeel/ruins concept as special authored content for a later story/static encounter pass.
+
