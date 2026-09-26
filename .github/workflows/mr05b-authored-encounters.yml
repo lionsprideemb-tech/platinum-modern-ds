@@ -13,6 +13,7 @@ on:
       - "tools/install_mr03f_summary_bottom_learner.py"
       - "tools/install_mr05a_hm_free_traversal.py"
       - "tools/install_mr05b_encounter_framework.py"
+      - "tools/install_mr05b_authored_encounters.py"
       - "tools/build_mr05b_authored_encounter_overrides.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -105,6 +106,7 @@ jobs:
             tools/install_mr03f_summary_bottom_learner.py \
             tools/install_mr05a_hm_free_traversal.py \
             tools/install_mr05b_encounter_framework.py \
+            tools/install_mr05b_authored_encounters.py \
             tools/build_mr05b_authored_encounter_overrides.py
 
       - name: Restore MP05 canonical ability architecture
@@ -254,6 +256,22 @@ jobs:
           jq -e '.areas.encounters_honey_tree.uncommon | index("SPECIES_BURMY") == null' mr05b-encounter-manifest.json
           jq -e '.areas.encounters_honey_tree.rare | index("SPECIES_BURMY") == null' mr05b-encounter-manifest.json
 
+      - name: Enable full Mercury four-period encounter runtime
+        shell: bash
+        run: |
+          python3 tools/install_mr05b_authored_encounters.py \
+            vendor/pokeplatinum \
+            --runtime-only \
+            --report mr05b-authored-runtime.json
+
+          test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
+          test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "25"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "1200"
+          grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
+          grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+          grep -q 'mercuryTimedGrassMagic' vendor/pokeplatinum/include/overlay006/wild_encounters.h
+
       - name: Prove CI direct-launch harness is absent
         shell: bash
         run: |
@@ -377,6 +395,7 @@ jobs:
           cp mr04-summary-bottom-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-overrides.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
