@@ -43,7 +43,7 @@ def patch_text(root: Path) -> None:
     data = json.loads(path.read_text())
 
     additions = {
-        "PokemonSummary_Text_MercuryLearnerTitle": "MOVE LEARNER",
+        "PokemonSummary_Text_MercuryLearnerTitle": "MOVE LEARNER   AVAILABLE MOVES",
         "PokemonSummary_Text_MercuryLearnerAvailable": "AVAILABLE MOVES",
         "PokemonSummary_Text_MercuryLearnerRow": "  {STRVAR_1 6, 0, 0}",
         "PokemonSummary_Text_MercuryLearnerRowSelected": "  {STRVAR_1 6, 0, 0}",
@@ -312,14 +312,14 @@ static const WindowTemplate sMercuryLearnerWindowTemplates[MERCURY_LEARNER_WINDO
         .tilemapLeft = 1,
         .tilemapTop = 12,
         .width = 30,
-        .height = 7,
+        .height = 8,
         .palette = MERCURY_LEARNER_TEXT_PLTT,
         .baseTile = 301,
     },
     [MERCURY_LEARNER_WINDOW_FOOTER] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 21,
+        .tilemapTop = 22,
         .width = 30,
         .height = 2,
         .palette = MERCURY_LEARNER_TEXT_PLTT,
@@ -485,21 +485,13 @@ static void MercuryMoveLearner_DrawList(PokemonSummaryScreen *summaryScreen)
     Window *window = &summaryScreen->mercuryLearnerWindows[MERCURY_LEARNER_WINDOW_LIST];
     Window_FillTilemap(window, 15);
 
-    MercuryMoveLearner_PrintMessage(
-        summaryScreen,
-        window,
-        PokemonSummary_Text_MercuryLearnerAvailable,
-        8,
-        0,
-        SUMMARY_TEXT_BLACK);
-
     if (summaryScreen->mercuryLearnerMoveCount == 0) {
         MercuryMoveLearner_PrintMessage(
             summaryScreen,
             window,
             PokemonSummary_Text_MercuryLearnerNoMoves,
             8,
-            24,
+            8,
             SUMMARY_TEXT_BLACK);
     } else {
         for (u32 row = 0; row < MERCURY_LEARNER_VISIBLE_ROWS; row++) {
@@ -514,7 +506,7 @@ static void MercuryMoveLearner_DrawList(PokemonSummaryScreen *summaryScreen)
                 window,
                 summaryScreen->mercuryLearnerMoves[index],
                 index == summaryScreen->mercuryLearnerCursor,
-                18 + row * 13);
+                row * 16);
         }
     }
 
