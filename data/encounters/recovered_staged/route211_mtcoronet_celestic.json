@@ -1,0 +1,945 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "area": "Route 211 West + Route 211 East + Mt. Coronet Route 211 entrance + Celestic water correction",
+  "status": "AUTHORED_PENDING_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum Route 211 / Mt. Coronet / Celestic Town, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography and ecology. Emerald-derived identifiers are hidden engine infrastructure only and are not design sources.",
+  "runtime_note": "The cumulative source does not yet contain finished player-facing Route 211 West/East or the full Route 211-side Mt. Coronet map chain. These encounters are intentionally staged and must be wired only when the corresponding Sinnoh maps exist.",
+  "route211_west": {
+    "availability": "Optional Eterna-side segment; reachable much earlier than the Celestic-side segment.",
+    "level_band": "23-26",
+    "land_encounters": {
+      "Morning": [
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_BIDOOF",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOP",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_TEDDIURSA",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_TYROGUE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ROOKIDEE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAKUHITA",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SAWK",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_THROH",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        }
+      ],
+      "Day": [
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_BIDOOF",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOP",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_TYROGUE",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_TEDDIURSA",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ROOKIDEE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAKUHITA",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SAWK",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_THROH",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        }
+      ],
+      "Evening": [
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOP",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_TEDDIURSA",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_TYROGUE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ZUBAT",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAKUHITA",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SAWK",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_THROH",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        }
+      ],
+      "Night": [
+        {
+          "species": "SPECIES_HOOTHOOT",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_ZUBAT",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MACHOP",
+          "min_level": 23,
+          "max_level": 24,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_TEDDIURSA",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_TYROGUE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 24,
+          "max_level": 25,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SAWK",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_THROH",
+          "min_level": 25,
+          "max_level": 26,
+          "weight": 1
+        }
+      ]
+    },
+    "platinum_anchors": [
+      "Meditite",
+      "Bidoof",
+      "Machop",
+      "Chingling",
+      "Bronzor",
+      "Zubat",
+      "Hoothoot",
+      "Tyrogue",
+      "Teddiursa"
+    ],
+    "mercury_new_highlights": [
+      "Rookidee",
+      "Makuhita",
+      "Mawile",
+      "Sawk",
+      "Throh"
+    ],
+    "water_encounters": null,
+    "note": "No invented Surf/fishing table; wild water is not added unless the final Platinum-derived map/source supports it."
+  },
+  "route211_east": {
+    "availability": "Celestic-side segment after the northern Route 210/Celestic progression.",
+    "level_band": "40-43",
+    "land_encounters": {
+      "Morning": [
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_SWABLU",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GURDURR",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_STONJOURNER",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ALTARIA",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_ROOKIDEE",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        }
+      ],
+      "Day": [
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_SWABLU",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GURDURR",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_STONJOURNER",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ALTARIA",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_RUFFLET",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        }
+      ],
+      "Evening": [
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_NOCTOWL",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_SWABLU",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_GURDURR",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_STONJOURNER",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SNEASEL",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        }
+      ],
+      "Night": [
+        {
+          "species": "SPECIES_NOCTOWL",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MEDITITE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZOR",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINGLING",
+          "min_level": 40,
+          "max_level": 41,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ZUBAT",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_SWABLU",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_STONJOURNER",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SNEASEL",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 1
+        }
+      ]
+    },
+    "platinum_anchors": [
+      "Meditite",
+      "Graveler",
+      "Machoke",
+      "Chingling",
+      "Bronzor",
+      "Zubat",
+      "Noctowl",
+      "Swablu"
+    ],
+    "mercury_new_highlights": [
+      "Gurdurr",
+      "Stonjourner",
+      "Altaria",
+      "Rufflet",
+      "Beldum",
+      "Mawile"
+    ],
+    "instant_honey_tree": {
+      "consume_honey": 1,
+      "cooldown": 0,
+      "pool": [
+        {
+          "species": "SPECIES_TEDDIURSA",
+          "chance": 20
+        },
+        {
+          "species": "SPECIES_HERACROSS",
+          "chance": 15
+        },
+        {
+          "species": "SPECIES_MUNCHLAX",
+          "chance": 15
+        },
+        {
+          "species": "SPECIES_SWABLU",
+          "chance": 10
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "chance": 10
+        },
+        {
+          "species": "SPECIES_TYROGUE",
+          "chance": 10
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "chance": 5
+        },
+        {
+          "species": "SPECIES_LARVESTA",
+          "chance": 5
+        },
+        {
+          "species": "SPECIES_RIOLU",
+          "chance": 5
+        },
+        {
+          "species": "SPECIES_SNEASEL",
+          "chance": 5
+        }
+      ]
+    },
+    "water_encounters": null,
+    "note": "Retains Platinum Route 211 East Honey Tree concept using Mercury instant-Honey rules."
+  },
+  "mt_coronet_route211_entrance": {
+    "level_band": "41-44",
+    "land_encounters": [
+      {
+        "species": "SPECIES_GRAVELER",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_MEDICHAM",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_BRONZONG",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MACHOKE",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_CHINGLING",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_GOLBAT",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_NOSEPASS",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_CLEFAIRY",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_CARBINK",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_TINKATUFF",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_PROBOPASS",
+        "min_level": 43,
+        "max_level": 44,
+        "weight": 1
+      },
+      {
+        "species": "SPECIES_CLEFABLE",
+        "min_level": 43,
+        "max_level": 44,
+        "weight": 1
+      }
+    ],
+    "platinum_anchors": [
+      "Graveler",
+      "Medicham",
+      "Bronzong",
+      "Machoke",
+      "Chingling",
+      "Golbat",
+      "Nosepass",
+      "Clefairy"
+    ],
+    "mercury_new_highlights": [
+      "Carbink",
+      "Tinkatuff",
+      "Probopass",
+      "Clefable"
+    ]
+  },
+  "mt_coronet_route211_lower_cavern": {
+    "level_band": "42-45",
+    "land_encounters": [
+      {
+        "species": "SPECIES_BRONZONG",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_GRAVELER",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_GOLBAT",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MEDICHAM",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MACHOKE",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_CLEFAIRY",
+        "min_level": 42,
+        "max_level": 43,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_NOSEPASS",
+        "min_level": 43,
+        "max_level": 44,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_CARBINK",
+        "min_level": 43,
+        "max_level": 44,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_TINKATUFF",
+        "min_level": 43,
+        "max_level": 44,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_GLIMMET",
+        "min_level": 43,
+        "max_level": 44,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_PROBOPASS",
+        "min_level": 44,
+        "max_level": 45,
+        "weight": 1
+      },
+      {
+        "species": "SPECIES_MAWILE",
+        "min_level": 44,
+        "max_level": 45,
+        "weight": 1
+      }
+    ],
+    "note": "Deeper Route 211-side Coronet progression; authored separately so Mt. Coronet is not one generic cave roster."
+  },
+  "celestic_town_correction": {
+    "random_land_encounters": false,
+    "surf": [
+      {
+        "species": "SPECIES_PSYDUCK",
+        "min_level": 38,
+        "max_level": 42,
+        "chance": 90
+      },
+      {
+        "species": "SPECIES_GOLDUCK",
+        "min_level": 40,
+        "max_level": 44,
+        "chance": 10
+      }
+    ],
+    "old_rod": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 10,
+        "max_level": 20,
+        "chance": 100
+      }
+    ],
+    "good_rod": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 25,
+        "max_level": 34,
+        "chance": 65
+      },
+      {
+        "species": "SPECIES_GOLDEEN",
+        "min_level": 27,
+        "max_level": 35,
+        "chance": 35
+      }
+    ],
+    "super_rod": [
+      {
+        "species": "SPECIES_GYARADOS",
+        "min_level": 40,
+        "max_level": 45,
+        "chance": 60
+      },
+      {
+        "species": "SPECIES_CORPHISH",
+        "min_level": 38,
+        "max_level": 44,
+        "chance": 30
+      },
+      {
+        "species": "SPECIES_SEAKING",
+        "min_level": 42,
+        "max_level": 46,
+        "chance": 5
+      },
+      {
+        "species": "SPECIES_CRAWDAUNT",
+        "min_level": 42,
+        "max_level": 46,
+        "chance": 5
+      }
+    ],
+    "note": "Correction to prior Route 210 North registry: Platinum Celestic Town has water encounters. Celestic Ruins remain random-encounter free."
+  },
+  "celestic_ruins": {
+    "random_wild_encounters": false
+  },
+  "diversity_rules": [
+    "Route 211 West and East are separate ecological/level identities because Mt. Coronet divides the route.",
+    "Route 211 East must not simply copy Route 210 North despite geographic continuity.",
+    "Mt. Coronet entrance and lower cavern have separate encounter rosters.",
+    "Great Marsh Safari-exclusive species remain reserved and are not reused here."
+  ]
+}
