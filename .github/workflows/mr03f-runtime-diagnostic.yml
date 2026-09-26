@@ -13,62 +13,62 @@ permissions:
   contents: read
 
 jobs:
-  diagnose:
+  diagnose-runtime:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
+    env:
+      SDL_VIDEODRIVER: dummy
+      ARTIFACT_ID: "10908365470"
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
 
-      - name: Install runtime dependencies
-        shell: bash
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends \
-            python3 python3-venv python3-pip libsdl2-2.0-0 unzip
-          python3 -m venv "$RUNNER_TEMP/mr03f-diag"
-          . "$RUNNER_TEMP/mr03f-diag/bin/activate"
-          pip install --upgrade pip py-desmume Pillow
-
-      - name: Download already-built MR03F proof ROM
+      - name: Reuse already-built MR03F ROM
         env:
           GH_TOKEN: \${{ github.token }}
         shell: bash
         run: |
+          mkdir -p prior diagnostic
           gh api \
-            repos/lionsprideemb-tech/platinum-modern-ds/actions/artifacts/10908365470/zip \
-            > "$RUNNER_TEMP/mr03f-proof.zip"
-          mkdir -p proof
-          unzip -q "$RUNNER_TEMP/mr03f-proof.zip" -d proof
-          test -s proof/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds
+            -H "Accept: application/vnd.github+json" \
+            "/repos/\${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip" \
+            > prior/mr03f.zip
+          unzip -q prior/mr03f.zip -d prior/artifact
+          test -s prior/artifact/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds
+          cp prior/artifact/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds diagnostic/mr03f.nds
 
-      - name: Trace Summary entry frame by frame
+      - name: Install emulator
         shell: bash
         run: |
-          . "$RUNNER_TEMP/mr03f-diag/bin/activate"
-          python3 - <<'PY'
+          python3 -m venv "$RUNNER_TEMP/mr03f-diag-venv"
+          . "$RUNNER_TEMP/mr03f-diag-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Capture opening frame-by-frame
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr03f-diag-venv/bin/activate"
+          python3 - <<'PY' 2>diagnostic/desmume-stderr.log
           from pathlib import Path
           import json
           from desmume.emulator import DeSmuME
           from desmume.controls import Keys, keymask
 
-          rom = Path("proof/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds")
-          out = Path("diag")
-          out.mkdir(exist_ok=True)
-
+          rom = Path("diagnostic/mr03f.nds")
+          out = Path("diagnostic")
           emu = DeSmuME()
           emu.open(str(rom))
           frame = 0
-          trace = []
+          captures = []
 
-          def cycle_one():
+          def cycle(count):
               global frame
-              emu.cycle(False)
-              frame += 1
-              return emu.is_running()
-
-          def cycle(n):
-              for _ in range(n):
-                  if not cycle_one():
+              for _ in range(count):
+                  emu.cycle(False)
+                  frame += 1
+                  if not emu.is_running():
                       return False
               return True
 
@@ -82,42 +82,43 @@ jobs:
               return cycle(settle)
 
           def snap(label):
-              img = emu.screenshot().convert("RGB")
+              im = emu.screenshot().convert("RGB")
               p = out / f"{frame:05d}-{label}.png"
-              img.save(p)
-              trace.append({"frame": frame, "label": label, "running": emu.is_running(), "file": p.name})
+              im.save(p)
+              captures.append({"frame": frame, "file": p.name})
 
           try:
-              cycle(3600)
-              press(Keys.KEY_X, settle=120)
-              press(Keys.KEY_A, settle=180)
-              press(Keys.KEY_A, settle=120)
-              press(Keys.KEY_DOWN, settle=60)
-              snap("before-open")
-              press(Keys.KEY_A, hold=4, settle=0)
-              snap("open-plus-4")
+              if not cycle(3600): raise SystemExit("stopped before field")
+              if not press(Keys.KEY_X, settle=120): raise SystemExit("stopped opening menu")
+              if not press(Keys.KEY_A, settle=180): raise SystemExit("stopped opening party")
+              if not press(Keys.KEY_A, settle=120): raise SystemExit("stopped opening context")
+              if not press(Keys.KEY_DOWN, settle=60): raise SystemExit("stopped selecting learner")
 
-              # Entry transition: capture frequently so we know the exact
-              # last healthy state before the ARM9 stops.
-              for step in range(1, 21):
-                  if not cycle(12):
-                      trace.append({"frame": frame, "label": f"stopped-step-{step}", "running": False})
-                      break
-                  snap(f"entry-{step:02d}")
+              snap("before-final-a")
+              if not press(Keys.KEY_A, hold=4, settle=0):
+                  snap("stopped-on-final-a")
+              else:
+                  snap("after-final-a")
+                  for n in range(1, 31):
+                      if not cycle(8):
+                          break
+                      snap(f"open-{n:02d}")
+
+              meta = {
+                  "last_frame": frame,
+                  "running": bool(emu.is_running()),
+                  "captures": captures,
+              }
+              (out / "meta.json").write_text(json.dumps(meta, indent=2) + "\n")
           finally:
-              try:
-                  emu.destroy()
-              except Exception:
-                  pass
-
-          (out / "trace.json").write_text(json.dumps(trace, indent=2) + "\n")
+              emu.destroy()
           PY
 
-      - name: Upload diagnostic frames
+      - name: Upload diagnostic
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mr03f-runtime-diagnostic
-          path: diag/
+          name: mercury-mr03f-runtime-diagnostic
+          path: diagnostic/
           if-no-files-found: error
           retention-days: 7
