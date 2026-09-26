@@ -298,8 +298,8 @@ def patch_party_menu(root: Path) -> None:
 
     replace_once(
         main,
-        "    v0 = Heap_Alloc(HEAP_ID_PARTY_MENU, 8);\n",
-        "    v0 = Heap_Alloc(HEAP_ID_PARTY_MENU, 12);\n",
+        "    v0 = Heap_Alloc(HEAP_ID_PARTY_MENU, 9 * sizeof(u8));\n",
+        "    v0 = Heap_Alloc(HEAP_ID_PARTY_MENU, 12 * sizeof(u8));\n",
         "MR05A party context buffer capacity",
     )
 
