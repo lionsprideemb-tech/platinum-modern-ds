@@ -105,7 +105,7 @@ def patch_summary_mode(root: Path) -> None:
         "if (summaryScreen->data->mode != SUMMARY_MODE_LOCK_MOVES) {",
         """if (summaryScreen->data->mode != SUMMARY_MODE_LOCK_MOVES
             && summaryScreen->data->mode != SUMMARY_MODE_MERCURY_MOVE_LEARNER) {""",
-        2,
+        3,
         "MR03E read-only move details",
     )
 
