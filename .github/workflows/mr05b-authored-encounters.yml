@@ -24,6 +24,7 @@ on:
       - "tools/extend_mr05g_preleague_core_areas.py"
       - "tools/extend_mr05h_lost_tower_trophy_garden.py"
       - "tools/extend_mr05i_solaceon_ruins.py"
+      - "tools/extend_mr05j_identified_maps.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -127,6 +128,7 @@ jobs:
             tools/extend_mr05g_preleague_core_areas.py \
             tools/extend_mr05h_lost_tower_trophy_garden.py \
             tools/extend_mr05i_solaceon_ruins.py \
+            tools/extend_mr05j_identified_maps.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -421,18 +423,40 @@ jobs:
           test "$(jq -r '.time_of_day_changes_unown_form_pool' mr05i-solaceon-unown-port.json)" = "false"
           test "$(jq -c '.unown_table_id_set' mr05i-solaceon-unown-port.json)" = '[1,2,3,4,5,6,7,8]'
 
-      - name: Install MR05I authored encounter tables
+      - name: Extend authored encounters through remaining identified pre-League maps
+        shell: bash
+        run: |
+          python3 tools/extend_mr05j_identified_maps.py \
+            vendor/pokeplatinum \
+            mr05i-authored-overrides-with-solaceon.json \
+            data/encounters/mr05j_identified_preleague_maps.json \
+            mr05j-authored-overrides-with-identified-maps.json \
+            --report mr05j-identified-maps-port.json
+
+          test "$(jq -r '.status' mr05j-identified-maps-port.json)" = "PASS"
+          test "$(jq -r '.resource_count' mr05j-identified-maps-port.json)" = "14"
+          test "$(jq -r '.full_tod_area_count_added' mr05j-identified-maps-port.json)" = "7"
+          test "$(jq -r '.full_tod_slot_count_added' mr05j-identified-maps-port.json)" = "336"
+          test "$(jq -r '.water_resource_count' mr05j-identified-maps-port.json)" = "11"
+          test "$(jq -r '.great_marsh_lookout_certified' mr05j-identified-maps-port.json)" = "true"
+          test "$(jq -r '.great_marsh_lookout_changed' mr05j-identified-maps-port.json)" = "false"
+          test "$(jq -r '.lake_verity_early_game_levels_preserved' mr05j-identified-maps-port.json)" = "true"
+          test "$(jq -r '.lake_acuity_approved_cold_ecology_preserved' mr05j-identified-maps-port.json)" = "true"
+          test "$(jq -r '.remaining_identified_standard_resources_after_phase' mr05j-identified-maps-port.json)" = "4"
+          test "$(jq -r '.remaining_unknown_resources_after_phase' mr05j-identified-maps-port.json)" = "25"
+
+      - name: Install MR05J authored encounter tables
         shell: bash
         run: |
           python3 tools/install_mr05b_encounter_framework.py \
             vendor/pokeplatinum \
-            mr05i-authored-overrides-with-solaceon.json \
+            mr05j-authored-overrides-with-identified-maps.json \
             --manifest mr05b-encounter-manifest.json \
             --report mr05b-encounter-framework.json
 
           test "$(jq -r '.status' mr05b-encounter-framework.json)" = "PASS"
           test "$(jq -r '.area_count' mr05b-encounter-framework.json)" = "185"
-          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "141"
+          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "155"
           test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "false"
           test "$(jq -r '.area_count' mr05b-encounter-manifest.json)" = "185"
           jq -e '.changed_areas | index("encounters_honey_tree") != null' mr05b-encounter-framework.json
@@ -451,8 +475,8 @@ jobs:
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
           test "$(jq -r '.four_period_full_land_tables' mr05b-authored-runtime.json)" = "true"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "134"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "6432"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "141"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "6768"
           test "$(jq -r '.vanilla_special_replacements_bypassed_for_mercury_tables' mr05b-authored-runtime.json)" = "true"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
@@ -534,14 +558,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05I Solaceon Ruins ROM
+      - name: Build MR05J identified-map ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05I normal boot in DeSmuME
+      - name: Capture MR05J normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -591,7 +615,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05I_NORMAL_BOOT",
+              "gate": "MERCURY_MR05J_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -599,7 +623,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05i-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05j-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -613,8 +637,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05I_Solaceon_Ruins.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05I_Solaceon_Ruins.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05J_Identified_Maps.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05J_Identified_Maps.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -642,18 +666,20 @@ jobs:
           cp mr05h-lost-trophy-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05i-authored-overrides-with-solaceon.json mr05b-artifact/ 2>/dev/null || true
           cp mr05i-solaceon-unown-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05j-authored-overrides-with-identified-maps.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05j-identified-maps-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05c-regi-preleague.json mr05b-artifact/ 2>/dev/null || true
           cp mr05f-legendary-statics.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05i-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05j-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05i-solaceon-ruins
+          name: mercury-mr05j-identified-maps
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -663,7 +689,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05I — Solaceon Ruins Form-Safe Pass"
+            echo "## Mercury MR05J — Remaining Identified Pre-League Maps"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -699,9 +725,14 @@ jobs:
             echo "- Trophy Garden former daily-lottery species are distributed across Morning/Day/Evening/Night; no daily availability gate"
             echo "- All 18 Solaceon Ruins encounter resources now participate in Mercury's four-period runtime without altering Unown form tables"
             echo "- Unown F-R-I-E-N-D path, dead-end form pool, and secret ?/! table remain preserved"
+            echo "- Acuity Lakefront, all three lakes, Lake Verity low-water state, Mt. Coronet 1F south, and Valor Lakefront now have authored four-period land tables"
+            echo "- Canalave, Celestic, Eterna, Pastoria, Sunyshore, Twinleaf, Pokémon League, and lake water/fishing tables are authored"
+            echo "- Jirachi, Mesprit, Azelf, and Uxie remain separate static/story encounters and never enter random tables"
+            echo "- Great Marsh binocular data remains informational; daily RNG still does not gate availability"
+            echo "- Only four identified postgame standard encounter resources plus 25 unknown map resources remain"
             echo "- Cynthia's grandmother unlocks Dialga/Palkia rifts after Distortion World, pre-League"
             echo "- Dialga/Palkia remain Lv70 and their rifts are retry-safe until capture"
             echo "- Mesprit guided pursuit remains isolated for a dedicated tracking pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Player ROM staged as Pokemon_Mercury_MR05I_Solaceon_Ruins.nds"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05J_Identified_Maps.nds"
           } >> "$GITHUB_STEP_SUMMARY"
