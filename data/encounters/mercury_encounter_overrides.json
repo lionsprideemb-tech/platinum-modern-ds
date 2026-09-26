@@ -1,5 +1,821 @@
 {
   "schema": 1,
-  "description": "Central Mercury Redux wild encounter overrides. Empty in MR05B baseline so Platinum encounters remain unchanged.",
-  "areas": {}
+  "description": "Mercury Redux authored encounter overrides. MR05B content port in progress; no longer vanilla-preserving.",
+  "source_recovery": {
+    "runtime": "data/encounters/source_recovery/mercury_gba_runtime_encounters_2026-09-05.json",
+    "staged": "data/encounters/source_recovery/mercury_gba_staged_encounter_registries_2026-09-05.json"
+  },
+  "areas": {
+    "encounters_twinleaf_town": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_BIDOOF",
+          "level": 3
+        },
+        "1": {
+          "species": "SPECIES_STARLY",
+          "level": 3
+        },
+        "2": {
+          "species": "SPECIES_SHINX",
+          "level": 3
+        },
+        "3": {
+          "species": "SPECIES_BUNEARY",
+          "level": 3
+        },
+        "4": {
+          "species": "SPECIES_SENTRET",
+          "level": 3
+        },
+        "6": {
+          "species": "SPECIES_BUDEW",
+          "level": 3
+        },
+        "7": {
+          "species": "SPECIES_RALTS",
+          "level": 3
+        },
+        "8": {
+          "species": "SPECIES_EEVEE",
+          "level": 3
+        },
+        "9": {
+          "species": "SPECIES_WOOLOO",
+          "level": 3
+        },
+        "10": {
+          "species": "SPECIES_PICHU",
+          "level": 3
+        },
+        "11": {
+          "species": "SPECIES_MUNCHLAX",
+          "level": 3
+        }
+      },
+      "day": {
+        "0": "SPECIES_BUNEARY",
+        "1": "SPECIES_SHINX"
+      },
+      "night": {
+        "0": "SPECIES_BIDOOF",
+        "1": "SPECIES_SHINX"
+      }
+    },
+    "encounters_route_201": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_STARLY",
+          "level": 3
+        },
+        "1": {
+          "species": "SPECIES_BIDOOF",
+          "level": 3
+        },
+        "2": {
+          "species": "SPECIES_SHINX",
+          "level": 3
+        },
+        "3": {
+          "species": "SPECIES_BUDEW",
+          "level": 3
+        },
+        "4": {
+          "species": "SPECIES_FLETCHLING",
+          "level": 3
+        },
+        "6": {
+          "species": "SPECIES_HOPPIP",
+          "level": 3
+        },
+        "7": {
+          "species": "SPECIES_NYMBLE",
+          "level": 3
+        },
+        "8": {
+          "species": "SPECIES_PICHU",
+          "level": 3
+        },
+        "9": {
+          "species": "SPECIES_PIKIPEK",
+          "level": 3
+        },
+        "10": {
+          "species": "SPECIES_DEERLING",
+          "level": 3
+        },
+        "11": {
+          "species": "SPECIES_SEWADDLE",
+          "level": 3
+        }
+      },
+      "day": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_ZIGZAGOON"
+      },
+      "night": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_POOCHYENA"
+      }
+    },
+    "encounters_route_202": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_BIDOOF",
+          "level": 4
+        },
+        "1": {
+          "species": "SPECIES_STARLY",
+          "level": 4
+        },
+        "2": {
+          "species": "SPECIES_SHINX",
+          "level": 4
+        },
+        "3": {
+          "species": "SPECIES_KRICKETOT",
+          "level": 4
+        },
+        "4": {
+          "species": "SPECIES_BUDEW",
+          "level": 4
+        },
+        "5": {
+          "species": "SPECIES_FLETCHLING",
+          "level": 4
+        },
+        "6": {
+          "species": "SPECIES_LILLIPUP",
+          "level": 4
+        },
+        "7": {
+          "species": "SPECIES_PAWMI",
+          "level": 4
+        },
+        "8": {
+          "species": "SPECIES_BUNEARY",
+          "level": 5
+        },
+        "9": {
+          "species": "SPECIES_GRUBBIN",
+          "level": 5
+        },
+        "10": {
+          "species": "SPECIES_RALTS",
+          "level": 5
+        },
+        "11": {
+          "species": "SPECIES_ROCKRUFF",
+          "level": 5
+        }
+      },
+      "day": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_LILLIPUP"
+      },
+      "night": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_KRICKETOT"
+      }
+    },
+    "encounters_route_203": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_STARLY",
+          "level": 6
+        },
+        "1": {
+          "species": "SPECIES_BIDOOF",
+          "level": 6
+        },
+        "2": {
+          "species": "SPECIES_SHINX",
+          "level": 7
+        },
+        "3": {
+          "species": "SPECIES_KRICKETOT",
+          "level": 6
+        },
+        "4": {
+          "species": "SPECIES_MACHOP",
+          "level": 6
+        },
+        "5": {
+          "species": "SPECIES_MAKUHITA",
+          "level": 6
+        },
+        "6": {
+          "species": "SPECIES_PONYTA",
+          "level": 7
+        },
+        "7": {
+          "species": "SPECIES_GEODUDE",
+          "level": 7
+        },
+        "8": {
+          "species": "SPECIES_ROGGENROLA",
+          "level": 7
+        },
+        "9": {
+          "species": "SPECIES_ARON",
+          "level": 8
+        },
+        "10": {
+          "species": "SPECIES_ABRA",
+          "level": 8
+        },
+        "11": {
+          "species": "SPECIES_RIOLU",
+          "level": 8
+        }
+      },
+      "day": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_MACHOP"
+      },
+      "night": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_HOUNDOUR"
+      }
+    },
+    "encounters_route_204_south": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_STARLY",
+          "level": 13
+        },
+        "1": {
+          "species": "SPECIES_BIDOOF",
+          "level": 13
+        },
+        "2": {
+          "species": "SPECIES_SHINX",
+          "level": 14
+        },
+        "3": {
+          "species": "SPECIES_BUDEW",
+          "level": 13
+        },
+        "4": {
+          "species": "SPECIES_KRICKETOT",
+          "level": 13
+        },
+        "5": {
+          "species": "SPECIES_CHERUBI",
+          "level": 14
+        },
+        "6": {
+          "species": "SPECIES_PIDOVE",
+          "level": 14
+        },
+        "7": {
+          "species": "SPECIES_YAMPER",
+          "level": 14
+        },
+        "8": {
+          "species": "SPECIES_SKIDDO",
+          "level": 15
+        },
+        "9": {
+          "species": "SPECIES_PAWMI",
+          "level": 14
+        },
+        "10": {
+          "species": "SPECIES_SMOLIV",
+          "level": 14
+        },
+        "11": {
+          "species": "SPECIES_RALTS",
+          "level": 15
+        }
+      },
+      "day": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_BUDEW"
+      },
+      "night": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_KRICKETOT"
+      }
+    },
+    "encounters_route_204_north": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_STARAVIA",
+          "level": 15
+        },
+        "1": {
+          "species": "SPECIES_BUDEW",
+          "level": 15
+        },
+        "2": {
+          "species": "SPECIES_CHERUBI",
+          "level": 15
+        },
+        "3": {
+          "species": "SPECIES_SHINX",
+          "level": 15
+        },
+        "4": {
+          "species": "SPECIES_BUNEARY",
+          "level": 15
+        },
+        "5": {
+          "species": "SPECIES_KRICKETOT",
+          "level": 15
+        },
+        "6": {
+          "species": "SPECIES_COMBEE",
+          "level": 16
+        },
+        "7": {
+          "species": "SPECIES_SKIDDO",
+          "level": 16
+        },
+        "8": {
+          "species": "SPECIES_SMOLIV",
+          "level": 16
+        },
+        "9": {
+          "species": "SPECIES_PAWMI",
+          "level": 16
+        },
+        "10": {
+          "species": "SPECIES_FLETCHLING",
+          "level": 16
+        },
+        "11": {
+          "species": "SPECIES_TOGEPI",
+          "level": 16
+        }
+      },
+      "day": {
+        "0": "SPECIES_CHERUBI",
+        "1": "SPECIES_SHINX"
+      },
+      "night": {
+        "0": "SPECIES_SHINX",
+        "1": "SPECIES_BUNEARY"
+      }
+    },
+    "encounters_route_205_south": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_BIDOOF",
+          "level": 19
+        },
+        "1": {
+          "species": "SPECIES_STARLY",
+          "level": 19
+        },
+        "2": {
+          "species": "SPECIES_BUDEW",
+          "level": 19
+        },
+        "3": {
+          "species": "SPECIES_BUIZEL",
+          "level": 19
+        },
+        "4": {
+          "species": "SPECIES_SHELLOS",
+          "level": 19
+        },
+        "5": {
+          "species": "SPECIES_PACHIRISU",
+          "level": 19
+        },
+        "6": {
+          "species": "SPECIES_BUNEARY",
+          "level": 19
+        },
+        "7": {
+          "species": "SPECIES_ODDISH",
+          "level": 19
+        },
+        "8": {
+          "species": "SPECIES_WOOPER",
+          "level": 19
+        },
+        "9": {
+          "species": "SPECIES_TYMPOLE",
+          "level": 19
+        },
+        "10": {
+          "species": "SPECIES_TADBULB",
+          "level": 19
+        },
+        "11": {
+          "species": "SPECIES_PSYDUCK",
+          "level": 19
+        }
+      },
+      "day": {
+        "0": "SPECIES_BUDEW",
+        "1": "SPECIES_BUIZEL"
+      },
+      "night": {
+        "0": "SPECIES_BUIZEL",
+        "1": "SPECIES_SHELLOS"
+      }
+    },
+    "encounters_route_206": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_PONYTA",
+          "level": 21
+        },
+        "1": {
+          "species": "SPECIES_BLITZLE",
+          "level": 21
+        },
+        "2": {
+          "species": "SPECIES_DODUO",
+          "level": 21
+        },
+        "3": {
+          "species": "SPECIES_VAROOM",
+          "level": 21
+        },
+        "4": {
+          "species": "SPECIES_CYCLIZAR",
+          "level": 22
+        },
+        "5": {
+          "species": "SPECIES_NYMBLE",
+          "level": 21
+        },
+        "6": {
+          "species": "SPECIES_TANDEMAUS",
+          "level": 21
+        },
+        "7": {
+          "species": "SPECIES_EMOLGA",
+          "level": 22
+        },
+        "8": {
+          "species": "SPECIES_CHARCADET",
+          "level": 22
+        },
+        "9": {
+          "species": "SPECIES_CAPSAKID",
+          "level": 22
+        },
+        "10": {
+          "species": "SPECIES_GLIGAR",
+          "level": 23
+        },
+        "11": {
+          "species": "SPECIES_CYCLIZAR",
+          "level": 23
+        }
+      },
+      "day": {
+        "0": "SPECIES_DODUO",
+        "1": "SPECIES_CYCLIZAR"
+      },
+      "night": {
+        "0": "SPECIES_MASCHIFF",
+        "1": "SPECIES_TRUBBISH"
+      }
+    },
+    "encounters_route_207": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_MACHOP",
+          "level": 22
+        },
+        "1": {
+          "species": "SPECIES_MEDITITE",
+          "level": 22
+        },
+        "2": {
+          "species": "SPECIES_SANDSHREW",
+          "level": 22
+        },
+        "3": {
+          "species": "SPECIES_MUDBRAY",
+          "level": 22
+        },
+        "4": {
+          "species": "SPECIES_TIMBURR",
+          "level": 22
+        },
+        "5": {
+          "species": "SPECIES_MIENFOO",
+          "level": 22
+        },
+        "6": {
+          "species": "SPECIES_PANCHAM",
+          "level": 22
+        },
+        "7": {
+          "species": "SPECIES_CUBONE",
+          "level": 22
+        },
+        "8": {
+          "species": "SPECIES_STUFFUL",
+          "level": 23
+        },
+        "9": {
+          "species": "SPECIES_MINCCINO",
+          "level": 23
+        },
+        "10": {
+          "species": "SPECIES_FALINKS",
+          "level": 23
+        },
+        "11": {
+          "species": "SPECIES_MIENFOO",
+          "level": 24
+        }
+      },
+      "day": {
+        "0": "SPECIES_SANDSHREW",
+        "1": "SPECIES_MUDBRAY"
+      },
+      "night": {
+        "0": "SPECIES_PANCHAM",
+        "1": "SPECIES_MANKEY"
+      }
+    },
+    "encounters_route_208": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_ROSELIA",
+          "level": 22
+        },
+        "1": {
+          "species": "SPECIES_BUNNELBY",
+          "level": 22
+        },
+        "2": {
+          "species": "SPECIES_SKWOVET",
+          "level": 22
+        },
+        "3": {
+          "species": "SPECIES_MINCCINO",
+          "level": 22
+        },
+        "4": {
+          "species": "SPECIES_COTTONEE",
+          "level": 22
+        },
+        "5": {
+          "species": "SPECIES_FLABEBE",
+          "level": 22
+        },
+        "6": {
+          "species": "SPECIES_FIDOUGH",
+          "level": 22
+        },
+        "7": {
+          "species": "SPECIES_FURFROU",
+          "level": 22
+        },
+        "8": {
+          "species": "SPECIES_ESPURR",
+          "level": 24
+        },
+        "9": {
+          "species": "SPECIES_LITLEO",
+          "level": 24
+        },
+        "10": {
+          "species": "SPECIES_SWIRLIX",
+          "level": 24
+        },
+        "11": {
+          "species": "SPECIES_SPRITZEE",
+          "level": 24
+        }
+      },
+      "day": {
+        "0": "SPECIES_SKWOVET",
+        "1": "SPECIES_MINCCINO"
+      },
+      "night": {
+        "0": "SPECIES_SHUPPET",
+        "1": "SPECIES_GREAVARD"
+      }
+    },
+    "encounters_valley_windworks_outside": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_BIDOOF",
+          "level": 17
+        },
+        "1": {
+          "species": "SPECIES_SHINX",
+          "level": 17
+        },
+        "2": {
+          "species": "SPECIES_PACHIRISU",
+          "level": 17
+        },
+        "3": {
+          "species": "SPECIES_BUIZEL",
+          "level": 17
+        },
+        "4": {
+          "species": "SPECIES_SHELLOS",
+          "level": 17
+        },
+        "5": {
+          "species": "SPECIES_STARLY",
+          "level": 17
+        },
+        "6": {
+          "species": "SPECIES_MAREEP",
+          "level": 17
+        },
+        "7": {
+          "species": "SPECIES_YAMPER",
+          "level": 17
+        },
+        "8": {
+          "species": "SPECIES_DUCKLETT",
+          "level": 17
+        },
+        "9": {
+          "species": "SPECIES_HELIOPTILE",
+          "level": 17
+        },
+        "10": {
+          "species": "SPECIES_ELECTRIKE",
+          "level": 17
+        },
+        "11": {
+          "species": "SPECIES_ELEKID",
+          "level": 17
+        }
+      },
+      "day": {
+        "0": "SPECIES_PACHIRISU",
+        "1": "SPECIES_BUIZEL"
+      },
+      "night": {
+        "0": "SPECIES_SHELLOS",
+        "1": "SPECIES_PACHIRISU"
+      }
+    },
+    "encounters_eterna_forest": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_BUDEW",
+          "level": 18
+        },
+        "1": {
+          "species": "SPECIES_BUNEARY",
+          "level": 18
+        },
+        "2": {
+          "species": "SPECIES_WURMPLE",
+          "level": 18
+        },
+        "3": {
+          "species": "SPECIES_COMBEE",
+          "level": 18
+        },
+        "4": {
+          "species": "SPECIES_CHERUBI",
+          "level": 19
+        },
+        "5": {
+          "species": "SPECIES_PARAS",
+          "level": 19
+        },
+        "6": {
+          "species": "SPECIES_TOEDSCOOL",
+          "level": 19
+        },
+        "7": {
+          "species": "SPECIES_BUDEW",
+          "level": 19
+        },
+        "8": {
+          "species": "SPECIES_BUNEARY",
+          "level": 19
+        },
+        "9": {
+          "species": "SPECIES_CHERUBI",
+          "level": 19
+        },
+        "10": {
+          "species": "SPECIES_TOEDSCOOL",
+          "level": 20
+        },
+        "11": {
+          "species": "SPECIES_HERACROSS",
+          "level": 20
+        }
+      },
+      "day": {
+        "0": "SPECIES_WURMPLE",
+        "1": "SPECIES_COMBEE"
+      },
+      "night": {
+        "0": "SPECIES_MURKROW",
+        "1": "SPECIES_MISDREAVUS"
+      }
+    },
+    "encounters_lake_verity": {
+      "land_rate": 20,
+      "land_encounters": {
+        "0": {
+          "species": "SPECIES_PSYDUCK",
+          "level": 4
+        },
+        "1": {
+          "species": "SPECIES_BIDOOF",
+          "level": 4
+        },
+        "2": {
+          "species": "SPECIES_BUDEW",
+          "level": 4
+        },
+        "3": {
+          "species": "SPECIES_SURSKIT",
+          "level": 4
+        },
+        "4": {
+          "species": "SPECIES_WOOPER",
+          "level": 4
+        },
+        "5": {
+          "species": "SPECIES_PSYDUCK",
+          "level": 4
+        },
+        "6": {
+          "species": "SPECIES_AZURILL",
+          "level": 4
+        },
+        "7": {
+          "species": "SPECIES_RALTS",
+          "level": 4
+        },
+        "8": {
+          "species": "SPECIES_DUCKLETT",
+          "level": 4
+        },
+        "9": {
+          "species": "SPECIES_LOTAD",
+          "level": 4
+        },
+        "10": {
+          "species": "SPECIES_MIME_JR",
+          "level": 4
+        },
+        "11": {
+          "species": "SPECIES_CLEFFA",
+          "level": 4
+        }
+      },
+      "day": {
+        "0": "SPECIES_SURSKIT",
+        "1": "SPECIES_BUDEW"
+      },
+      "night": {
+        "0": "SPECIES_HOOTHOOT",
+        "1": "SPECIES_MISDREAVUS"
+      }
+    },
+    "encounters_honey_tree": {
+      "common": [
+        "SPECIES_AIPOM",
+        "SPECIES_TEDDIURSA",
+        "SPECIES_HERACROSS",
+        "SPECIES_APPLIN",
+        "SPECIES_CUTIEFLY",
+        "SPECIES_HOPPIP"
+      ],
+      "uncommon": [
+        "SPECIES_HERACROSS",
+        "SPECIES_MUNCHLAX",
+        "SPECIES_SIZZLIPEDE",
+        "SPECIES_VULPIX",
+        "SPECIES_SLOWPOKE",
+        "SPECIES_EEVEE"
+      ],
+      "rare": [
+        "SPECIES_MUNCHLAX",
+        "SPECIES_EEVEE",
+        "SPECIES_HERACROSS",
+        "SPECIES_APPLIN",
+        "SPECIES_CUTIEFLY",
+        "SPECIES_VULPIX"
+      ]
+    }
+  }
 }
