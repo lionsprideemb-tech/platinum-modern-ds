@@ -164,6 +164,7 @@ def patch_ui(root: Path) -> None:
     u8 yesNoCallback;
     u8 mercuryPage;
     u8 mercuryFilter;
+    u8 *mercuryPreviewState;
 } MoveReminderController;
 
 enum {
@@ -196,6 +197,7 @@ static void MercuryMoveLearner_PrintNumber(MoveReminderController *controller, W
 static void MercuryMoveLearner_PrintMoveName(MoveReminderController *controller, Window *window, u16 move, u32 x, u32 y);
 static void MercuryMoveLearner_PrintTypeName(MoveReminderController *controller, Window *window, u16 type, u32 x, u32 y);
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height);
+static void MercuryMoveLearner_LoadPalette(void);
 """,
         "MR03C declarations",
     )
@@ -278,18 +280,18 @@ static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width
         .tilemapLeft = 1,
         .tilemapTop = 8,
         .width = 30,
-        .height = 8,
+        .height = 7,
         .palette = 15,
         .baseTile = 0x0F1,
     },
     [MOVE_REMINDER_WIN_MERCURY_DESC] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 16,
+        .tilemapTop = 15,
         .width = 30,
-        .height = 6,
+        .height = 7,
         .palette = 15,
-        .baseTile = 0x1E1,
+        .baseTile = 0x1C3,
     },
     [MOVE_REMINDER_WIN_MERCURY_HELP] = {
         .bgLayer = BG_LAYER_SUB_0,
@@ -306,7 +308,7 @@ static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width
 
     # The dedicated bottom list is five rows.  It uses a normal text cursor;
     # all legacy engine-A selector/type-row sprites are disabled below.
-    replace_once(source, "    .maxDisplay = 7,\n", "    .maxDisplay = 5,\n", "MR03C list rows")
+    replace_once(source, "    .maxDisplay = 7,\n", "    .maxDisplay = 4,\n", "MR03C list rows")
     replace_once(source, "    .textColorBg = 0,\n", "    .textColorBg = 15,\n", "MR03C list bg")
     replace_once(source, "    .lineSpacing = 16,\n", "    .lineSpacing = 12,\n", "MR03C row spacing")
     replace_once(source, "    .cursorType = 1,\n", "    .cursorType = 0,\n", "MR03C text cursor")
@@ -553,6 +555,31 @@ static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width
     )
 
     helpers = r'''
+static void MercuryMoveLearner_LoadPalette(void)
+{
+    static const u16 palette[16] = {
+        GX_RGB(0, 0, 0),
+        GX_RGB(3, 7, 13),
+        GX_RGB(12, 18, 24),
+        GX_RGB(5, 18, 30),
+        GX_RGB(24, 28, 31),
+        GX_RGB(30, 25, 10),
+        GX_RGB(30, 8, 6),
+        GX_RGB(8, 22, 29),
+        GX_RGB(8, 12, 19),
+        GX_RGB(15, 20, 26),
+        GX_RGB(20, 24, 28),
+        GX_RGB(10, 16, 23),
+        GX_RGB(26, 28, 30),
+        GX_RGB(6, 13, 20),
+        GX_RGB(21, 25, 29),
+        GX_RGB(31, 31, 31),
+    };
+
+    GX_LoadBGPltt(palette, 15 * PALETTE_SIZE_BYTES, PALETTE_SIZE_BYTES);
+    GXS_LoadBGPltt(palette, 15 * PALETTE_SIZE_BYTES, PALETTE_SIZE_BYTES);
+}
+
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height)
 {
     Window_FillRectWithColor(window, 1, x, y, width, 1);
@@ -695,18 +722,26 @@ static void MercuryMoveLearner_DrawBottomChrome(MoveReminderController *controll
         MoveReminder_Text_MercuryFilterTutor,
         MoveReminder_Text_MercuryFilterSpecial,
     };
-    static const u8 filterX[5] = { 6, 48, 94, 132, 178 };
+    static const u8 tabX[5] = { 3, 49, 95, 141, 187 };
+    static const u8 textX[5] = { 14, 55, 106, 148, 190 };
 
     for (u32 i = 0; i < 5; i++) {
         if (i == controller->mercuryFilter) {
-            Window_FillRectWithColor(filter, 2, filterX[i] - 3, 3, 40, 14);
+            Window_FillRectWithColor(filter, 4, tabX[i] + 1, 3, 44, 17);
+            Window_FillRectWithColor(filter, 3, tabX[i], 2, 46, 1);
+            Window_FillRectWithColor(filter, 3, tabX[i], 20, 46, 1);
+            Window_FillRectWithColor(filter, 3, tabX[i], 2, 1, 19);
+            Window_FillRectWithColor(filter, 3, tabX[i] + 45, 2, 1, 19);
+        } else {
+            MercuryMoveLearner_DrawPanel(filter, tabX[i], 2, 46, 19);
         }
+
         MercuryMoveLearner_PrintMessage(
             controller,
             filter,
             filterMessages[i],
-            filterX[i],
-            4);
+            textX[i],
+            5);
     }
 
     MercuryMoveLearner_PrintMessage(
@@ -716,16 +751,22 @@ static void MercuryMoveLearner_DrawBottomChrome(MoveReminderController *controll
         5,
         2);
 
-    static const u8 moveX[LEARNED_MOVES_MAX] = { 4, 64, 124, 184 };
+    static const u8 cardX[LEARNED_MOVES_MAX] = { 2, 62, 122, 182 };
     for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
         u16 move = Pokemon_GetValue(controller->data->mon, MON_DATA_MOVE1 + i, NULL);
+        MercuryMoveLearner_DrawPanel(current, cardX[i], 14, 56, 23);
+
         if (move == MOVE_NONE) {
             continue;
         }
-        MercuryMoveLearner_PrintMoveName(controller, current, move, moveX[i], 18);
+
+        MercuryMoveLearner_PrintMoveName(controller, current, move, cardX[i] + 3, 16);
+
+        u16 type = MoveTable_LoadParam(move, MOVEATTRIBUTE_TYPE);
+        MercuryMoveLearner_PrintTypeName(controller, current, type, cardX[i] + 3, 27);
 
         u16 pp = Pokemon_GetValue(controller->data->mon, MON_DATA_MOVE1_PP + i, NULL);
-        MercuryMoveLearner_PrintNumber(controller, current, pp, moveX[i] + 18, 29);
+        MercuryMoveLearner_PrintNumber(controller, current, pp, cardX[i] + 35, 27);
     }
 
     MercuryMoveLearner_PrintMessage(
@@ -855,6 +896,10 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
 
     Window_FillTilemap(window, 15);
     MercuryMoveLearner_DrawPanel(window, 0, 0, 240, 175);
+
+    Window_FillRectWithColor(window, 4, 1, 1, 238, 31);
+    Window_FillRectWithColor(window, 3, 1, 31, 238, 2);
+
     MercuryMoveLearner_DrawTopIdentity(controller, window);
 
     u32 pageTitle = MoveReminder_Text_MercuryMoveView;
@@ -865,32 +910,25 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     }
 
     MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryShoulderLeft, 6, 4);
-    MercuryMoveLearner_PrintMessage(controller, window, pageTitle, 78, 4);
-    MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryShoulderRight, 218, 4);
+    MercuryMoveLearner_PrintMessage(controller, window, pageTitle, 82, 4);
+    MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryShoulderRight, 220, 4);
 
     if (controller->mercuryPage == MERCURY_PAGE_MOVE) {
-        MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 92);
-        MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 92);
-        MercuryMoveLearner_DrawPanel(window, 4, 132, 232, 38);
+        MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 100);
+        MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 100);
+        MercuryMoveLearner_DrawPanel(window, 4, 140, 232, 30);
 
-        MercuryMoveLearner_PrintMessage(
-            controller,
-            window,
-            MoveReminder_Text_MercuryPokemonPanel,
-            20,
-            52);
-
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryHP, 12, 100);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryHP, 12, 120);
         u32 hp = Pokemon_GetValue(mon, MON_DATA_HP, NULL);
         u32 maxHP = Pokemon_GetValue(mon, MON_DATA_MAX_HP, NULL);
-        MercuryMoveLearner_PrintNumber(controller, window, hp, 34, 100);
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercurySlash, 58, 100);
-        MercuryMoveLearner_PrintNumber(controller, window, maxHP, 70, 100);
+        MercuryMoveLearner_PrintNumber(controller, window, hp, 34, 120);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercurySlash, 58, 120);
+        MercuryMoveLearner_PrintNumber(controller, window, maxHP, 70, 120);
 
-        Window_FillRectWithColor(window, 2, 12, 116, 72, 6);
+        Window_FillRectWithColor(window, 2, 12, 130, 72, 5);
         if (maxHP > 0) {
             u32 fill = (72 * hp) / maxHP;
-            Window_FillRectWithColor(window, 1, 12, 116, fill, 6);
+            Window_FillRectWithColor(window, 3, 12, 130, fill, 5);
         }
 
         u16 selected = MoveReminder_GetSelectedMove(controller);
@@ -906,12 +944,24 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
             if (moveClass == CLASS_SPECIAL) classMsg = MoveReminder_Text_MercuryClassSpecial;
             MercuryMoveLearner_PrintMessage(controller, window, classMsg, 176, 58);
 
-            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryPower, 108, 74);
-            MercuryMoveLearner_PrintNumber(controller, window, MoveTable_LoadParam(selected, MOVEATTRIBUTE_POWER), 166, 74);
-            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryAccuracy, 108, 88);
-            MercuryMoveLearner_PrintNumber(controller, window, MoveTable_LoadParam(selected, MOVEATTRIBUTE_ACCURACY), 166, 88);
-            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryPP, 108, 102);
-            MercuryMoveLearner_PrintNumber(controller, window, MoveTable_CalcMaxPP(selected, 0), 166, 102);
+            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryPower, 108, 72);
+            u32 power = MoveTable_LoadParam(selected, MOVEATTRIBUTE_POWER);
+            if (power <= 1) {
+                MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_Dashes, 166, 72);
+            } else {
+                MercuryMoveLearner_PrintNumber(controller, window, power, 166, 72);
+            }
+
+            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryAccuracy, 108, 86);
+            u32 accuracy = MoveTable_LoadParam(selected, MOVEATTRIBUTE_ACCURACY);
+            if (accuracy == 0) {
+                MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_Dashes, 166, 86);
+            } else {
+                MercuryMoveLearner_PrintNumber(controller, window, accuracy, 166, 86);
+            }
+
+            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryPP, 108, 100);
+            MercuryMoveLearner_PrintNumber(controller, window, MoveTable_CalcMaxPP(selected, 0), 166, 100);
 
             MessageLoader *desc = MessageLoader_Init(
                 MSG_LOADER_LOAD_ON_DEMAND,
@@ -921,25 +971,29 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
             MessageLoader_GetString(desc, selected, controller->string);
             Text_AddPrinterWithParamsAndColor(
                 window, FONT_SYSTEM, controller->string,
-                108, 116, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+                108, 114, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
             MessageLoader_Free(desc);
         }
 
-        static const u8 x[LEARNED_MOVES_MAX] = { 10, 68, 126, 184 };
+        static const u8 cardX[LEARNED_MOVES_MAX] = { 7, 65, 123, 181 };
         for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
             u16 move = Pokemon_GetValue(mon, MON_DATA_MOVE1 + i, NULL);
+            MercuryMoveLearner_DrawPanel(window, cardX[i], 143, 54, 24);
+
             if (move != MOVE_NONE) {
-                MercuryMoveLearner_PrintMoveName(controller, window, move, x[i], 141);
+                MercuryMoveLearner_PrintMoveName(controller, window, move, cardX[i] + 3, 145);
                 MercuryMoveLearner_PrintNumber(
                     controller,
                     window,
                     Pokemon_GetValue(mon, MON_DATA_MOVE1_PP + i, NULL),
-                    x[i] + 18,
-                    155);
+                    cardX[i] + 22,
+                    157);
             }
         }
     } else if (controller->mercuryPage == MERCURY_PAGE_STATS) {
-        MercuryMoveLearner_DrawPanel(window, 4, 36, 232, 134);
+        MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
+        MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 96);
+        MercuryMoveLearner_DrawPanel(window, 100, 136, 136, 34);
 
         static const u32 labels[6] = {
             MoveReminder_Text_MercuryHP,
@@ -959,17 +1013,18 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         };
 
         for (u32 i = 0; i < 6; i++) {
-            u32 y = 44 + i * 16;
-            MercuryMoveLearner_PrintMessage(controller, window, labels[i], 16, y);
+            u32 y = 44 + i * 14;
+            MercuryMoveLearner_PrintMessage(controller, window, labels[i], 108, y);
             u32 value = Pokemon_GetValue(mon, params[i], NULL);
-            MercuryMoveLearner_PrintNumber(controller, window, value, 88, y);
+            MercuryMoveLearner_PrintNumber(controller, window, value, 158, y);
+
             u32 bar = value;
             if (bar > 255) bar = 255;
-            Window_FillRectWithColor(window, 2, 122, y + 3, 90, 5);
-            Window_FillRectWithColor(window, 1, 122, y + 3, (90 * bar) / 255, 5);
+            Window_FillRectWithColor(window, 2, 188, y + 3, 38, 5);
+            Window_FillRectWithColor(window, 3, 188, y + 3, (38 * bar) / 255, 5);
         }
 
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryNature, 16, 144);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryNature, 108, 141);
         MessageLoader *nature = MessageLoader_Init(
             MSG_LOADER_LOAD_ON_DEMAND,
             NARC_INDEX_MSGDATA__PL_MSG,
@@ -978,24 +1033,25 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         MessageLoader_GetString(nature, Pokemon_GetNature(mon), controller->string);
         Text_AddPrinterWithParamsAndColor(
             window, FONT_SYSTEM, controller->string,
-            82, 144, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+            164, 141, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         MessageLoader_Free(nature);
 
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryHeldItem, 16, 158);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryHeldItem, 108, 155);
         u16 item = Pokemon_GetValue(mon, MON_DATA_HELD_ITEM, NULL);
         if (item == 0) {
-            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryNone, 82, 158);
+            MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryNone, 164, 155);
         } else {
             Item_LoadName(controller->string, item, HEAP_ID_MOVE_REMINDER);
             Text_AddPrinterWithParamsAndColor(
                 window, FONT_SYSTEM, controller->string,
-                82, 158, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+                164, 155, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         }
     } else {
-        MercuryMoveLearner_DrawPanel(window, 4, 36, 232, 78);
-        MercuryMoveLearner_DrawPanel(window, 4, 118, 232, 52);
+        MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
+        MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 78);
+        MercuryMoveLearner_DrawPanel(window, 100, 118, 136, 52);
 
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryAbility, 16, 44);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryAbility, 108, 44);
 
         u16 ability = Pokemon_GetValue(mon, MON_DATA_ABILITY, NULL);
         MessageLoader *abilityNames = MessageLoader_Init(
@@ -1006,7 +1062,7 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         MessageLoader_GetString(abilityNames, ability, controller->string);
         Text_AddPrinterWithParamsAndColor(
             window, FONT_SYSTEM, controller->string,
-            16, 60, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+            108, 60, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         MessageLoader_Free(abilityNames);
 
         MessageLoader *abilityDesc = MessageLoader_Init(
@@ -1017,13 +1073,13 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         MessageLoader_GetString(abilityDesc, ability, controller->string);
         Text_AddPrinterWithParamsAndColor(
             window, FONT_SYSTEM, controller->string,
-            16, 78, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+            108, 78, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         MessageLoader_Free(abilityDesc);
 
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryInnateAbilities, 16, 126);
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryOff, 190, 126);
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 24, 142);
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 24, 154);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryInnateAbilities, 108, 126);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryOff, 210, 126);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 112, 142);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 112, 154);
     }
 
     Window_ScheduleCopyToVRAM(window);
@@ -1048,6 +1104,24 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     controller->mercuryPage = MERCURY_PAGE_MOVE;
     controller->mercuryFilter = MERCURY_FILTER_ALL;
 
+    MercuryMoveLearner_LoadPalette();
+    LoadStandardWindowGraphics(
+        controller->bgConfig,
+        BG_LAYER_MAIN_3,
+        0x2A0,
+        14,
+        STANDARD_WINDOW_SYSTEM,
+        HEAP_ID_MOVE_REMINDER);
+    controller->mercuryPreviewState = DrawPokemonPreviewFromStruct(
+        controller->bgConfig,
+        BG_LAYER_MAIN_3,
+        2,
+        5,
+        14,
+        0x2A0,
+        controller->data->mon,
+        HEAP_ID_MOVE_REMINDER);
+
     for (u32 i = MOVE_REMINDER_WIN_LABEL_BATTLE_MOVES;
          i <= MOVE_REMINDER_WIN_MOVES_NAMES;
          i++) {
@@ -1063,6 +1137,38 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     MercuryMoveLearner_DrawBottomChrome(controller);
     MoveReminder_DrawMovesInfo(controller);""",
         "MR03C setup",
+    )
+
+    replace_once(
+        source,
+        """static int MoveReminder_State_FadeToExit(MoveReminderController *controller)
+{
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        """static int MoveReminder_State_FadeToExit(MoveReminderController *controller)
+{
+    if (controller->mercuryPreviewState != NULL) {
+        *controller->mercuryPreviewState = PREVIEW_STATE_REMOVE;
+        controller->mercuryPreviewState = NULL;
+    }
+
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        "MR03C preview cleanup on exit",
+    )
+
+    replace_once(
+        source,
+        """static int MoveReminder_State_FadeToSummaryScreen(MoveReminderController *controller)
+{
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        """static int MoveReminder_State_FadeToSummaryScreen(MoveReminderController *controller)
+{
+    if (controller->mercuryPreviewState != NULL) {
+        *controller->mercuryPreviewState = PREVIEW_STATE_REMOVE;
+        controller->mercuryPreviewState = NULL;
+    }
+
+    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
+        "MR03C preview cleanup on summary",
     )
 
     # Free-list callback is unchanged, but a filter switch resets list/cursor
@@ -1171,7 +1277,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "next_visual_step": "custom palette/panel art and full Pokemon portrait",
+        "visual_pass": "Mercury blue palette, tab/card styling, full Pokemon preview portrait",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
