@@ -229,11 +229,33 @@ jobs:
 
           test "$(jq -r '.status' mr05b-encounter-framework.json)" = "PASS"
           test "$(jq -r '.area_count' mr05b-encounter-framework.json)" = "185"
-          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" = "0"
-          test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "true"
-          test "$(jq -r '.baseline_sha256' mr05b-encounter-framework.json)" = \
-               "$(jq -r '.output_sha256' mr05b-encounter-framework.json)"
+          changed="$(jq -r '.changed_area_count' mr05b-encounter-framework.json)"
+          test "$changed" -ge 27
+          test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "false"
           test "$(jq -r '.area_count' mr05b-encounter-manifest.json)" = "185"
+
+          # Authoritative Mercury content gates: numbered routes plus Honey Trees
+          # must actually differ from Platinum rather than only centralizing data.
+          for area in \
+            encounters_route_201 encounters_route_202 encounters_route_203 \
+            encounters_route_204_south encounters_route_204_north \
+            encounters_route_205_south encounters_route_205_north \
+            encounters_route_206 encounters_route_207 encounters_route_208 \
+            encounters_route_210_north encounters_route_211_west encounters_route_211_east \
+            encounters_route_216 encounters_route_217 encounters_route_218 \
+            encounters_route_219 encounters_route_220 encounters_route_221 \
+            encounters_route_222 encounters_route_223 encounters_route_224 \
+            encounters_honey_tree
+          do
+            jq -e --arg area "$area" '.changed_areas | index($area) != null' \
+              mr05b-encounter-framework.json >/dev/null
+          done
+
+          ! grep -q 'SPECIES_BURMY' vendor/pokeplatinum/res/field/encounters/encounters_honey_tree.json
+          grep -q 'SPECIES_HERACROSS' vendor/pokeplatinum/res/field/encounters/encounters_honey_tree.json
+          grep -q 'SPECIES_MUNCHLAX' vendor/pokeplatinum/res/field/encounters/encounters_honey_tree.json
+          grep -q 'SPECIES_APPLIN' vendor/pokeplatinum/res/field/encounters/encounters_honey_tree.json
+          test "$(jq -r '.stage' data/encounters/MR05B_CONTENT_PORT_STATUS.json)" = "MR05B_NUMBERED_ROUTES_PORTED"
 
       - name: Prove CI direct-launch harness is absent
         shell: bash
@@ -275,7 +297,7 @@ jobs:
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05A normal boot in DeSmuME
+      - name: Capture MR05B normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -388,7 +410,9 @@ jobs:
             echo "- Full ROM compile required"
             echo "- Real DeSmuME normal-boot screenshots required"
             echo "- Sealed MR05A HM-free traversal retained"
-            echo "- 185 encounter areas centralized and schema-validated"
+            echo "- 185 encounter resources centralized and schema-validated"
+            echo "- Mercury authored Routes 201-224 ported where Platinum has encounter resources"
+            echo "- Honey Tree rare pool replaced; Burmy removed"
             echo "- MR05B baseline changes zero encounter slots"
             echo "- Encounter-framework ROM staged as Pokemon_Mercury_MR05B_Encounter_Framework.nds"
           } >> "$GITHUB_STEP_SUMMARY"
