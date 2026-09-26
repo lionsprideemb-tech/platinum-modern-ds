@@ -1,0 +1,597 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "area": "Route 218 + Canalave City water approach",
+  "status": "AUTHORED_PENDING_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum Route 218 and Canalave City, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography, ecology, and encounter identity. Emerald-derived map constants are hidden engine infrastructure only and are not design sources.",
+  "runtime_note": "The cumulative source does not yet contain finished player-facing Route 218 and Canalave City Sinnoh maps. These encounters are intentionally staged and must be wired only when those Platinum-derived maps exist.",
+  "route218": {
+    "level_band": "41-44 land / 40-45 Surf / 31-47 fishing",
+    "identity": "Short Surf-heavy fishing route west of Jubilife, transitioning into Canalave maritime/industrial ecology.",
+    "platinum_anchors": [
+      "Floatzel",
+      "Mr. Mime",
+      "Gastrodon",
+      "Chatot (Morning/Day/Evening only)",
+      "Tentacool",
+      "Shellos",
+      "Tentacruel",
+      "Finneon",
+      "Gyarados",
+      "Lumineon",
+      "Honey Tree",
+      "Voltorb swarm concept"
+    ],
+    "land_encounters": {
+      "Morning": [
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MR_MIME",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHATOT",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MAGNEMITE",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLINK",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_YAMPER",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_HELIOPTILE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_VOLTORB",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MEOWTH_GALAR",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_KLEFKI",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_DURALUDON",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        }
+      ],
+      "Day": [
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MR_MIME",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHATOT",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MAGNEMITE",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLINK",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_HELIOPTILE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_YAMPER",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_VOLTORB",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MEOWTH_GALAR",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_KLEFKI",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_DURALUDON",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        }
+      ],
+      "Evening": [
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MR_MIME",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MAGNEMITE",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLINK",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHATOT",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ELECTRIKE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_YAMPER",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_VOLTORB",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MEOWTH_GALAR",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_KLEFKI",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_DURALUDON",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        }
+      ],
+      "Night": [
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MR_MIME",
+          "min_level": 41,
+          "max_level": 42,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MAGNEMITE",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLINK",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ELECTRIKE",
+          "min_level": 41,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MEOWTH_GALAR",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_YAMPER",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_VOLTORB",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_PAWMI",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_KLEFKI",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_DURALUDON",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 1
+        }
+      ]
+    },
+    "surf": [
+      {
+        "species": "SPECIES_TENTACOOL",
+        "min_level": 40,
+        "max_level": 43,
+        "chance": 60
+      },
+      {
+        "species": "SPECIES_SHELLOS",
+        "min_level": 40,
+        "max_level": 43,
+        "chance": 30
+      },
+      {
+        "species": "SPECIES_TENTACRUEL",
+        "min_level": 42,
+        "max_level": 44,
+        "chance": 5
+      },
+      {
+        "species": "SPECIES_CHINCHOU",
+        "min_level": 41,
+        "max_level": 44,
+        "chance": 4
+      },
+      {
+        "species": "SPECIES_GASTRODON",
+        "min_level": 43,
+        "max_level": 45,
+        "chance": 1
+      }
+    ],
+    "fishing": {
+      "old_rod": [
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 15,
+          "max_level": 25,
+          "chance": 70
+        },
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 15,
+          "max_level": 25,
+          "chance": 30
+        }
+      ],
+      "good_rod": [
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 31,
+          "max_level": 38,
+          "chance": 60
+        },
+        {
+          "species": "SPECIES_FINNEON",
+          "min_level": 32,
+          "max_level": 39,
+          "chance": 20
+        },
+        {
+          "species": "SPECIES_REMORAID",
+          "min_level": 33,
+          "max_level": 40,
+          "chance": 20
+        }
+      ],
+      "super_rod": [
+        {
+          "species": "SPECIES_GYARADOS",
+          "min_level": 42,
+          "max_level": 46,
+          "chance": 40
+        },
+        {
+          "species": "SPECIES_LUMINEON",
+          "min_level": 42,
+          "max_level": 46,
+          "chance": 40
+        },
+        {
+          "species": "SPECIES_OCTILLERY",
+          "min_level": 43,
+          "max_level": 46,
+          "chance": 15
+        },
+        {
+          "species": "SPECIES_MANTYKE",
+          "min_level": 42,
+          "max_level": 45,
+          "chance": 4
+        },
+        {
+          "species": "SPECIES_KINGDRA",
+          "min_level": 45,
+          "max_level": 47,
+          "chance": 1
+        }
+      ]
+    },
+    "instant_honey_tree": {
+      "consume_honey": 1,
+      "cooldown": 0,
+      "pool": [
+        {
+          "species": "SPECIES_ELEKID",
+          "chance": 15,
+          "level": 42
+        },
+        {
+          "species": "SPECIES_PAWMI",
+          "chance": 15,
+          "level": 42
+        },
+        {
+          "species": "SPECIES_MEOWTH_GALAR",
+          "chance": 10,
+          "level": 42
+        },
+        {
+          "species": "SPECIES_MUNCHLAX",
+          "chance": 10,
+          "level": 43
+        },
+        {
+          "species": "SPECIES_SCYTHER",
+          "chance": 10,
+          "level": 43
+        },
+        {
+          "species": "SPECIES_KLEFKI",
+          "chance": 10,
+          "level": 43
+        },
+        {
+          "species": "SPECIES_DURALUDON",
+          "chance": 10,
+          "level": 44
+        },
+        {
+          "species": "SPECIES_ROTOM",
+          "chance": 10,
+          "level": 44
+        },
+        {
+          "species": "SPECIES_PORYGON",
+          "chance": 5,
+          "level": 44
+        },
+        {
+          "species": "SPECIES_VOLTORB_HISUI",
+          "chance": 5,
+          "level": 44
+        }
+      ]
+    },
+    "notes": [
+      "Mr. Mime remains a prominent Route 218 catch, preserving Platinum identity.",
+      "Chatot is absent at Night, preserving Platinum time-of-day behavior.",
+      "Voltorb is integrated as a low-rate regular encounter rather than a swarm-only daily gate.",
+      "The Mercury expansion leans into Canalave-bound industrial/coastal species rather than repeating Route 213 beach/tide-pool ecology."
+    ]
+  },
+  "canalave_city": {
+    "random_land_encounters": false,
+    "surf": [
+      {
+        "species": "SPECIES_TENTACOOL",
+        "min_level": 41,
+        "max_level": 44,
+        "chance": 60
+      },
+      {
+        "species": "SPECIES_SHELLOS",
+        "min_level": 41,
+        "max_level": 44,
+        "chance": 30
+      },
+      {
+        "species": "SPECIES_TENTACRUEL",
+        "min_level": 43,
+        "max_level": 45,
+        "chance": 5
+      },
+      {
+        "species": "SPECIES_CHINCHOU",
+        "min_level": 42,
+        "max_level": 45,
+        "chance": 4
+      },
+      {
+        "species": "SPECIES_GASTRODON",
+        "min_level": 44,
+        "max_level": 46,
+        "chance": 1
+      }
+    ],
+    "fishing": {
+      "old_rod": [
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 15,
+          "max_level": 25,
+          "chance": 70
+        },
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 15,
+          "max_level": 25,
+          "chance": 30
+        }
+      ],
+      "good_rod": [
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 32,
+          "max_level": 39,
+          "chance": 60
+        },
+        {
+          "species": "SPECIES_FINNEON",
+          "min_level": 33,
+          "max_level": 40,
+          "chance": 20
+        },
+        {
+          "species": "SPECIES_CHINCHOU",
+          "min_level": 34,
+          "max_level": 41,
+          "chance": 20
+        }
+      ],
+      "super_rod": [
+        {
+          "species": "SPECIES_GYARADOS",
+          "min_level": 42,
+          "max_level": 46,
+          "chance": 40
+        },
+        {
+          "species": "SPECIES_LUMINEON",
+          "min_level": 42,
+          "max_level": 46,
+          "chance": 40
+        },
+        {
+          "species": "SPECIES_MANTINE",
+          "min_level": 43,
+          "max_level": 46,
+          "chance": 15
+        },
+        {
+          "species": "SPECIES_WAILMER",
+          "min_level": 43,
+          "max_level": 46,
+          "chance": 4
+        },
+        {
+          "species": "SPECIES_FINIZEN",
+          "min_level": 44,
+          "max_level": 47,
+          "chance": 1
+        }
+      ]
+    },
+    "note": "Canalave water intentionally overlaps Route 218 because it is the same connected waterway. Mercury adds a modest harbor-specific Super Rod layer without erasing the Platinum core."
+  },
+  "diversity_rules": [
+    "Do not reuse Great Marsh Safari-exclusive species as ordinary Route 218 or Canalave catches.",
+    "Route 218 must remain distinct from Route 213: industrial/coastal approach rather than beach/tide-pool ecology.",
+    "Shared Route 218/Canalave aquatic species are intentional because the areas share one connected waterway.",
+    "Do not bind staged data to unrelated non-Sinnoh maps."
+  ]
+}
