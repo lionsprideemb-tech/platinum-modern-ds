@@ -74,7 +74,7 @@ def patch_ui(root: Path) -> None:
     insert_after_once(
         source,
         '#include "heap.h"\n',
-        '#include "item.h"\n',
+        '#include "item.h"\n#include "character_sprite.h"\n',
         "MR03C item-name include",
     )
 
@@ -143,6 +143,7 @@ def patch_ui(root: Path) -> None:
         """    MOVE_REMINDER_WIN_YES_NO_MENU,
     MOVE_REMINDER_WIN_SUB_INFO,
     MOVE_REMINDER_WIN_MERCURY_TOP,
+    MOVE_REMINDER_WIN_MERCURY_PORTRAIT,
     MOVE_REMINDER_WIN_MERCURY_FILTER,
     MOVE_REMINDER_WIN_MERCURY_CURRENT,
     MOVE_REMINDER_WIN_MERCURY_LIST,
@@ -164,6 +165,7 @@ def patch_ui(root: Path) -> None:
     u8 yesNoCallback;
     u8 mercuryPage;
     u8 mercuryFilter;
+    u8 mercuryMessageBoxVisible;
 } MoveReminderController;
 
 enum {
@@ -197,6 +199,7 @@ static void MercuryMoveLearner_PrintMoveName(MoveReminderController *controller,
 static void MercuryMoveLearner_PrintTypeName(MoveReminderController *controller, Window *window, u16 type, u32 x, u32 y);
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height);
 static void MercuryMoveLearner_LoadPalette(void);
+static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *controller);
 """,
         "MR03C declarations",
     )
@@ -255,6 +258,15 @@ static void MercuryMoveLearner_LoadPalette(void);
         .height = 22,
         .palette = 15,
         .baseTile = 0x001,
+    },
+    [MOVE_REMINDER_WIN_MERCURY_PORTRAIT] = {
+        .bgLayer = BG_LAYER_MAIN_3,
+        .tilemapLeft = 2,
+        .tilemapTop = 5,
+        .width = 10,
+        .height = 10,
+        .palette = 14,
+        .baseTile = 0x2A0,
     },
     [MOVE_REMINDER_WIN_MERCURY_FILTER] = {
         .bgLayer = BG_LAYER_SUB_0,
@@ -324,6 +336,15 @@ static void MercuryMoveLearner_LoadPalette(void);
 """
     new_input = """static int MoveReminder_State_ProcessMainInput(MoveReminderController *controller)
 {
+    if (controller->mercuryMessageBoxVisible) {
+        Window_EraseMessageBox(
+            &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+            FALSE);
+        Window_ClearAndScheduleCopyToVRAM(
+            &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
+        controller->mercuryMessageBoxVisible = FALSE;
+    }
+
     if (JOY_NEW(PAD_BUTTON_L)) {
         Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
         controller->mercuryPage = (controller->mercuryPage + 2) % 3;
@@ -445,6 +466,47 @@ static void MercuryMoveLearner_LoadPalette(void);
     ManagedSprite_SetDrawFlag(controller->managedSprites[MOVE_REMINDER_SPRITE_SIDE_ARROW_RIGHT], FALSE);
 }''',
         "MR03C legacy side arrows off",
+    )
+
+    replace_once(
+        source,
+        """    MoveReminder_SetStringTemplate(controller, MOVE_REMINDER_STR_ASK_TEACH_WHICH_TO_MON);
+    MoveReminder_DrawText(controller, MOVE_REMINDER_WIN_MESSAGE_BOX, FONT_MESSAGE, TEXT_COLOR(1, 2, 15), ALIGN_LEFT);
+
+    controller->nextState = MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;
+
+    Window_ScheduleCopyToVRAM(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);""",
+        """    controller->nextState = MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;""",
+        "MR03C remove initial vanilla prompt",
+    )
+
+    replace_function(
+        source,
+        "static void MoveReminder_SetMessageBoxText(MoveReminderController *controller, u32 str)",
+        r'''static void MoveReminder_SetMessageBoxText(MoveReminderController *controller, u32 str)
+{
+    Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX], 15);
+    Window_DrawMessageBoxWithScrollCursor(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        0,
+        10,
+        13);
+    controller->mercuryMessageBoxVisible = TRUE;
+
+    MoveReminder_SetStringTemplate(controller, str);
+    RenderControlFlags_SetCanABSpeedUpPrint(TRUE);
+    RenderControlFlags_SetAutoScrollFlags(AUTO_SCROLL_DISABLED);
+
+    controller->textPrinterID = Text_AddPrinterWithParams(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        FONT_MESSAGE,
+        controller->string,
+        0,
+        0,
+        Options_TextFrameDelay(controller->data->options),
+        MoveReminder_TextPrinterCallback);
+}''',
+        "MR03C confirmation message box",
     )
 
     # Filtered list implementation. StringList choice values remain move IDs,
@@ -577,6 +639,60 @@ static void MercuryMoveLearner_LoadPalette(void)
 
     GX_LoadBGPltt(palette, 15 * PALETTE_SIZE_BYTES, PALETTE_SIZE_BYTES);
     GXS_LoadBGPltt(palette, 15 * PALETTE_SIZE_BYTES, PALETTE_SIZE_BYTES);
+}
+
+static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *controller)
+{
+    Window *portrait = &controller->windows[MOVE_REMINDER_WIN_MERCURY_PORTRAIT];
+    Pokemon *mon = controller->data->mon;
+    PokemonSpriteTemplate spriteTemplate;
+
+    Window_FillTilemap(portrait, 0);
+
+    Pokemon_BuildSpriteTemplate(&spriteTemplate, mon, FACE_FRONT);
+
+    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+    u32 personality = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
+    u8 *buffer = Heap_Alloc(HEAP_ID_MOVE_REMINDER, 0xC80);
+
+    CharacterSprite_LoadPokemonSpriteRect(
+        spriteTemplate.narcID,
+        spriteTemplate.character,
+        HEAP_ID_MOVE_REMINDER,
+        0,
+        0,
+        10,
+        10,
+        buffer,
+        personality,
+        FALSE,
+        FACE_FRONT,
+        species);
+
+    Window_BlitBitmapRectWithTransparency(
+        portrait,
+        buffer,
+        0,
+        0,
+        80,
+        80,
+        0,
+        0,
+        80,
+        80,
+        0);
+
+    Heap_Free(buffer);
+
+    Graphics_LoadPalette(
+        spriteTemplate.narcID,
+        spriteTemplate.palette,
+        PAL_LOAD_MAIN_BG,
+        14 * PALETTE_SIZE_BYTES,
+        PALETTE_SIZE_BYTES,
+        HEAP_ID_MOVE_REMINDER);
+
+    Window_ScheduleCopyToVRAM(portrait);
 }
 
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height)
@@ -914,11 +1030,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
 
     if (controller->mercuryPage == MERCURY_PAGE_MOVE) {
         MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 100);
-        Window_FillRectWithColor(window, 8, 8, 40, 84, 70);
-        MercuryMoveLearner_PrintMessage(
-            controller, window,
-            MoveReminder_Text_MercuryPokemonPanel,
-            24, 66);
         MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 100);
         MercuryMoveLearner_DrawPanel(window, 4, 140, 232, 30);
 
@@ -996,13 +1107,8 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         }
     } else if (controller->mercuryPage == MERCURY_PAGE_STATS) {
         MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
-        Window_FillRectWithColor(window, 8, 8, 40, 84, 96);
-        MercuryMoveLearner_PrintMessage(
-            controller, window,
-            MoveReminder_Text_MercuryPokemonPanel,
-            24, 80);
         MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 96);
-        MercuryMoveLearner_DrawPanel(window, 100, 136, 136, 34);
+        MercuryMoveLearner_DrawPanel(window, 100, 124, 136, 46);
 
         static const u32 labels[6] = {
             MoveReminder_Text_MercuryHP,
@@ -1033,7 +1139,7 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
             Window_FillRectWithColor(window, 3, 188, y + 3, (38 * bar) / 255, 5);
         }
 
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryNature, 108, 141);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryNature, 108, 128);
         MessageLoader *nature = MessageLoader_Init(
             MSG_LOADER_LOAD_ON_DEMAND,
             NARC_INDEX_MSGDATA__PL_MSG,
@@ -1042,10 +1148,23 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         MessageLoader_GetString(nature, Pokemon_GetNature(mon), controller->string);
         Text_AddPrinterWithParamsAndColor(
             window, FONT_SYSTEM, controller->string,
-            164, 141, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+            164, 128, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         MessageLoader_Free(nature);
 
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryHeldItem, 108, 155);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryAbility, 108, 142);
+        u16 ability = Pokemon_GetValue(mon, MON_DATA_ABILITY, NULL);
+        MessageLoader *abilityNames = MessageLoader_Init(
+            MSG_LOADER_LOAD_ON_DEMAND,
+            NARC_INDEX_MSGDATA__PL_MSG,
+            TEXT_BANK_ABILITY_NAMES,
+            HEAP_ID_MOVE_REMINDER);
+        MessageLoader_GetString(abilityNames, ability, controller->string);
+        Text_AddPrinterWithParamsAndColor(
+            window, FONT_SYSTEM, controller->string,
+            164, 142, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
+        MessageLoader_Free(abilityNames);
+
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryHeldItem, 108, 156);
         u16 item = Pokemon_GetValue(mon, MON_DATA_HELD_ITEM, NULL);
         if (item == 0) {
             MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryNone, 164, 155);
@@ -1057,11 +1176,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         }
     } else {
         MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
-        Window_FillRectWithColor(window, 8, 8, 40, 84, 96);
-        MercuryMoveLearner_PrintMessage(
-            controller, window,
-            MoveReminder_Text_MercuryPokemonPanel,
-            24, 80);
         MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 78);
         MercuryMoveLearner_DrawPanel(window, 100, 118, 136, 52);
 
@@ -1092,11 +1206,13 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
 
         MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryInnateAbilities, 108, 126);
         MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryOff, 210, 126);
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 112, 142);
-        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 112, 154);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 112, 138);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 112, 150);
+        MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryDash, 112, 162);
     }
 
     Window_ScheduleCopyToVRAM(window);
+    MercuryMoveLearner_DrawPokemonPortrait(controller);
 }
 '''
 
@@ -1119,6 +1235,12 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     controller->mercuryFilter = MERCURY_FILTER_ALL;
 
     MercuryMoveLearner_LoadPalette();
+    controller->mercuryMessageBoxVisible = FALSE;
+    Window_EraseMessageBox(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        FALSE);
+    Window_ClearAndScheduleCopyToVRAM(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
 
     for (u32 i = MOVE_REMINDER_WIN_LABEL_BATTLE_MOVES;
          i <= MOVE_REMINDER_WIN_MOVES_NAMES;
@@ -1243,7 +1365,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "Mercury blue palette and tab/card styling; portrait temporarily isolated after preview-task runtime crash",
+        "visual_pass": "Mercury blue palette, tab/card styling, and task-free BG Pokemon portrait renderer",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
