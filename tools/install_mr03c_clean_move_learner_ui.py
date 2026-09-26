@@ -614,12 +614,15 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
 
     Pokemon_BuildSpriteTemplate(&spriteTemplate, mon, FACE_FRONT);
 
+    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+    u32 personality = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
     u8 *buffer = Heap_Alloc(HEAP_ID_MOVE_REMINDER, 0xC80);
 
-    // LoadTiledData returns row-major 10x10 BG-compatible tiles. The
-    // PokemonSpriteRect helper deliberately reorders tiles for OAM shapes,
-    // which produced the striped portrait seen in the previous proof.
-    CharacterSprite_LoadTiledData(
+    // Platinum's Pokemon helper emits the 10x10 frame in DS OAM region order.
+    // Preserve that correct Pokemon decoding (including Spinda spots), then
+    // invert the six-region packing into the row-major tile order a BG Window
+    // expects.
+    CharacterSprite_LoadPokemonSpriteRect(
         spriteTemplate.narcID,
         spriteTemplate.character,
         HEAP_ID_MOVE_REMINDER,
@@ -627,9 +630,30 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         0,
         10,
         10,
-        buffer);
+        buffer,
+        personality,
+        FALSE,
+        FACE_FRONT,
+        species);
 
-    MI_CpuCopy8(buffer, portrait->pixels, 0xC80);
+    static const u8 regionX[6] = { 0, 8, 8, 0, 4, 8 };
+    static const u8 regionY[6] = { 0, 0, 4, 8, 8, 8 };
+    static const u8 regionW[6] = { 8, 2, 2, 4, 4, 2 };
+    static const u8 regionH[6] = { 8, 4, 4, 2, 2, 2 };
+
+    u32 srcTile = 0;
+    for (u32 region = 0; region < 6; region++) {
+        for (u32 y = 0; y < regionH[region]; y++) {
+            for (u32 x = 0; x < regionW[region]; x++) {
+                u32 dstTile = ((regionY[region] + y) * 10) + regionX[region] + x;
+                MI_CpuCopy8(
+                    buffer + srcTile * TILE_SIZE_4BPP,
+                    (u8 *)portrait->pixels + dstTile * TILE_SIZE_4BPP,
+                    TILE_SIZE_4BPP);
+                srcTile++;
+            }
+        }
+    }
 
     Heap_Free(buffer);
 
