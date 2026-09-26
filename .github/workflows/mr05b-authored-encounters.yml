@@ -16,6 +16,7 @@ on:
       - "tools/install_mr05b_authored_encounters.py"
       - "tools/build_mr05b_authored_encounter_overrides.py"
       - "tools/extend_mr05b_great_marsh_overrides.py"
+      - "tools/extend_mr05b_special_areas.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
       - "tools/install_pt04d_species_batch.py"
@@ -109,7 +110,8 @@ jobs:
             tools/install_mr05b_encounter_framework.py \
             tools/install_mr05b_authored_encounters.py \
             tools/build_mr05b_authored_encounter_overrides.py \
-            tools/extend_mr05b_great_marsh_overrides.py
+            tools/extend_mr05b_great_marsh_overrides.py \
+            tools/extend_mr05b_special_areas.py
 
       - name: Restore MP05 canonical ability architecture
         shell: bash
@@ -255,18 +257,35 @@ jobs:
           test "$(jq -r '.full_tod_slot_count' mr05b-great-marsh-port.json)" = "288"
           test "$(jq -r '.daily_rng_gate' mr05b-great-marsh-port.json)" = "false"
 
+      - name: Extend authored encounters with first cave and special-area batch
+        shell: bash
+        run: |
+          python3 tools/extend_mr05b_special_areas.py \
+            vendor/pokeplatinum \
+            mr05b-authored-overrides-with-marsh.json \
+            data/encounters/legacy_sources/sinnoh_missing_area_audit.json \
+            mr05b-authored-overrides-with-specials.json \
+            --report mr05b-special-areas-port.json
+
+          test "$(jq -r '.status' mr05b-special-areas-port.json)" = "PASS"
+          test "$(jq -r '.resource_count' mr05b-special-areas-port.json)" = "16"
+          test "$(jq -r '.old_chateau_resource_count' mr05b-special-areas-port.json)" = "9"
+          test "$(jq -r '.snowpoint_temple_floor_count' mr05b-special-areas-port.json)" = "6"
+          test "$(jq -r '.full_tod_area_count_added' mr05b-special-areas-port.json)" = "15"
+          test "$(jq -r '.full_tod_slot_count_added' mr05b-special-areas-port.json)" = "720"
+
       - name: Install MR05B authored encounter tables
         shell: bash
         run: |
           python3 tools/install_mr05b_encounter_framework.py \
             vendor/pokeplatinum \
-            mr05b-authored-overrides-with-marsh.json \
+            mr05b-authored-overrides-with-specials.json \
             --manifest mr05b-encounter-manifest.json \
             --report mr05b-encounter-framework.json
 
           test "$(jq -r '.status' mr05b-encounter-framework.json)" = "PASS"
           test "$(jq -r '.area_count' mr05b-encounter-framework.json)" = "185"
-          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "42"
+          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "58"
           test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "false"
           test "$(jq -r '.area_count' mr05b-encounter-manifest.json)" = "185"
           jq -e '.changed_areas | index("encounters_honey_tree") != null' mr05b-encounter-framework.json
@@ -285,8 +304,8 @@ jobs:
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
           test "$(jq -r '.four_period_full_land_tables' mr05b-authored-runtime.json)" = "true"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "38"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "1824"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "53"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "2544"
           test "$(jq -r '.vanilla_special_replacements_bypassed_for_mercury_tables' mr05b-authored-runtime.json)" = "true"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
@@ -419,6 +438,8 @@ jobs:
           cp mr05b-authored-overrides.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-overrides-with-marsh.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-great-marsh-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05b-authored-overrides-with-specials.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05b-special-areas-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
@@ -454,6 +475,7 @@ jobs:
             echo "- Routes 201-230 authored across 35 route segments"
             echo "- Full 12-slot Morning/Day/Evening/Night runtime tables enabled for 32 land-capable routes plus all 6 Great Marsh biomes"
             echo "- Great Marsh daily RNG no longer gates encounter availability; binoculars remain informational"
+            echo "- Ravaged Path water/fishing, all 9 Old Chateau encounter maps, and all 6 Snowpoint Temple floors authored"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
             echo "- Encounter-framework ROM staged as Pokemon_Mercury_MR05B_Authored_Encounters.nds"
           } >> "$GITHUB_STEP_SUMMARY"
