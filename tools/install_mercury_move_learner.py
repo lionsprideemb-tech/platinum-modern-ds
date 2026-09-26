@@ -286,20 +286,18 @@ u16 *MoveReminderData_GetMoves(Pokemon *mon, enum HeapID heapID)
 
     u16 moveCount = 0;
 
-    // Preserve adventure progression for level-up moves: only moves whose
-    // required level has been reached appear in the learner.
+    // Mercury's universal Move Learner exposes the species' complete legal
+    // level-up learnset regardless of the Pokemon's current level.
     for (u16 i = 0; i < MAX_LEARNSET_ENTRIES + 1; i++) {
         if (LEARNSET_ENTRY_IS_SENTINEL(levelUpMoves[i])) {
             break;
         }
 
-        if (levelUpMoves[i].level <= level) {
-            MercuryMoveLearner_AddMove(
-                learnerMoves,
-                &moveCount,
-                currentMoves,
-                levelUpMoves[i].move);
-        }
+        MercuryMoveLearner_AddMove(
+            learnerMoves,
+            &moveCount,
+            currentMoves,
+            levelUpMoves[i].move);
     }
 
     // Redux-style universal pool.  These entries are generated from the
@@ -765,7 +763,7 @@ def main() -> None:
         "donor": str(donor_path),
         "implemented_move_registry": str(args.implemented_moves),
         "policy": {
-            "level_up_moves": "available after their required level is reached",
+            "level_up_moves": "all legal level-up moves are available regardless of current level",
             "egg_moves": "available directly in Move Learner",
             "machine_moves": "available directly; no Platinum TM compatibility bit required",
             "tutor_moves": "available directly in Move Learner",
