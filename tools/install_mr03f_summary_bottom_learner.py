@@ -573,7 +573,7 @@ static void MercuryMoveLearner_DrawDetails(PokemonSummaryScreen *summaryScreen)
         FONT_SYSTEM,
         summaryScreen->string,
         8,
-        16,
+        14,
         TEXT_SPEED_NO_TRANSFER,
         SUMMARY_TEXT_BLACK,
         NULL);
