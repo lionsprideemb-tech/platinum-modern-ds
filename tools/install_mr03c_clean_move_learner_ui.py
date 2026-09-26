@@ -669,18 +669,11 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         FACE_FRONT,
         species);
 
-    Window_BlitBitmapRectWithTransparency(
-        portrait,
-        buffer,
-        0,
-        0,
-        80,
-        80,
-        0,
-        0,
-        80,
-        80,
-        0);
+    // CharacterSprite_LoadPokemonSpriteRect already returns a 10x10
+    // 4bpp tiled frame. A Window with the same 10x10 dimensions uses the
+    // identical tile layout, so copy it directly instead of passing the tiled
+    // data through the generic bitmap blitter.
+    MI_CpuCopy8(buffer, portrait->pixels, 0xC80);
 
     Heap_Free(buffer);
 
