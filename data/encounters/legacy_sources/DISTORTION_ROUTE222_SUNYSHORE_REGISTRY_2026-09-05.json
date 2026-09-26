@@ -1,0 +1,677 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "scope": "Spear Pillar / Distortion World encounter policy + Route 222 / Sunyshore encounter specification",
+  "status": "STAGED_FOR_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum / Sinnoh, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography, encounter anchors, ecology, and progression. Emerald-derived engine IDs are hidden implementation infrastructure only and are not content sources.",
+  "runtime_note": "The final player-facing Spear Pillar, Distortion World, Route 222, and Sunyshore maps are not yet constructed in this cumulative source. Do not attach these encounter specs to unrelated engine geography.",
+  "story_static_policy": {
+    "SPEAR_PILLAR": {
+      "random_wild_encounters": false,
+      "story_encounters": [
+        "Dialga/Palkia remain story-controlled during the Galactic climax; they are not random encounters.",
+        "Giratina interrupts Cyrus and opens the Distortion World as in Platinum."
+      ]
+    },
+    "DISTORTION_WORLD": {
+      "random_wild_encounters": false,
+      "reason": "Platinum explicitly has no ordinary wild Pok\u00e9mon in the Distortion World. Its emptiness is preserved as part of the area identity.",
+      "scripted_static": [
+        {
+          "species": "SPECIES_GIRATINA_ORIGIN",
+          "level": 60,
+          "role": "Mandatory story/static encounter at the end of the Distortion World",
+          "capture_allowed": true
+        }
+      ],
+      "retry_policy": "Mercury QoL: if Giratina is defeated or the player flees, the story encounter remains recoverable before the League rather than becoming a postgame-only loss. Exact reset/respawn script is staged for the final Distortion World map implementation.",
+      "time_policy": "The global clock continues to exist for save/evolution systems, but Distortion World has no day/night encounter tables because it has no random encounters.",
+      "lake_guardians": "Uxie, Mesprit, and Azelf are story guides/puzzle actors here, not random encounters.",
+      "cyrus": "Final Cyrus battle remains a scripted boss encounter before Giratina."
+    },
+    "TURNBACK_CAVE_FUTURE_POLICY": {
+      "status": "DEFERRED_TO_LATER_MAP_PASS",
+      "note": "Do not use Turnback Cave to justify random Distortion World encounters. It will receive its own Platinum-based cave audit later, including pre-League availability decisions needed by Mercury\u2019s all-supported-Pok\u00e9mon-before-postgame policy."
+    }
+  },
+  "areas": {
+    "ROUTE_222": {
+      "identity": "Southeastern Sinnoh coastal route into Sunyshore. Platinum electric/coastal anchors remain, while Mercury adds evolved late-game electric and shoreline species instead of recycling Route 218/213 wholesale.",
+      "time_of_day_land": {
+        "Morning": [
+          {
+            "species": "SPECIES_ELECTABUZZ",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_FLOATZEL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_MAGNEMITE",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_WINGULL",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_LUXIO",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CHATOT",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MAGNETON",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_PELIPPER",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_PINCURCHIN",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_ZEBSTRIKA",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_BOLTUND",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 3
+          },
+          {
+            "species": "SPECIES_HELIOLISK",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 3
+          }
+        ],
+        "Day": [
+          {
+            "species": "SPECIES_ELECTABUZZ",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_FLOATZEL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_MAGNEMITE",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_WINGULL",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_LUXIO",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CHATOT",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MAGNETON",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_PELIPPER",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_PINCURCHIN",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_KILOWATTREL",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_BOLTUND",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 3
+          },
+          {
+            "species": "SPECIES_HELIOLISK",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 3
+          }
+        ],
+        "Evening": [
+          {
+            "species": "SPECIES_ELECTABUZZ",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_FLOATZEL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_MAGNEMITE",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_WINGULL",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_LUXIO",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CHATOT",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MAGNETON",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_PELIPPER",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_PINCURCHIN",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_EELEKTRIK",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MORPEKO",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_BOLTUND",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          }
+        ],
+        "Night": [
+          {
+            "species": "SPECIES_FLOATZEL",
+            "min_level": 58,
+            "max_level": 61,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_ELECTABUZZ",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_MAGNEMITE",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_WINGULL",
+            "min_level": 57,
+            "max_level": 59,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_LUXIO",
+            "min_level": 57,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MAGNETON",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_PELIPPER",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_PINCURCHIN",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_EELEKTRIK",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MORPEKO",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_BOLTUND",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 3
+          },
+          {
+            "species": "SPECIES_HELIOLISK",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 3
+          }
+        ]
+      },
+      "surf": [
+        {
+          "species": "SPECIES_TENTACOOL",
+          "min_level": 55,
+          "max_level": 58,
+          "weight": 30
+        },
+        {
+          "species": "SPECIES_WINGULL",
+          "min_level": 55,
+          "max_level": 58,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_TENTACRUEL",
+          "min_level": 57,
+          "max_level": 60,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_PELIPPER",
+          "min_level": 57,
+          "max_level": 60,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MANTYKE",
+          "min_level": 56,
+          "max_level": 59,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINCHOU",
+          "min_level": 56,
+          "max_level": 59,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_FINNEON",
+          "min_level": 56,
+          "max_level": 59,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_FRILLISH",
+          "min_level": 57,
+          "max_level": 60,
+          "weight": 5
+        }
+      ],
+      "fishing": {
+        "old_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 25,
+            "max_level": 35,
+            "weight": 100
+          }
+        ],
+        "good_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 40,
+            "max_level": 45,
+            "weight": 35
+          },
+          {
+            "species": "SPECIES_REMORAID",
+            "min_level": 42,
+            "max_level": 47,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_FINNEON",
+            "min_level": 42,
+            "max_level": 47,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_CHINCHOU",
+            "min_level": 43,
+            "max_level": 48,
+            "weight": 15
+          }
+        ],
+        "super_rod": [
+          {
+            "species": "SPECIES_GYARADOS",
+            "min_level": 55,
+            "max_level": 60,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_OCTILLERY",
+            "min_level": 55,
+            "max_level": 60,
+            "weight": 25
+          },
+          {
+            "species": "SPECIES_LANTURN",
+            "min_level": 56,
+            "max_level": 61,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_LUMINEON",
+            "min_level": 56,
+            "max_level": 61,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_CLAWITZER",
+            "min_level": 58,
+            "max_level": 62,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_DRAGALGE",
+            "min_level": 58,
+            "max_level": 62,
+            "weight": 5
+          }
+        ]
+      },
+      "instant_honey_tree": [
+        {
+          "species": "SPECIES_BLITZLE",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_HELIOPTILE",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_TYNAMO",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_MORPEKO",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PINCURCHIN",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ROTOM",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINCHOU",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_VOLTORB_HISUI",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_PORYGON",
+          "min_level": 59,
+          "max_level": 61,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ELEKID",
+          "min_level": 58,
+          "max_level": 60,
+          "weight": 5
+        }
+      ],
+      "notes": [
+        "Platinum anchors: Electabuzz, Floatzel, Magnemite, Wingull, Luxio, Chatot, Magneton, Pelipper.",
+        "Chatot is absent at Night, following Platinum time-of-day behavior.",
+        "Flaaffy/Skitty special encounter ideas from Platinum are not required as randomizer gates; Mercury uses authored TOD/rare distribution instead.",
+        "Honey is instant in Mercury: one Honey triggers one immediate premium encounter with no wait or cooldown."
+      ]
+    },
+    "SUNYSHORE_CITY": {
+      "identity": "Sunyshore itself has no random land encounters. Its harbor/sea water is a late-game coastal fishery connected to Route 222.",
+      "land_random_encounters": false,
+      "surf": [
+        {
+          "species": "SPECIES_TENTACOOL",
+          "min_level": 56,
+          "max_level": 59,
+          "weight": 25
+        },
+        {
+          "species": "SPECIES_WINGULL",
+          "min_level": 56,
+          "max_level": 59,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_TENTACRUEL",
+          "min_level": 58,
+          "max_level": 61,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_PELIPPER",
+          "min_level": 58,
+          "max_level": 61,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MANTYKE",
+          "min_level": 57,
+          "max_level": 60,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINCHOU",
+          "min_level": 57,
+          "max_level": 60,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_FINNEON",
+          "min_level": 57,
+          "max_level": 60,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_FRILLISH",
+          "min_level": 58,
+          "max_level": 61,
+          "weight": 5
+        }
+      ],
+      "fishing": {
+        "old_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 25,
+            "max_level": 35,
+            "weight": 100
+          }
+        ],
+        "good_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 40,
+            "max_level": 45,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_REMORAID",
+            "min_level": 43,
+            "max_level": 48,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_FINNEON",
+            "min_level": 43,
+            "max_level": 48,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_CHINCHOU",
+            "min_level": 44,
+            "max_level": 49,
+            "weight": 20
+          }
+        ],
+        "super_rod": [
+          {
+            "species": "SPECIES_GYARADOS",
+            "min_level": 56,
+            "max_level": 61,
+            "weight": 25
+          },
+          {
+            "species": "SPECIES_OCTILLERY",
+            "min_level": 56,
+            "max_level": 61,
+            "weight": 25
+          },
+          {
+            "species": "SPECIES_LANTURN",
+            "min_level": 57,
+            "max_level": 62,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_LUMINEON",
+            "min_level": 57,
+            "max_level": 62,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_MANTINE",
+            "min_level": 58,
+            "max_level": 62,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_FINIZEN",
+            "min_level": 59,
+            "max_level": 62,
+            "weight": 5
+          }
+        ]
+      },
+      "notes": [
+        "Platinum Sunyshore water uses Tentacool/Wingull/Tentacruel/Pelipper as its core; Mercury expands the connected harbor ecology without inventing city grass encounters."
+      ]
+    }
+  },
+  "design_rules": [
+    "Distortion World has no random wild encounters; Giratina Origin is a scripted static encounter.",
+    "Route 222 preserves Platinum electric/coastal anchors and Chatot day/night behavior.",
+    "Route 222 must feel distinct from Route 213 and Route 218 by emphasizing late-game evolved Electric species.",
+    "Sunyshore has no random land table; water/fishing only.",
+    "No Great Marsh Safari-exclusive species are reused as ordinary Route 222/Sunyshore catches.",
+    "Honey Tree remains instant and premium."
+  ],
+  "references": {
+    "Platinum Distortion World": "https://www.serebii.net/pokearth/sinnoh/4th/distortionworld.shtml",
+    "Platinum Route 222": "https://www.serebii.net/pokearth/sinnoh/4th/route222.shtml",
+    "Platinum Sunyshore": "https://www.serebii.net/pokearth/sinnoh/4th/sunyshorecity.shtml"
+  }
+}
