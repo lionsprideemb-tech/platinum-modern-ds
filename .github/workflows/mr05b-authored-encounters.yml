@@ -282,6 +282,10 @@ jobs:
           python3 tools/extend_mr05b_iron_coronet.py \
             vendor/pokeplatinum \
             mr05b-authored-overrides-with-specials.json \
+            data/encounters/legacy_sources/iron_island.json \
+            data/encounters/legacy_sources/route211_mtcoronet_celestic.json \
+            data/encounters/legacy_sources/post_candice_mt_coronet_ascent.json \
+            data/encounters/legacy_sources/regi_ruins_preleague.json \
             mr05b-authored-overrides-with-iron-coronet.json \
             --report mr05b-iron-coronet-port.json
 
@@ -291,9 +295,13 @@ jobs:
           test "$(jq -r '.mt_coronet_resource_count' mr05b-iron-coronet-port.json)" = "12"
           test "$(jq -r '.full_tod_area_count_added' mr05b-iron-coronet-port.json)" = "18"
           test "$(jq -r '.full_tod_slot_count_added' mr05b-iron-coronet-port.json)" = "864"
+          test "$(jq -r '.source_mode' mr05b-iron-coronet-port.json)" = "sealed_registry_translation"
+          test "$(jq -r '.iron_island_riolu_random_encounter' mr05b-iron-coronet-port.json)" = "false"
+          test "$(jq -r '.iron_island_riley_gift_preserved' mr05b-iron-coronet-port.json)" = "true"
           test "$(jq -r '.mt_coronet_feebas_regular_fishing' mr05b-iron-coronet-port.json)" = "true"
           test "$(jq -r '.mt_coronet_elusive_rod_metadata_preserved' mr05b-iron-coronet-port.json)" = "true"
           test "$(jq -r '.regi_ruins_random_encounters_added' mr05b-iron-coronet-port.json)" = "false"
+          test "$(jq -r '.regigigas_static_reserved' mr05b-iron-coronet-port.json)" = "true"
 
       - name: Install MR05B authored encounter tables
         shell: bash
@@ -499,9 +507,10 @@ jobs:
             echo "- Full 12-slot Morning/Day/Evening/Night runtime tables enabled for 32 land-capable routes plus all 6 Great Marsh biomes"
             echo "- Great Marsh daily RNG no longer gates encounter availability; binoculars remain informational"
             echo "- Ravaged Path water/fishing, all 9 Old Chateau encounter maps, and all 6 Snowpoint Temple floors authored"
-            echo "- All 7 Iron Island encounter resources and 12 additional Mt. Coronet resources authored"
+            echo "- All 7 Iron Island encounter resources and 12 additional Mt. Coronet resources translated from sealed Mercury registries"
+            echo "- Riley's Riolu remains a special gift and is not inserted into Iron Island random encounters"
             echo "- Mt. Coronet B1F Feebas is available by normal fishing while special elusive-rod metadata remains preserved"
-            echo "- Regi ruins remain reserved for the separate static/map-event pass"
+            echo "- Regi ruins and Regigigas remain reserved for the separate static/map-event pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
             echo "- Encounter-framework ROM staged as Pokemon_Mercury_MR05B_Authored_Encounters.nds"
           } >> "$GITHUB_STEP_SUMMARY"
