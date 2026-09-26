@@ -23,6 +23,7 @@ on:
       - "tools/extend_mr05e_turnback_sendoff.py"
       - "tools/extend_mr05g_preleague_core_areas.py"
       - "tools/extend_mr05h_lost_tower_trophy_garden.py"
+      - "tools/extend_mr05i_solaceon_ruins.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -125,6 +126,7 @@ jobs:
             tools/extend_mr05e_turnback_sendoff.py \
             tools/extend_mr05g_preleague_core_areas.py \
             tools/extend_mr05h_lost_tower_trophy_garden.py \
+            tools/extend_mr05i_solaceon_ruins.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -400,18 +402,37 @@ jobs:
           test "$(jq -r '.lost_tower_galactic_story_added' mr05h-lost-trophy-port.json)" = "false"
           test "$(jq -r '.solaceon_ruins_deferred_for_unown_form_safety' mr05h-lost-trophy-port.json)" = "true"
 
-      - name: Install MR05H authored encounter tables
+      - name: Extend authored encounters through Solaceon Ruins
+        shell: bash
+        run: |
+          python3 tools/extend_mr05i_solaceon_ruins.py \
+            vendor/pokeplatinum \
+            mr05h-authored-overrides-with-lost-trophy.json \
+            mr05i-authored-overrides-with-solaceon.json \
+            --report mr05i-solaceon-unown-port.json
+
+          test "$(jq -r '.status' mr05i-solaceon-unown-port.json)" = "PASS"
+          test "$(jq -r '.resource_count' mr05i-solaceon-unown-port.json)" = "18"
+          test "$(jq -r '.full_tod_area_count_added' mr05i-solaceon-unown-port.json)" = "18"
+          test "$(jq -r '.full_tod_slot_count_added' mr05i-solaceon-unown-port.json)" = "864"
+          test "$(jq -r '.all_random_species_remain_unown' mr05i-solaceon-unown-port.json)" = "true"
+          test "$(jq -r '.protected_form_fields_untouched' mr05i-solaceon-unown-port.json)" = "true"
+          test "$(jq -r '.vanilla_unown_runtime_detected' mr05i-solaceon-unown-port.json)" = "true"
+          test "$(jq -r '.time_of_day_changes_unown_form_pool' mr05i-solaceon-unown-port.json)" = "false"
+          test "$(jq -c '.unown_table_id_set' mr05i-solaceon-unown-port.json)" = '[1,2,3,4,5,6,7,8]'
+
+      - name: Install MR05I authored encounter tables
         shell: bash
         run: |
           python3 tools/install_mr05b_encounter_framework.py \
             vendor/pokeplatinum \
-            mr05h-authored-overrides-with-lost-trophy.json \
+            mr05i-authored-overrides-with-solaceon.json \
             --manifest mr05b-encounter-manifest.json \
             --report mr05b-encounter-framework.json
 
           test "$(jq -r '.status' mr05b-encounter-framework.json)" = "PASS"
           test "$(jq -r '.area_count' mr05b-encounter-framework.json)" = "185"
-          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "123"
+          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "141"
           test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "false"
           test "$(jq -r '.area_count' mr05b-encounter-manifest.json)" = "185"
           jq -e '.changed_areas | index("encounters_honey_tree") != null' mr05b-encounter-framework.json
@@ -430,8 +451,8 @@ jobs:
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
           test "$(jq -r '.four_period_full_land_tables' mr05b-authored-runtime.json)" = "true"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "116"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "5568"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "134"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "6432"
           test "$(jq -r '.vanilla_special_replacements_bypassed_for_mercury_tables' mr05b-authored-runtime.json)" = "true"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
@@ -513,14 +534,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05H Lost Tower + Trophy Garden ROM
+      - name: Build MR05I Solaceon Ruins ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05H normal boot in DeSmuME
+      - name: Capture MR05I normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -570,7 +591,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05H_NORMAL_BOOT",
+              "gate": "MERCURY_MR05I_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -578,7 +599,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05h-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05i-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -592,8 +613,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05H_Lost_Tower_Trophy_Garden.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05H_Lost_Tower_Trophy_Garden.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05I_Solaceon_Ruins.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05I_Solaceon_Ruins.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -619,18 +640,20 @@ jobs:
           cp mr05g-preleague-core-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05h-authored-overrides-with-lost-trophy.json mr05b-artifact/ 2>/dev/null || true
           cp mr05h-lost-trophy-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05i-authored-overrides-with-solaceon.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05i-solaceon-unown-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05c-regi-preleague.json mr05b-artifact/ 2>/dev/null || true
           cp mr05f-legendary-statics.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05h-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05i-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05h-lost-tower-trophy-garden
+          name: mercury-mr05i-solaceon-ruins
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -640,7 +663,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05H — Lost Tower + Trophy Garden"
+            echo "## Mercury MR05I — Solaceon Ruins Form-Safe Pass"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -674,10 +697,11 @@ jobs:
             echo "- Normal Drifloon, Delta Drifloon, Meltan, and Celebi remain separate static/story encounters rather than random grass"
             echo "- All five Lost Tower floors now have authored four-period memorial/Ghost ecology without adding Galactic story content"
             echo "- Trophy Garden former daily-lottery species are distributed across Morning/Day/Evening/Night; no daily availability gate"
-            echo "- Solaceon Ruins remain isolated for a dedicated Unown-form-safe encounter pass"
+            echo "- All 18 Solaceon Ruins encounter resources now participate in Mercury's four-period runtime without altering Unown form tables"
+            echo "- Unown F-R-I-E-N-D path, dead-end form pool, and secret ?/! table remain preserved"
             echo "- Cynthia's grandmother unlocks Dialga/Palkia rifts after Distortion World, pre-League"
             echo "- Dialga/Palkia remain Lv70 and their rifts are retry-safe until capture"
             echo "- Mesprit guided pursuit remains isolated for a dedicated tracking pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Player ROM staged as Pokemon_Mercury_MR05H_Lost_Tower_Trophy_Garden.nds"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05I_Solaceon_Ruins.nds"
           } >> "$GITHUB_STEP_SUMMARY"
