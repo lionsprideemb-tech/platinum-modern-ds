@@ -606,11 +606,17 @@ static void MercuryMoveLearner_LoadPalette(void)
 
 static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *controller)
 {
-    Window *portrait = &controller->windows[MOVE_REMINDER_WIN_MERCURY_PORTRAIT];
+    // BG3's character data begins at 0x8000 and its tilemap begins at 0xD800.
+    // A standalone 10x10 portrait at base tile 0x2A0 crosses that boundary:
+    //   0x8000 + (0x2A0 * 32) = 0xD400
+    // so tiles 32..99 overwrite the BG tilemap. That is the real cause of
+    // the intact top of the Pokemon followed by the vertical "shredded" rows.
+    //
+    // Reuse the tiles already owned by the 30x22 Mercury top window instead.
+    // This keeps every portrait tile below the 0xD800 screen-base boundary.
+    Window *window = &controller->windows[MOVE_REMINDER_WIN_MERCURY_TOP];
     Pokemon *mon = controller->data->mon;
     PokemonSpriteTemplate spriteTemplate;
-
-    Window_FillTilemap(portrait, 0);
 
     Pokemon_BuildSpriteTemplate(&spriteTemplate, mon, FACE_FRONT);
 
@@ -618,10 +624,6 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
     u32 personality = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
     u8 *buffer = Heap_Alloc(HEAP_ID_MOVE_REMINDER, 0xC80);
 
-    // Platinum's Pokemon helper emits the 10x10 frame in DS OAM region order.
-    // Preserve that correct Pokemon decoding (including Spinda spots), then
-    // invert the six-region packing into the row-major tile order a BG Window
-    // expects.
     CharacterSprite_LoadPokemonSpriteRect(
         spriteTemplate.narcID,
         spriteTemplate.character,
@@ -636,19 +638,29 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         FACE_FRONT,
         species);
 
+    // CharacterSprite_LoadPokemonSpriteRect packs the 10x10 frame in the
+    // six OAM regions below. Invert that packing while writing directly into
+    // the corresponding 10x10 area of the existing 30-wide top-window tiles.
     static const u8 regionX[6] = { 0, 8, 8, 0, 4, 8 };
     static const u8 regionY[6] = { 0, 0, 4, 8, 8, 8 };
     static const u8 regionW[6] = { 8, 2, 2, 4, 4, 2 };
     static const u8 regionH[6] = { 8, 4, 4, 2, 2, 2 };
 
+    // Top window begins at screen tile (1,1); portrait target is (2,5).
+    const u32 portraitTileX = 1;
+    const u32 portraitTileY = 4;
     u32 srcTile = 0;
+
     for (u32 region = 0; region < 6; region++) {
         for (u32 y = 0; y < regionH[region]; y++) {
             for (u32 x = 0; x < regionW[region]; x++) {
-                u32 dstTile = ((regionY[region] + y) * 10) + regionX[region] + x;
+                u32 dstX = portraitTileX + regionX[region] + x;
+                u32 dstY = portraitTileY + regionY[region] + y;
+                u32 dstTile = dstY * window->width + dstX;
+
                 MI_CpuCopy8(
                     buffer + srcTile * TILE_SIZE_4BPP,
-                    (u8 *)portrait->pixels + dstTile * TILE_SIZE_4BPP,
+                    (u8 *)window->pixels + dstTile * TILE_SIZE_4BPP,
                     TILE_SIZE_4BPP);
                 srcTile++;
             }
@@ -665,7 +677,19 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         PALETTE_SIZE_BYTES,
         HEAP_ID_MOVE_REMINDER);
 
-    Window_ScheduleCopyToVRAM(portrait);
+    // Reload the top-window tiles after the portrait was composited, then give
+    // only the portrait's tilemap cells the Pokemon palette. No extra character
+    // tiles are allocated, so the BG3 tilemap can no longer be overwritten.
+    Window_ScheduleCopyToVRAM(window);
+    Bg_ChangeTilemapRectPalette(
+        controller->bgConfig,
+        BG_LAYER_MAIN_3,
+        2,
+        5,
+        10,
+        10,
+        14);
+    Bg_ScheduleTilemapTransfer(controller->bgConfig, BG_LAYER_MAIN_3);
 }
 
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height)
@@ -1326,7 +1350,7 @@ def main() -> None:
             "selected move details/effect",
             "button hints",
         ],
-        "portrait_note": "static front frame; Spinda spot overlay can be added in the final polish pass",
+        "portrait_note": "Pokemon portrait is composited into the existing top-window tile store so BG3 character data never crosses the 0xD800 screen-base boundary",
         "preserved": [
             "MR03 universal learner backend",
             "normal party-menu entry",
