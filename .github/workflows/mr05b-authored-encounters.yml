@@ -20,6 +20,7 @@ on:
       - "tools/extend_mr05b_iron_coronet.py"
       - "tools/install_mr05c_regi_preleague.py"
       - "tools/extend_mr05d_victory_road.py"
+      - "tools/extend_mr05e_turnback_sendoff.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
       - "tools/install_pt04d_species_batch.py"
@@ -117,7 +118,8 @@ jobs:
             tools/extend_mr05b_special_areas.py \
             tools/extend_mr05b_iron_coronet.py \
             tools/install_mr05c_regi_preleague.py \
-            tools/extend_mr05d_victory_road.py
+            tools/extend_mr05d_victory_road.py \
+            tools/extend_mr05e_turnback_sendoff.py
 
       - name: Restore MP05 canonical ability architecture
         shell: bash
@@ -328,18 +330,38 @@ jobs:
           test "$(jq -r '.national_dex_gate_removed' mr05d-victory-road-port.json)" = "true"
           test "$(jq -r '.route_224_existing_authored_table_preserved' mr05d-victory-road-port.json)" = "true"
 
-      - name: Install MR05D authored encounter tables
+      - name: Extend authored encounters through Sendoff Spring and Turnback Cave
+        shell: bash
+        run: |
+          python3 tools/extend_mr05e_turnback_sendoff.py \
+            vendor/pokeplatinum \
+            mr05d-authored-overrides-with-victory-road.json \
+            data/encounters/legacy_sources/sinnoh_special_legendary_areas.json \
+            mr05e-authored-overrides-with-turnback.json \
+            --report mr05e-turnback-sendoff-port.json
+
+          test "$(jq -r '.status' mr05e-turnback-sendoff-port.json)" = "PASS"
+          test "$(jq -r '.resource_count' mr05e-turnback-sendoff-port.json)" = "22"
+          test "$(jq -r '.sendoff_spring_resource_count' mr05e-turnback-sendoff-port.json)" = "1"
+          test "$(jq -r '.turnback_cave_resource_count' mr05e-turnback-sendoff-port.json)" = "21"
+          test "$(jq -r '.full_tod_area_count_added' mr05e-turnback-sendoff-port.json)" = "21"
+          test "$(jq -r '.full_tod_slot_count_added' mr05e-turnback-sendoff-port.json)" = "1008"
+          test "$(jq -r '.turnback_terminal_no_random_encounters' mr05e-turnback-sendoff-port.json)" = "true"
+          test "$(jq -r '.sendoff_water_fishing_authored' mr05e-turnback-sendoff-port.json)" = "true"
+          test "$(jq -r '.static_giratina_story_deferred' mr05e-turnback-sendoff-port.json)" = "true"
+
+      - name: Install MR05E authored encounter tables
         shell: bash
         run: |
           python3 tools/install_mr05b_encounter_framework.py \
             vendor/pokeplatinum \
-            mr05d-authored-overrides-with-victory-road.json \
+            mr05e-authored-overrides-with-turnback.json \
             --manifest mr05b-encounter-manifest.json \
             --report mr05b-encounter-framework.json
 
           test "$(jq -r '.status' mr05b-encounter-framework.json)" = "PASS"
           test "$(jq -r '.area_count' mr05b-encounter-framework.json)" = "185"
-          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "83"
+          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "105"
           test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "false"
           test "$(jq -r '.area_count' mr05b-encounter-manifest.json)" = "185"
           jq -e '.changed_areas | index("encounters_honey_tree") != null' mr05b-encounter-framework.json
@@ -358,8 +380,8 @@ jobs:
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
           test "$(jq -r '.four_period_full_land_tables' mr05b-authored-runtime.json)" = "true"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "77"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "3696"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "98"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "4704"
           test "$(jq -r '.vanilla_special_replacements_bypassed_for_mercury_tables' mr05b-authored-runtime.json)" = "true"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
@@ -422,14 +444,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05D encounter + Regi ROM
+      - name: Build MR05E Turnback + Sendoff ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05D normal boot in DeSmuME
+      - name: Capture MR05E normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -479,7 +501,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05D_NORMAL_BOOT",
+              "gate": "MERCURY_MR05E_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -487,7 +509,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05d-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05e-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -501,8 +523,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05D_Victory_Road.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05D_Victory_Road.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05E_Turnback_Sendoff.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05E_Turnback_Sendoff.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -522,17 +544,19 @@ jobs:
           cp mr05b-iron-coronet-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05d-authored-overrides-with-victory-road.json mr05b-artifact/ 2>/dev/null || true
           cp mr05d-victory-road-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05e-authored-overrides-with-turnback.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05e-turnback-sendoff-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05c-regi-preleague.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05d-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05e-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05d-victory-road
+          name: mercury-mr05e-turnback-sendoff
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -542,7 +566,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05D — Victory Road + Pre-League Regi Loop"
+            echo "## Mercury MR05E — Turnback Cave + Sendoff Spring"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -567,6 +591,9 @@ jobs:
             echo "- KO/flee retry behavior preserved by leave/re-enter reset"
             echo "- All 6 Victory Road encounter resources authored, including the Marley branch"
             echo "- Marley / Route 224 branch opens pre-League without National Dex or Hall of Fame"
+            echo "- Sendoff Spring has full four-period land plus authored Surf/fishing ecology"
+            echo "- All 21 Turnback Cave resources are mapped; 20 maze resources use tiered authored ecology and the Giratina terminal room has no random encounters"
+            echo "- Static Giratina/lake guardian/Spear Pillar legendary scripting remains a separate auditable phase"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Player ROM staged as Pokemon_Mercury_MR05D_Victory_Road.nds"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05E_Turnback_Sendoff.nds"
           } >> "$GITHUB_STEP_SUMMARY"
