@@ -6,8 +6,9 @@ requires a compatible party Pokemon, not an occupied move slot. Vanilla badge,
 map, partner, and story restrictions remain in place.
 
 Phase A covers field-interaction traversal (Cut, Rock Smash, Strength, Surf,
-Rock Climb, Waterfall, and the dormant direct Defog path). Party-menu-only
-field skills are handled in the follow-up MR05A menu pass.
+Rock Climb, Waterfall, and the dormant direct Defog path). The completed
+MR05A pass also exposes Fly, Defog, and Flash from the party menu whenever
+the selected Pokemon is compatible, without requiring the move to be learned.
 """
 
 from __future__ import annotations
@@ -260,6 +261,165 @@ def patch_field_scripts(root: Path) -> None:
     text_path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
 
 
+
+def patch_party_menu(root: Path) -> None:
+    defs = root / "include/applications/party_menu/defs.h"
+    main = root / "src/applications/party_menu/main.c"
+    windows = root / "src/applications/party_menu/windows.c"
+
+    replace_once(
+        defs,
+        """    PARTY_MENU_STR_MOVE0,
+    PARTY_MENU_STR_MOVE1,
+    PARTY_MENU_STR_MOVE2,
+    PARTY_MENU_STR_MOVE3,
+
+    NUM_PARTY_MENU_STRS,
+""",
+        """    PARTY_MENU_STR_MOVE0,
+    PARTY_MENU_STR_MOVE1,
+    PARTY_MENU_STR_MOVE2,
+    PARTY_MENU_STR_MOVE3,
+    PARTY_MENU_STR_MOVE4,
+    PARTY_MENU_STR_MOVE5,
+    PARTY_MENU_STR_MOVE6,
+
+    NUM_PARTY_MENU_STRS,
+""",
+        "MR05A dynamic field-move string capacity",
+    )
+
+    insert_after_once(
+        main,
+        '#include "message.h"\n',
+        '#include "move_reminder_data.h"\n',
+        "MR05A party-menu compatibility include",
+    )
+
+    replace_once(
+        main,
+        "    v0 = Heap_Alloc(HEAP_ID_PARTY_MENU, 8);\n",
+        "    v0 = Heap_Alloc(HEAP_ID_PARTY_MENU, 12);\n",
+        "MR05A party context buffer capacity",
+    )
+
+    replace_once(
+        main,
+        """    for (v1 = 0; v1 < 20; v1++) {
+        String_Free(v0->menuStrings[v1]);
+    }
+""",
+        """    for (v1 = 0; v1 < NUM_PARTY_MENU_STRS; v1++) {
+        String_Free(v0->menuStrings[v1]);
+    }
+""",
+        "MR05A dynamic string cleanup capacity",
+    )
+
+    insert_after_once(
+        main,
+        """static const u16 sFieldMoves[FIELD_MOVE_MAX] = {
+    [FIELD_MOVE_CUT] = MOVE_CUT,
+    [FIELD_MOVE_FLY] = MOVE_FLY,
+    [FIELD_MOVE_SURF] = MOVE_SURF,
+    [FIELD_MOVE_STRENGTH] = MOVE_STRENGTH,
+    [FIELD_MOVE_DEFOG] = MOVE_DEFOG,
+    [FIELD_MOVE_ROCK_SMASH] = MOVE_ROCK_SMASH,
+    [FIELD_MOVE_WATERFALL] = MOVE_WATERFALL,
+    [FIELD_MOVE_ROCK_CLIMB] = MOVE_ROCK_CLIMB,
+    [FIELD_MOVE_FLASH] = MOVE_FLASH,
+    [FIELD_MOVE_TELEPORT] = MOVE_TELEPORT,
+    [FIELD_MOVE_DIG] = MOVE_DIG,
+    [FIELD_MOVE_SWEET_SCENT] = MOVE_SWEET_SCENT,
+    [FIELD_MOVE_CHATTER] = MOVE_CHATTER,
+    [FIELD_MOVE_MILK_DRINK] = MOVE_MILK_DRINK,
+    [FIELD_MOVE_SOFTBOILED] = MOVE_SOFTBOILED,
+};
+""",
+        """
+static const u16 sMercuryHmFreeMenuMoves[] = {
+    MOVE_FLY,
+    MOVE_DEFOG,
+    MOVE_FLASH,
+};
+""",
+        "MR05A party-menu compatibility moves",
+    )
+
+    old = """            for (i = 0; i < 4; i++) {
+                move = (u16)Pokemon_GetValue(mon, MON_DATA_MOVE1 + i, NULL);
+
+                if (move == 0) {
+                    break;
+                }
+
+                fieldEffect = GetFieldMoveIndex(move);
+
+                if (fieldEffect != 0xff) {
+                    menuEntriesBuffer[count] = fieldEffect;
+                    count++;
+                    PartyMenu_SetKnownFieldMove(application, move, fieldMoveIndex);
+                    fieldMoveIndex++;
+                }
+            }
+
+            menuEntriesBuffer[count] = 0;
+"""
+    new = """            for (i = 0; i < 4; i++) {
+                move = (u16)Pokemon_GetValue(mon, MON_DATA_MOVE1 + i, NULL);
+
+                if (move == 0) {
+                    break;
+                }
+
+                fieldEffect = GetFieldMoveIndex(move);
+
+                if (fieldEffect != 0xff) {
+                    menuEntriesBuffer[count] = fieldEffect;
+                    count++;
+                    PartyMenu_SetKnownFieldMove(application, move, fieldMoveIndex);
+                    fieldMoveIndex++;
+                }
+            }
+
+            for (i = 0; i < NELEMS(sMercuryHmFreeMenuMoves); i++) {
+                u16 compatibleMove = sMercuryHmFreeMenuMoves[i];
+                BOOL alreadyKnown = FALSE;
+
+                for (u8 moveSlot = 0; moveSlot < LEARNED_MOVES_MAX; moveSlot++) {
+                    if ((u16)Pokemon_GetValue(mon, MON_DATA_MOVE1 + moveSlot, NULL) == compatibleMove) {
+                        alreadyKnown = TRUE;
+                        break;
+                    }
+                }
+
+                if (alreadyKnown == FALSE
+                    && MoveReminderData_IsMoveCompatible(mon, compatibleMove, HEAP_ID_PARTY_MENU)) {
+                    fieldEffect = GetFieldMoveIndex(compatibleMove);
+
+                    if (fieldEffect != 0xff) {
+                        menuEntriesBuffer[count] = fieldEffect;
+                        count++;
+                        PartyMenu_SetKnownFieldMove(application, compatibleMove, fieldMoveIndex);
+                        fieldMoveIndex++;
+                    }
+                }
+            }
+
+            menuEntriesBuffer[count] = 0;
+"""
+    replace_once(main, old, new, "MR05A compatible party-menu actions")
+
+    replace_once(
+        windows,
+        """    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_FieldMove0 + menuEntry);
+""",
+        """    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_FieldMove0);
+""",
+        "MR05A reusable field-move label template",
+    )
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pokeplatinum_root", type=Path)
@@ -271,6 +431,7 @@ def main() -> None:
     patch_compatibility_backend(root)
     patch_script_command(root)
     patch_field_scripts(root)
+    patch_party_menu(root)
 
     report = {
         "gate": "MERCURY_MR05A_HM_FREE_TRAVERSAL_FOUNDATION",
@@ -279,7 +440,7 @@ def main() -> None:
             "badge_checks": "preserved",
             "story_and_map_checks": "preserved",
             "party_requirement": "compatible non-Egg Pokemon required",
-            "move_slot_requirement": "removed for patched field interactions",
+            "move_slot_requirement": "removed for patched field interactions and Fly/Defog/Flash party-menu actions",
             "compatibility_source": "Mercury universal Move Learner legal learnset data",
         },
         "phase_a": [
@@ -291,12 +452,13 @@ def main() -> None:
             "Waterfall",
             "direct Defog script path",
         ],
-        "deferred_same_phase": [
-            "party-menu compatibility presentation",
-            "Fly without learned move",
-            "standard Defog without learned move",
-            "Flash without learned move",
+        "party_menu_hm_free": [
+            "Fly",
+            "Defog",
+            "Flash",
         ],
+        "dynamic_field_move_label_capacity": 7,
+        "deferred_same_phase": [],
         "vanilla_find_party_slot_command_modified": False,
         "mercury_script_opcode": "SCRCMD_UNUSED_09C",
     }
