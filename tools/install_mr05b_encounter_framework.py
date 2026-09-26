@@ -113,6 +113,23 @@ def validate_standard_area(key: str, data: dict[str, Any]) -> None:
     if not isinstance(category.get("map_number"), int):
         raise SystemExit(f"{key}: map_number must be an integer")
 
+    if "mercury_tod_land" in data:
+        tables = data["mercury_tod_land"]
+        if not isinstance(tables, dict):
+            raise SystemExit(f"{key}: mercury_tod_land must be an object")
+        for period in ("morning", "day", "evening", "night"):
+            slots = tables.get(period)
+            if not isinstance(slots, list) or len(slots) != 12:
+                raise SystemExit(f"{key}: mercury_tod_land.{period} must contain 12 slots")
+            for i, slot in enumerate(slots):
+                if not isinstance(slot, dict):
+                    raise SystemExit(f"{key}: mercury_tod_land.{period}[{i}] is not an object")
+                low = slot.get("level_min")
+                high = slot.get("level_max")
+                if not isinstance(low, int) or not isinstance(high, int) or not 1 <= low <= high <= 100:
+                    raise SystemExit(f"{key}: mercury_tod_land.{period}[{i}] invalid level range")
+                validate_species(slot.get("species"), f"{key} mercury_tod_land.{period}[{i}]")
+
     if "daily_encounters" in data:
         daily = data["daily_encounters"]
         if not isinstance(daily, list) or len(daily) != 16:
@@ -192,6 +209,9 @@ def merge_patch(base: Any, patch: Any, where: str) -> Any:
         out = deepcopy(base)
         for key, value in patch.items():
             if key not in out:
+                if key.startswith("mercury_"):
+                    out[key] = deepcopy(value)
+                    continue
                 raise SystemExit(f"{where}: unknown field {key!r}")
             out[key] = merge_patch(out[key], value, f"{where}.{key}")
         return out
