@@ -21,6 +21,7 @@ on:
       - "tools/install_mr05c_regi_preleague.py"
       - "tools/extend_mr05d_victory_road.py"
       - "tools/extend_mr05e_turnback_sendoff.py"
+      - "tools/extend_mr05g_preleague_core_areas.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -121,6 +122,7 @@ jobs:
             tools/install_mr05c_regi_preleague.py \
             tools/extend_mr05d_victory_road.py \
             tools/extend_mr05e_turnback_sendoff.py \
+            tools/extend_mr05g_preleague_core_areas.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -352,18 +354,41 @@ jobs:
           test "$(jq -r '.sendoff_water_fishing_authored' mr05e-turnback-sendoff-port.json)" = "true"
           test "$(jq -r '.static_giratina_story_deferred' mr05e-turnback-sendoff-port.json)" = "true"
 
-      - name: Install MR05E authored encounter tables
+      - name: Extend authored encounters with pre-League core areas
+        shell: bash
+        run: |
+          python3 tools/extend_mr05g_preleague_core_areas.py \
+            vendor/pokeplatinum \
+            mr05e-authored-overrides-with-turnback.json \
+            data/encounters/mr05g_preleague_core_areas.json \
+            mr05g-authored-overrides-with-core-areas.json \
+            --report mr05g-preleague-core-port.json
+
+          test "$(jq -r '.status' mr05g-preleague-core-port.json)" = "PASS"
+          test "$(jq -r '.resource_count' mr05g-preleague-core-port.json)" = "12"
+          test "$(jq -r '.full_tod_area_count_added' mr05g-preleague-core-port.json)" = "12"
+          test "$(jq -r '.full_tod_slot_count_added' mr05g-preleague-core-port.json)" = "576"
+          test "$(jq -r '.route203_gible_priority_access' mr05g-preleague-core-port.json)" = "true"
+          test "$(jq -r '.route203_riolu_priority_access' mr05g-preleague-core-port.json)" = "true"
+          test "$(jq -r '.wayward_b1f_gible_den_preserved' mr05g-preleague-core-port.json)" = "true"
+          test "$(jq -r '.valley_normal_drifloon_randomized' mr05g-preleague-core-port.json)" = "false"
+          test "$(jq -r '.valley_delta_drifloon_randomized' mr05g-preleague-core-port.json)" = "false"
+          test "$(jq -r '.fuego_meltan_randomized' mr05g-preleague-core-port.json)" = "false"
+          test "$(jq -r '.eterna_celebi_randomized' mr05g-preleague-core-port.json)" = "false"
+          test "$(jq -r '.platinum_water_fishing_preserved' mr05g-preleague-core-port.json)" = "true"
+
+      - name: Install MR05G authored encounter tables
         shell: bash
         run: |
           python3 tools/install_mr05b_encounter_framework.py \
             vendor/pokeplatinum \
-            mr05e-authored-overrides-with-turnback.json \
+            mr05g-authored-overrides-with-core-areas.json \
             --manifest mr05b-encounter-manifest.json \
             --report mr05b-encounter-framework.json
 
           test "$(jq -r '.status' mr05b-encounter-framework.json)" = "PASS"
           test "$(jq -r '.area_count' mr05b-encounter-framework.json)" = "185"
-          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "105"
+          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "117"
           test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "false"
           test "$(jq -r '.area_count' mr05b-encounter-manifest.json)" = "185"
           jq -e '.changed_areas | index("encounters_honey_tree") != null' mr05b-encounter-framework.json
@@ -382,8 +407,8 @@ jobs:
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
           test "$(jq -r '.four_period_full_land_tables' mr05b-authored-runtime.json)" = "true"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "98"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "4704"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "110"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "5280"
           test "$(jq -r '.vanilla_special_replacements_bypassed_for_mercury_tables' mr05b-authored-runtime.json)" = "true"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
@@ -465,14 +490,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05F legendary-static ROM
+      - name: Build MR05G core-area + legendary-static ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05F normal boot in DeSmuME
+      - name: Capture MR05G normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -522,7 +547,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05F_NORMAL_BOOT",
+              "gate": "MERCURY_MR05G_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -530,7 +555,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05f-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05g-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -544,8 +569,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05F_Legendary_Statics.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05F_Legendary_Statics.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05G_Core_Areas.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05G_Core_Areas.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -567,18 +592,20 @@ jobs:
           cp mr05d-victory-road-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05e-authored-overrides-with-turnback.json mr05b-artifact/ 2>/dev/null || true
           cp mr05e-turnback-sendoff-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05g-authored-overrides-with-core-areas.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05g-preleague-core-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05c-regi-preleague.json mr05b-artifact/ 2>/dev/null || true
           cp mr05f-legendary-statics.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05f-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05g-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05f-legendary-statics
+          name: mercury-mr05g-core-areas
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -588,7 +615,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05F — Legendary Static Safety + Encounter Expansion"
+            echo "## Mercury MR05G — Core Pre-League Encounter Expansion"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -616,9 +643,13 @@ jobs:
             echo "- Sendoff Spring has full four-period land plus authored Surf/fishing ecology"
             echo "- All 21 Turnback Cave resources are mapped; 20 maze resources use tiered authored ecology and the Giratina terminal room has no random encounters"
             echo "- Turnback fallback Giratina is Lv60; Uxie and Azelf are Lv60"
+            echo "- Route 203 now guarantees early-access Gible and Riolu in every time period outside Oreburgh Gate"
+            echo "- Oreburgh Gate/Mine, Eterna Forest, Wayward Cave, Valley Windworks, Fuego exterior, and all three Ruin Maniac cave stages now have authored four-period land tables"
+            echo "- Wayward Cave B1F keeps a real Gible-den identity instead of a microscopic rare roll"
+            echo "- Normal Drifloon, Delta Drifloon, Meltan, and Celebi remain separate static/story encounters rather than random grass"
             echo "- Cynthia's grandmother unlocks Dialga/Palkia rifts after Distortion World, pre-League"
             echo "- Dialga/Palkia remain Lv70 and their rifts are retry-safe until capture"
             echo "- Mesprit guided pursuit remains isolated for a dedicated tracking pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Player ROM staged as Pokemon_Mercury_MR05F_Legendary_Statics.nds"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05G_Core_Areas.nds"
           } >> "$GITHUB_STEP_SUMMARY"
