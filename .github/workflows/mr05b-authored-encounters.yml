@@ -267,8 +267,8 @@ jobs:
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
           test "$(jq -r '.four_period_full_land_tables' mr05b-authored-runtime.json)" = "true"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "35"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "1680"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "32"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "1536"
           test "$(jq -r '.vanilla_special_replacements_bypassed_for_mercury_tables' mr05b-authored-runtime.json)" = "true"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
@@ -398,7 +398,6 @@ jobs:
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
-          cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-overrides.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
@@ -433,7 +432,7 @@ jobs:
             echo "- Sealed MR05A HM-free traversal retained"
             echo "- Routes 201-224 ported from recovered Mercury authored encounter source"
             echo "- Routes 201-230 authored across 35 route segments"
-            echo "- Full 12-slot Morning/Day/Evening/Night runtime tables enabled for all 35 route segments"
+            echo "- Full 12-slot Morning/Day/Evening/Night runtime tables enabled for all 32 land-capable route segments; Routes 219/220/223 are water-only"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
             echo "- Encounter-framework ROM staged as Pokemon_Mercury_MR05B_Authored_Encounters.nds"
           } >> "$GITHUB_STEP_SUMMARY"
