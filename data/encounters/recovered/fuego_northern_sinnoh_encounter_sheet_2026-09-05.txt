@@ -1,0 +1,384 @@
+POKEMON MERCURY REDUX — FUEGO IRONWORKS + NORTHERN SINNOH ENCOUNTER SHEET
+Date: 2026-09-05
+
+DESIGN BASIS
+Pokemon Platinum / Sinnoh first. Mercury expands the encounter ecology. Emerald-derived engine identifiers are implementation-only and are not encounter-design sources.
+
+IMPLEMENTATION STATUS
+STAGED FOR FINAL SINNOH MAPS. The finished player-facing maps for these areas are not yet present in this cumulative source, so these tables are not attached to unrelated engine geography.
+
+========================================================================
+FUEGO IRONWORKS
+========================================================================
+Optional industrial riverside habitat. Platinum anchors Magnemite, Magmar, Floatzel, and Gastrodon; Mercury adds Fire/Electric/forge species without turning the area into a generic cave.
+
+MORNING LAND
+  Magnemite                Lv 34-36   20%
+  Magmar                   Lv 35-37   20%
+  Floatzel                 Lv 35-37   15%
+  Gastrodon (West Sea)     Lv 35-37   10%
+  Charcadet                Lv 34-36   10%
+  Numel                    Lv 34-36   10%
+  Torkoal                  Lv 35-37    5%
+  Carkol                   Lv 35-37    5%
+  Heatmor                  Lv 36-38    2%
+  Elekid                   Lv 34-36    1%
+  Togedemaru               Lv 36-38    1%
+  Turtonator               Lv 37-38    1%
+
+DAY LAND
+  Magnemite                Lv 34-36   20%
+  Magmar                   Lv 35-37   20%
+  Floatzel                 Lv 35-37   10%
+  Gastrodon (West Sea)     Lv 35-37   10%
+  Charcadet                Lv 34-36   10%
+  Numel                    Lv 34-36   10%
+  Torkoal                  Lv 35-37    5%
+  Carkol                   Lv 35-37    5%
+  Heatmor                  Lv 36-38    4%
+  Elekid                   Lv 34-36    4%
+  Togedemaru               Lv 36-38    1%
+  Turtonator               Lv 37-38    1%
+
+EVENING LAND
+  Magnemite                Lv 34-36   20%
+  Magmar                   Lv 35-37   20%
+  Floatzel                 Lv 35-37   10%
+  Gastrodon (West Sea)     Lv 35-37   10%
+  Charcadet                Lv 34-36   10%
+  Carkol                   Lv 35-37   10%
+  Heatmor                  Lv 36-38    5%
+  Elekid                   Lv 34-36    5%
+  Numel                    Lv 34-36    5%
+  Torkoal                  Lv 35-37    3%
+  Togedemaru               Lv 36-38    1%
+  Turtonator               Lv 37-38    1%
+
+NIGHT LAND
+  Magnemite                Lv 34-36   20%
+  Magmar                   Lv 35-37   15%
+  Gastrodon (West Sea)     Lv 35-37   15%
+  Floatzel                 Lv 35-37    5%
+  Charcadet                Lv 34-36   10%
+  Carkol                   Lv 35-37   10%
+  Heatmor                  Lv 36-38   10%
+  Elekid                   Lv 34-36    5%
+  Torkoal                  Lv 35-37    4%
+  Numel                    Lv 34-36    3%
+  Togedemaru               Lv 36-38    2%
+  Turtonator               Lv 37-38    1%
+
+SURF
+  Shellos (West Sea)       Lv 34-37   35%
+  Gastrodon (West Sea)     Lv 35-38   20%
+  Tentacool                Lv 34-37   15%
+  Tentacruel               Lv 36-38   10%
+  Finneon                  Lv 34-37   10%
+  Tynamo                   Lv 35-38   10%
+
+OLD ROD
+  Magikarp                 Lv 20-30  100%
+
+GOOD ROD
+  Magikarp                 Lv 30-35   40%
+  Finneon                  Lv 32-37   30%
+  Barboach                 Lv 32-37   20%
+  Tynamo                   Lv 34-38   10%
+
+SUPER ROD
+  Gyarados                 Lv 38-43   30%
+  Lumineon                 Lv 38-43   20%
+  Whiscash                 Lv 38-43   20%
+  Eelektrik                Lv 39-43   10%
+  Gastrodon (West Sea)     Lv 39-43   10%
+  Milotic                  Lv 41-43    5%
+  Lanturn                  Lv 40-43    5%
+
+INSTANT HONEY TREE — PREMIUM POOL
+  Elekid                   Lv 35-38   15%
+  Charcadet                Lv 35-38   15%
+  Torkoal                  Lv 36-38   15%
+  Heatmor                  Lv 36-38   10%
+  Turtonator               Lv 37-39   10%
+  Togedemaru               Lv 36-38   10%
+  Larvesta                 Lv 37-39   10%
+  Fletchinder              Lv 35-38    5%
+  Litleo                   Lv 35-38    5%
+  Porygon                  Lv 37-39    5%
+
+Inside factory: no random wild encounters.
+========================================================================
+ROUTE 216
+========================================================================
+Snowy treeline and mountain-pass ecology. Platinum Snover/Sneasel/Meditite/Graveler backbone; Mercury introduces cold forest and mountain species.
+
+MORNING LAND
+  Snover                   Lv 45-48   20%
+  Sneasel                  Lv 46-48   15%
+  Meditite                 Lv 45-47   10%
+  Graveler                 Lv 46-48   10%
+  Cubchoo                  Lv 45-47   10%
+  Stantler                 Lv 45-47   10%
+  Bergmite                 Lv 46-48    5%
+  Delibird                 Lv 46-48    5%
+  Snom                     Lv 45-47    5%
+  Amaura                   Lv 46-48    4%
+  Sandshrew (Alola)        Lv 46-48    4%
+  Abomasnow                Lv 48-48    2%
+
+DAY LAND
+  Snover                   Lv 45-48   20%
+  Sneasel                  Lv 46-48   15%
+  Meditite                 Lv 45-47   10%
+  Graveler                 Lv 46-48   10%
+  Cubchoo                  Lv 45-47   10%
+  Bergmite                 Lv 46-48   10%
+  Stantler                 Lv 45-47    5%
+  Delibird                 Lv 46-48    5%
+  Snom                     Lv 45-47    5%
+  Amaura                   Lv 46-48    4%
+  Sandshrew (Alola)        Lv 46-48    4%
+  Abomasnow                Lv 48-48    2%
+
+EVENING LAND
+  Sneasel                  Lv 46-48   20%
+  Snover                   Lv 45-48   15%
+  Meditite                 Lv 45-47   10%
+  Graveler                 Lv 46-48   10%
+  Cubchoo                  Lv 45-47   10%
+  Stantler                 Lv 45-47    5%
+  Bergmite                 Lv 46-48    5%
+  Snom                     Lv 45-47   10%
+  Greavard                 Lv 46-48    5%
+  Delibird                 Lv 46-48    4%
+  Sandshrew (Alola)        Lv 46-48    4%
+  Snorunt                  Lv 47-48    2%
+
+NIGHT LAND
+  Sneasel                  Lv 46-48   20%
+  Snover                   Lv 45-48   15%
+  Snorunt                  Lv 46-48   15%
+  Cubchoo                  Lv 45-47   10%
+  Snom                     Lv 45-47   10%
+  Greavard                 Lv 46-48   10%
+  Graveler                 Lv 46-48    5%
+  Delibird                 Lv 46-48    5%
+  Sandshrew (Alola)        Lv 46-48    4%
+  Froslass                 Lv 48-48    2%
+  Abomasnow                Lv 48-48    2%
+  Stantler                 Lv 45-47    2%
+========================================================================
+ROUTE 217
+========================================================================
+Deep-blizzard tundra. Platinum Snover/Swinub/Sneasel/Snorunt identity; Mercury expands with harsher Ice species distinct from Route 216.
+
+MORNING LAND
+  Swinub                   Lv 47-49   20%
+  Snover                   Lv 47-50   15%
+  Sneasel                  Lv 48-50   10%
+  Snorunt                  Lv 47-49   10%
+  Vanillite                Lv 47-49   10%
+  Cetoddle                 Lv 48-50   10%
+  Bergmite                 Lv 48-50    5%
+  Spheal                   Lv 47-49    5%
+  Darumaka (Galar)         Lv 48-50    5%
+  Cryogonal                Lv 49-50    4%
+  Eiscue                   Lv 49-50    4%
+  Piloswine                Lv 50-50    2%
+
+DAY LAND
+  Snover                   Lv 47-50   20%
+  Swinub                   Lv 47-49   20%
+  Sneasel                  Lv 48-50   10%
+  Cetoddle                 Lv 48-50   10%
+  Vanillite                Lv 47-49   10%
+  Bergmite                 Lv 48-50   10%
+  Spheal                   Lv 47-49    5%
+  Darumaka (Galar)         Lv 48-50    5%
+  Cryogonal                Lv 49-50    4%
+  Eiscue                   Lv 49-50    4%
+  Piloswine                Lv 50-50    1%
+  Snorunt                  Lv 49-50    1%
+
+EVENING LAND
+  Swinub                   Lv 47-49   20%
+  Snover                   Lv 47-50   15%
+  Snorunt                  Lv 47-49   15%
+  Sneasel                  Lv 48-50   10%
+  Cetoddle                 Lv 48-50   10%
+  Bergmite                 Lv 48-50    5%
+  Spheal                   Lv 47-49    5%
+  Darumaka (Galar)         Lv 48-50    5%
+  Vanillite                Lv 47-49    5%
+  Cryogonal                Lv 49-50    4%
+  Eiscue                   Lv 49-50    4%
+  Piloswine                Lv 50-50    2%
+
+NIGHT LAND
+  Swinub                   Lv 47-49   20%
+  Snorunt                  Lv 47-50   20%
+  Snover                   Lv 47-50   15%
+  Sneasel                  Lv 48-50   10%
+  Vanillite                Lv 47-49   10%
+  Spheal                   Lv 47-49    5%
+  Cetoddle                 Lv 48-50    5%
+  Darumaka (Galar)         Lv 48-50    5%
+  Cryogonal                Lv 49-50    4%
+  Eiscue                   Lv 49-50    4%
+  Froslass                 Lv 50-50    1%
+  Piloswine                Lv 50-50    1%
+
+Icy Rock retained as Glaceon evolution landmark.
+========================================================================
+ACUITY LAKEFRONT
+========================================================================
+High-elevation snow shelf at the Lake Acuity approach. Platinum Snover/Swinub/Sneasel backbone; Mercury emphasizes evolved cold-climate species.
+
+MORNING LAND
+  Swinub                   Lv 49-51   20%
+  Snover                   Lv 49-52   15%
+  Sneasel                  Lv 50-52   15%
+  Piloswine                Lv 50-52   10%
+  Sandshrew (Alola)        Lv 49-51   10%
+  Beartic                  Lv 50-52   10%
+  Crabominable             Lv 50-52    5%
+  Frosmoth                 Lv 50-52    5%
+  Cryogonal                Lv 50-52    4%
+  Avalugg                  Lv 51-52    3%
+  Cetitan                  Lv 51-52    2%
+  Glaceon                  Lv 52-52    1%
+
+DAY LAND
+  Swinub                   Lv 49-51   20%
+  Snover                   Lv 49-52   15%
+  Sneasel                  Lv 50-52   15%
+  Piloswine                Lv 50-52   10%
+  Sandshrew (Alola)        Lv 49-51   10%
+  Beartic                  Lv 50-52   10%
+  Crabominable             Lv 50-52    5%
+  Frosmoth                 Lv 50-52    5%
+  Cryogonal                Lv 50-52    4%
+  Avalugg                  Lv 51-52    3%
+  Cetitan                  Lv 51-52    2%
+  Glaceon                  Lv 52-52    1%
+
+EVENING LAND
+  Swinub                   Lv 49-51   15%
+  Snover                   Lv 49-52   15%
+  Sneasel                  Lv 50-52   15%
+  Piloswine                Lv 50-52   10%
+  Sandshrew (Alola)        Lv 49-51   10%
+  Frosmoth                 Lv 50-52   10%
+  Beartic                  Lv 50-52    5%
+  Crabominable             Lv 50-52    5%
+  Cryogonal                Lv 50-52    5%
+  Avalugg                  Lv 51-52    4%
+  Cetitan                  Lv 51-52    4%
+  Glaceon                  Lv 52-52    2%
+
+NIGHT LAND
+  Swinub                   Lv 49-51   15%
+  Snover                   Lv 49-52   15%
+  Sneasel                  Lv 50-52   15%
+  Piloswine                Lv 50-52   10%
+  Sandshrew (Alola)        Lv 49-51   10%
+  Frosmoth                 Lv 50-52   10%
+  Crabominable             Lv 50-52    5%
+  Cryogonal                Lv 50-52    5%
+  Avalugg                  Lv 51-52    5%
+  Cetitan                  Lv 51-52    4%
+  Froslass                 Lv 52-52    4%
+  Glaceon                  Lv 52-52    2%
+========================================================================
+LAKE ACUITY
+========================================================================
+Northern lake-edge snow-and-water habitat. Platinum Snover/Bibarel/Golduck/Sneasel/Psyduck backbone retained.
+
+MORNING LAND
+  Snover                   Lv 50-53   20%
+  Bibarel                  Lv 50-52   15%
+  Golduck                  Lv 50-52   10%
+  Sneasel                  Lv 51-53   10%
+  Psyduck                  Lv 50-51   10%
+  Snorunt                  Lv 50-52   10%
+  Smoochum                 Lv 50-52    5%
+  Bergmite                 Lv 50-52    5%
+  Spheal                   Lv 50-52    5%
+  Cubchoo                  Lv 50-52    4%
+  Frigibax                 Lv 52-53    4%
+  Piplup                   Lv 52-53    2%
+
+DAY LAND
+  Snover                   Lv 50-53   20%
+  Bibarel                  Lv 50-52   15%
+  Golduck                  Lv 50-52   10%
+  Sneasel                  Lv 51-53   10%
+  Psyduck                  Lv 50-51   10%
+  Snorunt                  Lv 50-52   10%
+  Bergmite                 Lv 50-52    5%
+  Spheal                   Lv 50-52    5%
+  Cubchoo                  Lv 50-52    5%
+  Smoochum                 Lv 50-52    3%
+  Frigibax                 Lv 52-53    4%
+  Piplup                   Lv 52-53    3%
+
+EVENING LAND
+  Bibarel                  Lv 50-52   15%
+  Snover                   Lv 50-53   15%
+  Golduck                  Lv 50-52   10%
+  Sneasel                  Lv 51-53   10%
+  Psyduck                  Lv 50-51   10%
+  Snorunt                  Lv 50-52   10%
+  Smoochum                 Lv 50-52   10%
+  Bergmite                 Lv 50-52    5%
+  Spheal                   Lv 50-52    5%
+  Frigibax                 Lv 52-53    4%
+  Piplup                   Lv 52-53    4%
+  Cryogonal                Lv 52-53    2%
+
+NIGHT LAND
+  Bibarel                  Lv 50-52   15%
+  Snover                   Lv 50-53   15%
+  Snorunt                  Lv 50-52   15%
+  Golduck                  Lv 50-52   10%
+  Sneasel                  Lv 51-53   10%
+  Psyduck                  Lv 50-51    5%
+  Smoochum                 Lv 50-52   10%
+  Bergmite                 Lv 50-52    5%
+  Spheal                   Lv 50-52    5%
+  Froslass                 Lv 52-53    4%
+  Frigibax                 Lv 52-53    4%
+  Piplup                   Lv 52-53    2%
+
+SURF
+  Psyduck                  Lv 50-52   40%
+  Golduck                  Lv 51-53   25%
+  Spheal                   Lv 50-52   15%
+  Sealeo                   Lv 51-53   10%
+  Lapras                   Lv 52-53    5%
+  Dewgong                  Lv 52-53    5%
+
+OLD ROD
+  Magikarp                 Lv 20-30  100%
+
+GOOD ROD
+  Magikarp                 Lv 35-40   40%
+  Goldeen                  Lv 35-40   30%
+  Barboach                 Lv 36-41   20%
+  Feebas                   Lv 38-42   10%
+
+SUPER ROD
+  Gyarados                 Lv 43-48   30%
+  Seaking                  Lv 43-48   25%
+  Whiscash                 Lv 43-48   15%
+  Dewgong                  Lv 44-49   10%
+  Lapras                   Lv 45-50   10%
+  Milotic                  Lv 47-50    5%
+  Basculin (White-Striped) Lv 45-49    5%
+
+Lake Acuity cave: no random encounters; Uxie remains a static/story encounter.
+========================================================================
+SNOWPOINT CITY
+========================================================================
+
+No random wild encounter table authored for Snowpoint City itself.
