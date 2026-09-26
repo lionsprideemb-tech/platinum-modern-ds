@@ -6,7 +6,7 @@ on:
     branches:
       - feature/mr04-player-build
     paths:
-      - ".github/workflows/mr04-mercury-player-build.yml"
+      - ".github/workflows/mr04-player-build.yml"
       - "tools/install_mercury_move_learner.py"
       - "tools/install_mr03_party_move_learner.py"
       - "tools/install_mr03e_summary_top_shell.py"
