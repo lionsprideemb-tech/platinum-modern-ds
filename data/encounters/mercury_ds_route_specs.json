@@ -6775,56 +6775,56 @@
       "honey_tree": [
         {
           "species": "SPECIES_ABSOL",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 20
         },
         {
           "species": "SPECIES_TEDDIURSA",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 15
         },
         {
           "species": "SPECIES_SWABLU",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 15
         },
         {
           "species": "SPECIES_HERACROSS",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 10
         },
         {
           "species": "SPECIES_MUNCHLAX",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 10
         },
         {
           "species": "SPECIES_MAWILE",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 10
         },
         {
           "species": "SPECIES_BAGON",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 10
         },
         {
           "species": "SPECIES_VULPIX_ALOLA",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 5
         },
         {
           "species": "SPECIES_HATENNA",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 42,
+          "max_level": 42,
           "weight": 5
         }
       ]
@@ -7438,62 +7438,62 @@
       "honey_tree": [
         {
           "species": "SPECIES_TEDDIURSA",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 20
         },
         {
           "species": "SPECIES_HERACROSS",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 15
         },
         {
           "species": "SPECIES_MUNCHLAX",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 15
         },
         {
           "species": "SPECIES_SWABLU",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 10
         },
         {
           "species": "SPECIES_MAWILE",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 10
         },
         {
           "species": "SPECIES_TYROGUE",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 10
         },
         {
           "species": "SPECIES_BELDUM",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 5
         },
         {
           "species": "SPECIES_LARVESTA",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 5
         },
         {
           "species": "SPECIES_RIOLU",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 5
         },
         {
           "species": "SPECIES_SNEASEL",
-          "min_level": 1,
-          "max_level": 1,
+          "min_level": 43,
+          "max_level": 43,
           "weight": 5
         }
       ]
@@ -13479,6 +13479,170 @@
         "max_level": 44,
         "weight": 5
       }
+    ],
+    "FuegoIronworks": [
+      {
+        "species": "SPECIES_ELEKID",
+        "min_level": 35,
+        "max_level": 38,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_CHARCADET",
+        "min_level": 35,
+        "max_level": 38,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_TORKOAL",
+        "min_level": 36,
+        "max_level": 38,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_HEATMOR",
+        "min_level": 36,
+        "max_level": 38,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_TURTONATOR",
+        "min_level": 37,
+        "max_level": 39,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_TOGEDEMARU",
+        "min_level": 36,
+        "max_level": 38,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_LARVESTA",
+        "min_level": 37,
+        "max_level": 39,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_FLETCHINDER",
+        "min_level": 35,
+        "max_level": 38,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_LITLEO",
+        "min_level": 35,
+        "max_level": 38,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_PORYGON",
+        "min_level": 37,
+        "max_level": 39,
+        "weight": 5
+      }
     ]
+  },
+  "honey_tree_assignments": {
+    "MAP_HEADER_ROUTE_205_SOUTH": {
+      "source": "regional",
+      "key": "Floaroma",
+      "rescale_level": 20
+    },
+    "MAP_HEADER_ROUTE_205_NORTH": {
+      "source": "route",
+      "key": "encounters_route_205_north"
+    },
+    "MAP_HEADER_ROUTE_206": {
+      "source": "regional",
+      "key": "Eterna",
+      "rescale_level": 24
+    },
+    "MAP_HEADER_ROUTE_207": {
+      "source": "regional",
+      "key": "Eterna",
+      "rescale_level": 25
+    },
+    "MAP_HEADER_ROUTE_208": {
+      "source": "regional",
+      "key": "Eterna",
+      "rescale_level": 25
+    },
+    "MAP_HEADER_ROUTE_209": {
+      "source": "regional",
+      "key": "Eterna",
+      "rescale_level": 28
+    },
+    "MAP_HEADER_ROUTE_210_SOUTH": {
+      "source": "regional",
+      "key": "Route215",
+      "rescale_level": 30
+    },
+    "MAP_HEADER_ROUTE_210_NORTH": {
+      "source": "route",
+      "key": "encounters_route_210_north"
+    },
+    "MAP_HEADER_ROUTE_211_EAST": {
+      "source": "route",
+      "key": "encounters_route_211_east"
+    },
+    "MAP_HEADER_ROUTE_212_NORTH": {
+      "source": "regional",
+      "key": "Route212North"
+    },
+    "MAP_HEADER_ROUTE_212_SOUTH": {
+      "source": "regional",
+      "key": "Route212South"
+    },
+    "MAP_HEADER_ROUTE_213": {
+      "source": "regional",
+      "key": "Route213"
+    },
+    "MAP_HEADER_ROUTE_214": {
+      "source": "regional",
+      "key": "Route214"
+    },
+    "MAP_HEADER_ROUTE_215": {
+      "source": "regional",
+      "key": "Route215"
+    },
+    "MAP_HEADER_ROUTE_218": {
+      "source": "regional",
+      "key": "Route218"
+    },
+    "MAP_HEADER_ROUTE_221": {
+      "source": "route",
+      "key": "encounters_route_221"
+    },
+    "MAP_HEADER_ROUTE_222": {
+      "source": "route",
+      "key": "encounters_route_222"
+    },
+    "MAP_HEADER_VALLEY_WINDWORKS_OUTSIDE": {
+      "source": "regional",
+      "key": "Floaroma"
+    },
+    "MAP_HEADER_ETERNA_FOREST_OUTSIDE": {
+      "source": "regional",
+      "key": "Eterna"
+    },
+    "MAP_HEADER_FUEGO_IRONWORKS_OUTSIDE": {
+      "source": "regional",
+      "key": "FuegoIronworks"
+    },
+    "MAP_HEADER_FLOAROMA_MEADOW": {
+      "source": "regional",
+      "key": "Floaroma"
+    }
+  },
+  "honey_tree_policy": {
+    "instant_battle_on_slather": true,
+    "consume_one_honey": true,
+    "cooldown_minutes": 0,
+    "tree_count": 21,
+    "weighted_pool_selection": true,
+    "authored_species_and_levels": true,
+    "burmy_in_premium_pool": false,
+    "fallback_policy": "Trees without a dedicated recovered pool use the nearest authored regional pool; where progression differs, levels are rescaled to the route's authored upper encounter band."
   }
 }
