@@ -53,12 +53,25 @@ def validate_periods(resource: str, area: dict[str, Any]) -> None:
             raise SystemExit(f"{resource}: {period} must contain exactly 12 slots")
         for i, slot in enumerate(slots):
             species = slot.get("species")
-            low = slot.get("level_min")
-            high = slot.get("level_max")
+            low_raw = slot.get("level_min")
+            high_raw = slot.get("level_max")
             if not isinstance(species, str) or not species.startswith("SPECIES_"):
                 raise SystemExit(f"{resource}: {period}[{i}] invalid species")
-            if not isinstance(low, int) or not isinstance(high, int) or not 1 <= low <= high <= 100:
-                raise SystemExit(f"{resource}: {period}[{i}] invalid levels")
+            try:
+                low = int(low_raw)
+                high = int(high_raw)
+            except (TypeError, ValueError):
+                raise SystemExit(
+                    f"{resource}: {period}[{i}] invalid levels "
+                    f"(level_min={low_raw!r}, level_max={high_raw!r})"
+                )
+            if not 1 <= low <= high <= 100:
+                raise SystemExit(
+                    f"{resource}: {period}[{i}] invalid levels "
+                    f"(level_min={low!r}, level_max={high!r})"
+                )
+            slot["level_min"] = low
+            slot["level_max"] = high
 
 def build_patch(area: dict[str, Any]) -> dict[str, Any]:
     periods = area["periods"]
