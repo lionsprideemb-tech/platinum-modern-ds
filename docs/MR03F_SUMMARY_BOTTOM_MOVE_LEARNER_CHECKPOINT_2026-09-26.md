@@ -73,6 +73,9 @@ After diagnostics, MR03F received targeted fixes without changing the locked arc
 - `21bd37c1453b9e35df1cf3ca1a138757371e118f` — enter Platinum's complete native move-select presentation
 - `0d38056c4854306fc9aac15a485607faa2045788` — expose the full legal level-up learnset regardless of current level
 - `7fad489865339f0c16dd7311d6bb9ed10af22e55` — tighten bottom learner row/detail spacing
+- `cc85b420c1ac3491660c58daa7f463eb8b164076` — fit five-line move descriptions
+- `5e62862cf27d2292be69f8c280ea5eb21be7bb5d` — lift description text two pixels
+- `f087afa9b06746a4689457f38b64cd9ca6c58f58` — expand the detail panel by one full tile row while preserving four visible moves
 
 All were re-proven by the full MR03F workflow.
 
@@ -80,22 +83,22 @@ All were re-proven by the full MR03F workflow.
 
 Latest successful full proof workflow:
 
-- Head commit: `7fad489865339f0c16dd7311d6bb9ed10af22e55`
-- Run ID: **36253524082**
+- Head commit: `f087afa9b06746a4689457f38b64cd9ca6c58f58`
+- Run ID: **36258042152**
 - Job: `prove-summary-bottom-learner`
 - Conclusion: **success**
 - `Build one MR03F proof ROM`: **PASS**
 - `Capture full DS Move Learner proof`: **PASS**
 - Artifact: `mercury-mr03f-summary-bottom-move-learner`
-- Artifact ID: **10909759209**
+- Artifact ID: **10911492245**
 
 Latest proof ROM SHA-256:
 
-`cc5949e1e358f7de9dd6e62fe7e0b23a25b9db417af16afd0f16c8f228171346`
+`0df46602232f9c8862f5bf2e8d91288582bbbf85ff9fe08a162962e954f9011f`
 
 ## Visual verification
 
-The latest polished artifact from `7fad489865339f0c16dd7311d6bb9ed10af22e55` was manually reviewed. The browse, scrolled, replacement, cancel-return, and alternate-top-page frames are visually clean.
+The latest polished artifact from `f087afa9b06746a4689457f38b64cd9ca6c58f58` was manually reviewed. The browse, scrolled, replacement, cancel-return, and alternate-top-page frames are visually clean. The final bottom-screen layout preserves four visible move rows and expands the description panel enough for long five-line move text without clipping into the footer.
 
 Captured runtime states:
 
