@@ -1469,6 +1469,13 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
             Window_ClearAndScheduleCopyToVRAM(&controller->windows[i]);
         }
     }
+
+    // MR03D D1d: remove every legacy Move Reminder window mapping from BG1.
+    // Only the Mercury transparent overlay is allowed to be remapped afterward.
+    Bg_ClearTilemap(controller->bgConfig, BG_LAYER_MAIN_1);
+    Bg_ClearTilesRange(BG_LAYER_MAIN_1, 32, 0, HEAP_ID_MOVE_REMINDER);
+    Bg_ScheduleTilemapTransfer(controller->bgConfig, BG_LAYER_MAIN_1);
+
     MoveReminder_DrawTypeIcons(controller);
     MoveReminder_DrawSideArrows(controller, FALSE);
     MoveReminder_DrawArrows(controller);
@@ -1587,7 +1594,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "MR03D D1c: retail Summary BG3 + move_info BG2, untouched main palette, transparent BG1 overlay; temporary BG portrait disabled pending native 3D sprite",
+        "visual_pass": "MR03D D1d: retail Summary layer priorities; stale legacy Move Reminder BG1 window mappings purged before the Mercury overlay is drawn",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
