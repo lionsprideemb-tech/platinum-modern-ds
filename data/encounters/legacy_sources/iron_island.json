@@ -1,0 +1,685 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "area": "Iron Island",
+  "status": "STAGED_FOR_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum Iron Island, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography, ecology, Riley progression, and encounter anchors. Emerald-derived identifiers are hidden engine implementation only and are not content sources.",
+  "runtime_note": "The cumulative source does not yet contain finished player-facing Iron Island Sinnoh maps. Do not attach this registry to unrelated engine geography. Wire these tables only when the Platinum-derived Iron Island maps/floors exist.",
+  "outside": {
+    "random_land_encounters": false,
+    "note": "Platinum Iron Island outside has water/fishing encounters but no ordinary grass/cave land table.",
+    "surf": [
+      {
+        "species": "SPECIES_WINGULL",
+        "min_level": 41,
+        "max_level": 44,
+        "weight": 35
+      },
+      {
+        "species": "SPECIES_TENTACOOL",
+        "min_level": 41,
+        "max_level": 44,
+        "weight": 25
+      },
+      {
+        "species": "SPECIES_PELIPPER",
+        "min_level": 42,
+        "max_level": 45,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_TENTACRUEL",
+        "min_level": 42,
+        "max_level": 45,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MANTINE",
+        "min_level": 43,
+        "max_level": 45,
+        "weight": 15
+      }
+    ],
+    "fishing": {
+      "old_rod": [
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 20,
+          "max_level": 30,
+          "weight": 100
+        }
+      ],
+      "good_rod": [
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 31,
+          "max_level": 38,
+          "weight": 45
+        },
+        {
+          "species": "SPECIES_FINNEON",
+          "min_level": 32,
+          "max_level": 39,
+          "weight": 35
+        },
+        {
+          "species": "SPECIES_REMORAID",
+          "min_level": 33,
+          "max_level": 40,
+          "weight": 20
+        }
+      ],
+      "super_rod": [
+        {
+          "species": "SPECIES_GYARADOS",
+          "min_level": 42,
+          "max_level": 47,
+          "weight": 35
+        },
+        {
+          "species": "SPECIES_LUMINEON",
+          "min_level": 42,
+          "max_level": 47,
+          "weight": 25
+        },
+        {
+          "species": "SPECIES_QWILFISH",
+          "min_level": 42,
+          "max_level": 47,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_OCTILLERY",
+          "min_level": 43,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MANTINE",
+          "min_level": 43,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_RELICANTH",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 5
+        }
+      ]
+    }
+  },
+  "floors": {
+    "1F": {
+      "level_band": "42-45",
+      "identity": "Abandoned mine entrance; Platinum Geodude/Graveler/Zubat/Golbat/Onix backbone with light ore-processing and Steel-type expansion.",
+      "encounters": [
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GEODUDE",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ONIX",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ARON",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_KLINK",
+          "min_level": 42,
+          "max_level": 43,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_ROLYCOLY",
+          "min_level": 42,
+          "max_level": 44,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_CUFANT",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_FERROSEED",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_VAROOM",
+          "min_level": 43,
+          "max_level": 44,
+          "weight": 3
+        },
+        {
+          "species": "SPECIES_TINKATUFF",
+          "min_level": 44,
+          "max_level": 45,
+          "weight": 1
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 44,
+          "max_level": 45,
+          "weight": 1
+        }
+      ]
+    },
+    "B1F_LEFT_ORE_VEIN": {
+      "level_band": "43-46",
+      "identity": "Old ore vein; denser mineral, crystal, and digging ecology.",
+      "encounters": [
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ONIX",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_LAIRON",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLANG",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CARKOL",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_DRILBUR",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CARBINK",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_ORTHWORM",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_DURANT",
+          "min_level": 45,
+          "max_level": 46,
+          "weight": 2
+        }
+      ]
+    },
+    "B1F_RIGHT_TRAINING_GALLERY": {
+      "level_band": "43-46",
+      "identity": "Trainer-used gallery; Platinum mine anchors remain, but hardy Fighting/Steel species become more common.",
+      "encounters": [
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ONIX",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MACHOKE",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MEDICHAM",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GURDURR",
+          "min_level": 43,
+          "max_level": 45,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PAWNIARD",
+          "min_level": 44,
+          "max_level": 45,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_TINKATUFF",
+          "min_level": 44,
+          "max_level": 45,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_FALINKS",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 2
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 2
+        },
+        {
+          "species": "SPECIES_VAROOM",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 2
+        }
+      ]
+    },
+    "B2F_LEFT_RILEY_SECTION": {
+      "level_band": "44-47",
+      "identity": "Riley partnership zone; Steelix enters as in Platinum and industrial/mining species become heavier. Wild battles become doubles while Riley accompanies the player.",
+      "encounters": [
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ONIX",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_STEELIX",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_LAIRON",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLANG",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CUFANT",
+          "min_level": 44,
+          "max_level": 46,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_EXCADRILL",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_GURDURR",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 3
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 3
+        }
+      ]
+    },
+    "B2F_RIGHT_IRON_CHAMBER": {
+      "level_band": "45-48",
+      "identity": "Iron-rich chamber; fewer basic rocks, more developed Steel species and abandoned-mine specialists.",
+      "encounters": [
+        {
+          "species": "SPECIES_STEELIX",
+          "min_level": 45,
+          "max_level": 48,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ONIX",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_LAIRON",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLANG",
+          "min_level": 45,
+          "max_level": 47,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_FERROTHORN",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ORTHWORM",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 7
+        },
+        {
+          "species": "SPECIES_DURANT",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_TINKATUFF",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 3
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 47,
+          "max_level": 48,
+          "weight": 1
+        }
+      ]
+    },
+    "B3F_FINAL_MINE": {
+      "level_band": "46-49",
+      "identity": "Deepest abandoned mine before the exit/ruins; strongest Steel/mineral ecology with Steelix as the major Platinum anchor.",
+      "encounters": [
+        {
+          "species": "SPECIES_STEELIX",
+          "min_level": 46,
+          "max_level": 49,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GRAVELER",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_AGGRON",
+          "min_level": 47,
+          "max_level": 49,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_KLANG",
+          "min_level": 46,
+          "max_level": 48,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRONZONG",
+          "min_level": 47,
+          "max_level": 49,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_EXCADRILL",
+          "min_level": 47,
+          "max_level": 49,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_FERROTHORN",
+          "min_level": 47,
+          "max_level": 49,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_ORTHWORM",
+          "min_level": 47,
+          "max_level": 49,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_MAWILE",
+          "min_level": 47,
+          "max_level": 49,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_SABLEYE",
+          "min_level": 47,
+          "max_level": 49,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELDUM",
+          "min_level": 48,
+          "max_level": 49,
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "rock_smash": {
+    "upper_mine": [
+      {
+        "species": "SPECIES_GEODUDE",
+        "min_level": 42,
+        "max_level": 44,
+        "weight": 50
+      },
+      {
+        "species": "SPECIES_ROGGENROLA",
+        "min_level": 42,
+        "max_level": 44,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_ARON",
+        "min_level": 43,
+        "max_level": 44,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_NOSEPASS",
+        "min_level": 43,
+        "max_level": 45,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_CARBINK",
+        "min_level": 44,
+        "max_level": 45,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_TINKATINK",
+        "min_level": 44,
+        "max_level": 45,
+        "weight": 1
+      }
+    ],
+    "deep_mine": [
+      {
+        "species": "SPECIES_GRAVELER",
+        "min_level": 45,
+        "max_level": 47,
+        "weight": 40
+      },
+      {
+        "species": "SPECIES_LAIRON",
+        "min_level": 45,
+        "max_level": 47,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_NOSEPASS",
+        "min_level": 45,
+        "max_level": 47,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_CARBINK",
+        "min_level": 46,
+        "max_level": 48,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_GLIMMET",
+        "min_level": 46,
+        "max_level": 48,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_TINKATUFF",
+        "min_level": 46,
+        "max_level": 48,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_BELDUM",
+        "min_level": 47,
+        "max_level": 48,
+        "weight": 1
+      }
+    ]
+  },
+  "riley": {
+    "partner_rule": "Preserve Platinum structure: Riley joins in B2F; wild battles become Double Battles while partnered and Riley heals the player's party after battles.",
+    "gift": "Riolu Egg",
+    "gift_species": "SPECIES_RIOLU",
+    "gift_note": "Riolu is intentionally NOT a random Iron Island encounter. Earlier Mercury access remains intact; Riley's Egg remains a special story reward. If the party is full, Mercury should send the Egg to the PC rather than forcing a backtrack.",
+    "galactic_note": "Preserve the Platinum Team Galactic encounter that ends Riley's partnership before the Egg reward."
+  },
+  "iron_ruins": {
+    "random_encounters": false,
+    "note": "Preserve the Platinum Iron Ruins/Registeel concept as special authored content; do not dilute it with a generic random encounter table. Legendary/static implementation is a later story/content pass."
+  },
+  "diversity_rules": [
+    "Do not use one generic encounter table for every Iron Island floor.",
+    "Preserve Platinum's Geodude/Graveler/Zubat/Golbat/Onix/Steelix cave backbone while increasing Steel/mineral specialization with depth.",
+    "Riolu stays a Riley gift, not a random encounter, despite earlier Mercury wild availability elsewhere.",
+    "Do not reuse Great Marsh Safari-exclusive species as ordinary Iron Island catches.",
+    "Iron Island should feel distinct from Oreburgh Mine, Wayward Cave, Ruin Maniac Tunnel, and Mt. Coronet through its abandoned industrial mine / Steel ecology."
+  ]
+}
