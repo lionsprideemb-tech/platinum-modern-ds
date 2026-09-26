@@ -563,7 +563,7 @@
           {
             "min_level": 7,
             "max_level": 8,
-            "species": "SPECIES_ARON"
+            "species": "SPECIES_GIBLE"
           },
           {
             "min_level": 7,
@@ -625,7 +625,7 @@
           {
             "min_level": 7,
             "max_level": 8,
-            "species": "SPECIES_DRILBUR"
+            "species": "SPECIES_GIBLE"
           },
           {
             "min_level": 7,
@@ -687,7 +687,7 @@
           {
             "min_level": 7,
             "max_level": 8,
-            "species": "SPECIES_HOUNDOUR"
+            "species": "SPECIES_GIBLE"
           },
           {
             "min_level": 7,
@@ -747,9 +747,9 @@
             "species": "SPECIES_ROCKRUFF"
           },
           {
-            "min_level": 6,
-            "max_level": 7,
-            "species": "SPECIES_MACHOP"
+            "min_level": 7,
+            "max_level": 8,
+            "species": "SPECIES_GIBLE"
           },
           {
             "min_level": 7,
@@ -762,7 +762,8 @@
             "species": "SPECIES_RIOLU"
           }
         ]
-      }
+      },
+      "priority_note": "Mercury priority access: Gible at the 4% slot and Riolu at the 1% slot in every time period outside Oreburgh Gate."
     },
     "206": {
       "source": "runtime:Route206",
