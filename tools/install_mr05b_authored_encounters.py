@@ -156,6 +156,8 @@ TOD_PERIODS = ("Morning", "Day", "Evening", "Night")
 
 
 def species(token: str) -> str:
+    if token.startswith("SPECIES_UNOWN_") and token != "SPECIES_UNOWN":
+        return "SPECIES_UNOWN"
     return SPECIES_ALIASES.get(token, token)
 
 
@@ -479,7 +481,7 @@ def main() -> None:
     report = {
         "gate": "MERCURY_MR05B_AUTHORED_ENCOUNTERS",
         "status": "PASS",
-        "source_record_count": int(snapshot["record_count"]),
+        "source_record_count": int(snapshot.get("record_count", len(snapshot["records"]))),
         "ported_area_count": len(results),
         "changed_area_count": len(changed),
         "changed_areas": changed,
