@@ -305,18 +305,18 @@ static const WindowTemplate sMercuryLearnerWindowTemplates[MERCURY_LEARNER_WINDO
         .tilemapLeft = 1,
         .tilemapTop = 3,
         .width = 30,
-        .height = 8,
+        .height = 6,
         .palette = MERCURY_LEARNER_TEXT_PLTT,
         .baseTile = 61,
     },
     [MERCURY_LEARNER_WINDOW_DETAILS] = {
         .bgLayer = BG_LAYER_SUB_0,
         .tilemapLeft = 1,
-        .tilemapTop = 12,
+        .tilemapTop = 10,
         .width = 30,
-        .height = 8,
+        .height = 10,
         .palette = MERCURY_LEARNER_TEXT_PLTT,
-        .baseTile = 301,
+        .baseTile = 241,
     },
     [MERCURY_LEARNER_WINDOW_FOOTER] = {
         .bgLayer = BG_LAYER_SUB_0,
@@ -508,7 +508,7 @@ static void MercuryMoveLearner_DrawList(PokemonSummaryScreen *summaryScreen)
                 window,
                 summaryScreen->mercuryLearnerMoves[index],
                 index == summaryScreen->mercuryLearnerCursor,
-                row * 16);
+                row * 12);
         }
     }
 
@@ -573,7 +573,7 @@ static void MercuryMoveLearner_DrawDetails(PokemonSummaryScreen *summaryScreen)
         FONT_SYSTEM,
         summaryScreen->string,
         8,
-        18,
+        16,
         TEXT_SPEED_NO_TRANSFER,
         SUMMARY_TEXT_BLACK,
         NULL);
