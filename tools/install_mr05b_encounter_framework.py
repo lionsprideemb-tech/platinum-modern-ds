@@ -1,0 +1,237 @@
+#!/usr/bin/env python3
+"""MR05B — centralized Mercury encounter-table framework.
+
+Reads every Platinum encounter JSON as one logical dataset, validates the
+schema, optionally applies centralized per-area overrides, and emits a single
+canonical manifest/report for later Mercury encounter editing and randomizer
+work.
+
+Overrides are keyed by encounter file stem without the .json extension.
+Object values deep-merge. Array values may be replaced as a whole or patched
+by index using an object such as {"0": {"species": "SPECIES_GIBLE"}}.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from copy import deepcopy
+from pathlib import Path
+from typing import Any
+
+EXPECTED_LIST_LENGTHS = {
+    "land_encounters": 12,
+    "swarms": 2,
+    "day": 2,
+    "night": 2,
+    "radar": 4,
+    "ruby": 2,
+    "sapphire": 2,
+    "emerald": 2,
+    "firered": 2,
+    "leafgreen": 2,
+    "surf_encounters": 5,
+    "old_rod_encounters": 5,
+    "good_rod_encounters": 5,
+    "super_rod_encounters": 5,
+}
+
+RATE_FIELDS = (
+    "land_rate",
+    "surf_rate",
+    "old_rod_rate",
+    "good_rod_rate",
+    "super_rod_rate",
+)
+
+WATER_LISTS = (
+    "surf_encounters",
+    "old_rod_encounters",
+    "good_rod_encounters",
+    "super_rod_encounters",
+)
+
+
+def canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def digest(value: Any) -> str:
+    return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def validate_species(value: Any, where: str) -> None:
+    if not isinstance(value, str) or not value.startswith("SPECIES_"):
+        raise SystemExit(f"{where}: invalid species token {value!r}")
+
+
+def validate_area(key: str, data: dict[str, Any]) -> None:
+    for field, expected in EXPECTED_LIST_LENGTHS.items():
+        if field not in data:
+            raise SystemExit(f"{key}: missing {field}")
+        if not isinstance(data[field], list) or len(data[field]) != expected:
+            raise SystemExit(
+                f"{key}: {field} must contain {expected} entries, found "
+                f"{len(data[field]) if isinstance(data[field], list) else 'non-list'}"
+            )
+
+    for field in RATE_FIELDS:
+        rate = data.get(field)
+        if not isinstance(rate, int) or not 0 <= rate <= 100:
+            raise SystemExit(f"{key}: {field} must be an integer from 0 to 100")
+
+    for i, slot in enumerate(data["land_encounters"]):
+        if not isinstance(slot, dict):
+            raise SystemExit(f"{key}: land slot {i} is not an object")
+        level = slot.get("level")
+        if not isinstance(level, int) or not 0 <= level <= 100:
+            raise SystemExit(f"{key}: land slot {i} invalid level {level!r}")
+        validate_species(slot.get("species"), f"{key} land slot {i}")
+
+    for field in ("swarms", "day", "night", "radar", "ruby", "sapphire", "emerald", "firered", "leafgreen"):
+        for i, species in enumerate(data[field]):
+            validate_species(species, f"{key} {field}[{i}]")
+
+    for field in WATER_LISTS:
+        for i, slot in enumerate(data[field]):
+            if not isinstance(slot, dict):
+                raise SystemExit(f"{key}: {field}[{i}] is not an object")
+            low = slot.get("level_min")
+            high = slot.get("level_max")
+            if not isinstance(low, int) or not isinstance(high, int):
+                raise SystemExit(f"{key}: {field}[{i}] levels must be integers")
+            if not 0 <= low <= 100 or not 0 <= high <= 100 or high < low:
+                raise SystemExit(f"{key}: {field}[{i}] invalid level range {low}-{high}")
+            validate_species(slot.get("species"), f"{key} {field}[{i}]")
+
+    category = data.get("map_category")
+    if not isinstance(category, dict):
+        raise SystemExit(f"{key}: missing map_category object")
+    if category.get("map_type") not in ("field", "dungeon"):
+        raise SystemExit(f"{key}: unexpected map_type {category.get('map_type')!r}")
+    if not isinstance(category.get("map_number"), int):
+        raise SystemExit(f"{key}: map_number must be an integer")
+
+
+def merge_patch(base: Any, patch: Any, where: str) -> Any:
+    if isinstance(base, dict) and isinstance(patch, dict):
+        out = deepcopy(base)
+        for key, value in patch.items():
+            if key not in out:
+                raise SystemExit(f"{where}: unknown field {key!r}")
+            out[key] = merge_patch(out[key], value, f"{where}.{key}")
+        return out
+
+    if isinstance(base, list) and isinstance(patch, dict):
+        out = deepcopy(base)
+        for raw_index, value in patch.items():
+            try:
+                index = int(raw_index)
+            except (TypeError, ValueError):
+                raise SystemExit(f"{where}: array patch index {raw_index!r} is not an integer")
+            if index < 0 or index >= len(out):
+                raise SystemExit(f"{where}: array patch index {index} out of range")
+            out[index] = merge_patch(out[index], value, f"{where}[{index}]")
+        return out
+
+    return deepcopy(patch)
+
+
+def load_dataset(encounter_dir: Path) -> dict[str, dict[str, Any]]:
+    files = sorted(encounter_dir.glob("encounters_*.json"))
+    if not files:
+        raise SystemExit(f"No encounter tables found in {encounter_dir}")
+
+    dataset: dict[str, dict[str, Any]] = {}
+    for path in files:
+        key = path.stem
+        data = json.loads(path.read_text())
+        validate_area(key, data)
+        dataset[key] = data
+    return dataset
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("pokeplatinum_root", type=Path)
+    ap.add_argument("config", type=Path)
+    ap.add_argument("--manifest", type=Path, default=Path("mr05b-encounter-manifest.json"))
+    ap.add_argument("--report", type=Path, default=Path("mr05b-encounter-framework.json"))
+    args = ap.parse_args()
+
+    root = args.pokeplatinum_root.resolve()
+    encounter_dir = root / "res/field/encounters"
+    cfg = json.loads(args.config.read_text())
+
+    if cfg.get("schema") != 1:
+        raise SystemExit("MR05B encounter config schema must be 1")
+    overrides = cfg.get("areas")
+    if not isinstance(overrides, dict):
+        raise SystemExit("MR05B encounter config areas must be an object")
+
+    before = load_dataset(encounter_dir)
+    before_digest = digest(before)
+
+    after = deepcopy(before)
+    changed = []
+
+    for key, patch in overrides.items():
+        if key not in after:
+            raise SystemExit(f"MR05B override references unknown encounter area {key!r}")
+        if not isinstance(patch, dict):
+            raise SystemExit(f"MR05B override for {key} must be an object")
+        patched = merge_patch(after[key], patch, key)
+        validate_area(key, patched)
+        if patched != after[key]:
+            after[key] = patched
+            changed.append(key)
+
+    for key in sorted(after):
+        path = encounter_dir / f"{key}.json"
+        path.write_text(json.dumps(after[key], indent=4, ensure_ascii=False) + "\n")
+
+    reloaded = load_dataset(encounter_dir)
+    if reloaded != after:
+        raise SystemExit("MR05B encounter write/read round-trip mismatch")
+
+    after_digest = digest(after)
+
+    manifest = {
+        "schema": 1,
+        "source": "Mercury Redux encounter framework",
+        "area_count": len(after),
+        "dataset_sha256": after_digest,
+        "areas": after,
+    }
+    args.manifest.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+
+    report = {
+        "gate": "MERCURY_MR05B_ENCOUNTER_TABLE_FRAMEWORK",
+        "status": "PASS",
+        "area_count": len(after),
+        "changed_area_count": len(changed),
+        "changed_areas": changed,
+        "baseline_sha256": before_digest,
+        "output_sha256": after_digest,
+        "baseline_preserved": before_digest == after_digest,
+        "central_config": str(args.config),
+        "supports": [
+            "land",
+            "swarm",
+            "day",
+            "night",
+            "Poke Radar",
+            "GBA dual-slot",
+            "Surf",
+            "Old Rod",
+            "Good Rod",
+            "Super Rod",
+        ],
+    }
+    args.report.write_text(json.dumps(report, indent=2) + "\n")
+    print(json.dumps(report, indent=2))
+
+
+if __name__ == "__main__":
+    main()
