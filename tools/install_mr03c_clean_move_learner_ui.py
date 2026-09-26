@@ -78,6 +78,13 @@ def patch_ui(root: Path) -> None:
         "MR03C item-name include",
     )
 
+    insert_after_once(
+        source,
+        '#include "res/text/bank/move_reminder.h"\n',
+        '#include "res/graphics/pokemon_summary_screen/pl_pst_gra.naix"\n',
+        "MR03D Platinum Summary graphics include",
+    )
+
     # Give the custom top page its own character/tilemap layer so its 30x22
     # window cannot collide with Platinum's message-box tile storage.
     #
@@ -110,7 +117,7 @@ def patch_ui(root: Path) -> None:
         .screenBase = GX_BG_SCRBASE_0x7800,
         .charBase = GX_BG_CHARBASE_0x08000,
         .bgExtPltt = GX_BG_EXTPLTT_01,
-        .priority = 1,
+        .priority = 3,
         .areaOver = 0,
         .mosaic = FALSE,
     };
@@ -216,6 +223,8 @@ static void MercuryMoveLearner_PrintNumber(MoveReminderController *controller, W
 static void MercuryMoveLearner_PrintMoveName(MoveReminderController *controller, Window *window, u16 move, u32 x, u32 y);
 static void MercuryMoveLearner_PrintTypeName(MoveReminderController *controller, Window *window, u16 type, u32 x, u32 y);
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height);
+static void MercuryMoveLearner_LoadNativeTopAssets(MoveReminderController *controller);
+static void MercuryMoveLearner_LoadNativeTopPage(MoveReminderController *controller);
 static void MercuryMoveLearner_LoadPalette(void);
 static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *controller);
 """,
@@ -269,22 +278,22 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         .baseTile = 1,
     },
     [MOVE_REMINDER_WIN_MERCURY_TOP] = {
-        .bgLayer = BG_LAYER_MAIN_3,
+        .bgLayer = BG_LAYER_MAIN_1,
         .tilemapLeft = 1,
         .tilemapTop = 1,
         .width = 30,
         .height = 22,
         .palette = 15,
-        .baseTile = 0x001,
+        .baseTile = 0x300,
     },
     [MOVE_REMINDER_WIN_MERCURY_PORTRAIT] = {
-        .bgLayer = BG_LAYER_MAIN_3,
-        .tilemapLeft = 2,
-        .tilemapTop = 5,
-        .width = 10,
-        .height = 10,
+        .bgLayer = BG_LAYER_MAIN_1,
+        .tilemapLeft = 31,
+        .tilemapTop = 23,
+        .width = 1,
+        .height = 1,
         .palette = 14,
-        .baseTile = 0x295,
+        .baseTile = 0x594,
     },
     [MOVE_REMINDER_WIN_MERCURY_FILTER] = {
         .bgLayer = BG_LAYER_SUB_0,
@@ -671,6 +680,59 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
     )
 
     helpers = r'''
+static void MercuryMoveLearner_LoadNativeTopAssets(MoveReminderController *controller)
+{
+    NARC *narc = NARC_ctor(NARC_INDEX_GRAPHIC__PL_PST_GRA, HEAP_ID_MOVE_REMINDER);
+
+    Graphics_LoadTilesToBgLayerFromOpenNARC(
+        narc,
+        tiles_main_NCGR,
+        controller->bgConfig,
+        BG_LAYER_MAIN_3,
+        0,
+        0,
+        FALSE,
+        HEAP_ID_MOVE_REMINDER);
+    Graphics_LoadPaletteFromOpenNARC(
+        narc,
+        tiles_main_NCLR,
+        PAL_LOAD_MAIN_BG,
+        0,
+        0,
+        HEAP_ID_MOVE_REMINDER);
+
+    NARC_dtor(narc);
+}
+
+static void MercuryMoveLearner_LoadNativeTopPage(MoveReminderController *controller)
+{
+    u32 memberIndex = page_battle_moves_NSCR;
+
+    if (controller->mercuryPage == MERCURY_PAGE_STATS) {
+        memberIndex = page_skills_NSCR;
+    } else if (controller->mercuryPage == MERCURY_PAGE_ABILITY) {
+        memberIndex = page_info_NSCR;
+    }
+
+    void *memberBuffer = NARC_AllocAndReadWholeMemberByIndexPair(
+        NARC_INDEX_GRAPHIC__PL_PST_GRA,
+        memberIndex,
+        HEAP_ID_MOVE_REMINDER);
+    NNSG2dScreenData *tilemap;
+    NNS_G2dGetUnpackedScreenData(memberBuffer, &tilemap);
+
+    Bg_LoadToTilemapRect(
+        controller->bgConfig,
+        BG_LAYER_MAIN_3,
+        tilemap->rawData,
+        0,
+        0,
+        32,
+        32);
+    Bg_ScheduleTilemapTransfer(controller->bgConfig, BG_LAYER_MAIN_3);
+    Heap_Free(memberBuffer);
+}
+
 static void MercuryMoveLearner_LoadPalette(void)
 {
     static const u16 palette[16] = {
@@ -775,13 +837,13 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
     Window_ScheduleCopyToVRAM(window);
     Bg_ChangeTilemapRectPalette(
         controller->bgConfig,
-        BG_LAYER_MAIN_3,
+        BG_LAYER_MAIN_1,
         2,
         5,
         10,
         10,
         14);
-    Bg_ScheduleTilemapTransfer(controller->bgConfig, BG_LAYER_MAIN_3);
+    Bg_ScheduleTilemapTransfer(controller->bgConfig, BG_LAYER_MAIN_1);
 }
 
 static void MercuryMoveLearner_DrawPanel(Window *window, u32 x, u32 y, u32 width, u32 height)
@@ -1098,11 +1160,8 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     Window *window = &controller->windows[MOVE_REMINDER_WIN_MERCURY_TOP];
     Pokemon *mon = controller->data->mon;
 
-    Window_FillTilemap(window, 15);
-    MercuryMoveLearner_DrawPanel(window, 0, 0, 240, 175);
-
-    Window_FillRectWithColor(window, 4, 1, 1, 238, 31);
-    Window_FillRectWithColor(window, 3, 1, 31, 238, 2);
+    MercuryMoveLearner_LoadNativeTopPage(controller);
+    Window_FillTilemap(window, 0);
 
     MercuryMoveLearner_DrawTopIdentity(controller, window);
 
@@ -1118,9 +1177,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryShoulderRight, 220, 4);
 
     if (controller->mercuryPage == MERCURY_PAGE_MOVE) {
-        MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 100);
-        MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 100);
-        MercuryMoveLearner_DrawPanel(window, 4, 140, 232, 30);
 
         MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryHP, 12, 120);
         u32 hp = Pokemon_GetValue(mon, MON_DATA_HP, NULL);
@@ -1182,7 +1238,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         static const u8 cardX[LEARNED_MOVES_MAX] = { 7, 65, 123, 181 };
         for (u16 i = 0; i < LEARNED_MOVES_MAX; i++) {
             u16 move = Pokemon_GetValue(mon, MON_DATA_MOVE1 + i, NULL);
-            MercuryMoveLearner_DrawPanel(window, cardX[i], 143, 54, 24);
 
             if (move != MOVE_NONE) {
                 MercuryMoveLearner_PrintMoveName(controller, window, move, cardX[i] + 3, 145);
@@ -1195,9 +1250,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
             }
         }
     } else if (controller->mercuryPage == MERCURY_PAGE_STATS) {
-        MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
-        MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 96);
-        MercuryMoveLearner_DrawPanel(window, 100, 124, 136, 46);
 
         static const u32 labels[6] = {
             MoveReminder_Text_MercuryHP,
@@ -1264,9 +1316,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
                 164, 155, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(1, 2, 15), NULL);
         }
     } else {
-        MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
-        MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 78);
-        MercuryMoveLearner_DrawPanel(window, 100, 118, 136, 52);
 
         MercuryMoveLearner_PrintMessage(controller, window, MoveReminder_Text_MercuryAbility, 108, 44);
 
@@ -1323,6 +1372,7 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     controller->mercuryPage = MERCURY_PAGE_MOVE;
     controller->mercuryFilter = MERCURY_FILTER_ALL;
 
+    MercuryMoveLearner_LoadNativeTopAssets(controller);
     MercuryMoveLearner_LoadPalette();
 
     // The native Platinum message box is only needed once the player actually
@@ -1457,7 +1507,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "dark Mercury blue palette, tab/card styling, BG-compatible front portrait, expanded app heap",
+        "visual_pass": "MR03D D1: real Platinum Summary tiles/palette/tilemaps on the top screen with transparent BG1 data overlay; bottom screen remains prototype pending D3",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
