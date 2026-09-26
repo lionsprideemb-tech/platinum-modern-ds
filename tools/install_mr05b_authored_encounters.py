@@ -90,11 +90,69 @@ SPECIES_ALIASES = {
     "SPECIES_MACHOP_REDUX": "SPECIES_MACHOP",
     "SPECIES_LARVITAR_REDUX": "SPECIES_LARVITAR",
     "SPECIES_DARUMAKA_REDUX": "SPECIES_DARUMAKA",
+    "SPECIES_MARBEEP": "SPECIES_MAREEP",
+    "SPECIES_BASCULIN_RED_STRIPED": "SPECIES_BASCULIN",
+    "SPECIES_DARUMAKA_GALAR": "SPECIES_DARUMAKA",
+    "SPECIES_EISCUE_ICE": "SPECIES_EISCUE",
+    "SPECIES_FARFETCHD_GALAR": "SPECIES_FARFETCHD",
+    "SPECIES_GRIMER_ALOLA": "SPECIES_GRIMER",
+    "SPECIES_GROWLITHE_HISUI": "SPECIES_GROWLITHE",
+    "SPECIES_LILLIGANT_HISUI": "SPECIES_LILLIGANT",
+    "SPECIES_MEOWTH_GALAR": "SPECIES_MEOWTH",
+    "SPECIES_ORICORIO_PAU": "SPECIES_ORICORIO",
+    "SPECIES_SANDSHREW_ALOLA": "SPECIES_SANDSHREW",
+    "SPECIES_SLOWPOKE_GALAR": "SPECIES_SLOWPOKE",
+    "SPECIES_SNEASEL_HISUI": "SPECIES_SNEASEL",
+    "SPECIES_STUNFISK_GALAR": "SPECIES_STUNFISK",
+    "SPECIES_VOLTORB_HISUI": "SPECIES_VOLTORB",
+    "SPECIES_VULPIX_ALOLA": "SPECIES_VULPIX",
+    "SPECIES_WOOPER_PALDEA": "SPECIES_WOOPER",
 }
 
 OLD_ROD_EXPAND = (0, 1, 0, 0, 1)
 GOOD_ROD_EXPAND = (2, 3, 4, 2, 4)
 SUPER_ROD_INDEXES = (5, 6, 7, 8, 9)
+
+MAP_HEADER_BY_AREA = {
+    "encounters_route_201": "MAP_HEADER_ROUTE_201",
+    "encounters_route_202": "MAP_HEADER_ROUTE_202",
+    "encounters_route_203": "MAP_HEADER_ROUTE_203",
+    "encounters_route_204_south": "MAP_HEADER_ROUTE_204_SOUTH",
+    "encounters_route_204_north": "MAP_HEADER_ROUTE_204_NORTH",
+    "encounters_route_205_south": "MAP_HEADER_ROUTE_205_SOUTH",
+    "encounters_route_205_north": "MAP_HEADER_ROUTE_205_NORTH",
+    "encounters_route_206": "MAP_HEADER_ROUTE_206",
+    "encounters_route_207": "MAP_HEADER_ROUTE_207",
+    "encounters_route_208": "MAP_HEADER_ROUTE_208",
+    "encounters_route_209": "MAP_HEADER_ROUTE_209",
+    "encounters_route_210_south": "MAP_HEADER_ROUTE_210_SOUTH",
+    "encounters_route_210_north": "MAP_HEADER_ROUTE_210_NORTH",
+    "encounters_route_211_west": "MAP_HEADER_ROUTE_211_WEST",
+    "encounters_route_211_east": "MAP_HEADER_ROUTE_211_EAST",
+    "encounters_route_212_north": "MAP_HEADER_ROUTE_212_NORTH",
+    "encounters_route_212_south": "MAP_HEADER_ROUTE_212_SOUTH",
+    "encounters_route_213": "MAP_HEADER_ROUTE_213",
+    "encounters_route_214": "MAP_HEADER_ROUTE_214",
+    "encounters_route_215": "MAP_HEADER_ROUTE_215",
+    "encounters_route_216": "MAP_HEADER_ROUTE_216",
+    "encounters_route_217": "MAP_HEADER_ROUTE_217",
+    "encounters_route_218": "MAP_HEADER_ROUTE_218",
+    "encounters_route_219": "MAP_HEADER_ROUTE_219",
+    "encounters_route_220": "MAP_HEADER_ROUTE_220",
+    "encounters_route_221": "MAP_HEADER_ROUTE_221",
+    "encounters_route_222": "MAP_HEADER_ROUTE_222",
+    "encounters_route_223": "MAP_HEADER_ROUTE_223",
+    "encounters_route_224": "MAP_HEADER_ROUTE_224",
+    "encounters_great_marsh_1": "MAP_HEADER_GREAT_MARSH_1",
+    "encounters_great_marsh_2": "MAP_HEADER_GREAT_MARSH_2",
+    "encounters_great_marsh_3": "MAP_HEADER_GREAT_MARSH_3",
+    "encounters_great_marsh_4": "MAP_HEADER_GREAT_MARSH_4",
+    "encounters_great_marsh_5": "MAP_HEADER_GREAT_MARSH_5",
+    "encounters_great_marsh_6": "MAP_HEADER_GREAT_MARSH_6",
+}
+
+TOD_PERIODS = ("Morning", "Day", "Evening", "Night")
+
 
 
 def species(token: str) -> str:
@@ -226,10 +284,180 @@ def update_static_area(enc_dir: Path, label: str, out_stem: str, records: dict[s
     return {"area": out_stem, "source": label, "changed": before != after}
 
 
+
+def c_ident(area: str) -> str:
+    return "".join(part.capitalize() for part in area.removeprefix("encounters_").split("_"))
+
+
+def build_full_tod_runtime_block(route_specs: dict[str, Any]) -> tuple[str, int]:
+    arrays: list[str] = []
+    cases: list[str] = []
+    installed = 0
+
+    routes = route_specs.get("routes", {})
+    if not isinstance(routes, dict):
+        raise SystemExit("MR05B route specs missing routes object")
+
+    for area, spec in routes.items():
+        land = spec.get("land") or {}
+        if not land:
+            continue
+
+        if area not in MAP_HEADER_BY_AREA:
+            raise SystemExit(f"MR05B missing map-header mapping for {area}")
+
+        for period in TOD_PERIODS:
+            slots = land.get(period)
+            if not isinstance(slots, list) or len(slots) != 12:
+                raise SystemExit(f"{area}/{period}: expected 12 authored land slots")
+
+        ident = c_ident(area)
+        for period in TOD_PERIODS:
+            arrays.append(
+                f"static const EncounterSlot sMercury{ident}{period}[MAX_GRASS_ENCOUNTERS] = {{"
+            )
+            expected_weights = (20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1)
+            for index, slot in enumerate(land[period]):
+                if int(slot.get("weight", expected_weights[index])) != expected_weights[index]:
+                    raise SystemExit(
+                        f"{area}/{period} slot {index}: expected weight "
+                        f"{expected_weights[index]}, found {slot.get('weight')}"
+                    )
+                arrays.append(
+                    "    { "
+                    + species(slot["species"])
+                    + f", {int(slot['max_level'])}, {int(slot['min_level'])} "
+                    + "},"
+                )
+            arrays.append("};")
+            arrays.append("")
+
+        cases.extend(
+            [
+                f"    case {MAP_HEADER_BY_AREA[area]}:",
+                "        switch (timeOfDay) {",
+                "        case TIMEOFDAY_MORNING:",
+                f"            return sMercury{ident}Morning;",
+                "        case TIMEOFDAY_DAY:",
+                f"            return sMercury{ident}Day;",
+                "        case TIMEOFDAY_TWILIGHT:",
+                f"            return sMercury{ident}Evening;",
+                "        case TIMEOFDAY_NIGHT:",
+                "        case TIMEOFDAY_LATE_NIGHT:",
+                "        default:",
+                f"            return sMercury{ident}Night;",
+                "        }",
+            ]
+        )
+        installed += 1
+
+    block = arrays + [
+        "/* MERCURY_MR05B_AUTHORED_TOD_BEGIN */",
+        "static const EncounterSlot *Mercury_GetAuthoredLandTable(int mapHeaderID)",
+        "{",
+        "    int timeOfDay = GetTimeOfDay();",
+        "",
+        "    switch (mapHeaderID) {",
+    ] + cases + [
+        "    default:",
+        "        return NULL;",
+        "    }",
+        "}",
+        "",
+        "static BOOL Mercury_ApplyAuthoredLandTable(int mapHeaderID, EncounterSlot *encounterTable)",
+        "{",
+        "    const EncounterSlot *source = Mercury_GetAuthoredLandTable(mapHeaderID);",
+        "",
+        "    if (source == NULL) {",
+        "        return FALSE;",
+        "    }",
+        "",
+        "    memcpy(encounterTable, source, sizeof(EncounterSlot) * MAX_GRASS_ENCOUNTERS);",
+        "    return TRUE;",
+        "}",
+        "/* MERCURY_MR05B_AUTHORED_TOD_END */",
+        "",
+    ]
+    return "\n".join(block), installed
+
+
+def patch_full_tod_runtime(root: Path, route_specs: dict[str, Any]) -> int:
+    path = root / "src/overlay006/wild_encounters.c"
+    text = path.read_text()
+
+    if "MERCURY_MR05B_AUTHORED_TOD_BEGIN" in text:
+        raise SystemExit("MR05B full TOD runtime selector already installed")
+
+    include_anchor = '#include "generated/items.h"\n'
+    if include_anchor not in text:
+        raise SystemExit("MR05B map-header include anchor missing")
+    text = text.replace(
+        include_anchor,
+        include_anchor + '#include "generated/map_headers.h"\n',
+        1,
+    )
+
+    struct_anchor = """typedef struct EncounterSlot {
+    int species;
+    u16 maxLevel;
+    u16 minLevel;
+} EncounterSlot;
+"""
+    if text.count(struct_anchor) != 1:
+        raise SystemExit(
+            f"MR05B EncounterSlot anchor mismatch: {text.count(struct_anchor)}"
+        )
+
+    runtime_block, installed = build_full_tod_runtime_block(route_specs)
+    text = text.replace(
+        struct_anchor,
+        struct_anchor + "\n" + runtime_block + "\n",
+        1,
+    )
+
+    old_replace = """        BOOL nationalDexObtained = Pokedex_IsNationalDexObtained(SaveData_GetPokedex(FieldSystem_GetSaveData(fieldSystem)));
+
+        WildEncounters_ReplaceTimedEncounters(encounterData, &encounterTable[2].species, &encounterTable[3].species);
+        WildEncounters_ReplaceSwarmEncounters(fieldSystem, encounterData, &encounterTable[0].species, &encounterTable[1].species);
+        WildEncounters_ReplaceTrophyGardenEncounters(fieldSystem, nationalDexObtained, &encounterTable[6].species, &encounterTable[7].species);
+        WildEncounters_ReplaceDualSlotEncounters(encounterData, nationalDexObtained, &encounterTable[8].species, &encounterTable[9].species);
+"""
+    new_replace = """        BOOL nationalDexObtained = Pokedex_IsNationalDexObtained(SaveData_GetPokedex(FieldSystem_GetSaveData(fieldSystem)));
+        BOOL mercuryAuthoredTable = Mercury_ApplyAuthoredLandTable(fieldSystem->location->mapHeaderID, encounterTable);
+
+        if (mercuryAuthoredTable == FALSE) {
+            WildEncounters_ReplaceTimedEncounters(encounterData, &encounterTable[2].species, &encounterTable[3].species);
+            WildEncounters_ReplaceSwarmEncounters(fieldSystem, encounterData, &encounterTable[0].species, &encounterTable[1].species);
+            WildEncounters_ReplaceTrophyGardenEncounters(fieldSystem, nationalDexObtained, &encounterTable[6].species, &encounterTable[7].species);
+            WildEncounters_ReplaceDualSlotEncounters(encounterData, nationalDexObtained, &encounterTable[8].species, &encounterTable[9].species);
+        }
+"""
+    if text.count(old_replace) != 1:
+        raise SystemExit(
+            f"MR05B wild replacement anchor mismatch: {text.count(old_replace)}"
+        )
+    text = text.replace(old_replace, new_replace, 1)
+
+    old_level = "        level = encounterTable[encounterSlot].maxLevel;\n"
+    if text.count(old_level) != 1:
+        raise SystemExit(
+            f"MR05B grass level anchor mismatch: {text.count(old_level)}"
+        )
+    text = text.replace(
+        old_level,
+        "        level = GetWildMonLevel(&encounterTable[encounterSlot], encounterFieldParams);\n",
+        1,
+    )
+
+    path.write_text(text)
+    return installed
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pokeplatinum_root", type=Path)
     ap.add_argument("runtime_snapshot", type=Path)
+    ap.add_argument("--route-specs", type=Path, required=True)
     ap.add_argument("--report", type=Path, default=Path("mr05b-authored-encounters.json"))
     args = ap.parse_args()
 
@@ -244,6 +472,9 @@ def main() -> None:
     for label, out_stem in STATIC_MAP.items():
         results.append(update_static_area(enc_dir, label, out_stem, records))
 
+    route_specs = json.loads(args.route_specs.read_text())
+    full_tod_area_count = patch_full_tod_runtime(root, route_specs)
+
     changed = [r["area"] for r in results if r["changed"]]
     report = {
         "gate": "MERCURY_MR05B_AUTHORED_ENCOUNTERS",
@@ -253,7 +484,13 @@ def main() -> None:
         "changed_area_count": len(changed),
         "changed_areas": changed,
         "additive_maps_pending_in_next_pass": ADDITIVE_MAPS,
-        "full_four_period_runtime_selector_pending": True,
+        "full_four_period_runtime_selector_pending": False,
+        "full_four_period_runtime_area_count": full_tod_area_count,
+        "water_only_authored_routes": [
+            "encounters_route_219",
+            "encounters_route_220",
+            "encounters_route_223",
+        ],
         "regional_honey_tree_runtime_pending": True,
         "species_aliases_used": SPECIES_ALIASES,
     }
