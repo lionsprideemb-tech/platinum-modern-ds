@@ -342,6 +342,31 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
     replace_once(source, "    .lineSpacing = 16,\n", "    .lineSpacing = 12,\n", "MR03C row spacing")
     replace_once(source, "    .cursorType = 1,\n", "    .cursorType = 0,\n", "MR03C text cursor")
 
+    # Platinum normally prints "Choose a move for <MON>." immediately
+    # after MoveReminder_Setup().  That happens *after* our setup-time erase,
+    # so remove the browse-only prompt entirely. Confirmation text is still
+    # rendered through MoveReminder_SetMessageBoxText when A/B enters a native
+    # teach/exit flow.
+    replace_once(
+        source,
+        """    MoveReminder_Setup(controller);
+    MoveReminder_DrawMoveSelector(controller, controller->data->cursorPos, 0);
+    MoveReminder_SetStringTemplate(controller, MOVE_REMINDER_STR_ASK_TEACH_WHICH_TO_MON);
+    MoveReminder_DrawText(controller, MOVE_REMINDER_WIN_MESSAGE_BOX, FONT_MESSAGE, TEXT_COLOR(1, 2, 15), ALIGN_LEFT);
+
+    controller->nextState = MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;
+
+    Window_ScheduleCopyToVRAM(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
+    MoveReminder_DrawArrows(controller);""",
+        """    MoveReminder_Setup(controller);
+    MoveReminder_DrawMoveSelector(controller, controller->data->cursorPos, 0);
+
+    controller->nextState = MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;
+
+    MoveReminder_DrawArrows(controller);""",
+        "MR03C suppress initial browse message",
+    )
+
     # L/R are page navigation and X cycles source filters.
     old_input = """static int MoveReminder_State_ProcessMainInput(MoveReminderController *controller)
 {
