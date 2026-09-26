@@ -59,7 +59,15 @@ def walk_species(value: Any):
 
 
 def midpoint(slot: dict[str, Any]) -> int:
-    return (int(slot["level_min"]) + int(slot["level_max"]) + 1) // 2
+    return (int(slot["min_level"]) + int(slot["max_level"]) + 1) // 2
+
+
+def normalize_land_slot(slot: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "level_min": int(slot["min_level"]),
+        "level_max": int(slot["max_level"]),
+        "species": slot["species"],
+    }
 
 
 def compatibility_pair(slots: list[dict[str, Any]]) -> list[str]:
@@ -120,6 +128,10 @@ def land_patch(area: dict[str, Any]) -> dict[str, Any]:
     periods = area["periods"]
     validate_land("land", periods)
     day = periods["day"]
+    normalized = {
+        period: [normalize_land_slot(slot) for slot in periods[period]]
+        for period in PERIODS
+    }
     return {
         "land_rate": int(area["land_rate"]),
         "land_encounters": [
@@ -128,10 +140,7 @@ def land_patch(area: dict[str, Any]) -> dict[str, Any]:
         ],
         "day": compatibility_pair(day),
         "night": compatibility_pair(periods["night"]),
-        "mercury_tod_land": {
-            period: periods[period]
-            for period in PERIODS
-        },
+        "mercury_tod_land": normalized,
     }
 
 
