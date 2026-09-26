@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - feature/mr03c-clean-move-learner-ui
+      - feature/mr03d-platinum-native-ui
     paths:
       - ".github/workflows/mr03c-clean-move-learner-ui.yml"
       - "tools/install_mr03c_clean_move_learner_ui.py"
