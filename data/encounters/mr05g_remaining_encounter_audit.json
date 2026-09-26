@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "project": "Pokemon Mercury Redux",
+  "checkpoint": "MR05G_SUCCESS",
+  "proof_run_id": 36275614625,
+  "total_encounter_resources": 185,
+  "changed_resources": 117,
+  "full_tod_resources": 110,
+  "full_tod_slots": 5280,
+  "unchanged_resource_count": 68,
+  "next_batch": "MR05H Lost Tower + Trophy Garden",
+  "notes": [
+    "MR05G full ROM compile PASS and real DeSmuME normal boot PASS.",
+    "Lost Tower and Trophy Garden are the next six resources.",
+    "Solaceon Ruins are held for a dedicated Unown-form-safe pass.",
+    "unknown_533 through unknown_557 require map/header tracing before editing."
+  ]
+}

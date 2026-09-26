@@ -1,0 +1,1539 @@
+{
+  "schema": 1,
+  "project": "Pokemon Mercury Redux",
+  "phase": "MR05H",
+  "purpose": "Trophy Garden deterministic availability plus all five Lost Tower wild floors.",
+  "source_policy": [
+    "Trophy Garden follows the sealed Route 212/Trophy Garden registry.",
+    "Lost Tower remains a memorial/cultural location and is not converted into a Galactic dungeon.",
+    "Solaceon Ruins are deferred to a dedicated Unown-form-safe pass."
+  ],
+  "resources": {
+    "encounters_trophy_garden": {
+      "identity": "Trophy Garden — former Platinum daily-lottery species distributed across four time periods.",
+      "source": "ROUTE212_TROPHY_GARDEN_REGISTRY_2026-09-05.json",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_PIKACHU",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PICHU",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ROSELIA",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_STARAVIA",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_CLEFFA",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_HAPPINY",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_AZURILL",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_PLUSLE",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_MINUN",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_CASTFORM",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_PORYGON",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_EEVEE",
+            "min_level": 24,
+            "max_level": 24
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_PIKACHU",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PICHU",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ROSELIA",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_STARAVIA",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_CLEFAIRY",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_CHANSEY",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_MARILL",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_PLUSLE",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_MINUN",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_CASTFORM",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_PORYGON",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_EEVEE",
+            "min_level": 24,
+            "max_level": 24
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_PIKACHU",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PICHU",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ROSELIA",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_STARAVIA",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_JIGGLYPUFF",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_IGGLYBUFF",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_BONSLY",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_MIME_JR",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_MEOWTH",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_CASTFORM",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_PORYGON",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_EEVEE",
+            "min_level": 24,
+            "max_level": 24
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_PIKACHU",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PICHU",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ROSELIA",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_STARAVIA",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_JIGGLYPUFF",
+            "min_level": 23,
+            "max_level": 23
+          },
+          {
+            "species": "SPECIES_CLEFAIRY",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_MEOWTH",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_MIME_JR",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_BONSLY",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_CHANSEY",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_PORYGON",
+            "min_level": 24,
+            "max_level": 24
+          },
+          {
+            "species": "SPECIES_EEVEE",
+            "min_level": 24,
+            "max_level": 24
+          }
+        ]
+      },
+      "daily_lottery_required": false
+    },
+    "encounters_route_209_lost_tower_1f": {
+      "identity": "Lost Tower 1F — memorial/cultural Ghost habitat; Platinum anchors retained and ecology expanded with depth.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 18,
+            "max_level": 18
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 18,
+            "max_level": 18
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 18,
+            "max_level": 18
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 18,
+            "max_level": 18
+          }
+        ]
+      }
+    },
+    "encounters_route_209_lost_tower_2f": {
+      "identity": "Lost Tower 2F — memorial/cultural Ghost habitat; Platinum anchors retained and ecology expanded with depth.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 18,
+            "max_level": 18
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ]
+      }
+    },
+    "encounters_route_209_lost_tower_3f": {
+      "identity": "Lost Tower 3F — memorial/cultural Ghost habitat; Platinum anchors retained and ecology expanded with depth.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ]
+      }
+    },
+    "encounters_route_209_lost_tower_4f": {
+      "identity": "Lost Tower 4F — memorial/cultural Ghost habitat; Platinum anchors retained and ecology expanded with depth.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 19,
+            "max_level": 19
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 19,
+            "max_level": 19
+          }
+        ]
+      }
+    },
+    "encounters_route_209_lost_tower_5f": {
+      "identity": "Lost Tower 5F — memorial/cultural Ghost habitat; Platinum anchors retained and ecology expanded with depth.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_HAUNTER",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_YAMASK",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_SHUPPET",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_LITWICK",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_PHANTUMP",
+            "min_level": 21,
+            "max_level": 21
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 22,
+            "max_level": 22
+          },
+          {
+            "species": "SPECIES_ZUBAT",
+            "min_level": 20,
+            "max_level": 20
+          },
+          {
+            "species": "SPECIES_GASTLY",
+            "min_level": 21,
+            "max_level": 21
+          }
+        ]
+      }
+    }
+  }
+}
