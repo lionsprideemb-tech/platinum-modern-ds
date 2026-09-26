@@ -311,8 +311,28 @@ def main() -> None:
                 for entry in morning
             ]
             out["land_rate"] = max(int(base.get("land_rate", 0)), 20)
+
+            # Legacy Platinum fields remain populated for compatibility readers.
             out["day"] = timed_species(periods.get("Day", morning), morning, fallbacks)
             out["night"] = timed_species(periods.get("Night", morning), morning, fallbacks)
+
+            # Mercury runtime consumes all four complete authored 12-slot tables.
+            out["mercury_tod_land"] = {}
+            for source_period, runtime_period in (
+                ("Morning", "morning"),
+                ("Day", "day"),
+                ("Evening", "evening"),
+                ("Night", "night"),
+            ):
+                full_period = ensure_12(periods.get(source_period, morning), route_key)
+                out["mercury_tod_land"][runtime_period] = [
+                    {
+                        "level_min": int(entry.get("min_level", entry.get("level", 1))),
+                        "level_max": int(entry.get("max_level", entry.get("min_level", entry.get("level", 1)))),
+                        "species": projected_species(entry["species"], fallbacks),
+                    }
+                    for entry in full_period
+                ]
         elif route.get("land") is False:
             out["land_rate"] = 0
 
@@ -379,7 +399,7 @@ def main() -> None:
         "honey_tree_burmy_present": any("BURMY" in s for pool in HONEY_POOL.values() for s in pool),
         "regional_form_runtime_fallbacks": unique_fallbacks,
         "source_preserves_evening_tables": True,
-        "runtime_projection": "Morning base + two Day/Twilight replacements + two Night/Late-Night replacements",
+        "runtime_projection": "Full Mercury 12-slot Morning/Day/Evening/Night tables with Platinum compatibility fields retained",
         "runtime_species_registry_validation": "PASS",
         "active_ds_species_count": len(supported_species),
     }
