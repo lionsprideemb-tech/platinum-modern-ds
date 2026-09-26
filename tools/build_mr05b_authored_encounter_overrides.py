@@ -60,6 +60,12 @@ ROUTE_TO_FILE = {
 }
 
 FORM_FALLBACKS = {
+    "SPECIES_ABRA_REDUX": "SPECIES_ABRA",
+    "SPECIES_MARBEEP": "SPECIES_MAREEP",
+    "SPECIES_DEERLING_AUTUMN": "SPECIES_DEERLING",
+    "SPECIES_LILLIGANT_HISUI": "SPECIES_LILLIGANT",
+    "SPECIES_MEOWTH_GALAR": "SPECIES_MEOWTH",
+    "SPECIES_VOLTORB_HISUI": "SPECIES_VOLTORB",
     "SPECIES_SHELLOS_WEST": "SPECIES_SHELLOS",
     "SPECIES_SHELLOS_EAST": "SPECIES_SHELLOS",
     "SPECIES_GASTRODON_WEST": "SPECIES_GASTRODON",
@@ -115,6 +121,17 @@ WATER_DEFAULT_WEIGHTS = [60, 30, 5, 4, 1]
 OLD_ROD_DEFAULT_WEIGHTS = [70, 30]
 GOOD_ROD_DEFAULT_WEIGHTS = [60, 20, 20]
 SUPER_ROD_DEFAULT_WEIGHTS = [40, 40, 15, 4, 1]
+
+
+def load_supported_species(root: Path) -> set[str]:
+    registry = root / "generated/species.txt"
+    if not registry.exists():
+        raise SystemExit(f"MR05B expected generated species registry at {registry}")
+    return {
+        line.strip()
+        for line in registry.read_text().splitlines()
+        if line.strip().startswith("SPECIES_")
+    }
 
 
 def projected_species(species: str, fallbacks: list[dict[str, str]]) -> str:
@@ -241,6 +258,18 @@ def set_rate(area: dict[str, Any], field: str, has_entries: bool, default: int) 
         area[field] = default
 
 
+
+def walk_species_tokens(value: Any):
+    if isinstance(value, dict):
+        for child in value.values():
+            yield from walk_species_tokens(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from walk_species_tokens(child)
+    elif isinstance(value, str) and value.startswith("SPECIES_"):
+        yield value
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pokeplatinum_root", type=Path)
@@ -253,6 +282,7 @@ def main() -> None:
     encounter_dir = root / "res/field/encounters"
     source = json.loads(args.source_manifest.read_text())
     routes = source["routes"]
+    supported_species = load_supported_species(root)
 
     missing = sorted(set(ROUTE_TO_FILE) - set(routes))
     if missing:
@@ -312,6 +342,18 @@ def main() -> None:
 
     overrides["encounters_honey_tree"] = HONEY_POOL
 
+    unresolved_runtime_species = sorted({
+        value
+        for area in overrides.values()
+        for value in walk_species_tokens(area)
+        if value not in supported_species
+    })
+    if unresolved_runtime_species:
+        raise SystemExit(
+            "MR05B runtime encounter output contains species outside the active DS registry: "
+            + ", ".join(unresolved_runtime_species)
+        )
+
     output = {
         "schema": 1,
         "description": "Mercury Redux authored Sinnoh encounter overrides recovered from the original Mercury encounter pass.",
@@ -338,6 +380,8 @@ def main() -> None:
         "regional_form_runtime_fallbacks": unique_fallbacks,
         "source_preserves_evening_tables": True,
         "runtime_projection": "Morning base + two Day/Twilight replacements + two Night/Late-Night replacements",
+        "runtime_species_registry_validation": "PASS",
+        "active_ds_species_count": len(supported_species),
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
