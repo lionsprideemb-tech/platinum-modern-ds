@@ -1,0 +1,886 @@
+{
+  "schema": 1,
+  "project": "Pokemon Mercury Redux",
+  "phase": "MR05K",
+  "purpose": "Finish the final four identified standard encounter resources before unknown-map tracing.",
+  "rules": [
+    "Stark Mountain preserves Platinum Camerupt/Rhydon/Graveler/Weezing/Slugma/Magcargo identity while expanding volcanic ecology.",
+    "Heatran remains a scripted static legendary and is never placed in random encounter tables.",
+    "Resort Area preserves Platinum's deliberately strange high-level Magikarp fishing identity instead of homogenizing it into another generic water table."
+  ],
+  "resources": {
+    "encounters_stark_mountain_outside": {
+      "identity": "Stark Mountain exterior — exposed volcanic slope with heavy Rock/Fire/Poison/Steel ecology.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_CAMERUPT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_FEAROW",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_SKARMORY",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_NUMEL",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_RHYHORN",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 59,
+            "max_level": 60
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_CAMERUPT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_FEAROW",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_SKARMORY",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_NUMEL",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_RHYHORN",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 59,
+            "max_level": 60
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_CAMERUPT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_FEAROW",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_SKARMORY",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_NUMEL",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 59,
+            "max_level": 60
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_CAMERUPT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_NUMEL",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_RHYHORN",
+            "min_level": 55,
+            "max_level": 57
+          },
+          {
+            "species": "SPECIES_SALANDIT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 59,
+            "max_level": 60
+          }
+        ]
+      }
+    },
+    "encounters_stark_mountain_room_1": {
+      "identity": "Stark Mountain Room 1 — volcanic cave retaining Magcargo/Rhydon/Golbat/Graveler/Weezing/Slugma anchors.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_SLUGMA",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_RHYHORN",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_SALANDIT",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 59,
+            "max_level": 61
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_SLUGMA",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_RHYHORN",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_SALANDIT",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 59,
+            "max_level": 61
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_SALANDIT",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_SLUGMA",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_TORKOAL",
+            "min_level": 59,
+            "max_level": 61
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_SALANDIT",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 57,
+            "max_level": 59
+          },
+          {
+            "species": "SPECIES_SLUGMA",
+            "min_level": 56,
+            "max_level": 58
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_GLIMMET",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_TORKOAL",
+            "min_level": 59,
+            "max_level": 61
+          }
+        ]
+      }
+    },
+    "encounters_stark_mountain_room_2": {
+      "identity": "Stark Mountain Room 2 — deepest ordinary wild zone before Heatran's scripted chamber; stronger evolved volcanic species.",
+      "land_rate": 10,
+      "periods": {
+        "morning": [
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_SALAZZLE",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_GLIMMORA",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TORKOAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 61,
+            "max_level": 63
+          }
+        ],
+        "day": [
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_SALAZZLE",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_GLIMMORA",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TORKOAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 61,
+            "max_level": 63
+          }
+        ],
+        "evening": [
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_SALAZZLE",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_GLIMMORA",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TORKOAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 61,
+            "max_level": 63
+          }
+        ],
+        "night": [
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_WEEZING",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_MAGCARGO",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_SALAZZLE",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_RHYDON",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_COALOSSAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_GRAVELER",
+            "min_level": 58,
+            "max_level": 60
+          },
+          {
+            "species": "SPECIES_CARKOL",
+            "min_level": 59,
+            "max_level": 61
+          },
+          {
+            "species": "SPECIES_HEATMOR",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_GLIMMORA",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TORKOAL",
+            "min_level": 60,
+            "max_level": 62
+          },
+          {
+            "species": "SPECIES_TURTONATOR",
+            "min_level": 61,
+            "max_level": 63
+          }
+        ]
+      }
+    },
+    "encounters_resort_area": {
+      "identity": "Resort Area pond — preserves the Platinum trophy-fishing Magikarp gimmick, including a Super Rod roll capable of reaching Lv100.",
+      "land_random_encounters": false,
+      "water": {
+        "surf_rate": 10,
+        "surf": [
+          {
+            "species": "SPECIES_GOLDUCK",
+            "min_level": 45,
+            "max_level": 55,
+            "weight": 35
+          },
+          {
+            "species": "SPECIES_PSYDUCK",
+            "min_level": 40,
+            "max_level": 50,
+            "weight": 25
+          },
+          {
+            "species": "SPECIES_AZUMARILL",
+            "min_level": 45,
+            "max_level": 55,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_FEEBAS",
+            "min_level": 40,
+            "max_level": 50,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_MILOTIC",
+            "min_level": 50,
+            "max_level": 55,
+            "weight": 5
+          }
+        ],
+        "old_rod_rate": 25,
+        "old_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 5,
+            "max_level": 15,
+            "weight": 80
+          },
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 10,
+            "max_level": 20,
+            "weight": 20
+          }
+        ],
+        "good_rod_rate": 50,
+        "good_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 20,
+            "max_level": 30,
+            "weight": 60
+          },
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 25,
+            "max_level": 35,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_FEEBAS",
+            "min_level": 25,
+            "max_level": 35,
+            "weight": 10
+          }
+        ],
+        "super_rod_rate": 75,
+        "super_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 40,
+            "max_level": 60,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 30,
+            "max_level": 70,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 20,
+            "max_level": 80,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 10,
+            "max_level": 90,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 1,
+            "max_level": 100,
+            "weight": 20
+          }
+        ]
+      }
+    }
+  },
+  "static_exclusions": {
+    "SPECIES_HEATRAN": "Stark Mountain scripted static encounter only."
+  }
+}
