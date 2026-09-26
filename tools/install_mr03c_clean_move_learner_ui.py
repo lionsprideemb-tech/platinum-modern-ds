@@ -583,21 +583,21 @@ static void MercuryMoveLearner_LoadPalette(void)
 {
     static const u16 palette[16] = {
         GX_RGB(0, 0, 0),
-        GX_RGB(3, 7, 13),
-        GX_RGB(12, 18, 24),
-        GX_RGB(5, 18, 30),
-        GX_RGB(24, 28, 31),
-        GX_RGB(30, 25, 10),
-        GX_RGB(30, 8, 6),
-        GX_RGB(8, 22, 29),
-        GX_RGB(8, 12, 19),
-        GX_RGB(15, 20, 26),
-        GX_RGB(20, 24, 28),
-        GX_RGB(10, 16, 23),
-        GX_RGB(26, 28, 30),
-        GX_RGB(6, 13, 20),
-        GX_RGB(21, 25, 29),
         GX_RGB(31, 31, 31),
+        GX_RGB(14, 19, 24),
+        GX_RGB(4, 18, 31),
+        GX_RGB(5, 11, 19),
+        GX_RGB(31, 24, 5),
+        GX_RGB(31, 6, 5),
+        GX_RGB(5, 23, 31),
+        GX_RGB(3, 7, 13),
+        GX_RGB(9, 14, 20),
+        GX_RGB(17, 21, 25),
+        GX_RGB(6, 12, 19),
+        GX_RGB(23, 26, 29),
+        GX_RGB(4, 10, 17),
+        GX_RGB(19, 23, 27),
+        GX_RGB(2, 5, 10),
     };
 
     GX_LoadBGPltt(palette, 15 * PALETTE_SIZE_BYTES, PALETTE_SIZE_BYTES);
@@ -614,11 +614,12 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
 
     Pokemon_BuildSpriteTemplate(&spriteTemplate, mon, FACE_FRONT);
 
-    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
-    u32 personality = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
     u8 *buffer = Heap_Alloc(HEAP_ID_MOVE_REMINDER, 0xC80);
 
-    CharacterSprite_LoadPokemonSpriteRect(
+    // LoadTiledData returns row-major 10x10 BG-compatible tiles. The
+    // PokemonSpriteRect helper deliberately reorders tiles for OAM shapes,
+    // which produced the striped portrait seen in the previous proof.
+    CharacterSprite_LoadTiledData(
         spriteTemplate.narcID,
         spriteTemplate.character,
         HEAP_ID_MOVE_REMINDER,
@@ -626,16 +627,8 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         0,
         10,
         10,
-        buffer,
-        personality,
-        FALSE,
-        FACE_FRONT,
-        species);
+        buffer);
 
-    // CharacterSprite_LoadPokemonSpriteRect already returns a 10x10
-    // 4bpp tiled frame. A Window with the same 10x10 dimensions uses the
-    // identical tile layout, so copy it directly instead of passing the tiled
-    // data through the generic bitmap blitter.
     MI_CpuCopy8(buffer, portrait->pixels, 0xC80);
 
     Heap_Free(buffer);
@@ -1309,13 +1302,14 @@ def main() -> None:
             "selected move details/effect",
             "button hints",
         ],
+        "portrait_note": "static front frame; Spinda spot overlay can be added in the final polish pass",
         "preserved": [
             "MR03 universal learner backend",
             "normal party-menu entry",
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "Mercury blue palette, tab/card styling, task-free BG Pokemon portrait, expanded app heap",
+        "visual_pass": "dark Mercury blue palette, tab/card styling, BG-compatible front portrait, expanded app heap",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
