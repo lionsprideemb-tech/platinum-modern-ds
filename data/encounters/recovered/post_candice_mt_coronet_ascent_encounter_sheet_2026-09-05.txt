@@ -1,0 +1,235 @@
+POKEMON MERCURY REDUX — POST-CANDICE MT. CORONET ASCENT ENCOUNTER SHEET
+Date: 2026-09-05
+
+SOURCE / DESIGN RULE
+Platinum/Sinnoh is the content source. Mercury expands the ecology while preserving recognizable Platinum anchors. Emerald-derived IDs are hidden engine infrastructure only.
+
+IMPLEMENTATION STATUS
+STAGED SPECIFICATION. The final Platinum-derived upper Mt. Coronet / Spear Pillar maps are not yet constructed in this cumulative source, so these tables are not attached to unrelated placeholder geography.
+
+========================================================================
+MT CORONET B1F FEEBAS LAKE
+Hidden subterranean lake. Platinum cave anchors remain, but the water/fishing ecology is authored around Barboach/Whiscash and permanent Feebas availability instead of a special-tile lottery.
+LAND / CAVE
+- Clefairy: Lv. 50-52 — 20%
+- Golbat: Lv. 50-52 — 15%
+- Graveler: Lv. 50-52 — 15%
+- Machoke: Lv. 51-53 — 10%
+- Nosepass: Lv. 50-52 — 10%
+- Meditite: Lv. 50-52 — 10%
+- Chingling: Lv. 50-52 — 5%
+- Bronzor: Lv. 50-52 — 5%
+- Sableye: Lv. 51-53 — 4%
+- Carbink: Lv. 51-53 — 3%
+- Elgyem: Lv. 52-53 — 2%
+- Absol: Lv. 52-53 — 1%
+SURF
+- Barboach: Lv. 50-52 — 40%
+- Whiscash: Lv. 51-53 — 30%
+- Chinchou: Lv. 50-52 — 15%
+- Tynamo: Lv. 51-53 — 10%
+- Feebas: Lv. 52-53 — 5%
+OLD ROD
+- Magikarp: Lv. 25-30 — 70%
+- Barboach: Lv. 28-32 — 30%
+GOOD ROD
+- Barboach: Lv. 45-48 — 50%
+- Whiscash: Lv. 47-50 — 30%
+- Feebas: Lv. 48-50 — 20%
+SUPER ROD
+- Whiscash: Lv. 52-55 — 45%
+- Gyarados: Lv. 52-55 — 35%
+- Feebas: Lv. 53-56 — 19%
+- Milotic: Lv. 56-58 — 1%
+SPECIAL RULE
+Feebas is always present in the lake's fishing pool. No daily tile roll or hidden 4-tile requirement.
+
+========================================================================
+MT CORONET ASCENT 2F
+First serious post-Galactic-HQ ascent floor; Platinum mineral/fairy/psychic anchors with new crystal and magnetic species.
+LAND / CAVE
+- Clefairy: Lv. 52-54 — 20%
+- Graveler: Lv. 52-54 — 20%
+- Machoke: Lv. 52-54 — 10%
+- Medicham: Lv. 52-54 — 10%
+- Bronzong: Lv. 53-55 — 10%
+- Golbat: Lv. 52-54 — 10%
+- Nosepass: Lv. 52-54 — 5%
+- Chingling: Lv. 52-54 — 5%
+- Carbink: Lv. 53-55 — 4%
+- Tinkatuff: Lv. 53-55 — 4%
+- Mawile: Lv. 54-55 — 1%
+- Minior: Lv. 54-55 — 1%
+
+========================================================================
+MT CORONET ASCENT 3F
+Higher magnetic cavern; evolved psychic/steel and magnetic species become more prominent.
+LAND / CAVE
+- Bronzong: Lv. 53-55 — 20%
+- Graveler: Lv. 53-55 — 20%
+- Golbat: Lv. 53-55 — 10%
+- Machoke: Lv. 53-55 — 10%
+- Medicham: Lv. 53-55 — 10%
+- Chimecho: Lv. 54-56 — 10%
+- Probopass: Lv. 54-56 — 5%
+- Carbink: Lv. 54-56 — 5%
+- Magnezone: Lv. 55-56 — 4%
+- Glimmet: Lv. 54-56 — 4%
+- Solrock: Lv. 55-56 — 1%
+- Lunatone: Lv. 55-56 — 1%
+
+========================================================================
+MT CORONET MOUNTAINSIDE
+Snow-covered exterior between interior ascent chambers. Platinum Snover/Abomasnow and mountain anchors remain; clock-based ecology is meaningful because this section is outdoors.
+MORNING
+- Snover: Lv. 54-56 — 20%
+- Clefairy: Lv. 54-56 — 20%
+- Machoke: Lv. 54-56 — 10%
+- Medicham: Lv. 54-56 — 10%
+- Chingling: Lv. 54-56 — 10%
+- Bronzong: Lv. 55-57 — 10%
+- Abomasnow: Lv. 55-57 — 5%
+- Gligar: Lv. 55-57 — 5%
+- Minior: Lv. 56-57 — 4%
+- Solrock: Lv. 56-57 — 4%
+- Lunatone: Lv. 56-57 — 1%
+- Clefable: Lv. 57 — 1%
+DAY
+- Snover: Lv. 54-56 — 20%
+- Abomasnow: Lv. 55-57 — 20%
+- Machoke: Lv. 54-56 — 10%
+- Medicham: Lv. 54-56 — 10%
+- Clefairy: Lv. 54-56 — 10%
+- Bronzong: Lv. 55-57 — 10%
+- Gligar: Lv. 55-57 — 5%
+- Chingling: Lv. 54-56 — 5%
+- Minior: Lv. 56-57 — 4%
+- Solrock: Lv. 56-57 — 4%
+- Clefable: Lv. 57 — 1%
+- Magnezone: Lv. 57 — 1%
+EVENING
+- Snover: Lv. 54-56 — 20%
+- Clefairy: Lv. 54-56 — 15%
+- Golbat: Lv. 55-57 — 15%
+- Medicham: Lv. 54-56 — 10%
+- Bronzong: Lv. 55-57 — 10%
+- Gligar: Lv. 55-57 — 10%
+- Abomasnow: Lv. 55-57 — 5%
+- Chingling: Lv. 54-56 — 5%
+- Minior: Lv. 56-57 — 4%
+- Lunatone: Lv. 56-57 — 4%
+- Clefable: Lv. 57 — 1%
+- Crobat: Lv. 57 — 1%
+NIGHT
+- Snover: Lv. 54-56 — 20%
+- Golbat: Lv. 55-57 — 20%
+- Noctowl: Lv. 55-57 — 10%
+- Medicham: Lv. 54-56 — 10%
+- Bronzong: Lv. 55-57 — 10%
+- Clefairy: Lv. 54-56 — 10%
+- Abomasnow: Lv. 55-57 — 5%
+- Gligar: Lv. 55-57 — 5%
+- Lunatone: Lv. 56-57 — 4%
+- Minior: Lv. 56-57 — 4%
+- Clefable: Lv. 57 — 1%
+- Crobat: Lv. 57 — 1%
+
+========================================================================
+MT CORONET 4F ROOM1 CRYSTAL GALLERY
+Crystal/mineral gallery; mineral Pokémon become much more prominent than on lower floors.
+LAND / CAVE
+- Graveler: Lv. 54-56 — 20%
+- Bronzong: Lv. 55-57 — 20%
+- Clefairy: Lv. 54-56 — 10%
+- Golbat: Lv. 54-56 — 10%
+- Carbink: Lv. 55-57 — 10%
+- Glimmet: Lv. 55-57 — 10%
+- Nosepass: Lv. 54-56 — 5%
+- Mawile: Lv. 55-57 — 5%
+- Tinkatuff: Lv. 55-57 — 4%
+- Minior: Lv. 56-57 — 4%
+- Beldum: Lv. 57 — 1%
+- Clefable: Lv. 57 — 1%
+
+========================================================================
+MT CORONET 4F ROOM2 WATERFALL SHRINE
+Quiet waterfall/orb chamber; psychic, fairy, ghost, and ancient-feeling species replace some of the heavy mineral emphasis.
+LAND / CAVE
+- Clefairy: Lv. 55-57 — 20%
+- Medicham: Lv. 55-57 — 20%
+- Bronzong: Lv. 55-57 — 10%
+- Golbat: Lv. 55-57 — 10%
+- Chimecho: Lv. 56-58 — 10%
+- Sableye: Lv. 56-58 — 10%
+- Carbink: Lv. 56-58 — 5%
+- Elgyem: Lv. 56-58 — 5%
+- Frigibax: Lv. 57-58 — 4%
+- Minior: Lv. 57-58 — 4%
+- Beldum: Lv. 58 — 1%
+- Clefable: Lv. 58 — 1%
+WATERFALL POOL
+- Barboach: Lv. 52-54 — 40%
+- Whiscash: Lv. 54-56 — 30%
+- Feebas: Lv. 54-56 — 20%
+- Chinchou: Lv. 53-55 — 10%
+
+========================================================================
+MT CORONET 4F ROOM3 GALACTIC TUNNEL
+Narrow final interior approach used by Galactic; darker/steel cave species fit the disturbed tunnel environment.
+LAND / CAVE
+- Golbat: Lv. 56-58 — 20%
+- Machoke: Lv. 56-58 — 20%
+- Graveler: Lv. 56-58 — 10%
+- Bronzong: Lv. 56-58 — 10%
+- Sableye: Lv. 56-58 — 10%
+- Pawniard: Lv. 56-58 — 10%
+- Klang: Lv. 57-59 — 5%
+- Mawile: Lv. 57-59 — 5%
+- Tinkatuff: Lv. 57-59 — 4%
+- Absol: Lv. 58-59 — 4%
+- Beldum: Lv. 59 — 1%
+- Metang: Lv. 59 — 1%
+
+========================================================================
+MT CORONET 5F CELESTIAL CHAMBER
+High celestial cavern near the summit; Platinum fairy/psychic/steel anchors combine with sun/moon/cosmic species.
+LAND / CAVE
+- Clefairy: Lv. 57-59 — 20%
+- Bronzong: Lv. 57-59 — 20%
+- Chimecho: Lv. 58-60 — 10%
+- Graveler: Lv. 57-59 — 10%
+- Golbat: Lv. 57-59 — 10%
+- Medicham: Lv. 57-59 — 10%
+- Solrock: Lv. 58-60 — 5%
+- Lunatone: Lv. 58-60 — 5%
+- Minior: Lv. 59-60 — 4%
+- Elgyem: Lv. 59-60 — 4%
+- Clefable: Lv. 60 — 1%
+- Metang: Lv. 60 — 1%
+
+========================================================================
+MT CORONET 6F SUMMIT GATE
+Final cave floor before Spear Pillar; stronger evolved forms signal the summit and late-story difficulty.
+LAND / CAVE
+- Bronzong: Lv. 58-60 — 20%
+- Golbat: Lv. 58-60 — 15%
+- Graveler: Lv. 58-60 — 15%
+- Clefable: Lv. 59-61 — 10%
+- Machoke: Lv. 58-60 — 10%
+- Medicham: Lv. 58-60 — 10%
+- Magnezone: Lv. 59-61 — 5%
+- Probopass: Lv. 59-61 — 5%
+- Chimecho: Lv. 59-61 — 4%
+- Metang: Lv. 60-61 — 4%
+- Crobat: Lv. 61 — 1%
+- Machamp: Lv. 61 — 1%
+
+========================================================================
+SPEAR PILLAR
+Sacred summit ruins and Galactic climax area.
+STATIC POLICY
+- No generic random wild encounters.
+- Platinum story climax routes into Giratina / Distortion World rather than making Dialga or Palkia ordinary random encounters.
+- Dialga/Palkia portal encounters, if retained, remain later scripted static encounters tied to their proper orb/story conditions.
+- Any Mercury-specific legendary additions must be authored as static/story content, never grass/cave random slots.
+
