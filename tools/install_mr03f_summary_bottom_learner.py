@@ -46,10 +46,10 @@ def patch_text(root: Path) -> None:
         "PokemonSummary_Text_MercuryLearnerTitle": "MOVE LEARNER",
         "PokemonSummary_Text_MercuryLearnerAvailable": "AVAILABLE MOVES",
         "PokemonSummary_Text_MercuryLearnerRow": "  {STRVAR_1 6, 0, 0}",
-        "PokemonSummary_Text_MercuryLearnerRowSelected": "▶ {STRVAR_1 6, 0, 0}",
+        "PokemonSummary_Text_MercuryLearnerRowSelected": "> {STRVAR_1 6, 0, 0}",
         "PokemonSummary_Text_MercuryLearnerStats": "POWER     ACC.      PP",
         "PokemonSummary_Text_MercuryLearnerNumber": "{STRVAR_1 52, 0, 0}",
-        "PokemonSummary_Text_MercuryLearnerHelp": "↑↓ SELECT   A TEACH   L/R PAGE   B BACK",
+        "PokemonSummary_Text_MercuryLearnerHelp": "D-PAD:SELECT  A:TEACH  L/R:PAGE  B:BACK",
         "PokemonSummary_Text_MercuryLearnerReplaceHelp": "Choose a move to replace on the top screen.",
         "PokemonSummary_Text_MercuryLearnerNoMoves": "No additional moves are available.",
     }
