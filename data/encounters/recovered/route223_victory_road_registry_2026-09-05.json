@@ -1,0 +1,1260 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "scope": "Route 223 / Pokemon League approach / Victory Road encounter specification",
+  "status": "STAGED_FOR_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum / Sinnoh, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography, encounter anchors, ecology, and progression. Emerald-derived engine IDs are hidden implementation infrastructure only and are not content sources.",
+  "runtime_note": "Final player-facing Route 223, Pokemon League approach, and Victory Road maps are not yet constructed in this cumulative source. Do not attach these specs to unrelated engine geometry.",
+  "route_223": {
+    "identity": "Platinum Route 223 sea route: a fully aquatic final approach from Sunyshore to the Pokemon League, expanded with rare open-water species while retaining Tentacruel/Pelipper/Mantyke as the core.",
+    "land_encounters": false,
+    "surf": [
+      {
+        "species": "SPECIES_TENTACRUEL",
+        "min_level": 61,
+        "max_level": 64,
+        "weight": 30
+      },
+      {
+        "species": "SPECIES_PELIPPER",
+        "min_level": 61,
+        "max_level": 64,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_MANTYKE",
+        "min_level": 60,
+        "max_level": 63,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MANTINE",
+        "min_level": 62,
+        "max_level": 65,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_SHARPEDO",
+        "min_level": 62,
+        "max_level": 65,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_ALOMOMOLA",
+        "min_level": 61,
+        "max_level": 64,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_VELUZA",
+        "min_level": 62,
+        "max_level": 65,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_WUGTRIO",
+        "min_level": 62,
+        "max_level": 65,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_JELLICENT",
+        "min_level": 63,
+        "max_level": 65,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_DONDOZO",
+        "min_level": 64,
+        "max_level": 65,
+        "weight": 1
+      }
+    ],
+    "old_rod": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 20,
+        "max_level": 30,
+        "weight": 80
+      },
+      {
+        "species": "SPECIES_HORSEA",
+        "min_level": 25,
+        "max_level": 32,
+        "weight": 20
+      }
+    ],
+    "good_rod": [
+      {
+        "species": "SPECIES_REMORAID",
+        "min_level": 48,
+        "max_level": 55,
+        "weight": 30
+      },
+      {
+        "species": "SPECIES_HORSEA",
+        "min_level": 48,
+        "max_level": 55,
+        "weight": 25
+      },
+      {
+        "species": "SPECIES_CARVANHA",
+        "min_level": 50,
+        "max_level": 56,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_BRUXISH",
+        "min_level": 52,
+        "max_level": 57,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_OCTILLERY",
+        "min_level": 54,
+        "max_level": 58,
+        "weight": 10
+      }
+    ],
+    "super_rod": [
+      {
+        "species": "SPECIES_GYARADOS",
+        "min_level": 58,
+        "max_level": 64,
+        "weight": 25
+      },
+      {
+        "species": "SPECIES_OCTILLERY",
+        "min_level": 58,
+        "max_level": 64,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_SHARPEDO",
+        "min_level": 59,
+        "max_level": 65,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_KINGDRA",
+        "min_level": 60,
+        "max_level": 65,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_WAILORD",
+        "min_level": 60,
+        "max_level": 65,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_VELUZA",
+        "min_level": 60,
+        "max_level": 65,
+        "weight": 8
+      },
+      {
+        "species": "SPECIES_DONDOZO",
+        "min_level": 62,
+        "max_level": 65,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_BRUXISH",
+        "min_level": 60,
+        "max_level": 64,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_RELICANTH",
+        "min_level": 62,
+        "max_level": 65,
+        "weight": 2
+      }
+    ],
+    "platinum_anchors": [
+      "SPECIES_TENTACRUEL",
+      "SPECIES_PELIPPER",
+      "SPECIES_MANTYKE",
+      "SPECIES_MAGIKARP",
+      "SPECIES_REMORAID",
+      "SPECIES_OCTILLERY",
+      "SPECIES_GYARADOS"
+    ],
+    "notes": [
+      "No land encounter table; Route 223 is a water route in Platinum.",
+      "Mercury raises the practical encounter levels to match its late-game progression.",
+      "Waterfall traversal remains governed by Mercury HM-free badge/story + compatible-party-Pokemon rules; no move-slot requirement."
+    ]
+  },
+  "victory_road": {
+    "design": "Main pre-League Victory Road remains Platinum-based 1F / 2F / B1F. Each floor preserves Platinum anchors but has a different Mercury identity. No generic Rock Smash encounters are invented because Platinum does not list a Rock Smash wild table here.",
+    "areas": {
+      "1F_ROCKY_GATE": {
+        "identity": "Rock/ground entry chamber. Platinum anchors Graveler, Onix, Rhyhorn/Rhydon, Golbat, Steelix and Gabite remain visible; Mercury adds late-game mineral/dragon targets.",
+        "time_of_day": {
+          "Morning": [
+            {
+              "species": "SPECIES_RHYDON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GARGANACL",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_GLIMMORA",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_PUPITAR",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_DRUDDIGON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LYCANROC_MIDDAY",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_RHYPERIOR",
+              "min_level": 66,
+              "max_level": 66,
+              "weight": 1
+            }
+          ],
+          "Day": [
+            {
+              "species": "SPECIES_RHYDON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GARGANACL",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_GLIMMORA",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_PUPITAR",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_DRUDDIGON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LYCANROC_MIDDAY",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_RHYPERIOR",
+              "min_level": 66,
+              "max_level": 66,
+              "weight": 1
+            }
+          ],
+          "Evening": [
+            {
+              "species": "SPECIES_RHYDON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GARGANACL",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_GLIMMORA",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_PUPITAR",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_DRUDDIGON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LYCANROC_DUSK",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_RHYPERIOR",
+              "min_level": 66,
+              "max_level": 66,
+              "weight": 1
+            }
+          ],
+          "Night": [
+            {
+              "species": "SPECIES_RHYDON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 7
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 63,
+              "max_level": 65,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GARGANACL",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_GLIMMORA",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_PUPITAR",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_DRUDDIGON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LYCANROC_MIDNIGHT",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_RHYPERIOR",
+              "min_level": 66,
+              "max_level": 66,
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "2F_MAGNETIC_GALLERY": {
+        "identity": "Steel/magnetic upper chamber. Platinum Steelix/Magneton/Gabite core expanded with evolved Steel and Ground species.",
+        "time_of_day": {
+          "Morning": [
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 20
+            },
+            {
+              "species": "SPECIES_MAGNETON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_METANG",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_BISHARP",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_EXCADRILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_PROBOPASS",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_REVAVROOM",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAGNEZONE",
+              "min_level": 67,
+              "max_level": 67,
+              "weight": 1
+            }
+          ],
+          "Day": [
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 20
+            },
+            {
+              "species": "SPECIES_MAGNETON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_METANG",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_BISHARP",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_EXCADRILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_PROBOPASS",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_REVAVROOM",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAGNEZONE",
+              "min_level": 67,
+              "max_level": 67,
+              "weight": 1
+            }
+          ],
+          "Evening": [
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 20
+            },
+            {
+              "species": "SPECIES_MAGNETON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_METANG",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_BISHARP",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_EXCADRILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_PROBOPASS",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_REVAVROOM",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAGNEZONE",
+              "min_level": 67,
+              "max_level": 67,
+              "weight": 1
+            }
+          ],
+          "Night": [
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 20
+            },
+            {
+              "species": "SPECIES_MAGNETON",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 7
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 13
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_METANG",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_BISHARP",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_EXCADRILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_PROBOPASS",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_REVAVROOM",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAGNEZONE",
+              "min_level": 67,
+              "max_level": 67,
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "B1F_UNDERGROUND_WATER": {
+        "identity": "Underground lake chamber. Platinum Azumarill/Floatzel plus cave anchors preserved, with a distinct Water/Fighting/Dragon expansion.",
+        "time_of_day": {
+          "Morning": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_POLIWRATH",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 7
+            },
+            {
+              "species": "SPECIES_CRAWDAUNT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_ARAQUANID",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_HAKAMO_O",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_KINGDRA",
+              "min_level": 68,
+              "max_level": 68,
+              "weight": 1
+            }
+          ],
+          "Day": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_POLIWRATH",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 7
+            },
+            {
+              "species": "SPECIES_CRAWDAUNT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_ARAQUANID",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_HAKAMO_O",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_KINGDRA",
+              "min_level": 68,
+              "max_level": 68,
+              "weight": 1
+            }
+          ],
+          "Evening": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_POLIWRATH",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 7
+            },
+            {
+              "species": "SPECIES_CRAWDAUNT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_ARAQUANID",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_HAKAMO_O",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_KINGDRA",
+              "min_level": 68,
+              "max_level": 68,
+              "weight": 1
+            }
+          ],
+          "Night": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 7
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 64,
+              "max_level": 66,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 13
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_POLIWRATH",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 7
+            },
+            {
+              "species": "SPECIES_CRAWDAUNT",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_ARAQUANID",
+              "min_level": 65,
+              "max_level": 67,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_HAKAMO_O",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_KINGDRA",
+              "min_level": 68,
+              "max_level": 68,
+              "weight": 1
+            }
+          ]
+        },
+        "surf": [
+          {
+            "species": "SPECIES_FLOATZEL",
+            "min_level": 64,
+            "max_level": 67,
+            "weight": 35
+          },
+          {
+            "species": "SPECIES_AZUMARILL",
+            "min_level": 64,
+            "max_level": 67,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_GOLBAT",
+            "min_level": 64,
+            "max_level": 67,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_POLIWHIRL",
+            "min_level": 64,
+            "max_level": 67,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_WHISCASH",
+            "min_level": 64,
+            "max_level": 67,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_ARAQUANID",
+            "min_level": 65,
+            "max_level": 67,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_CRAWDAUNT",
+            "min_level": 65,
+            "max_level": 67,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_BARBOACH",
+            "min_level": 63,
+            "max_level": 66,
+            "weight": 4
+          },
+          {
+            "species": "SPECIES_KINGDRA",
+            "min_level": 67,
+            "max_level": 68,
+            "weight": 1
+          }
+        ],
+        "old_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 20,
+            "max_level": 30,
+            "weight": 80
+          },
+          {
+            "species": "SPECIES_GOLDEEN",
+            "min_level": 25,
+            "max_level": 32,
+            "weight": 20
+          }
+        ],
+        "good_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 48,
+            "max_level": 54,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_BARBOACH",
+            "min_level": 48,
+            "max_level": 55,
+            "weight": 25
+          },
+          {
+            "species": "SPECIES_CORPHISH",
+            "min_level": 50,
+            "max_level": 56,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_GOLDEEN",
+            "min_level": 50,
+            "max_level": 56,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_REMORAID",
+            "min_level": 50,
+            "max_level": 56,
+            "weight": 10
+          }
+        ],
+        "super_rod": [
+          {
+            "species": "SPECIES_GYARADOS",
+            "min_level": 60,
+            "max_level": 67,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_WHISCASH",
+            "min_level": 60,
+            "max_level": 67,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_CRAWDAUNT",
+            "min_level": 61,
+            "max_level": 67,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_OCTILLERY",
+            "min_level": 60,
+            "max_level": 66,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_KINGDRA",
+            "min_level": 62,
+            "max_level": 68,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_HUNTAIL",
+            "min_level": 62,
+            "max_level": 67,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_GOREBYSS",
+            "min_level": 62,
+            "max_level": 67,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_RELICANTH",
+            "min_level": 63,
+            "max_level": 68,
+            "weight": 5
+          }
+        ]
+      }
+    },
+    "marley_branch_policy": {
+      "status": "STAGED_FOR_LATER_ROUTE224_PASS",
+      "platinum_reference": "Platinum locks the Marley/Route 224 branch behind the National Dex. Mercury must not use that postgame lock because supported Pokemon are intended to be obtainable before the League/postgame.",
+      "mercury_policy": "Unlock the Marley branch through authored pre-League story/progression when its real Sinnoh map and Route 224 content are built. Keep its encounter tables separate from the main 1F/2F/B1F route."
+    },
+    "league_approach": {
+      "random_wild_encounters": false,
+      "youngster_martin": "Final mandatory Youngster Martin battle remains a scripted trainer encounter before the League; this ecology pass does not change his canonical team."
+    }
+  }
+}
