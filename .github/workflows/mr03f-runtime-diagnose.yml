@@ -1,0 +1,158 @@
+name: MR03F Runtime Diagnose
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr03f-summary-bottom-learner
+    paths:
+      - ".github/workflows/mr03f-runtime-diagnose.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose-runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download already-built MR03F proof artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-mr03f-summary-bottom-move-learner
+          path: prior-proof
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+          repository: \${{ github.repository }}
+          run-id: 36247126383
+
+      - name: Install runtime only
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends python3-venv libsdl2-2.0-0
+          python3 -m venv "$RUNNER_TEMP/mr03f-diag"
+          . "$RUNNER_TEMP/mr03f-diag/bin/activate"
+          pip install --upgrade pip Pillow py-desmume
+
+      - name: Capture the exact crash boundary
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr03f-diag/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import Keys, keymask
+
+          roms = list(Path("prior-proof").rglob("*.nds"))
+          if len(roms) != 1:
+              raise SystemExit(f"expected one proof ROM, found {roms}")
+          rom = roms[0]
+
+          out = Path("diag")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          frame = 0
+          records = []
+
+          def snap(label):
+              try:
+                  image = emu.screenshot().convert("RGB")
+                  p = out / f"{len(records):02d}-{label}-{frame:05d}.png"
+                  image.save(p)
+                  records.append({
+                      "label": label,
+                      "frame": frame,
+                      "running": bool(emu.is_running()),
+                      "file": p.name,
+                  })
+              except Exception as exc:
+                  records.append({
+                      "label": label,
+                      "frame": frame,
+                      "running": bool(emu.is_running()),
+                      "screenshot_error": repr(exc),
+                  })
+
+          def cycle(count, probe_every=None, label="probe"):
+              global frame
+              for i in range(count):
+                  emu.cycle(False)
+                  frame += 1
+                  if probe_every and i % probe_every == 0:
+                      snap(f"{label}-{i:03d}")
+                  if not emu.is_running():
+                      snap(f"{label}-STOP")
+                      return False
+              return True
+
+          def press(key, hold=4, settle=0, name="key"):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              ok = cycle(hold, probe_every=1, label=f"{name}-hold")
+              emu.input.keypad_rm_key(mask)
+              if not ok:
+                  return False
+              if settle:
+                  return cycle(settle, probe_every=max(1, settle // 6), label=f"{name}-settle")
+              return True
+
+          try:
+              if not cycle(3600):
+                  raise SystemExit("runtime stopped before field harness")
+              snap("field-ready")
+
+              if not press(Keys.KEY_X, settle=120, name="open-start"):
+                  raise SystemExit("runtime stopped opening Start Menu")
+              snap("start-menu")
+
+              if not press(Keys.KEY_A, settle=180, name="open-party"):
+                  raise SystemExit("runtime stopped opening party")
+              snap("party-menu")
+
+              if not press(Keys.KEY_A, settle=120, name="open-context"):
+                  raise SystemExit("runtime stopped opening Pokemon context menu")
+              snap("pokemon-context")
+
+              if not press(Keys.KEY_DOWN, settle=60, name="select-learner"):
+                  raise SystemExit("runtime stopped selecting Move Learner")
+              snap("learner-selected")
+
+              # The crash happened during this A transition in the full proof.
+              # Probe almost every frame so we preserve the last good screen.
+              mask = keymask(Keys.KEY_A)
+              emu.input.keypad_add_key(mask)
+              if not cycle(4, probe_every=1, label="launch-hold"):
+                  raise SystemExit("runtime stopped during launch A hold")
+              emu.input.keypad_rm_key(mask)
+
+              cycle(420, probe_every=4, label="launch-settle")
+              snap("after-launch-window")
+          finally:
+              try:
+                  emu.destroy()
+              except Exception:
+                  pass
+
+          (out / "runtime-diag.json").write_text(json.dumps({
+              "rom": str(rom),
+              "last_frame": frame,
+              "records": records,
+          }, indent=2) + "\n")
+          PY
+
+      - name: Upload diagnostic frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr03f-runtime-diagnostic
+          path: diag/
+          if-no-files-found: error
+          retention-days: 14
