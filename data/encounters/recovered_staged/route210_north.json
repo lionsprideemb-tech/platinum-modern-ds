@@ -1,0 +1,529 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "area": "Route 210 North / Celestic approach",
+  "status": "AUTHORED_PENDING_FINAL_SINNOH_MAP",
+  "design_source": "Pokemon Platinum Route 210 North, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines ecology and geography. Engine map IDs are not design sources.",
+  "runtime_note": "The cumulative source does not yet contain a finished player-facing Route 210 North map. This registry is intentionally not bound to an unrelated engine map. Wire it when the Platinum/Sinnoh Route 210 North map is constructed.",
+  "level_band": "38-42",
+  "land_encounters": {
+    "Morning": [
+      {
+        "species": "SPECIES_SWABLU",
+        "min_level": 38,
+        "max_level": 40,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_MEDITITE",
+        "min_level": 38,
+        "max_level": 40,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_BIBAREL",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_SPOINK",
+        "min_level": 38,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_NATU",
+        "min_level": 38,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_HATENNA",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MACHOP",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_SCYTHER",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_SNORUNT",
+        "min_level": 40,
+        "max_level": 41,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_ABSOL",
+        "min_level": 40,
+        "max_level": 41,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_BAGON",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      },
+      {
+        "species": "SPECIES_VULPIX_ALOLA",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      }
+    ],
+    "Day": [
+      {
+        "species": "SPECIES_SWABLU",
+        "min_level": 38,
+        "max_level": 40,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_MEDITITE",
+        "min_level": 38,
+        "max_level": 40,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_MACHOP",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_BIBAREL",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_NATU",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_HATENNA",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_SCYTHER",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_SPOINK",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_ABSOL",
+        "min_level": 40,
+        "max_level": 41,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_MACHOKE",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_BAGON",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      },
+      {
+        "species": "SPECIES_VULPIX_ALOLA",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      }
+    ],
+    "Evening": [
+      {
+        "species": "SPECIES_SWABLU",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_HOOTHOOT",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_MEDITITE",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MACHOKE",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_NATU",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_HATENNA",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_SCYTHER",
+        "min_level": 40,
+        "max_level": 41,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_ABSOL",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_NOCTOWL",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_SNORUNT",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_BAGON",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      },
+      {
+        "species": "SPECIES_VULPIX_ALOLA",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      }
+    ],
+    "Night": [
+      {
+        "species": "SPECIES_NOCTOWL",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_HOOTHOOT",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_SWABLU",
+        "min_level": 39,
+        "max_level": 40,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MEDITITE",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_ABSOL",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_SNORUNT",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_HATENNA",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_MACHOKE",
+        "min_level": 40,
+        "max_level": 42,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_SCYTHER",
+        "min_level": 40,
+        "max_level": 41,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_NATU",
+        "min_level": 39,
+        "max_level": 41,
+        "weight": 4
+      },
+      {
+        "species": "SPECIES_BAGON",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      },
+      {
+        "species": "SPECIES_VULPIX_ALOLA",
+        "min_level": 41,
+        "max_level": 42,
+        "weight": 1
+      }
+    ]
+  },
+  "surf": {
+    "encounter_rate": 5,
+    "mons": [
+      {
+        "species": "SPECIES_PSYDUCK",
+        "min_level": 38,
+        "max_level": 41
+      },
+      {
+        "species": "SPECIES_GOLDUCK",
+        "min_level": 39,
+        "max_level": 42
+      },
+      {
+        "species": "SPECIES_SLOWPOKE",
+        "min_level": 39,
+        "max_level": 41
+      },
+      {
+        "species": "SPECIES_POLIWHIRL",
+        "min_level": 40,
+        "max_level": 42
+      },
+      {
+        "species": "SPECIES_DRATINI",
+        "min_level": 41,
+        "max_level": 42
+      }
+    ]
+  },
+  "fishing": {
+    "encounter_rate": 30,
+    "mons": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 15,
+        "max_level": 25
+      },
+      {
+        "species": "SPECIES_BARBOACH",
+        "min_level": 25,
+        "max_level": 32
+      },
+      {
+        "species": "SPECIES_BARBOACH",
+        "min_level": 32,
+        "max_level": 38
+      },
+      {
+        "species": "SPECIES_PSYDUCK",
+        "min_level": 32,
+        "max_level": 38
+      },
+      {
+        "species": "SPECIES_DRATINI",
+        "min_level": 36,
+        "max_level": 40
+      },
+      {
+        "species": "SPECIES_WHISCASH",
+        "min_level": 39,
+        "max_level": 44
+      },
+      {
+        "species": "SPECIES_GYARADOS",
+        "min_level": 39,
+        "max_level": 44
+      },
+      {
+        "species": "SPECIES_GOLDUCK",
+        "min_level": 39,
+        "max_level": 43
+      },
+      {
+        "species": "SPECIES_DRATINI",
+        "min_level": 40,
+        "max_level": 43
+      },
+      {
+        "species": "SPECIES_DRAGONAIR",
+        "min_level": 42,
+        "max_level": 44
+      }
+    ]
+  },
+  "instant_honey_tree": {
+    "consume_honey": 1,
+    "cooldown": 0,
+    "pool": [
+      {
+        "species": "SPECIES_ABSOL",
+        "chance": 20
+      },
+      {
+        "species": "SPECIES_TEDDIURSA",
+        "chance": 15
+      },
+      {
+        "species": "SPECIES_SWABLU",
+        "chance": 15
+      },
+      {
+        "species": "SPECIES_HERACROSS",
+        "chance": 10
+      },
+      {
+        "species": "SPECIES_MUNCHLAX",
+        "chance": 10
+      },
+      {
+        "species": "SPECIES_MAWILE",
+        "chance": 10
+      },
+      {
+        "species": "SPECIES_BAGON",
+        "chance": 10
+      },
+      {
+        "species": "SPECIES_VULPIX_ALOLA",
+        "chance": 5
+      },
+      {
+        "species": "SPECIES_HATENNA",
+        "chance": 5
+      }
+    ]
+  },
+  "celestic_town": {
+    "random_land_encounters": false,
+    "surf": [
+      {
+        "species": "SPECIES_PSYDUCK",
+        "min_level": 38,
+        "max_level": 42,
+        "chance": 90
+      },
+      {
+        "species": "SPECIES_GOLDUCK",
+        "min_level": 40,
+        "max_level": 44,
+        "chance": 10
+      }
+    ],
+    "old_rod": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 10,
+        "max_level": 20,
+        "chance": 100
+      }
+    ],
+    "good_rod": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 25,
+        "max_level": 34,
+        "chance": 65
+      },
+      {
+        "species": "SPECIES_GOLDEEN",
+        "min_level": 27,
+        "max_level": 35,
+        "chance": 35
+      }
+    ],
+    "super_rod": [
+      {
+        "species": "SPECIES_GYARADOS",
+        "min_level": 40,
+        "max_level": 45,
+        "chance": 60
+      },
+      {
+        "species": "SPECIES_CORPHISH",
+        "min_level": 38,
+        "max_level": 44,
+        "chance": 30
+      },
+      {
+        "species": "SPECIES_SEAKING",
+        "min_level": 42,
+        "max_level": 46,
+        "chance": 5
+      },
+      {
+        "species": "SPECIES_CRAWDAUNT",
+        "min_level": 42,
+        "max_level": 46,
+        "chance": 5
+      }
+    ],
+    "correction_note": "Platinum Celestic Town has water encounters; previous no-wild statement applied only to land/ruins and is superseded."
+  },
+  "celestic_ruins": {
+    "random_wild_encounters": false,
+    "reason": "Story/ruins interior; no random encounters."
+  },
+  "platinum_anchors": [
+    "Swablu",
+    "Meditite",
+    "Bibarel",
+    "Machop",
+    "Machoke",
+    "Scyther",
+    "Hoothoot",
+    "Noctowl",
+    "Psyduck",
+    "Golduck",
+    "Bagon"
+  ],
+  "mercury_new_highlights": [
+    "Spoink",
+    "Natu",
+    "Hatenna",
+    "Absol",
+    "Snorunt",
+    "Alolan Vulpix",
+    "Slowpoke",
+    "Poliwhirl",
+    "Dratini"
+  ]
+}
