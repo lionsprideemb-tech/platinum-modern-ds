@@ -1,0 +1,1456 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "scope": "Sendoff Spring / Turnback Cave / lake guardians / Fullmoon Island / Newmoon Island / Dialga-Palkia portal encounter specification",
+  "status": "STAGED_FOR_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum / Sinnoh, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography, encounter anchors, ecology, static encounter staging, and story placement. Emerald-derived engine IDs are hidden implementation infrastructure only and are never content sources.",
+  "runtime_note": "The finished Platinum-derived Sendoff Spring, Turnback Cave, Fullmoon Island, Newmoon Island, lake caverns, and late Spear Pillar static-event maps/scripts are not all constructed in this cumulative source. Do not attach these specifications to unrelated engine geography.",
+  "areas": {
+    "SENDOFF_SPRING": {
+      "identity": "Sinnoh's secret fourth lake and the return point from the Distortion World. Platinum anchors Bibarel, Golduck, Staravia/Noctowl and Chimecho remain visible; Mercury adds a restrained liminal Ghost/Psychic layer rather than turning the area into a generic route.",
+      "availability": "Accessible immediately when the player exits the Distortion World, as in Platinum.",
+      "time_of_day_land": {
+        "Morning": [
+          {
+            "species": "SPECIES_BIBAREL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_GOLDUCK",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_STARAVIA",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CHIMECHO",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 8
+          },
+          {
+            "species": "SPECIES_CHINGLING",
+            "min_level": 58,
+            "max_level": 59,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_BRONZOR",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_HOUNDSTONE",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 3
+          },
+          {
+            "species": "SPECIES_SPIRITOMB",
+            "min_level": 61,
+            "max_level": 61,
+            "weight": 2
+          },
+          {
+            "species": "SPECIES_MISMAGIUS",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 2
+          }
+        ],
+        "Day": [
+          {
+            "species": "SPECIES_BIBAREL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_GOLDUCK",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_STARAVIA",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_CHIMECHO",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 8
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 8
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 7
+          },
+          {
+            "species": "SPECIES_CHINGLING",
+            "min_level": 58,
+            "max_level": 59,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_BRONZOR",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_HOUNDSTONE",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 3
+          },
+          {
+            "species": "SPECIES_SPIRITOMB",
+            "min_level": 61,
+            "max_level": 61,
+            "weight": 2
+          },
+          {
+            "species": "SPECIES_MISMAGIUS",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 2
+          }
+        ],
+        "Evening": [
+          {
+            "species": "SPECIES_BIBAREL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_GOLDUCK",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_STARAVIA",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 8
+          },
+          {
+            "species": "SPECIES_NOCTOWL",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 8
+          },
+          {
+            "species": "SPECIES_CHIMECHO",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 8
+          },
+          {
+            "species": "SPECIES_BRONZOR",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_HOUNDSTONE",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_SPIRITOMB",
+            "min_level": 61,
+            "max_level": 61,
+            "weight": 3
+          },
+          {
+            "species": "SPECIES_MISMAGIUS",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 3
+          }
+        ],
+        "Night": [
+          {
+            "species": "SPECIES_BIBAREL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_GOLDUCK",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_NOCTOWL",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_CHIMECHO",
+            "min_level": 59,
+            "max_level": 61,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_MISDREAVUS",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_DUSKULL",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_GREAVARD",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 8
+          },
+          {
+            "species": "SPECIES_HOUNDSTONE",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_BRONZOR",
+            "min_level": 58,
+            "max_level": 60,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MISMAGIUS",
+            "min_level": 60,
+            "max_level": 61,
+            "weight": 3
+          },
+          {
+            "species": "SPECIES_SPIRITOMB",
+            "min_level": 61,
+            "max_level": 61,
+            "weight": 2
+          },
+          {
+            "species": "SPECIES_CHINGLING",
+            "min_level": 58,
+            "max_level": 59,
+            "weight": 2
+          }
+        ]
+      },
+      "surf": [
+        {
+          "species": "SPECIES_GOLDUCK",
+          "min_level": 58,
+          "max_level": 62,
+          "weight": 40
+        },
+        {
+          "species": "SPECIES_JELLICENT",
+          "min_level": 59,
+          "max_level": 62,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_BASCULEGION",
+          "min_level": 60,
+          "max_level": 62,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_SLOWKING",
+          "min_level": 60,
+          "max_level": 62,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_MILOTIC",
+          "min_level": 61,
+          "max_level": 62,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_DHELMISE",
+          "min_level": 61,
+          "max_level": 62,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_BRUXISH",
+          "min_level": 60,
+          "max_level": 62,
+          "weight": 5
+        }
+      ],
+      "old_rod": [
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 25,
+          "max_level": 35,
+          "weight": 80
+        },
+        {
+          "species": "SPECIES_GOLDEEN",
+          "min_level": 30,
+          "max_level": 38,
+          "weight": 20
+        }
+      ],
+      "good_rod": [
+        {
+          "species": "SPECIES_GOLDEEN",
+          "min_level": 52,
+          "max_level": 58,
+          "weight": 30
+        },
+        {
+          "species": "SPECIES_MAGIKARP",
+          "min_level": 50,
+          "max_level": 56,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_BASCULIN",
+          "min_level": 52,
+          "max_level": 58,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_FEEBAS",
+          "min_level": 54,
+          "max_level": 59,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_CHINCHOU",
+          "min_level": 52,
+          "max_level": 58,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_FRILLISH",
+          "min_level": 53,
+          "max_level": 59,
+          "weight": 10
+        }
+      ],
+      "super_rod": [
+        {
+          "species": "SPECIES_GYARADOS",
+          "min_level": 58,
+          "max_level": 63,
+          "weight": 25
+        },
+        {
+          "species": "SPECIES_SEAKING",
+          "min_level": 58,
+          "max_level": 63,
+          "weight": 20
+        },
+        {
+          "species": "SPECIES_MILOTIC",
+          "min_level": 60,
+          "max_level": 64,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BASCULEGION",
+          "min_level": 60,
+          "max_level": 64,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_JELLICENT",
+          "min_level": 60,
+          "max_level": 64,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_DHELMISE",
+          "min_level": 61,
+          "max_level": 64,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_RELICANTH",
+          "min_level": 61,
+          "max_level": 64,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_BRUXISH",
+          "min_level": 60,
+          "max_level": 64,
+          "weight": 5
+        }
+      ],
+      "platinum_dual_slot_policy": "Solrock/Lunatone are NOT imported from Platinum's GBA dual-slot method. Mercury does not use cartridge-insertion encounter mechanics as a content source."
+    },
+    "TURNBACK_CAVE": {
+      "availability_policy": "Mercury removes Platinum's Hall-of-Fame gate. Turnback Cave opens after the Distortion World story resolution and before the League so Giratina retry/Griseous Orb access is never postgame-only.",
+      "maze_policy": "Preserve Platinum's three-pillar / under-30-room maze identity. Exact room-randomization script is deferred to the final map implementation.",
+      "tiers": {
+        "ENTRANCE_TO_FIRST_PILLAR": {
+          "identity": "Outer echo rooms retaining Platinum Gastly/Golbat/Bronzor/Chingling/Duskull anchors.",
+          "time_of_day": {
+            "Morning": [
+              {
+                "species": "SPECIES_GASTLY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 20
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_BRONZOR",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_CHINGLING",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSKULL",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_MISDREAVUS",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_ELGYEM",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_BALTOY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLETT",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_GREAVARD",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 60,
+                "max_level": 60,
+                "weight": 1
+              }
+            ],
+            "Day": [
+              {
+                "species": "SPECIES_GASTLY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 20
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_BRONZOR",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_CHINGLING",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSKULL",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_MISDREAVUS",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_ELGYEM",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_BALTOY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLETT",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_GREAVARD",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 60,
+                "max_level": 60,
+                "weight": 1
+              }
+            ],
+            "Evening": [
+              {
+                "species": "SPECIES_GASTLY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 18
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_BRONZOR",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_CHINGLING",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSKULL",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_MISDREAVUS",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_ELGYEM",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_BALTOY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLETT",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_GREAVARD",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 60,
+                "max_level": 60,
+                "weight": 1
+              }
+            ],
+            "Night": [
+              {
+                "species": "SPECIES_GASTLY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 16
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 14
+              },
+              {
+                "species": "SPECIES_BRONZOR",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 14
+              },
+              {
+                "species": "SPECIES_CHINGLING",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 9
+              },
+              {
+                "species": "SPECIES_DUSKULL",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 14
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 9
+              },
+              {
+                "species": "SPECIES_MISDREAVUS",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_ELGYEM",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_BALTOY",
+                "min_level": 58,
+                "max_level": 60,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLETT",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_GREAVARD",
+                "min_level": 59,
+                "max_level": 60,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 60,
+                "max_level": 60,
+                "weight": 2
+              }
+            ]
+          }
+        },
+        "FIRST_TO_SECOND_PILLAR": {
+          "identity": "Mid-depth rooms where Platinum evolves the core toward Haunter/Bronzong/Chimecho/Dusclops.",
+          "time_of_day": {
+            "Morning": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 20
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_BEHEEYEM",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_SINISTEA",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 63,
+                "max_level": 63,
+                "weight": 1
+              }
+            ],
+            "Day": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 20
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_BEHEEYEM",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_SINISTEA",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 63,
+                "max_level": 63,
+                "weight": 1
+              }
+            ],
+            "Evening": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 18
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_BEHEEYEM",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_SINISTEA",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 63,
+                "max_level": 63,
+                "weight": 1
+              }
+            ],
+            "Night": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 17
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 14
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 14
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 9
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 14
+              },
+              {
+                "species": "SPECIES_YAMASK",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 7
+              },
+              {
+                "species": "SPECIES_BEHEEYEM",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 62,
+                "max_level": 63,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_SINISTEA",
+                "min_level": 61,
+                "max_level": 63,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 63,
+                "max_level": 63,
+                "weight": 2
+              }
+            ]
+          }
+        },
+        "SECOND_TO_THIRD_PILLAR": {
+          "identity": "Deep distortion-overlap rooms with stronger evolved Ghost/Psychic/ancient species while retaining the Platinum core.",
+          "time_of_day": {
+            "Morning": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_ROTOM",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_ZOROARK_HISUI",
+                "min_level": 66,
+                "max_level": 66,
+                "weight": 2
+              }
+            ],
+            "Day": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_ROTOM",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_ZOROARK_HISUI",
+                "min_level": 66,
+                "max_level": 66,
+                "weight": 2
+              }
+            ],
+            "Evening": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 15
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 12
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 8
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_ROTOM",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 4
+              },
+              {
+                "species": "SPECIES_ZOROARK_HISUI",
+                "min_level": 66,
+                "max_level": 66,
+                "weight": 2
+              }
+            ],
+            "Night": [
+              {
+                "species": "SPECIES_HAUNTER",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 13
+              },
+              {
+                "species": "SPECIES_GOLBAT",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 11
+              },
+              {
+                "species": "SPECIES_BRONZONG",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 11
+              },
+              {
+                "species": "SPECIES_DUSCLOPS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 14
+              },
+              {
+                "species": "SPECIES_CHIMECHO",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 9
+              },
+              {
+                "species": "SPECIES_MISMAGIUS",
+                "min_level": 64,
+                "max_level": 66,
+                "weight": 11
+              },
+              {
+                "species": "SPECIES_DUSKNOIR",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 10
+              },
+              {
+                "species": "SPECIES_GOLURK",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 6
+              },
+              {
+                "species": "SPECIES_CLAYDOL",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_SPIRITOMB",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 5
+              },
+              {
+                "species": "SPECIES_ROTOM",
+                "min_level": 65,
+                "max_level": 66,
+                "weight": 3
+              },
+              {
+                "species": "SPECIES_ZOROARK_HISUI",
+                "min_level": 66,
+                "max_level": 66,
+                "weight": 2
+              }
+            ]
+          }
+        }
+      },
+      "terminal_room": {
+        "random_wild_encounters": false,
+        "missed_distortion_retry": {
+          "species": "SPECIES_GIRATINA_ALTERED",
+          "level": 60,
+          "condition": "Only if Origin Forme Giratina was not captured in the Distortion World",
+          "respawn_on_ko_or_flee": true
+        },
+        "griseous_orb": "If Giratina was already caught, completing the Turnback maze grants access to the Distortion World portal / Griseous Orb path. Mercury makes the Griseous Orb obtainable before the League.",
+        "origin_form_policy": "Captured Giratina uses the Griseous Orb/form-change system outside the Distortion World; no second random Giratina is added."
+      }
+    },
+    "FULLMOON_ISLAND": {
+      "random_wild_encounters": false,
+      "platinum_story": "Cresselia is met in the crescent clearing, flees, and leaves the Lunar Wing for Sailor Eldritch's son.",
+      "mercury_access": "The Canalave nightmare/Lunar Wing sidequest unlocks before the League after the Distortion World/Canalave story requirements; no National Dex or Hall of Fame gate.",
+      "cresselia": {
+        "first_scene": {
+          "species": "SPECIES_CRESSELIA",
+          "level": 60,
+          "battle": false,
+          "action": "Flees and leaves the Lunar Wing, preserving Platinum's story beat."
+        },
+        "capture_qol": "After the Lunar Wing cures the boy, Cresselia returns to Fullmoon Island as a visible static Lv.60 encounter. Mercury does not require random regional roaming to capture it.",
+        "static_capture": {
+          "species": "SPECIES_CRESSELIA",
+          "level": 60,
+          "respawn_on_ko_or_flee": true
+        }
+      }
+    },
+    "NEWMOON_ISLAND": {
+      "random_wild_encounters": false,
+      "member_card_policy": "Member Card becomes an obtainable in-game key item tied to the completed Lunar Wing/Cresselia nightmare chain. No external distribution, National Dex, or Hall of Fame requirement.",
+      "story": "Canalave's locked inn initiates the nightmare transport to Newmoon Island, preserving Platinum's event framing.",
+      "static_encounter": {
+        "species": "SPECIES_DARKRAI",
+        "level": 65,
+        "respawn_on_ko_or_flee": true,
+        "pre_league_available": true
+      },
+      "mega_note": "Catching Darkrai grants the base species only. Any Darkrai Mega Stone/mega access remains a separate Mercury progression reward and is not bundled into this encounter."
+    }
+  },
+  "lake_guardians": {
+    "unlock": "After resolving Giratina / Distortion World, as in Platinum.",
+    "UXIE": {
+      "location": "Lake Acuity cavern",
+      "species": "SPECIES_UXIE",
+      "level": 60,
+      "mode": "static",
+      "respawn_on_ko_or_flee": true
+    },
+    "AZELF": {
+      "location": "Lake Valor cavern",
+      "species": "SPECIES_AZELF",
+      "level": 60,
+      "mode": "static",
+      "respawn_on_ko_or_flee": true
+    },
+    "MESPRIT": {
+      "location": "Lake Verity cavern -> Sinnoh pursuit",
+      "species": "SPECIES_MESPRIT",
+      "level": 60,
+      "mode": "story_flee_then_guided_pursuit",
+      "platinum_story": "Mesprit flees Lake Verity and becomes a roaming Pok\u00e9mon.",
+      "mercury_qol": "Preserve the flee scene, but replace blind random roaming with a Marking Map-guided guaranteed pursuit: the map shows its exact current route and the next eligible encounter/visible marker on that route triggers Mesprit. It cannot be permanently lost.",
+      "respawn_on_ko_or_flee": true
+    }
+  },
+  "spear_pillar_portals": {
+    "random_wild_encounters": false,
+    "unlock_policy": "After the Distortion World story, obtaining the Adamant Orb/Lustrous Orb in Mt. Coronet and speaking with Cynthia's grandmother enables the corresponding Spear Pillar portals. Mercury removes Platinum's Hall of Fame/National Dex gate.",
+    "DIALGA": {
+      "species": "SPECIES_DIALGA",
+      "level": 70,
+      "required_item": "Adamant Orb",
+      "respawn_on_ko_or_flee": true,
+      "pre_league_available": true
+    },
+    "PALKIA": {
+      "species": "SPECIES_PALKIA",
+      "level": 70,
+      "required_item": "Lustrous Orb",
+      "respawn_on_ko_or_flee": true,
+      "pre_league_available": true
+    },
+    "sequence": "Both may be caught on the same save; exiting/re-entering Spear Pillar refreshes the next available portal, matching Platinum's sequential portal concept."
+  }
+}
