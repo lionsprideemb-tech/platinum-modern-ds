@@ -18,25 +18,26 @@ jobs:
     timeout-minutes: 20
     env:
       SDL_VIDEODRIVER: dummy
-      ARTIFACT_ID: "10908365470"
 
     steps:
       - name: Checkout Mercury DS
         uses: actions/checkout@v4
 
       - name: Reuse already-built MR03F ROM
-        env:
-          GH_TOKEN: \${{ github.token }}
+        uses: actions/download-artifact@v4
+        with:
+          name: mercury-mr03f-summary-bottom-move-learner
+          path: prior-artifact
+          repository: ${{ github.repository }}
+          run-id: 36247126383
+          github-token: ${{ github.token }}
+
+      - name: Prepare diagnostic ROM
         shell: bash
         run: |
-          mkdir -p prior diagnostic
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            "/repos/\${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip" \
-            > prior/mr03f.zip
-          unzip -q prior/mr03f.zip -d prior/artifact
-          test -s prior/artifact/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds
-          cp prior/artifact/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds diagnostic/mr03f.nds
+          mkdir -p diagnostic
+          test -s prior-artifact/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds
+          cp prior-artifact/Pokemon_Mercury_MR03F_Summary_Bottom_Proof.nds diagnostic/mr03f.nds
 
       - name: Install emulator
         shell: bash
@@ -66,11 +67,11 @@ jobs:
           def cycle(count):
               global frame
               for _ in range(count):
-                  emu.cycle(False)
-                  frame += 1
                   if not emu.is_running():
                       return False
-              return True
+                  emu.cycle(False)
+                  frame += 1
+              return emu.is_running()
 
           def press(key, hold=4, settle=0):
               mask = keymask(key)
@@ -95,14 +96,16 @@ jobs:
               if not press(Keys.KEY_DOWN, settle=60): raise SystemExit("stopped selecting learner")
 
               snap("before-final-a")
-              if not press(Keys.KEY_A, hold=4, settle=0):
-                  snap("stopped-on-final-a")
-              else:
-                  snap("after-final-a")
-                  for n in range(1, 31):
-                      if not cycle(8):
-                          break
-                      snap(f"open-{n:02d}")
+              mask = keymask(Keys.KEY_A)
+              emu.input.keypad_add_key(mask)
+              cycle(4)
+              emu.input.keypad_rm_key(mask)
+              snap("after-final-a")
+
+              for n in range(1, 31):
+                  if not cycle(8):
+                      break
+                  snap(f"open-{n:02d}")
 
               meta = {
                   "last_frame": frame,
@@ -110,6 +113,7 @@ jobs:
                   "captures": captures,
               }
               (out / "meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+              print(json.dumps(meta, indent=2))
           finally:
               emu.destroy()
           PY
