@@ -2872,7 +2872,7 @@
       "land": {
         "Morning": [
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 45,
             "max_level": 48,
             "weight": 20
@@ -2946,7 +2946,7 @@
         ],
         "Day": [
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 45,
             "max_level": 48,
             "weight": 20
@@ -3026,7 +3026,7 @@
             "weight": 20
           },
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 45,
             "max_level": 48,
             "weight": 15
@@ -3100,7 +3100,7 @@
             "weight": 20
           },
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 45,
             "max_level": 48,
             "weight": 15
@@ -3179,7 +3179,7 @@
             "weight": 20
           },
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 47,
             "max_level": 50,
             "weight": 15
@@ -3247,7 +3247,7 @@
         ],
         "Day": [
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 47,
             "max_level": 50,
             "weight": 20
@@ -3327,7 +3327,7 @@
             "weight": 20
           },
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 47,
             "max_level": 50,
             "weight": 15
@@ -3407,7 +3407,7 @@
             "weight": 20
           },
           {
-            "species": "SPECIES_SNOOVER",
+            "species": "SPECIES_SNOVER",
             "min_level": 47,
             "max_level": 50,
             "weight": 15
