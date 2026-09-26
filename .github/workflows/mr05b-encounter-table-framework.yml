@@ -13,6 +13,7 @@ on:
       - "tools/install_mr03f_summary_bottom_learner.py"
       - "tools/install_mr05a_hm_free_traversal.py"
       - "tools/install_mr05b_encounter_framework.py"
+      - "tools/install_mr05b_authored_encounters.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
       - "tools/install_pt04d_species_batch.py"
@@ -103,7 +104,8 @@ jobs:
             tools/install_mr03e_summary_top_shell.py \
             tools/install_mr03f_summary_bottom_learner.py \
             tools/install_mr05a_hm_free_traversal.py \
-            tools/install_mr05b_encounter_framework.py
+            tools/install_mr05b_encounter_framework.py \
+            tools/install_mr05b_authored_encounters.py
 
       - name: Restore MP05 canonical ability architecture
         shell: bash
@@ -257,6 +259,18 @@ jobs:
           grep -q 'SPECIES_APPLIN' vendor/pokeplatinum/res/field/encounters/encounters_honey_tree.json
           test "$(jq -r '.stage' data/encounters/MR05B_CONTENT_PORT_STATUS.json)" = "MR05B_NUMBERED_ROUTES_PORTED"
 
+      - name: Install authored Mercury encounter tables
+        shell: bash
+        run: |
+          python3 tools/install_mr05b_authored_encounters.py \
+            vendor/pokeplatinum \
+            data/encounters/recovered_mercury_gba_runtime.json \
+            --report mr05b-authored-encounters.json
+
+          test "$(jq -r '.status' mr05b-authored-encounters.json)" = "PASS"
+          test "$(jq -r '.changed_area_count' mr05b-authored-encounters.json)" -gt 0
+          test "$(jq -r '.ported_area_count' mr05b-authored-encounters.json)" -ge 37
+
       - name: Prove CI direct-launch harness is absent
         shell: bash
         run: |
@@ -381,6 +395,7 @@ jobs:
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05b-authored-encounters.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/mr05b-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
@@ -413,6 +428,6 @@ jobs:
             echo "- 185 encounter resources centralized and schema-validated"
             echo "- Mercury authored Routes 201-224 ported where Platinum has encounter resources"
             echo "- Honey Tree rare pool replaced; Burmy removed"
-            echo "- MR05B baseline changes zero encounter slots"
+            echo "- Authored Mercury encounter tables applied; zero-change builds are rejected"
             echo "- Encounter-framework ROM staged as Pokemon_Mercury_MR05B_Encounter_Framework.nds"
           } >> "$GITHUB_STEP_SUMMARY"
