@@ -1,0 +1,1308 @@
+{
+  "schema": 1,
+  "source_repository": "lionsprideemb-tech/Sinnoh-gba",
+  "source_blob": "c77e8d64377634a2223bf19e747ace74ddbc5325",
+  "source_file": "game/src/data/wild_encounters.json",
+  "slot_weights": [
+    20,
+    20,
+    10,
+    10,
+    10,
+    10,
+    5,
+    5,
+    4,
+    4,
+    1,
+    1
+  ],
+  "note": "Exact Mercury-authored Route 201-204 land encounter records recovered from the cumulative GBA source for DS porting.",
+  "areas": {
+    "encounters_route_201": {
+      "source_labels": [
+        "gRoute201_Morning",
+        "gRoute201_Day",
+        "gRoute201_Evening",
+        "gRoute201_Night"
+      ],
+      "encounter_rate": 20,
+      "morning": [
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_FLETCHLING"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MARBEEP"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_HOPPIP"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_NYMBLE"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_PICHU"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_PIKIPEK"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_DEERLING"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SEWADDLE"
+        }
+      ],
+      "day": [
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_ZIGZAGOON"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_FLETCHLING"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MARBEEP"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SEEDOT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_NYMBLE"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_DEERLING"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_PICHU"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_PIKIPEK"
+        }
+      ],
+      "evening": [
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_HOOTHOOT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_NICKIT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MARBEEP"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_NYMBLE"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SEEDOT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MISDREAVUS"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MURKROW"
+        }
+      ],
+      "night": [
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_HOOTHOOT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_NICKIT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MARBEEP"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SPINARAK"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_NYMBLE"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_SEEDOT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_ZUBAT"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MISDREAVUS"
+        },
+        {
+          "min_level": 2,
+          "max_level": 4,
+          "species": "SPECIES_MURKROW"
+        }
+      ]
+    },
+    "encounters_route_202": {
+      "source_labels": [
+        "gRoute202_Morning",
+        "gRoute202_Day",
+        "gRoute202_Evening",
+        "gRoute202_Night"
+      ],
+      "encounter_rate": 20,
+      "morning": [
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_FLETCHLING"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_LILLIPUP"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_GRUBBIN"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_RALTS"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_ROCKRUFF"
+        }
+      ],
+      "day": [
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_LILLIPUP"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_FLETCHLING"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_GRUBBIN"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_BURMY"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_RALTS"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_ROCKRUFF"
+        }
+      ],
+      "evening": [
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_GRUBBIN"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_NICKIT"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_BURMY"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_RALTS"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_MISDREAVUS"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_ROCKRUFF"
+        }
+      ],
+      "night": [
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_HOOTHOOT"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 3,
+          "max_level": 4,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_POOCHYENA"
+        },
+        {
+          "min_level": 3,
+          "max_level": 5,
+          "species": "SPECIES_NICKIT"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_SPINARAK"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_GRUBBIN"
+        },
+        {
+          "min_level": 4,
+          "max_level": 5,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_MISDREAVUS"
+        },
+        {
+          "min_level": 5,
+          "max_level": 5,
+          "species": "SPECIES_ROCKRUFF"
+        }
+      ]
+    },
+    "encounters_route_203": {
+      "source_labels": [
+        "gRoute203_Morning",
+        "gRoute203_Day",
+        "gRoute203_Evening",
+        "gRoute203_Night"
+      ],
+      "encounter_rate": 20,
+      "morning": [
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 5,
+          "max_level": 7,
+          "species": "SPECIES_MACHOP"
+        },
+        {
+          "min_level": 5,
+          "max_level": 7,
+          "species": "SPECIES_MAKUHITA"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_PONYTA"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_GEODUDE"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_ROGGENROLA"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ARON"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ABRA_REDUX"
+        },
+        {
+          "min_level": 8,
+          "max_level": 8,
+          "species": "SPECIES_RIOLU"
+        }
+      ],
+      "day": [
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 5,
+          "max_level": 7,
+          "species": "SPECIES_MACHOP"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_PONYTA"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_GEODUDE"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_ROGGENROLA"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ARON"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_DRILBUR"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ABRA_REDUX"
+        },
+        {
+          "min_level": 8,
+          "max_level": 8,
+          "species": "SPECIES_RIOLU"
+        }
+      ],
+      "evening": [
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 5,
+          "max_level": 7,
+          "species": "SPECIES_MACHOP"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_GEODUDE"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_PONYTA"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_ROGGENROLA"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ARON"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_HOUNDOUR"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ABRA_REDUX"
+        },
+        {
+          "min_level": 8,
+          "max_level": 8,
+          "species": "SPECIES_RIOLU"
+        }
+      ],
+      "night": [
+        {
+          "min_level": 5,
+          "max_level": 7,
+          "species": "SPECIES_ZUBAT"
+        },
+        {
+          "min_level": 5,
+          "max_level": 6,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_HOUNDOUR"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_GEODUDE"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_ROGGENROLA"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ARON"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_DRILBUR"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 6,
+          "max_level": 7,
+          "species": "SPECIES_MACHOP"
+        },
+        {
+          "min_level": 7,
+          "max_level": 8,
+          "species": "SPECIES_ABRA_REDUX"
+        },
+        {
+          "min_level": 8,
+          "max_level": 8,
+          "species": "SPECIES_RIOLU"
+        }
+      ]
+    },
+    "encounters_route_204_south": {
+      "source_labels": [
+        "gRoute204South_Morning",
+        "gRoute204South_Day",
+        "gRoute204South_Evening",
+        "gRoute204South_Night"
+      ],
+      "encounter_rate": 20,
+      "morning": [
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_CHERUBI"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_PIDOVE"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_YAMPER"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SMOLIV"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_RALTS"
+        }
+      ],
+      "day": [
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_CHERUBI"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_PIDOVE"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_YAMPER"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SMOLIV"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_RALTS"
+        }
+      ],
+      "evening": [
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_CHERUBI"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_YAMPER"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SMOLIV"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_ZUBAT"
+        }
+      ],
+      "night": [
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_ZUBAT"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_BIDOOF"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 12,
+          "max_level": 13,
+          "species": "SPECIES_STARLY"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_YAMPER"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_SMOLIV"
+        },
+        {
+          "min_level": 13,
+          "max_level": 14,
+          "species": "SPECIES_RALTS"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_CHERUBI"
+        }
+      ]
+    },
+    "encounters_route_204_north": {
+      "source_labels": [
+        "gRoute204North_Morning",
+        "gRoute204North_Day",
+        "gRoute204North_Evening",
+        "gRoute204North_Night"
+      ],
+      "encounter_rate": 20,
+      "morning": [
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_STARAVIA"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_CHERUBI"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_COMBEE"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SMOLIV"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_FLETCHLING"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_TOGEPI"
+        }
+      ],
+      "day": [
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_STARAVIA"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_CHERUBI"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_COMBEE"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SMOLIV"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_FLETCHLING"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SUNKERN"
+        }
+      ],
+      "evening": [
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_STARAVIA"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_CHERUBI"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_COMBEE"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_FLETCHLING"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_TOGEPI"
+        }
+      ],
+      "night": [
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_ZUBAT"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_STARAVIA"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_SHINX"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUNEARY"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_KRICKETOT"
+        },
+        {
+          "min_level": 14,
+          "max_level": 15,
+          "species": "SPECIES_BUDEW"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_CHERUBI"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SKIDDO"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_SMOLIV"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_PAWMI"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_ROCKRUFF"
+        },
+        {
+          "min_level": 15,
+          "max_level": 16,
+          "species": "SPECIES_TOGEPI"
+        }
+      ]
+    }
+  }
+}
