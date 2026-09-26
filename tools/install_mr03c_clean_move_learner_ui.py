@@ -164,7 +164,6 @@ def patch_ui(root: Path) -> None:
     u8 yesNoCallback;
     u8 mercuryPage;
     u8 mercuryFilter;
-    u8 *mercuryPreviewState;
 } MoveReminderController;
 
 enum {
@@ -915,6 +914,11 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
 
     if (controller->mercuryPage == MERCURY_PAGE_MOVE) {
         MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 100);
+        Window_FillRectWithColor(window, 8, 8, 40, 84, 70);
+        MercuryMoveLearner_PrintMessage(
+            controller, window,
+            MoveReminder_Text_MercuryPokemonPanel,
+            24, 66);
         MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 100);
         MercuryMoveLearner_DrawPanel(window, 4, 140, 232, 30);
 
@@ -992,6 +996,11 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         }
     } else if (controller->mercuryPage == MERCURY_PAGE_STATS) {
         MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
+        Window_FillRectWithColor(window, 8, 8, 40, 84, 96);
+        MercuryMoveLearner_PrintMessage(
+            controller, window,
+            MoveReminder_Text_MercuryPokemonPanel,
+            24, 80);
         MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 96);
         MercuryMoveLearner_DrawPanel(window, 100, 136, 136, 34);
 
@@ -1048,6 +1057,11 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
         }
     } else {
         MercuryMoveLearner_DrawPanel(window, 4, 36, 92, 134);
+        Window_FillRectWithColor(window, 8, 8, 40, 84, 96);
+        MercuryMoveLearner_PrintMessage(
+            controller, window,
+            MoveReminder_Text_MercuryPokemonPanel,
+            24, 80);
         MercuryMoveLearner_DrawPanel(window, 100, 36, 136, 78);
         MercuryMoveLearner_DrawPanel(window, 100, 118, 136, 52);
 
@@ -1105,22 +1119,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     controller->mercuryFilter = MERCURY_FILTER_ALL;
 
     MercuryMoveLearner_LoadPalette();
-    LoadStandardWindowGraphics(
-        controller->bgConfig,
-        BG_LAYER_MAIN_3,
-        0x2A0,
-        14,
-        STANDARD_WINDOW_SYSTEM,
-        HEAP_ID_MOVE_REMINDER);
-    controller->mercuryPreviewState = DrawPokemonPreviewFromStruct(
-        controller->bgConfig,
-        BG_LAYER_MAIN_3,
-        2,
-        5,
-        14,
-        0x2A0,
-        controller->data->mon,
-        HEAP_ID_MOVE_REMINDER);
 
     for (u32 i = MOVE_REMINDER_WIN_LABEL_BATTLE_MOVES;
          i <= MOVE_REMINDER_WIN_MOVES_NAMES;
@@ -1137,38 +1135,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     MercuryMoveLearner_DrawBottomChrome(controller);
     MoveReminder_DrawMovesInfo(controller);""",
         "MR03C setup",
-    )
-
-    replace_once(
-        source,
-        """static int MoveReminder_State_FadeToExit(MoveReminderController *controller)
-{
-    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
-        """static int MoveReminder_State_FadeToExit(MoveReminderController *controller)
-{
-    if (controller->mercuryPreviewState != NULL) {
-        *controller->mercuryPreviewState = PREVIEW_STATE_REMOVE;
-        controller->mercuryPreviewState = NULL;
-    }
-
-    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
-        "MR03C preview cleanup on exit",
-    )
-
-    replace_once(
-        source,
-        """static int MoveReminder_State_FadeToSummaryScreen(MoveReminderController *controller)
-{
-    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
-        """static int MoveReminder_State_FadeToSummaryScreen(MoveReminderController *controller)
-{
-    if (controller->mercuryPreviewState != NULL) {
-        *controller->mercuryPreviewState = PREVIEW_STATE_REMOVE;
-        controller->mercuryPreviewState = NULL;
-    }
-
-    App_StartScreenFade(TRUE, HEAP_ID_MOVE_REMINDER);""",
-        "MR03C preview cleanup on summary",
     )
 
     # Free-list callback is unchanged, but a filter switch resets list/cursor
@@ -1277,7 +1243,7 @@ def main() -> None:
             "native teach/replace flow",
             "normal story boot",
         ],
-        "visual_pass": "Mercury blue palette, tab/card styling, full Pokemon preview portrait",
+        "visual_pass": "Mercury blue palette and tab/card styling; portrait temporarily isolated after preview-task runtime crash",
     }
 
     args.report.write_text(json.dumps(report, indent=2) + "\n")
