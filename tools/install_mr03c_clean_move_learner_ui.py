@@ -428,7 +428,7 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         """    MoveReminder_Setup(controller);
     MoveReminder_DrawMoveSelector(controller, controller->data->cursorPos, 0);
     MoveReminder_SetStringTemplate(controller, MOVE_REMINDER_STR_ASK_TEACH_WHICH_TO_MON);
-    MoveReminder_DrawText(controller, MOVE_REMINDER_WIN_MESSAGE_BOX, FONT_MESSAGE, TEXT_COLOR(1, 2, 0), ALIGN_LEFT);
+    MoveReminder_DrawText(controller, MOVE_REMINDER_WIN_MESSAGE_BOX, FONT_MESSAGE, TEXT_COLOR(1, 2, 15), ALIGN_LEFT);
 
     controller->nextState = MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;
 
