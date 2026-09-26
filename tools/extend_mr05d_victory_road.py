@@ -19,6 +19,16 @@ from typing import Any
 
 LAND_SLOT_WEIGHTS = [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1]
 
+# The current Mercury DS encounter registry is the canonical 1,025 National
+# Dex species namespace. Lycanroc's battle forms live outside that namespace,
+# so authored wild-form tokens normalize to the base Lycanroc species here;
+# Rockruff's normal evolution conditions remain the route to Midnight/Dusk.
+FORM_SPECIES_NORMALIZATION = {
+    "SPECIES_LYCANROC_MIDDAY": "SPECIES_LYCANROC",
+    "SPECIES_LYCANROC_MIDNIGHT": "SPECIES_LYCANROC",
+    "SPECIES_LYCANROC_DUSK": "SPECIES_LYCANROC",
+}
+
 RESOURCE_MAP = {
     "encounters_victory_road_1f": ("main", "1F_ROCKY_GATE"),
     "encounters_victory_road_2f": ("main", "2F_MAGNETIC_GALLERY"),
@@ -40,6 +50,10 @@ def load_supported_species(root: Path) -> set[str]:
         for line in path.read_text().splitlines()
         if line.strip().startswith("SPECIES_")
     }
+
+
+def normalize_species(species: str) -> str:
+    return FORM_SPECIES_NORMALIZATION.get(species, species)
 
 
 def walk_species(value: Any):
@@ -77,7 +91,7 @@ def weighted_land(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         out.append({
             "level_min": int(chosen["min_level"]),
             "level_max": int(chosen["max_level"]),
-            "species": chosen["species"],
+            "species": normalize_species(chosen["species"]),
         })
         cumulative += slot_weight
     return out
@@ -90,7 +104,7 @@ def weighted_five(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         out.append({
             "level_min": int(chosen["min_level"]),
             "level_max": int(chosen["max_level"]),
-            "species": chosen["species"],
+            "species": normalize_species(chosen["species"]),
         })
     return out
 
@@ -249,6 +263,7 @@ def main() -> None:
         "hall_of_fame_gate_removed": True,
         "route_224_existing_authored_table_preserved": route224_untouched,
         "youngster_martin_team_untouched": True,
+        "form_species_normalization": FORM_SPECIES_NORMALIZATION,
         "runtime_species_registry_validation": "PASS",
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
