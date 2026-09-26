@@ -176,7 +176,6 @@ def patch_ui(root: Path) -> None:
     u8 yesNoCallback;
     u8 mercuryPage;
     u8 mercuryFilter;
-    u8 mercuryMessageBoxVisible;
 } MoveReminderController;
 
 enum {
@@ -347,15 +346,6 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
 """
     new_input = """static int MoveReminder_State_ProcessMainInput(MoveReminderController *controller)
 {
-    if (controller->mercuryMessageBoxVisible) {
-        Window_EraseMessageBox(
-            &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
-            FALSE);
-        Window_ClearAndScheduleCopyToVRAM(
-            &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
-        controller->mercuryMessageBoxVisible = FALSE;
-    }
-
     if (JOY_NEW(PAD_BUTTON_L)) {
         Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
         controller->mercuryPage = (controller->mercuryPage + 2) % 3;
@@ -479,46 +469,8 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         "MR03C legacy side arrows off",
     )
 
-    replace_once(
-        source,
-        """    MoveReminder_SetStringTemplate(controller, MOVE_REMINDER_STR_ASK_TEACH_WHICH_TO_MON);
-    MoveReminder_DrawText(controller, MOVE_REMINDER_WIN_MESSAGE_BOX, FONT_MESSAGE, TEXT_COLOR(1, 2, 15), ALIGN_LEFT);
-
-    controller->nextState = MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;
-
-    Window_ScheduleCopyToVRAM(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);""",
-        """    controller->nextState = MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;""",
-        "MR03C remove initial vanilla prompt",
-    )
-
-    replace_function(
-        source,
-        "static void MoveReminder_SetMessageBoxText(MoveReminderController *controller, u32 str)",
-        r'''static void MoveReminder_SetMessageBoxText(MoveReminderController *controller, u32 str)
-{
-    Window_FillTilemap(&controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX], 15);
-    Window_DrawMessageBoxWithScrollCursor(
-        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
-        0,
-        10,
-        13);
-    controller->mercuryMessageBoxVisible = TRUE;
-
-    MoveReminder_SetStringTemplate(controller, str);
-    RenderControlFlags_SetCanABSpeedUpPrint(TRUE);
-    RenderControlFlags_SetAutoScrollFlags(AUTO_SCROLL_DISABLED);
-
-    controller->textPrinterID = Text_AddPrinterWithParams(
-        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
-        FONT_MESSAGE,
-        controller->string,
-        0,
-        0,
-        Options_TextFrameDelay(controller->data->options),
-        MoveReminder_TextPrinterCallback);
-}''',
-        "MR03C confirmation message box",
-    )
+    # Keep Platinum's native message box behavior for confirmation flow while
+    # the portrait crash is isolated independently.
 
     # Filtered list implementation. StringList choice values remain move IDs,
     # so the native teaching state machine can consume them directly.
@@ -1239,12 +1191,6 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
     controller->mercuryFilter = MERCURY_FILTER_ALL;
 
     MercuryMoveLearner_LoadPalette();
-    controller->mercuryMessageBoxVisible = FALSE;
-    Window_EraseMessageBox(
-        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
-        FALSE);
-    Window_ClearAndScheduleCopyToVRAM(
-        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX]);
 
     for (u32 i = MOVE_REMINDER_WIN_LABEL_BATTLE_MOVES;
          i <= MOVE_REMINDER_WIN_MOVES_NAMES;
