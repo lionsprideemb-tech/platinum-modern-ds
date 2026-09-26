@@ -1,0 +1,1577 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "scope": "Pre-League Marley Victory Road branch / Route 224 / Seabreak Path / Flower Paradise encounter specification",
+  "status": "STAGED_FOR_FINAL_SINNOH_MAPS",
+  "design_source": "Pokemon Platinum / Sinnoh, expanded for Mercury Redux",
+  "source_rule": "Platinum/Sinnoh defines geography, ecology, encounters, and story placement. Emerald-derived engine IDs are hidden implementation infrastructure only and are never used as content sources.",
+  "runtime_note": "The finished Platinum-derived Marley branch, Route 224, Seabreak Path and Flower Paradise maps are not yet constructed in this cumulative source. Do not wire these specs onto unrelated engine geometry.",
+  "marley_victory_road_branch": {
+    "unlock_policy": {
+      "platinum": "The Marley branch opens only after the National Dex / postgame progression in Platinum.",
+      "mercury": "Open the branch during the first pre-League Victory Road visit after the player has the required story/badge traversal permissions. No National Dex or Hall of Fame gate.",
+      "partner": "Marley joins in the fog/underground branch as a battle partner using her Arcanine. Partner double-battle/healing behavior is preserved; this ecology pass does not rebalance her trainer data."
+    },
+    "areas": {
+      "FOG_GALLERY": {
+        "identity": "Platinum Nat Dex Area converted into the pre-League Marley entrance: damp/foggy cave retaining Floatzel, Graveler, Onix, Golbat, Steelix and Gabite, with a stronger nocturnal/mineral expansion.",
+        "time_of_day": {
+          "Morning": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAWILE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ],
+          "Day": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAWILE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ],
+          "Evening": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 12
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 13
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAWILE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ],
+          "Night": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 14
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 14
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_MAWILE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "UNDERGROUND_LAKE": {
+        "identity": "Platinum Nat Dex Area B1F converted into the pre-League Marley lake: Azumarill, Floatzel, Dewgong, Graveler, Golbat and Gabite remain anchors; cold-water and cave species expand the hunt.",
+        "time_of_day": {
+          "Morning": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_DEWGONG",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 12
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SEALEO",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_CLOYSTER",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LANTURN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LAPRAS",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ],
+          "Day": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_DEWGONG",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 12
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SEALEO",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_CLOYSTER",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LANTURN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LAPRAS",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ],
+          "Evening": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_DEWGONG",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 12
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SEALEO",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_CLOYSTER",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LANTURN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LAPRAS",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ],
+          "Night": [
+            {
+              "species": "SPECIES_AZUMARILL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 12
+            },
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_DEWGONG",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 12
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 66,
+              "max_level": 68,
+              "weight": 13
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SEALEO",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_SABLEYE",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_CLOYSTER",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LANTURN",
+              "min_level": 68,
+              "max_level": 69,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_LAPRAS",
+              "min_level": 69,
+              "max_level": 69,
+              "weight": 1
+            }
+          ]
+        },
+        "surf": [
+          {
+            "species": "SPECIES_FLOATZEL",
+            "min_level": 66,
+            "max_level": 69,
+            "weight": 30
+          },
+          {
+            "species": "SPECIES_DEWGONG",
+            "min_level": 67,
+            "max_level": 70,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_LANTURN",
+            "min_level": 67,
+            "max_level": 70,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_CLOYSTER",
+            "min_level": 68,
+            "max_level": 70,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_SEALEO",
+            "min_level": 67,
+            "max_level": 70,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_LAPRAS",
+            "min_level": 69,
+            "max_level": 70,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_CORSOLA",
+            "min_level": 67,
+            "max_level": 70,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_MANTINE",
+            "min_level": 68,
+            "max_level": 70,
+            "weight": 5
+          }
+        ],
+        "old_rod": [
+          {
+            "species": "SPECIES_MAGIKARP",
+            "min_level": 25,
+            "max_level": 35,
+            "weight": 80
+          },
+          {
+            "species": "SPECIES_REMORAID",
+            "min_level": 30,
+            "max_level": 38,
+            "weight": 20
+          }
+        ],
+        "good_rod": [
+          {
+            "species": "SPECIES_REMORAID",
+            "min_level": 55,
+            "max_level": 62,
+            "weight": 25
+          },
+          {
+            "species": "SPECIES_QWILFISH",
+            "min_level": 56,
+            "max_level": 63,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_CHINCHOU",
+            "min_level": 55,
+            "max_level": 62,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_SHELLDER",
+            "min_level": 56,
+            "max_level": 63,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_CORSOLA",
+            "min_level": 57,
+            "max_level": 64,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_CLAMPERL",
+            "min_level": 58,
+            "max_level": 64,
+            "weight": 10
+          }
+        ],
+        "super_rod": [
+          {
+            "species": "SPECIES_GYARADOS",
+            "min_level": 64,
+            "max_level": 70,
+            "weight": 20
+          },
+          {
+            "species": "SPECIES_OCTILLERY",
+            "min_level": 64,
+            "max_level": 70,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_CLOYSTER",
+            "min_level": 65,
+            "max_level": 70,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_LANTURN",
+            "min_level": 65,
+            "max_level": 70,
+            "weight": 15
+          },
+          {
+            "species": "SPECIES_HUNTAIL",
+            "min_level": 66,
+            "max_level": 70,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_GOREBYSS",
+            "min_level": 66,
+            "max_level": 70,
+            "weight": 10
+          },
+          {
+            "species": "SPECIES_LAPRAS",
+            "min_level": 67,
+            "max_level": 70,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_KINGDRA",
+            "min_level": 67,
+            "max_level": 70,
+            "weight": 5
+          },
+          {
+            "species": "SPECIES_RELICANTH",
+            "min_level": 67,
+            "max_level": 70,
+            "weight": 5
+          }
+        ]
+      },
+      "EXIT_PASSAGE": {
+        "identity": "Final Platinum Nat Dex Exit Area before Route 224; a stronger mixed rock/dragon passage that signals the route beyond.",
+        "time_of_day": {
+          "Morning": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_KOMMO_O",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_TYRANITAR",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 70,
+              "max_level": 70,
+              "weight": 1
+            }
+          ],
+          "Day": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_KOMMO_O",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_TYRANITAR",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 70,
+              "max_level": 70,
+              "weight": 1
+            }
+          ],
+          "Evening": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_KOMMO_O",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_TYRANITAR",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 70,
+              "max_level": 70,
+              "weight": 1
+            }
+          ],
+          "Night": [
+            {
+              "species": "SPECIES_FLOATZEL",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 12
+            },
+            {
+              "species": "SPECIES_GRAVELER",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 15
+            },
+            {
+              "species": "SPECIES_ONIX",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GOLBAT",
+              "min_level": 67,
+              "max_level": 69,
+              "weight": 13
+            },
+            {
+              "species": "SPECIES_STEELIX",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GABITE",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 10
+            },
+            {
+              "species": "SPECIES_GLISCOR",
+              "min_level": 68,
+              "max_level": 70,
+              "weight": 8
+            },
+            {
+              "species": "SPECIES_CROBAT",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 6
+            },
+            {
+              "species": "SPECIES_NOIVERN",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_KOMMO_O",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_TYRANITAR",
+              "min_level": 69,
+              "max_level": 70,
+              "weight": 5
+            },
+            {
+              "species": "SPECIES_GARCHOMP",
+              "min_level": 70,
+              "max_level": 70,
+              "weight": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "route_224": {
+    "identity": "Platinum Route 224: remote forested peninsula with beaches and the White Rock, expanded as a pre-League optional high-level route.",
+    "time_of_day": {
+      "Morning": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_ROSELIA",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PELIPPER",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GLOOM",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_WEEPINBELL",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_BEAUTIFLY",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_SWANNA",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_LURANTIS",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_NATU",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_LILLIGANT_HISUI",
+          "min_level": 70,
+          "max_level": 70,
+          "weight": 1
+        }
+      ],
+      "Day": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 12
+        },
+        {
+          "species": "SPECIES_ROSELIA",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PELIPPER",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GLOOM",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_WEEPINBELL",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_BEAUTIFLY",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_LEAVANNY",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 6
+        },
+        {
+          "species": "SPECIES_LURANTIS",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_NATU",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_ROSERADE",
+          "min_level": 70,
+          "max_level": 70,
+          "weight": 3
+        }
+      ],
+      "Evening": [
+        {
+          "species": "SPECIES_BELLSPROUT",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_ROSELIA",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PELIPPER",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GLOOM",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_WEEPINBELL",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_BEAUTIFLY",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_DUSTOX",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 7
+        },
+        {
+          "species": "SPECIES_XATU",
+          "min_level": 69,
+          "max_level": 70,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_DUSKULL",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 7
+        },
+        {
+          "species": "SPECIES_ROSERADE",
+          "min_level": 70,
+          "max_level": 70,
+          "weight": 5
+        }
+      ],
+      "Night": [
+        {
+          "species": "SPECIES_ODDISH",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_ROSELIA",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 15
+        },
+        {
+          "species": "SPECIES_FLOATZEL",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_PELIPPER",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GASTRODON",
+          "min_level": 67,
+          "max_level": 69,
+          "weight": 10
+        },
+        {
+          "species": "SPECIES_GLOOM",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_WEEPINBELL",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_DUSTOX",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 8
+        },
+        {
+          "species": "SPECIES_DUSKULL",
+          "min_level": 68,
+          "max_level": 70,
+          "weight": 6
+        },
+        {
+          "species": "SPECIES_DUSCLOPS",
+          "min_level": 69,
+          "max_level": 70,
+          "weight": 5
+        },
+        {
+          "species": "SPECIES_XATU",
+          "min_level": 69,
+          "max_level": 70,
+          "weight": 4
+        },
+        {
+          "species": "SPECIES_BELLOSSOM",
+          "min_level": 70,
+          "max_level": 70,
+          "weight": 1
+        }
+      ]
+    },
+    "surf": [
+      {
+        "species": "SPECIES_PELIPPER",
+        "min_level": 66,
+        "max_level": 70,
+        "weight": 25
+      },
+      {
+        "species": "SPECIES_TENTACRUEL",
+        "min_level": 66,
+        "max_level": 70,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_GASTRODON",
+        "min_level": 66,
+        "max_level": 70,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_SWANNA",
+        "min_level": 67,
+        "max_level": 70,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_MANTINE",
+        "min_level": 67,
+        "max_level": 70,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_STARMIE",
+        "min_level": 68,
+        "max_level": 70,
+        "weight": 8
+      },
+      {
+        "species": "SPECIES_CORSOLA",
+        "min_level": 67,
+        "max_level": 70,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_QWILFISH",
+        "min_level": 67,
+        "max_level": 70,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_LUVDISC",
+        "min_level": 68,
+        "max_level": 70,
+        "weight": 2
+      }
+    ],
+    "old_rod": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 25,
+        "max_level": 35,
+        "weight": 80
+      },
+      {
+        "species": "SPECIES_REMORAID",
+        "min_level": 30,
+        "max_level": 38,
+        "weight": 20
+      }
+    ],
+    "good_rod": [
+      {
+        "species": "SPECIES_MAGIKARP",
+        "min_level": 55,
+        "max_level": 62,
+        "weight": 25
+      },
+      {
+        "species": "SPECIES_REMORAID",
+        "min_level": 55,
+        "max_level": 62,
+        "weight": 25
+      },
+      {
+        "species": "SPECIES_CORSOLA",
+        "min_level": 56,
+        "max_level": 63,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_QWILFISH",
+        "min_level": 56,
+        "max_level": 63,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_LUVDISC",
+        "min_level": 57,
+        "max_level": 64,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_CLAMPERL",
+        "min_level": 58,
+        "max_level": 64,
+        "weight": 5
+      }
+    ],
+    "super_rod": [
+      {
+        "species": "SPECIES_GYARADOS",
+        "min_level": 64,
+        "max_level": 70,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_OCTILLERY",
+        "min_level": 64,
+        "max_level": 70,
+        "weight": 20
+      },
+      {
+        "species": "SPECIES_LUVDISC",
+        "min_level": 64,
+        "max_level": 69,
+        "weight": 15
+      },
+      {
+        "species": "SPECIES_STARMIE",
+        "min_level": 65,
+        "max_level": 70,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_CORSOLA",
+        "min_level": 65,
+        "max_level": 70,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_QWILFISH",
+        "min_level": 65,
+        "max_level": 70,
+        "weight": 10
+      },
+      {
+        "species": "SPECIES_HUNTAIL",
+        "min_level": 66,
+        "max_level": 70,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_GOREBYSS",
+        "min_level": 66,
+        "max_level": 70,
+        "weight": 5
+      },
+      {
+        "species": "SPECIES_RELICANTH",
+        "min_level": 67,
+        "max_level": 70,
+        "weight": 5
+      }
+    ],
+    "platinum_specials_normalized": {
+      "pokeradar": [
+        "Duskull",
+        "Dusclops"
+      ],
+      "swarm": [
+        "Natu"
+      ],
+      "policy": "Mercury folds these Platinum special-method species into authored TOD tables instead of requiring Radar/swarm RNG. GBA-cartridge insertion is not used as a content source."
+    },
+    "white_rock": "Preserved as the route endpoint and Shaymin/Seabreak Path story anchor.",
+    "honey_tree": false
+  },
+  "shaymin_path": {
+    "white_rock_oaks_letter": {
+      "platinum": "Oak's Letter opens Seabreak Path from the White Rock after the gratitude interaction.",
+      "mercury": "Oak's Letter becomes an obtainable in-game pre-League sidequest key item; no external distribution/event requirement. Exact quest giver/staging is deferred to the Route 224 story-map pass."
+    },
+    "seabreak_path": {
+      "random_wild_encounters": false,
+      "trainers": false,
+      "role": "Flower-covered approach to Flower Paradise; preserve Platinum's encounter-free presentation."
+    },
+    "flower_paradise": {
+      "random_wild_encounters": false,
+      "static_encounter": {
+        "species": "SPECIES_SHAYMIN_LAND",
+        "level": 65,
+        "respawn_on_ko_or_flee": true,
+        "pre_league_available": true
+      },
+      "gracidea_policy": "Catching the fateful/static Shaymin should unlock the normal Gracidea/Sky Forme path in Mercury; exact NPC/item script is deferred."
+    }
+  }
+}
