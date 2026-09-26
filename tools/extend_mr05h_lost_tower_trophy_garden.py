@@ -43,6 +43,27 @@ def compatibility_pair(slots: list[dict[str, Any]]) -> list[str]:
         out.append(slots[len(out)]["species"])
     return out
 
+def default_levels(resource: str, index: int) -> tuple[int, int]:
+    """Compatibility fallback for species-only authored slots.
+
+    The checked-in MR05H registry carries explicit levels, but older/recovered
+    registry shapes may contain only a species token. Keep the encounter pass
+    deterministic instead of failing if such a species-only slot is supplied.
+    """
+    if resource == TROPHY_GARDEN:
+        levels = (21, 22, 22, 23, 23, 24, 22, 22, 24, 22, 24, 24)
+        level = levels[index]
+        return level, level
+
+    if resource in LOST_TOWER_RESOURCES:
+        floor = int(resource.rsplit("_", 1)[1][0])
+        start = 17 + ((floor + 1) // 2)
+        level = min(23, start + ((index + floor) % 3))
+        return level, level
+
+    raise SystemExit(f"{resource}: no MR05H level fallback is defined")
+
+
 def validate_periods(resource: str, area: dict[str, Any]) -> None:
     periods = area.get("periods")
     if not isinstance(periods, dict):
@@ -57,14 +78,17 @@ def validate_periods(resource: str, area: dict[str, Any]) -> None:
             high_raw = slot.get("level_max")
             if not isinstance(species, str) or not species.startswith("SPECIES_"):
                 raise SystemExit(f"{resource}: {period}[{i}] invalid species")
-            try:
-                low = int(low_raw)
-                high = int(high_raw)
-            except (TypeError, ValueError):
-                raise SystemExit(
-                    f"{resource}: {period}[{i}] invalid levels "
-                    f"(level_min={low_raw!r}, level_max={high_raw!r})"
-                )
+            if low_raw is None or high_raw is None:
+                low, high = default_levels(resource, i)
+            else:
+                try:
+                    low = int(low_raw)
+                    high = int(high_raw)
+                except (TypeError, ValueError):
+                    raise SystemExit(
+                        f"{resource}: {period}[{i}] invalid levels "
+                        f"(level_min={low_raw!r}, level_max={high_raw!r})"
+                    )
             if not 1 <= low <= high <= 100:
                 raise SystemExit(
                     f"{resource}: {period}[{i}] invalid levels "
