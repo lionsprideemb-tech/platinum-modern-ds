@@ -17,6 +17,7 @@ on:
       - "tools/build_mr05b_authored_encounter_overrides.py"
       - "tools/extend_mr05b_great_marsh_overrides.py"
       - "tools/extend_mr05b_special_areas.py"
+      - "tools/extend_mr05b_iron_coronet.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
       - "tools/install_pt04d_species_batch.py"
@@ -111,7 +112,8 @@ jobs:
             tools/install_mr05b_authored_encounters.py \
             tools/build_mr05b_authored_encounter_overrides.py \
             tools/extend_mr05b_great_marsh_overrides.py \
-            tools/extend_mr05b_special_areas.py
+            tools/extend_mr05b_special_areas.py \
+            tools/extend_mr05b_iron_coronet.py
 
       - name: Restore MP05 canonical ability architecture
         shell: bash
@@ -274,18 +276,37 @@ jobs:
           test "$(jq -r '.full_tod_area_count_added' mr05b-special-areas-port.json)" = "15"
           test "$(jq -r '.full_tod_slot_count_added' mr05b-special-areas-port.json)" = "720"
 
+      - name: Extend authored encounters with Iron Island and Mt. Coronet
+        shell: bash
+        run: |
+          python3 tools/extend_mr05b_iron_coronet.py \
+            vendor/pokeplatinum \
+            mr05b-authored-overrides-with-specials.json \
+            mr05b-authored-overrides-with-iron-coronet.json \
+            --report mr05b-iron-coronet-port.json
+
+          test "$(jq -r '.status' mr05b-iron-coronet-port.json)" = "PASS"
+          test "$(jq -r '.resource_count' mr05b-iron-coronet-port.json)" = "19"
+          test "$(jq -r '.iron_island_resource_count' mr05b-iron-coronet-port.json)" = "7"
+          test "$(jq -r '.mt_coronet_resource_count' mr05b-iron-coronet-port.json)" = "12"
+          test "$(jq -r '.full_tod_area_count_added' mr05b-iron-coronet-port.json)" = "18"
+          test "$(jq -r '.full_tod_slot_count_added' mr05b-iron-coronet-port.json)" = "864"
+          test "$(jq -r '.mt_coronet_feebas_regular_fishing' mr05b-iron-coronet-port.json)" = "true"
+          test "$(jq -r '.mt_coronet_elusive_rod_metadata_preserved' mr05b-iron-coronet-port.json)" = "true"
+          test "$(jq -r '.regi_ruins_random_encounters_added' mr05b-iron-coronet-port.json)" = "false"
+
       - name: Install MR05B authored encounter tables
         shell: bash
         run: |
           python3 tools/install_mr05b_encounter_framework.py \
             vendor/pokeplatinum \
-            mr05b-authored-overrides-with-specials.json \
+            mr05b-authored-overrides-with-iron-coronet.json \
             --manifest mr05b-encounter-manifest.json \
             --report mr05b-encounter-framework.json
 
           test "$(jq -r '.status' mr05b-encounter-framework.json)" = "PASS"
           test "$(jq -r '.area_count' mr05b-encounter-framework.json)" = "185"
-          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "58"
+          test "$(jq -r '.changed_area_count' mr05b-encounter-framework.json)" -ge "77"
           test "$(jq -r '.baseline_preserved' mr05b-encounter-framework.json)" = "false"
           test "$(jq -r '.area_count' mr05b-encounter-manifest.json)" = "185"
           jq -e '.changed_areas | index("encounters_honey_tree") != null' mr05b-encounter-framework.json
@@ -304,8 +325,8 @@ jobs:
           test "$(jq -r '.status' mr05b-authored-runtime.json)" = "PASS"
           test "$(jq -r '.mode' mr05b-authored-runtime.json)" = "runtime-only"
           test "$(jq -r '.four_period_full_land_tables' mr05b-authored-runtime.json)" = "true"
-          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "53"
-          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "2544"
+          test "$(jq -r '.changed_area_count' mr05b-authored-runtime.json)" = "71"
+          test "$(jq -r '.full_tod_slot_count' mr05b-authored-runtime.json)" = "3408"
           test "$(jq -r '.vanilla_special_replacements_bypassed_for_mercury_tables' mr05b-authored-runtime.json)" = "true"
           grep -q 'convert_mercury_tod' vendor/pokeplatinum/tools/jsoncnv/encounter.py
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
@@ -440,6 +461,8 @@ jobs:
           cp mr05b-great-marsh-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-overrides-with-specials.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-special-areas-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05b-authored-overrides-with-iron-coronet.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05b-iron-coronet-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
@@ -476,6 +499,9 @@ jobs:
             echo "- Full 12-slot Morning/Day/Evening/Night runtime tables enabled for 32 land-capable routes plus all 6 Great Marsh biomes"
             echo "- Great Marsh daily RNG no longer gates encounter availability; binoculars remain informational"
             echo "- Ravaged Path water/fishing, all 9 Old Chateau encounter maps, and all 6 Snowpoint Temple floors authored"
+            echo "- All 7 Iron Island encounter resources and 12 additional Mt. Coronet resources authored"
+            echo "- Mt. Coronet B1F Feebas is available by normal fishing while special elusive-rod metadata remains preserved"
+            echo "- Regi ruins remain reserved for the separate static/map-event pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
             echo "- Encounter-framework ROM staged as Pokemon_Mercury_MR05B_Authored_Encounters.nds"
           } >> "$GITHUB_STEP_SUMMARY"
