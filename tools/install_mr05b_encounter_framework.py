@@ -66,7 +66,7 @@ def validate_species(value: Any, where: str) -> None:
         raise SystemExit(f"{where}: invalid species token {value!r}")
 
 
-def validate_area(key: str, data: dict[str, Any]) -> None:
+def validate_standard_area(key: str, data: dict[str, Any]) -> None:
     for field, expected in EXPECTED_LIST_LENGTHS.items():
         if field not in data:
             raise SystemExit(f"{key}: missing {field}")
@@ -112,6 +112,79 @@ def validate_area(key: str, data: dict[str, Any]) -> None:
         raise SystemExit(f"{key}: unexpected map_type {category.get('map_type')!r}")
     if not isinstance(category.get("map_number"), int):
         raise SystemExit(f"{key}: map_number must be an integer")
+
+    if "daily_encounters" in data:
+        daily = data["daily_encounters"]
+        if not isinstance(daily, list) or len(daily) != 16:
+            raise SystemExit(f"{key}: daily_encounters must contain 16 species")
+        for i, species in enumerate(daily):
+            validate_species(species, f"{key} daily_encounters[{i}]")
+
+    if "elusive_rod_encounter" in data:
+        elusive = data["elusive_rod_encounter"]
+        if not isinstance(elusive, dict):
+            raise SystemExit(f"{key}: elusive_rod_encounter must be an object")
+        validate_species(elusive.get("species"), f"{key} elusive rod")
+        dims = elusive.get("map_dimensions")
+        if (
+            not isinstance(dims, list)
+            or len(dims) != 2
+            or not all(isinstance(v, int) and v > 0 for v in dims)
+        ):
+            raise SystemExit(f"{key}: elusive rod map_dimensions must contain two positive integers")
+        tiles = elusive.get("tiles")
+        if not isinstance(tiles, list) or not tiles or not all(isinstance(v, int) and v >= 0 for v in tiles):
+            raise SystemExit(f"{key}: elusive rod tiles must be a non-empty integer list")
+
+
+def validate_honey_tree(key: str, data: dict[str, Any]) -> None:
+    for field in ("common", "uncommon", "rare"):
+        values = data.get(field)
+        if not isinstance(values, list) or len(values) != 6:
+            raise SystemExit(f"{key}: {field} must contain 6 species")
+        for i, species in enumerate(values):
+            validate_species(species, f"{key} {field}[{i}]")
+
+
+def validate_great_marsh_lookout(key: str, data: dict[str, Any]) -> None:
+    for field in ("before_national_dex", "after_national_dex"):
+        values = data.get(field)
+        if not isinstance(values, list) or len(values) != 32:
+            raise SystemExit(f"{key}: {field} must contain 32 species")
+        for i, species in enumerate(values):
+            validate_species(species, f"{key} {field}[{i}]")
+
+    coords = data.get("binocular_coords")
+    if not isinstance(coords, list) or len(coords) != 36:
+        raise SystemExit(f"{key}: binocular_coords must contain 36 coordinates")
+    for i, coord in enumerate(coords):
+        if (
+            not isinstance(coord, dict)
+            or not isinstance(coord.get("x"), int)
+            or not isinstance(coord.get("y"), int)
+        ):
+            raise SystemExit(f"{key}: binocular_coords[{i}] must contain integer x/y")
+
+
+def encounter_resource_type(key: str, data: dict[str, Any]) -> str:
+    if "land_encounters" in data:
+        return "standard"
+    if set(("common", "uncommon", "rare")).issubset(data):
+        return "honey_tree"
+    if set(("before_national_dex", "after_national_dex", "binocular_coords")).issubset(data):
+        return "great_marsh_lookout"
+    raise SystemExit(f"{key}: unrecognized encounter resource schema")
+
+
+def validate_area(key: str, data: dict[str, Any]) -> None:
+    resource_type = encounter_resource_type(key, data)
+    if resource_type == "standard":
+        validate_standard_area(key, data)
+    elif resource_type == "honey_tree":
+        validate_honey_tree(key, data)
+    elif resource_type == "great_marsh_lookout":
+        validate_great_marsh_lookout(key, data)
+
 
 
 def merge_patch(base: Any, patch: Any, where: str) -> Any:
@@ -206,10 +279,17 @@ def main() -> None:
     }
     args.manifest.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
 
+    resource_types = {
+        "standard": sum(encounter_resource_type(k, v) == "standard" for k, v in after.items()),
+        "honey_tree": sum(encounter_resource_type(k, v) == "honey_tree" for k, v in after.items()),
+        "great_marsh_lookout": sum(encounter_resource_type(k, v) == "great_marsh_lookout" for k, v in after.items()),
+    }
+
     report = {
         "gate": "MERCURY_MR05B_ENCOUNTER_TABLE_FRAMEWORK",
         "status": "PASS",
         "area_count": len(after),
+        "resource_types": resource_types,
         "changed_area_count": len(changed),
         "changed_areas": changed,
         "baseline_sha256": before_digest,
@@ -227,6 +307,10 @@ def main() -> None:
             "Old Rod",
             "Good Rod",
             "Super Rod",
+            "Honey Trees",
+            "Trophy Garden daily encounters",
+            "Great Marsh daily/binocular resources",
+            "Mt. Coronet elusive-rod encounter",
         ],
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
