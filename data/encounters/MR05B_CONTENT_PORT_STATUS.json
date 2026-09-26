@@ -1,56 +1,22 @@
 {
-  "mapped_area_count": 13,
-  "override_area_count": 14,
-  "authored_land_slots_applied": 154,
-  "unresolved_custom_slots": [
-    {
-      "target": "encounters_twinleaf_town",
-      "period": "Morning",
-      "slot": 5,
-      "source_species": "SPECIES_CORM"
-    },
-    {
-      "target": "encounters_twinleaf_town",
-      "period": "Day",
-      "slot": 5,
-      "source_species": "SPECIES_CORM"
-    },
-    {
-      "target": "encounters_twinleaf_town",
-      "period": "Evening",
-      "slot": 5,
-      "source_species": "SPECIES_CORM"
-    },
-    {
-      "target": "encounters_twinleaf_town",
-      "period": "Night",
-      "slot": 5,
-      "source_species": "SPECIES_CORM"
-    },
-    {
-      "target": "encounters_route_201",
-      "period": "Morning",
-      "slot": 5,
-      "source_species": "SPECIES_MARBEEP"
-    },
-    {
-      "target": "encounters_route_201",
-      "period": "Day",
-      "slot": 5,
-      "source_species": "SPECIES_MARBEEP"
-    },
-    {
-      "target": "encounters_route_201",
-      "period": "Evening",
-      "slot": 5,
-      "source_species": "SPECIES_MARBEEP"
-    },
-    {
-      "target": "encounters_route_201",
-      "period": "Night",
-      "slot": 5,
-      "source_species": "SPECIES_MARBEEP"
-    }
+  "stage": "MR05B_NUMBERED_ROUTES_PORTED",
+  "route_targets_added": [
+    "encounters_route_205_north",
+    "encounters_route_210_north",
+    "encounters_route_211_west",
+    "encounters_route_211_east",
+    "encounters_route_216",
+    "encounters_route_217",
+    "encounters_route_218",
+    "encounters_route_219",
+    "encounters_route_220",
+    "encounters_route_221",
+    "encounters_route_222",
+    "encounters_route_223",
+    "encounters_route_224"
   ],
-  "note": "Morning tables become DS baseline; Day/Night replacement slots are populated now. Full 4-period tables are preserved in mercury_tod_tables.json for runtime TOD expansion."
+  "total_override_areas": 27,
+  "unresolved_custom_occurrences": [],
+  "unresolved_custom_species": [],
+  "honey_tree_burmy_removed": true
 }
