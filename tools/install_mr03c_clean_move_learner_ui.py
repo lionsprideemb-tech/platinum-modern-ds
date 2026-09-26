@@ -477,8 +477,67 @@ static void MercuryMoveLearner_DrawPokemonPortrait(MoveReminderController *contr
         "MR03C legacy side arrows off",
     )
 
-    # Keep Platinum's native message box behavior for confirmation flow while
-    # the portrait crash is isolated independently.
+    # Keep the native teaching state machine, but make the message box
+    # contextual: hidden while browsing, restored only for confirmations.
+    replace_function(
+        source,
+        "static void MoveReminder_SetMessageBoxText(MoveReminderController *controller, u32 str)",
+        r'''static void MoveReminder_SetMessageBoxText(MoveReminderController *controller, u32 str)
+{
+    Window *messageBox = &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX];
+
+    Window_DrawMessageBoxWithScrollCursor(messageBox, FALSE, 10, 13);
+    Window_FillTilemap(messageBox, 15);
+
+    MoveReminder_SetStringTemplate(controller, str);
+    RenderControlFlags_SetCanABSpeedUpPrint(TRUE);
+    RenderControlFlags_SetAutoScrollFlags(AUTO_SCROLL_DISABLED);
+
+    controller->textPrinterID = Text_AddPrinterWithParams(
+        messageBox,
+        FONT_MESSAGE,
+        controller->string,
+        0,
+        0,
+        Options_TextFrameDelay(controller->data->options),
+        MoveReminder_TextPrinterCallback);
+}''',
+        "MR03C contextual message box",
+    )
+
+    replace_function(
+        source,
+        "static int MoveReminder_ShouldTeachMove_No(MoveReminderController *controller)",
+        r'''static int MoveReminder_ShouldTeachMove_No(MoveReminderController *controller)
+{
+    Window_EraseMessageBox(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        FALSE);
+
+    MoveReminder_DrawMoveSelector(controller, controller->data->cursorPos, 0);
+    MoveReminder_DrawSideArrows(controller, TRUE);
+
+    return MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;
+}''',
+        "MR03C hide message box after teach cancel",
+    )
+
+    replace_function(
+        source,
+        "static int MoveReminder_GiveUpTeachingMon_No(MoveReminderController *controller)",
+        r'''static int MoveReminder_GiveUpTeachingMon_No(MoveReminderController *controller)
+{
+    Window_EraseMessageBox(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        FALSE);
+
+    MoveReminder_DrawMoveSelector(controller, controller->data->cursorPos, 0);
+    MoveReminder_DrawSideArrows(controller, TRUE);
+
+    return MOVE_REMINDER_STATE_PROCESS_MAIN_INPUT;
+}''',
+        "MR03C hide message box after exit cancel",
+    )
 
     # Filtered list implementation. StringList choice values remain move IDs,
     # so the native teaching state machine can consume them directly.
@@ -1241,6 +1300,13 @@ static void MercuryMoveLearner_DrawTopPage(MoveReminderController *controller)
 
     MercuryMoveLearner_LoadPalette();
 
+    // The native Platinum message box is only needed once the player actually
+    // enters a teach/confirm flow.  Hide it during normal Mercury browsing so
+    // it cannot cover the lower portion of MOVE/STATS/ABILITY VIEW.
+    Window_EraseMessageBox(
+        &controller->windows[MOVE_REMINDER_WIN_MESSAGE_BOX],
+        FALSE);
+
     for (u32 i = MOVE_REMINDER_WIN_LABEL_BATTLE_MOVES;
          i <= MOVE_REMINDER_WIN_MOVES_NAMES;
          i++) {
@@ -1358,7 +1424,8 @@ def main() -> None:
             "selected move details/effect",
             "button hints",
         ],
-        "portrait_note": "Pokemon portrait is composited into the existing top-window tile store so BG3 character data never crosses the 0xD800 screen-base boundary",
+        "portrait_note": "Pokemon portrait uses the corrected non-overlapping BG3 VRAM layout and passes runtime proof",
+        "message_box_note": "native Platinum message box is hidden during browsing and restored only for teach/confirm states",
         "preserved": [
             "MR03 universal learner backend",
             "normal party-menu entry",
