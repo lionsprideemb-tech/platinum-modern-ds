@@ -1,0 +1,222 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "design_source": "Pokemon Platinum / Sinnoh",
+  "engine_note": "Internal engine map IDs used for encounter registration are scaffolding only; final player-facing Route 212 / Trophy Garden maps must be reconstructed from Platinum/Sinnoh references.",
+  "areas": [
+    {
+      "area": "Route 212 South",
+      "periods": {
+        "Morning": [
+          "Shellos (East Sea)",
+          "Quagsire",
+          "Croagunk",
+          "Buizel",
+          "Lombre",
+          "Palpitoad",
+          "Masquerain",
+          "Grimer",
+          "Ekans",
+          "Stunfisk",
+          "Bellibolt",
+          "Politoed"
+        ],
+        "Day": [
+          "Shellos (East Sea)",
+          "Quagsire",
+          "Buizel",
+          "Croagunk",
+          "Palpitoad",
+          "Lombre",
+          "Grimer",
+          "Masquerain",
+          "Stunfisk",
+          "Ekans",
+          "Bellibolt",
+          "Politoed"
+        ],
+        "Evening": [
+          "Shellos (East Sea)",
+          "Quagsire",
+          "Croagunk",
+          "Palpitoad",
+          "Lombre",
+          "Grimer",
+          "Stunfisk",
+          "Masquerain",
+          "Ekans",
+          "Toxicroak",
+          "Whiscash",
+          "Politoed"
+        ],
+        "Night": [
+          "Quagsire",
+          "Shellos (East Sea)",
+          "Croagunk",
+          "Palpitoad",
+          "Grimer",
+          "Stunfisk",
+          "Lombre",
+          "Masquerain",
+          "Ekans",
+          "Toxicroak",
+          "Whiscash",
+          "Politoed"
+        ]
+      }
+    },
+    {
+      "area": "Route 212 North",
+      "periods": {
+        "Morning": [
+          "Roselia",
+          "Marill",
+          "Kirlia",
+          "Staravia",
+          "Buneary",
+          "Glameow",
+          "Swablu",
+          "Snubbull",
+          "Smeargle",
+          "Petilil",
+          "Fletchling",
+          "Nickit"
+        ],
+        "Day": [
+          "Roselia",
+          "Marill",
+          "Staravia",
+          "Kirlia",
+          "Buneary",
+          "Glameow",
+          "Snubbull",
+          "Swablu",
+          "Smeargle",
+          "Petilil",
+          "Fletchling",
+          "Nickit"
+        ],
+        "Evening": [
+          "Marill",
+          "Roselia",
+          "Kirlia",
+          "Buneary",
+          "Glameow",
+          "Snubbull",
+          "Swablu",
+          "Nickit",
+          "Smeargle",
+          "Petilil",
+          "Fletchling",
+          "Meowth"
+        ],
+        "Night": [
+          "Marill",
+          "Roselia",
+          "Buneary",
+          "Glameow",
+          "Nickit",
+          "Snubbull",
+          "Kirlia",
+          "Swablu",
+          "Smeargle",
+          "Meowth",
+          "Murkrow",
+          "Hoothoot"
+        ]
+      }
+    },
+    {
+      "area": "Trophy Garden",
+      "periods": {
+        "Morning": [
+          "Pikachu",
+          "Pichu",
+          "Roselia",
+          "Staravia",
+          "Cleffa",
+          "Happiny",
+          "Azurill",
+          "Plusle",
+          "Minun",
+          "Castform",
+          "Porygon",
+          "Eevee"
+        ],
+        "Day": [
+          "Pikachu",
+          "Pichu",
+          "Roselia",
+          "Staravia",
+          "Clefairy",
+          "Chansey",
+          "Marill",
+          "Plusle",
+          "Minun",
+          "Castform",
+          "Porygon",
+          "Eevee"
+        ],
+        "Evening": [
+          "Pikachu",
+          "Pichu",
+          "Roselia",
+          "Staravia",
+          "Jigglypuff",
+          "Igglybuff",
+          "Bonsly",
+          "Mime Jr.",
+          "Meowth",
+          "Castform",
+          "Porygon",
+          "Eevee"
+        ],
+        "Night": [
+          "Pikachu",
+          "Pichu",
+          "Roselia",
+          "Staravia",
+          "Jigglypuff",
+          "Clefairy",
+          "Meowth",
+          "Mime Jr.",
+          "Bonsly",
+          "Chansey",
+          "Porygon",
+          "Eevee"
+        ]
+      }
+    }
+  ],
+  "instant_honey": {
+    "Route 212 South": {
+      "pool": [
+        "Nincada 15%",
+        "Spinarak 15%",
+        "Grubbin 15%",
+        "Dewpider 10%",
+        "Dwebble 10%",
+        "Venipede 10%",
+        "Scyther 10%",
+        "Heracross 5%",
+        "Snom 5%",
+        "Larvesta 5%"
+      ]
+    },
+    "Route 212 North": {
+      "pool": [
+        "Togepi 15%",
+        "Happiny 15%",
+        "Porygon 10%",
+        "Hatenna 10%",
+        "Milcery 10%",
+        "Eevee 10%",
+        "Skitty 10%",
+        "Minccino 5%",
+        "Chansey 5%",
+        "Indeedee 10%"
+      ]
+    }
+  },
+  "trophy_garden_policy": "No daily availability lottery is required by the authored encounter tables; Platinum rotating species are distributed across Morning/Day/Evening/Night."
+}
