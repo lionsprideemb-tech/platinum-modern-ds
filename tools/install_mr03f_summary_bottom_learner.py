@@ -314,7 +314,7 @@ static const WindowTemplate sMercuryLearnerWindowTemplates[MERCURY_LEARNER_WINDO
         .tilemapLeft = 1,
         .tilemapTop = 10,
         .width = 30,
-        .height = 10,
+        .height = 11,
         .palette = MERCURY_LEARNER_TEXT_PLTT,
         .baseTile = 241,
     },
@@ -325,7 +325,7 @@ static const WindowTemplate sMercuryLearnerWindowTemplates[MERCURY_LEARNER_WINDO
         .width = 30,
         .height = 2,
         .palette = MERCURY_LEARNER_TEXT_PLTT,
-        .baseTile = 541,
+        .baseTile = 571,
     },
 };
 
