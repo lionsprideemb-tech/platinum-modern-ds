@@ -111,9 +111,9 @@ def build_extra_table(
 
         source_code = {
             "EggMoves": 1,
-            // Mercury has no TM-as-consumable teaching category. Machine
-            // compatibility is surfaced through the Tutor bucket; source 3
-            // is reserved for true event/special move grants.
+            # Mercury has no TM-as-consumable teaching category. Machine
+            # compatibility is surfaced through the Tutor bucket; source 3
+            # is reserved for true event/special move grants.
             "MachineMoves": 2,
             "TutorMoves": 2,
         }
