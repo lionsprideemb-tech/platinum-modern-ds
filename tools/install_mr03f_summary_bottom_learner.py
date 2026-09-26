@@ -256,6 +256,8 @@ static void MercuryMoveLearner_PrintNumber(PokemonSummaryScreen *summaryScreen, 
         Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
 
         if (summaryScreen->data->mode == SUMMARY_MODE_MERCURY_MOVE_LEARNER_SELECT) {
+            Window_ClearAndScheduleCopyToVRAM(
+                &summaryScreen->extraWindows[SUMMARY_WINDOW_BATTLE_MOVE_5]);
             summaryScreen->data->mode = SUMMARY_MODE_MERCURY_MOVE_LEARNER;
             summaryScreen->data->move = MOVE_NONE;
             summaryScreen->pageState = PAGE_STATE_INITIAL;
@@ -323,7 +325,7 @@ static const WindowTemplate sMercuryLearnerWindowTemplates[MERCURY_LEARNER_WINDO
         .width = 30,
         .height = 2,
         .palette = MERCURY_LEARNER_TEXT_PLTT,
-        .baseTile = 511,
+        .baseTile = 541,
     },
 };
 
