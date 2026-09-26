@@ -6,7 +6,7 @@ on:
     branches:
       - feature/mr05a-hm-free-traversal
     paths:
-      - ".github/workflows/mr04-player-build.yml"
+      - ".github/workflows/mr05a-hm-free-traversal.yml"
       - "tools/install_mercury_move_learner.py"
       - "tools/install_mr03_party_move_learner.py"
       - "tools/install_mr03e_summary_top_shell.py"
