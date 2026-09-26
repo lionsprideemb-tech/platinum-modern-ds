@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "default_preset": "off",
+  "seed": 0,
+  "toggles": {
+    "master_enabled": false,
+    "randomize_stats": false,
+    "randomize_abilities": false,
+    "randomize_movesets": false,
+    "randomize_types": false,
+    "randomize_wild": false,
+    "randomize_trainers": false,
+    "randomize_gifts": false,
+    "randomize_statics": false,
+    "innate_abilities_enabled": false
+  },
+  "presets": [
+    "off",
+    "custom",
+    "scaled_progression",
+    "chaos_fully_random"
+  ]
+}
