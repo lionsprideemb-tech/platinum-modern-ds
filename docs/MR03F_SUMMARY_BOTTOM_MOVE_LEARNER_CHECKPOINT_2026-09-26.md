@@ -67,33 +67,35 @@ Subsequent MR03F work preserved the architecture and added only targeted cleanup
 
 These later changes were not required to stop the original crash.
 
-After diagnostics, two presentation-only MR03F polish commits were added:
+After diagnostics, MR03F received targeted fixes without changing the locked architecture:
 
 - `5092729d59604fd16ad2c05eafc698fd19629e6f` — fix learner tile overlap and cancel redraw
-- `21bd37c1453b9e35df1cf3ca1a138757371e118f` — fix native move-select presentation
+- `21bd37c1453b9e35df1cf3ca1a138757371e118f` — enter Platinum's complete native move-select presentation
+- `0d38056c4854306fc9aac15a485607faa2045788` — expose the full legal level-up learnset regardless of current level
+- `7fad489865339f0c16dd7311d6bb9ed10af22e55` — tighten bottom learner row/detail spacing
 
-These preserve the locked architecture and were re-proven by the full MR03F workflow.
+All were re-proven by the full MR03F workflow.
 
 ## Final runtime proof
 
 Latest successful full proof workflow:
 
-- Head commit: `21bd37c1453b9e35df1cf3ca1a138757371e118f`
-- Run ID: **36253028584**
+- Head commit: `7fad489865339f0c16dd7311d6bb9ed10af22e55`
+- Run ID: **36253524082**
 - Job: `prove-summary-bottom-learner`
 - Conclusion: **success**
 - `Build one MR03F proof ROM`: **PASS**
 - `Capture full DS Move Learner proof`: **PASS**
 - Artifact: `mercury-mr03f-summary-bottom-move-learner`
-- Artifact ID: **10909672176**
+- Artifact ID: **10909759209**
 
 Latest proof ROM SHA-256:
 
-`08140fd3ac221447fb1e978464106c4ca0b0a5b802b6d6ec8c0bd6d2bc5c3a80`
+`cc5949e1e358f7de9dd6e62fe7e0b23a25b9db417af16afd0f16c8f228171346`
 
 ## Visual verification
 
-The latest polished artifact was manually reviewed.
+The latest polished artifact from `7fad489865339f0c16dd7311d6bb9ed10af22e55` was manually reviewed. The browse, scrolled, replacement, cancel-return, and alternate-top-page frames are visually clean.
 
 Captured runtime states:
 
@@ -110,6 +112,7 @@ The proof therefore continues well beyond the original frame-4275 crash boundary
 
 - top screen stays the vanilla Platinum Summary renderer
 - bottom screen owns the Mercury Move Learner browser
+- the learner exposes the species' complete legal level-up learnset regardless of current level
 - Up/Down browses learner moves
 - L/R changes the vanilla top Summary page
 - A enters the native move replacement path
