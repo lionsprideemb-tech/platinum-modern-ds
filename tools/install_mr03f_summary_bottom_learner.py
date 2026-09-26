@@ -689,8 +689,13 @@ static int MercuryMoveLearner_BeginTeach(PokemonSummaryScreen *summaryScreen)
         SetupPageFromSubscreenButton(summaryScreen, SUMMARY_PAGE_BATTLE_MOVES);
     } else {
         LoadCurrentPageTilemap(summaryScreen);
-        SetupMoveInfoFromSubscreenButton(summaryScreen);
     }
+
+    // Enter Platinum's complete native move-selection presentation. This
+    // clears the normal Summary mon/item region, shifts the move-info layer
+    // into place, and enables the native move selector instead of leaving
+    // the full-size Pokemon sprite behind the move-detail text.
+    SetupMoveInfoNoTransition(summaryScreen);
 
     MercuryMoveLearner_DrawFooter(summaryScreen);
     return SUMMARY_STATE_SELECT_MOVE;
