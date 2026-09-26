@@ -185,6 +185,24 @@ def timed_species(
     return chosen[:2]
 
 
+def normalize_encounter_method(value: Any, where: str) -> tuple[list[dict[str, Any]], int | None]:
+    if not value:
+        return [], None
+    if isinstance(value, list):
+        if not all(isinstance(entry, dict) for entry in value):
+            raise SystemExit(f"{where}: encounter list contains a non-object entry")
+        return value, None
+    if isinstance(value, dict):
+        mons = value.get("mons")
+        if not isinstance(mons, list) or not all(isinstance(entry, dict) for entry in mons):
+            raise SystemExit(f"{where}: encounter object must contain a mons object-list")
+        rate = value.get("encounter_rate")
+        if rate is not None and not isinstance(rate, int):
+            raise SystemExit(f"{where}: encounter_rate must be an integer")
+        return mons, rate
+    raise SystemExit(f"{where}: unsupported encounter representation {type(value).__name__}")
+
+
 def weighted_five(
     entries: list[dict[str, Any]],
     defaults: list[int],
@@ -268,25 +286,25 @@ def main() -> None:
         elif route.get("land") is False:
             out["land_rate"] = 0
 
-        surf = route.get("surf") or []
+        surf, surf_rate = normalize_encounter_method(route.get("surf"), f"{route_key}.surf")
         if surf:
             out["surf_encounters"] = weighted_five(surf, WATER_DEFAULT_WEIGHTS, fallbacks)
-            out["surf_rate"] = max(int(base.get("surf_rate", 0)), 10)
+            out["surf_rate"] = surf_rate if surf_rate is not None else max(int(base.get("surf_rate", 0)), 10)
 
-        old_rod = route.get("old_rod") or []
+        old_rod, old_rod_rate = normalize_encounter_method(route.get("old_rod"), f"{route_key}.old_rod")
         if old_rod:
             out["old_rod_encounters"] = weighted_five(old_rod, OLD_ROD_DEFAULT_WEIGHTS, fallbacks)
-            out["old_rod_rate"] = max(int(base.get("old_rod_rate", 0)), 25)
+            out["old_rod_rate"] = old_rod_rate if old_rod_rate is not None else max(int(base.get("old_rod_rate", 0)), 25)
 
-        good_rod = route.get("good_rod") or []
+        good_rod, good_rod_rate = normalize_encounter_method(route.get("good_rod"), f"{route_key}.good_rod")
         if good_rod:
             out["good_rod_encounters"] = weighted_five(good_rod, GOOD_ROD_DEFAULT_WEIGHTS, fallbacks)
-            out["good_rod_rate"] = max(int(base.get("good_rod_rate", 0)), 25)
+            out["good_rod_rate"] = good_rod_rate if good_rod_rate is not None else max(int(base.get("good_rod_rate", 0)), 25)
 
-        super_rod = route.get("super_rod") or []
+        super_rod, super_rod_rate = normalize_encounter_method(route.get("super_rod"), f"{route_key}.super_rod")
         if super_rod:
             out["super_rod_encounters"] = weighted_five(super_rod, SUPER_ROD_DEFAULT_WEIGHTS, fallbacks)
-            out["super_rod_rate"] = max(int(base.get("super_rod_rate", 0)), 25)
+            out["super_rod_rate"] = super_rod_rate if super_rod_rate is not None else max(int(base.get("super_rod_rate", 0)), 25)
 
         if out:
             overrides[file_key] = out
