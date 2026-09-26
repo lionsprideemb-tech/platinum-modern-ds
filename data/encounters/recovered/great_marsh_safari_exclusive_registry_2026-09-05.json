@@ -1,0 +1,173 @@
+{
+  "project": "Pokemon Mercury Redux",
+  "date": "2026-09-05",
+  "design_source": "Pokemon Platinum / Sinnoh",
+  "engine_note": "Engine map constants are hidden implementation infrastructure only; they are not encounter/geography design sources.",
+  "safari_exclusive_policy": {
+    "ordinary_route_exclusive": true,
+    "daily_rng_gate": false,
+    "rare_slot_total_percent": 10,
+    "slot_weights_percent": [
+      4,
+      4,
+      1,
+      1
+    ],
+    "purpose": "Each Great Marsh biome has a distinct pool of foreign Safari rares unavailable on ordinary authored Sinnoh routes."
+  },
+  "areas": [
+    {
+      "area": 1,
+      "identity": "Canopy Fen",
+      "foreign_rares": [
+        {
+          "species": "Treecko",
+          "chance_percent": 4
+        },
+        {
+          "species": "Slakoth",
+          "chance_percent": 4
+        },
+        {
+          "species": "Oranguru",
+          "chance_percent": 1
+        },
+        {
+          "species": "Pinsir",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 2,
+      "identity": "Poison Mire",
+      "foreign_rares": [
+        {
+          "species": "Seviper",
+          "chance_percent": 4
+        },
+        {
+          "species": "Alolan Grimer",
+          "chance_percent": 4
+        },
+        {
+          "species": "Galarian Slowpoke",
+          "chance_percent": 1
+        },
+        {
+          "species": "Shroodle",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 3,
+      "identity": "Dragonfly Reeds",
+      "foreign_rares": [
+        {
+          "species": "Goomy",
+          "chance_percent": 4
+        },
+        {
+          "species": "Dreepy",
+          "chance_percent": 4
+        },
+        {
+          "species": "Joltik",
+          "chance_percent": 1
+        },
+        {
+          "species": "Galarian Stunfisk",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 4,
+      "identity": "Flowering Wetland",
+      "foreign_rares": [
+        {
+          "species": "Chikorita",
+          "chance_percent": 4
+        },
+        {
+          "species": "Comfey",
+          "chance_percent": 4
+        },
+        {
+          "species": "Oricorio (Pa'u)",
+          "chance_percent": 1
+        },
+        {
+          "species": "Sprigatito",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 5,
+      "identity": "Mudflat Pools",
+      "foreign_rares": [
+        {
+          "species": "Mudkip",
+          "chance_percent": 4
+        },
+        {
+          "species": "Froakie",
+          "chance_percent": 4
+        },
+        {
+          "species": "Shelmet",
+          "chance_percent": 1
+        },
+        {
+          "species": "Karrablast",
+          "chance_percent": 1
+        }
+      ]
+    },
+    {
+      "area": 6,
+      "identity": "Open Marsh",
+      "foreign_rares": [
+        {
+          "species": "Snivy",
+          "chance_percent": 4
+        },
+        {
+          "species": "Skarmory",
+          "chance_percent": 4
+        },
+        {
+          "species": "Magby",
+          "chance_percent": 1
+        },
+        {
+          "species": "Kangaskhan",
+          "chance_percent": 1
+        }
+      ]
+    }
+  ],
+  "platinum_binocular_species_permanent": [
+    "Roselia",
+    "Staravia",
+    "Skorupi",
+    "Drapion",
+    "Croagunk",
+    "Toxicroak",
+    "Carnivine",
+    "Paras",
+    "Exeggcute",
+    "Kangaskhan",
+    "Shroomish",
+    "Gulpin",
+    "Kecleon"
+  ],
+  "time_of_day": [
+    "Morning",
+    "Day",
+    "Evening",
+    "Night"
+  ]
+}
