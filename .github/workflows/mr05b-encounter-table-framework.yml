@@ -14,6 +14,7 @@ on:
       - "tools/install_mr05a_hm_free_traversal.py"
       - "tools/install_mr05b_encounter_framework.py"
       - "tools/install_mr05b_authored_encounters.py"
+      - "tools/install_mr05b_honey_trees.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
       - "tools/install_pt04d_species_batch.py"
@@ -105,7 +106,8 @@ jobs:
             tools/install_mr03f_summary_bottom_learner.py \
             tools/install_mr05a_hm_free_traversal.py \
             tools/install_mr05b_encounter_framework.py \
-            tools/install_mr05b_authored_encounters.py
+            tools/install_mr05b_authored_encounters.py \
+            tools/install_mr05b_honey_trees.py
 
       - name: Restore MP05 canonical ability architecture
         shell: bash
@@ -277,6 +279,20 @@ jobs:
           grep -q 'MERCURY_MR05B_AUTHORED_TOD_BEGIN' vendor/pokeplatinum/src/overlay006/wild_encounters.c
           grep -q 'Mercury_ApplyAuthoredLandTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
 
+      - name: Install MR05B instant regional Honey Trees
+        shell: bash
+        run: |
+          python3 tools/install_mr05b_honey_trees.py \
+            vendor/pokeplatinum \
+            data/encounters/recovered \
+            --report mr05b-honey-trees.json
+
+          test "$(jq -r '.status' mr05b-honey-trees.json)" = "PASS"
+          test "$(jq -r '.tree_map_count' mr05b-honey-trees.json)" = "21"
+          test "$(jq -r '.instant_battle' mr05b-honey-trees.json)" = "true"
+          test "$(jq -r '.burmy_present' mr05b-honey-trees.json)" = "false"
+          test "$(jq -r '.real_time_wait_hours' mr05b-honey-trees.json)" = "0"
+
       - name: Prove CI direct-launch harness is absent
         shell: bash
         run: |
@@ -401,6 +417,7 @@ jobs:
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-encounters.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05b-honey-trees.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-encounters.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
