@@ -5168,6 +5168,4456 @@
           }
         ]
       }
+    },
+    "encounters_route_205_north": {
+      "source_registry": "SINNOH_MISSING_AREA_AUDIT",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_BIDOOF",
+            "species": "SPECIES_BIDOOF",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_BUDEW",
+            "species": "SPECIES_BUDEW",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_WURMPLE",
+            "species": "SPECIES_WURMPLE",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_SILCOON",
+            "species": "SPECIES_SILCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_CASCOON",
+            "species": "SPECIES_CASCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_KRICKETOT",
+            "species": "SPECIES_KRICKETOT",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_BEAUTIFLY",
+            "species": "SPECIES_BEAUTIFLY",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DUSTOX",
+            "species": "SPECIES_DUSTOX",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SLOWPOKE",
+            "species": "SPECIES_SLOWPOKE",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_HOPPIP",
+            "species": "SPECIES_HOPPIP",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 5
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SEWADDLE",
+            "species": "SPECIES_SEWADDLE",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_PETILIL",
+            "species": "SPECIES_PETILIL",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 2
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_BUDEW",
+            "species": "SPECIES_BUDEW",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_BIDOOF",
+            "species": "SPECIES_BIDOOF",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_WURMPLE",
+            "species": "SPECIES_WURMPLE",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_SILCOON",
+            "species": "SPECIES_SILCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_CASCOON",
+            "species": "SPECIES_CASCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_BEAUTIFLY",
+            "species": "SPECIES_BEAUTIFLY",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 7
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_DUSTOX",
+            "species": "SPECIES_DUSTOX",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 7
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_HOPPIP",
+            "species": "SPECIES_HOPPIP",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 8
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SLOWPOKE",
+            "species": "SPECIES_SLOWPOKE",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 6
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_SEWADDLE",
+            "species": "SPECIES_SEWADDLE",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 5
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_PETILIL",
+            "species": "SPECIES_PETILIL",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_COTTONEE",
+            "species": "SPECIES_COTTONEE",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 2
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_BIDOOF",
+            "species": "SPECIES_BIDOOF",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 15
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_BUDEW",
+            "species": "SPECIES_BUDEW",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_WURMPLE",
+            "species": "SPECIES_WURMPLE",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_SILCOON",
+            "species": "SPECIES_SILCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_CASCOON",
+            "species": "SPECIES_CASCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_KRICKETOT",
+            "species": "SPECIES_KRICKETOT",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_BEAUTIFLY",
+            "species": "SPECIES_BEAUTIFLY",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DUSTOX",
+            "species": "SPECIES_DUSTOX",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SLOWPOKE",
+            "species": "SPECIES_SLOWPOKE",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_HOOTHOOT",
+            "species": "SPECIES_HOOTHOOT",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 8
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SEWADDLE",
+            "species": "SPECIES_SEWADDLE",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 5
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_COTTONEE",
+            "species": "SPECIES_COTTONEE",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 3
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_BIDOOF",
+            "species": "SPECIES_BIDOOF",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 15
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_BUDEW",
+            "species": "SPECIES_BUDEW",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 12
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_HOOTHOOT",
+            "species": "SPECIES_HOOTHOOT",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 22,
+            "source_weight": 15
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_KRICKETOT",
+            "species": "SPECIES_KRICKETOT",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_SILCOON",
+            "species": "SPECIES_SILCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_CASCOON",
+            "species": "SPECIES_CASCOON",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_DUSTOX",
+            "species": "SPECIES_DUSTOX",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_SLOWPOKE",
+            "species": "SPECIES_SLOWPOKE",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 8
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_MORELULL",
+            "species": "SPECIES_MORELULL",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_COTTONEE",
+            "species": "SPECIES_COTTONEE",
+            "resolve_mode": "exact",
+            "min_level": 20,
+            "max_level": 22,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SEWADDLE",
+            "species": "SPECIES_SEWADDLE",
+            "resolve_mode": "exact",
+            "min_level": 19,
+            "max_level": 21,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_MISDREAVUS",
+            "species": "SPECIES_MISDREAVUS",
+            "resolve_mode": "exact",
+            "min_level": 21,
+            "max_level": 22,
+            "source_weight": 3
+          }
+        ]
+      }
+    },
+    "encounters_route_210_north": {
+      "source_registry": "ROUTE210_NORTH_CELESTIC",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 38,
+            "max_level": 40,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 38,
+            "max_level": 40,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_BIBAREL",
+            "species": "SPECIES_BIBAREL",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_SPOINK",
+            "species": "SPECIES_SPOINK",
+            "resolve_mode": "exact",
+            "min_level": 38,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_NATU",
+            "species": "SPECIES_NATU",
+            "resolve_mode": "exact",
+            "min_level": 38,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_HATENNA",
+            "species": "SPECIES_HATENNA",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_MACHOP",
+            "species": "SPECIES_MACHOP",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_SCYTHER",
+            "species": "SPECIES_SCYTHER",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_ABSOL",
+            "species": "SPECIES_ABSOL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BAGON",
+            "species": "SPECIES_BAGON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_VULPIX_ALOLA",
+            "species": "SPECIES_VULPIX",
+            "resolve_mode": "base_form_alias",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 38,
+            "max_level": 40,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 38,
+            "max_level": 40,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MACHOP",
+            "species": "SPECIES_MACHOP",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_BIBAREL",
+            "species": "SPECIES_BIBAREL",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_NATU",
+            "species": "SPECIES_NATU",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_HATENNA",
+            "species": "SPECIES_HATENNA",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_SCYTHER",
+            "species": "SPECIES_SCYTHER",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_SPOINK",
+            "species": "SPECIES_SPOINK",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_ABSOL",
+            "species": "SPECIES_ABSOL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MACHOKE",
+            "species": "SPECIES_MACHOKE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BAGON",
+            "species": "SPECIES_BAGON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_VULPIX_ALOLA",
+            "species": "SPECIES_VULPIX",
+            "resolve_mode": "base_form_alias",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_HOOTHOOT",
+            "species": "SPECIES_HOOTHOOT",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_MACHOKE",
+            "species": "SPECIES_MACHOKE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_NATU",
+            "species": "SPECIES_NATU",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_HATENNA",
+            "species": "SPECIES_HATENNA",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_SCYTHER",
+            "species": "SPECIES_SCYTHER",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_ABSOL",
+            "species": "SPECIES_ABSOL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_NOCTOWL",
+            "species": "SPECIES_NOCTOWL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BAGON",
+            "species": "SPECIES_BAGON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_VULPIX_ALOLA",
+            "species": "SPECIES_VULPIX",
+            "resolve_mode": "base_form_alias",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_NOCTOWL",
+            "species": "SPECIES_NOCTOWL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_HOOTHOOT",
+            "species": "SPECIES_HOOTHOOT",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 40,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_ABSOL",
+            "species": "SPECIES_ABSOL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_HATENNA",
+            "species": "SPECIES_HATENNA",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_MACHOKE",
+            "species": "SPECIES_MACHOKE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SCYTHER",
+            "species": "SPECIES_SCYTHER",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_NATU",
+            "species": "SPECIES_NATU",
+            "resolve_mode": "exact",
+            "min_level": 39,
+            "max_level": 41,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BAGON",
+            "species": "SPECIES_BAGON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_VULPIX_ALOLA",
+            "species": "SPECIES_VULPIX",
+            "resolve_mode": "base_form_alias",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 1
+          }
+        ]
+      }
+    },
+    "encounters_route_211_west": {
+      "source_registry": "ROUTE211_MT_CORONET_CELESTIC",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_BIDOOF",
+            "species": "SPECIES_BIDOOF",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MACHOP",
+            "species": "SPECIES_MACHOP",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_TEDDIURSA",
+            "species": "SPECIES_TEDDIURSA",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_TYROGUE",
+            "species": "SPECIES_TYROGUE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_ROOKIDEE",
+            "species": "SPECIES_ROOKIDEE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_MAKUHITA",
+            "species": "SPECIES_MAKUHITA",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SAWK",
+            "species": "SPECIES_SAWK",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_THROH",
+            "species": "SPECIES_THROH",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_BIDOOF",
+            "species": "SPECIES_BIDOOF",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MACHOP",
+            "species": "SPECIES_MACHOP",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_TYROGUE",
+            "species": "SPECIES_TYROGUE",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_TEDDIURSA",
+            "species": "SPECIES_TEDDIURSA",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_ROOKIDEE",
+            "species": "SPECIES_ROOKIDEE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_MAKUHITA",
+            "species": "SPECIES_MAKUHITA",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SAWK",
+            "species": "SPECIES_SAWK",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_THROH",
+            "species": "SPECIES_THROH",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_HOOTHOOT",
+            "species": "SPECIES_HOOTHOOT",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MACHOP",
+            "species": "SPECIES_MACHOP",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_TEDDIURSA",
+            "species": "SPECIES_TEDDIURSA",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_TYROGUE",
+            "species": "SPECIES_TYROGUE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_ZUBAT",
+            "species": "SPECIES_ZUBAT",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_MAKUHITA",
+            "species": "SPECIES_MAKUHITA",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SAWK",
+            "species": "SPECIES_SAWK",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_THROH",
+            "species": "SPECIES_THROH",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_HOOTHOOT",
+            "species": "SPECIES_HOOTHOOT",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_ZUBAT",
+            "species": "SPECIES_ZUBAT",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_MACHOP",
+            "species": "SPECIES_MACHOP",
+            "resolve_mode": "exact",
+            "min_level": 23,
+            "max_level": 24,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_TEDDIURSA",
+            "species": "SPECIES_TEDDIURSA",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_TYROGUE",
+            "species": "SPECIES_TYROGUE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_SABLEYE",
+            "species": "SPECIES_SABLEYE",
+            "resolve_mode": "exact",
+            "min_level": 24,
+            "max_level": 25,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SAWK",
+            "species": "SPECIES_SAWK",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_THROH",
+            "species": "SPECIES_THROH",
+            "resolve_mode": "exact",
+            "min_level": 25,
+            "max_level": 26,
+            "source_weight": 1
+          }
+        ]
+      }
+    },
+    "encounters_route_211_east": {
+      "source_registry": "ROUTE211_MT_CORONET_CELESTIC",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MACHOKE",
+            "species": "SPECIES_MACHOKE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_GURDURR",
+            "species": "SPECIES_GURDURR",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_STONJOURNER",
+            "species": "SPECIES_STONJOURNER",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_ALTARIA",
+            "species": "SPECIES_ALTARIA",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_ROOKIDEE",
+            "species": "SPECIES_ROOKIDEE",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BELDUM",
+            "species": "SPECIES_BELDUM",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MACHOKE",
+            "species": "SPECIES_MACHOKE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_GURDURR",
+            "species": "SPECIES_GURDURR",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_STONJOURNER",
+            "species": "SPECIES_STONJOURNER",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_ALTARIA",
+            "species": "SPECIES_ALTARIA",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_RUFFLET",
+            "species": "SPECIES_RUFFLET",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BELDUM",
+            "species": "SPECIES_BELDUM",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MACHOKE",
+            "species": "SPECIES_MACHOKE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_NOCTOWL",
+            "species": "SPECIES_NOCTOWL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_GURDURR",
+            "species": "SPECIES_GURDURR",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_STONJOURNER",
+            "species": "SPECIES_STONJOURNER",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BELDUM",
+            "species": "SPECIES_BELDUM",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_NOCTOWL",
+            "species": "SPECIES_NOCTOWL",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_MACHOKE",
+            "species": "SPECIES_MACHOKE",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_BRONZOR",
+            "species": "SPECIES_BRONZOR",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_CHINGLING",
+            "species": "SPECIES_CHINGLING",
+            "resolve_mode": "exact",
+            "min_level": 40,
+            "max_level": 41,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_ZUBAT",
+            "species": "SPECIES_ZUBAT",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_SWABLU",
+            "species": "SPECIES_SWABLU",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_STONJOURNER",
+            "species": "SPECIES_STONJOURNER",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BELDUM",
+            "species": "SPECIES_BELDUM",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_MAWILE",
+            "species": "SPECIES_MAWILE",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 1
+          }
+        ]
+      }
+    },
+    "encounters_route_216": {
+      "source_registry": "FUEGO_NORTHERN_SINNOH",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 48,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_CUBCHOO",
+            "species": "SPECIES_CUBCHOO",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_STANTLER",
+            "species": "SPECIES_STANTLER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_BERGMITE",
+            "species": "SPECIES_BERGMITE",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DELIBIRD",
+            "species": "SPECIES_DELIBIRD",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SNOM",
+            "species": "SPECIES_SNOM",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_AMAURA",
+            "species": "SPECIES_AMAURA",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SANDSHREW_ALOLA",
+            "species": "SPECIES_SANDSHREW",
+            "resolve_mode": "base_form_alias",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_ABOMASNOW",
+            "species": "SPECIES_ABOMASNOW",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 48,
+            "source_weight": 2
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 48,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_CUBCHOO",
+            "species": "SPECIES_CUBCHOO",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_BERGMITE",
+            "species": "SPECIES_BERGMITE",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_STANTLER",
+            "species": "SPECIES_STANTLER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DELIBIRD",
+            "species": "SPECIES_DELIBIRD",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SNOM",
+            "species": "SPECIES_SNOM",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_AMAURA",
+            "species": "SPECIES_AMAURA",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SANDSHREW_ALOLA",
+            "species": "SPECIES_SANDSHREW",
+            "resolve_mode": "base_form_alias",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_ABOMASNOW",
+            "species": "SPECIES_ABOMASNOW",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 48,
+            "source_weight": 2
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 48,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MEDITITE",
+            "species": "SPECIES_MEDITITE",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_CUBCHOO",
+            "species": "SPECIES_CUBCHOO",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_STANTLER",
+            "species": "SPECIES_STANTLER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 5
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_BERGMITE",
+            "species": "SPECIES_BERGMITE",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_SNOM",
+            "species": "SPECIES_SNOM",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_GREAVARD",
+            "species": "SPECIES_GREAVARD",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_DELIBIRD",
+            "species": "SPECIES_DELIBIRD",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_SANDSHREW_ALOLA",
+            "species": "SPECIES_SANDSHREW",
+            "resolve_mode": "base_form_alias",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 48,
+            "source_weight": 2
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 48,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 15
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CUBCHOO",
+            "species": "SPECIES_CUBCHOO",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_SNOM",
+            "species": "SPECIES_SNOM",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_GREAVARD",
+            "species": "SPECIES_GREAVARD",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_GRAVELER",
+            "species": "SPECIES_GRAVELER",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DELIBIRD",
+            "species": "SPECIES_DELIBIRD",
+            "resolve_mode": "exact",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SANDSHREW_ALOLA",
+            "species": "SPECIES_SANDSHREW",
+            "resolve_mode": "base_form_alias",
+            "min_level": 46,
+            "max_level": 48,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_FROSLASS",
+            "species": "SPECIES_FROSLASS",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 48,
+            "source_weight": 2
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_ABOMASNOW",
+            "species": "SPECIES_ABOMASNOW",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 48,
+            "source_weight": 2
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_STANTLER",
+            "species": "SPECIES_STANTLER",
+            "resolve_mode": "exact",
+            "min_level": 45,
+            "max_level": 47,
+            "source_weight": 2
+          }
+        ]
+      }
+    },
+    "encounters_route_217": {
+      "source_registry": "FUEGO_NORTHERN_SINNOH",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SWINUB",
+            "species": "SPECIES_SWINUB",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 50,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_VANILLITE",
+            "species": "SPECIES_VANILLITE",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_CETODDLE",
+            "species": "SPECIES_CETODDLE",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_BERGMITE",
+            "species": "SPECIES_BERGMITE",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_SPHEAL",
+            "species": "SPECIES_SPHEAL",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_DARUMAKA_GALAR",
+            "species": "SPECIES_DARUMAKA",
+            "resolve_mode": "base_form_alias",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_CRYOGONAL",
+            "species": "SPECIES_CRYOGONAL",
+            "resolve_mode": "exact",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_EISCUE_ICE",
+            "species": "SPECIES_EISCUE",
+            "resolve_mode": "base_form_alias",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_PILOSWINE",
+            "species": "SPECIES_PILOSWINE",
+            "resolve_mode": "exact",
+            "min_level": 50,
+            "max_level": 50,
+            "source_weight": 2
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 50,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SWINUB",
+            "species": "SPECIES_SWINUB",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CETODDLE",
+            "species": "SPECIES_CETODDLE",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_VANILLITE",
+            "species": "SPECIES_VANILLITE",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_BERGMITE",
+            "species": "SPECIES_BERGMITE",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_SPHEAL",
+            "species": "SPECIES_SPHEAL",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DARUMAKA_GALAR",
+            "species": "SPECIES_DARUMAKA",
+            "resolve_mode": "base_form_alias",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_CRYOGONAL",
+            "species": "SPECIES_CRYOGONAL",
+            "resolve_mode": "exact",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_EISCUE_ICE",
+            "species": "SPECIES_EISCUE",
+            "resolve_mode": "base_form_alias",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_PILOSWINE",
+            "species": "SPECIES_PILOSWINE",
+            "resolve_mode": "exact",
+            "min_level": 50,
+            "max_level": 50,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 1
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SWINUB",
+            "species": "SPECIES_SWINUB",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 50,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 15
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_CETODDLE",
+            "species": "SPECIES_CETODDLE",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_BERGMITE",
+            "species": "SPECIES_BERGMITE",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 5
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_SPHEAL",
+            "species": "SPECIES_SPHEAL",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DARUMAKA_GALAR",
+            "species": "SPECIES_DARUMAKA",
+            "resolve_mode": "base_form_alias",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_VANILLITE",
+            "species": "SPECIES_VANILLITE",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_CRYOGONAL",
+            "species": "SPECIES_CRYOGONAL",
+            "resolve_mode": "exact",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_EISCUE_ICE",
+            "species": "SPECIES_EISCUE",
+            "resolve_mode": "base_form_alias",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_PILOSWINE",
+            "species": "SPECIES_PILOSWINE",
+            "resolve_mode": "exact",
+            "min_level": 50,
+            "max_level": 50,
+            "source_weight": 2
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SWINUB",
+            "species": "SPECIES_SWINUB",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_SNORUNT",
+            "species": "SPECIES_SNORUNT",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 50,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_SNOVER",
+            "species": "SPECIES_SNOVER",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 50,
+            "source_weight": 15
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_SNEASEL",
+            "species": "SPECIES_SNEASEL",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_VANILLITE",
+            "species": "SPECIES_VANILLITE",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_SPHEAL",
+            "species": "SPECIES_SPHEAL",
+            "resolve_mode": "exact",
+            "min_level": 47,
+            "max_level": 49,
+            "source_weight": 5
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_CETODDLE",
+            "species": "SPECIES_CETODDLE",
+            "resolve_mode": "exact",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DARUMAKA_GALAR",
+            "species": "SPECIES_DARUMAKA",
+            "resolve_mode": "base_form_alias",
+            "min_level": 48,
+            "max_level": 50,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_CRYOGONAL",
+            "species": "SPECIES_CRYOGONAL",
+            "resolve_mode": "exact",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_EISCUE_ICE",
+            "species": "SPECIES_EISCUE",
+            "resolve_mode": "base_form_alias",
+            "min_level": 49,
+            "max_level": 50,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_FROSLASS",
+            "species": "SPECIES_FROSLASS",
+            "resolve_mode": "exact",
+            "min_level": 50,
+            "max_level": 50,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_PILOSWINE",
+            "species": "SPECIES_PILOSWINE",
+            "resolve_mode": "exact",
+            "min_level": 50,
+            "max_level": 50,
+            "source_weight": 1
+          }
+        ]
+      }
+    },
+    "encounters_route_218": {
+      "source_registry": "ROUTE218_CANALAVE",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MR_MIME",
+            "species": "SPECIES_MR_MIME",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHATOT",
+            "species": "SPECIES_CHATOT",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_KLINK",
+            "species": "SPECIES_KLINK",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_YAMPER",
+            "species": "SPECIES_YAMPER",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_HELIOPTILE",
+            "species": "SPECIES_HELIOPTILE",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_VOLTORB",
+            "species": "SPECIES_VOLTORB",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MEOWTH_GALAR",
+            "species": "SPECIES_MEOWTH",
+            "resolve_mode": "base_form_alias",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_KLEFKI",
+            "species": "SPECIES_KLEFKI",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_DURALUDON",
+            "species": "SPECIES_DURALUDON",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MR_MIME",
+            "species": "SPECIES_MR_MIME",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_CHATOT",
+            "species": "SPECIES_CHATOT",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_KLINK",
+            "species": "SPECIES_KLINK",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_HELIOPTILE",
+            "species": "SPECIES_HELIOPTILE",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_YAMPER",
+            "species": "SPECIES_YAMPER",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_VOLTORB",
+            "species": "SPECIES_VOLTORB",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MEOWTH_GALAR",
+            "species": "SPECIES_MEOWTH",
+            "resolve_mode": "base_form_alias",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_KLEFKI",
+            "species": "SPECIES_KLEFKI",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_DURALUDON",
+            "species": "SPECIES_DURALUDON",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MR_MIME",
+            "species": "SPECIES_MR_MIME",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_KLINK",
+            "species": "SPECIES_KLINK",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_CHATOT",
+            "species": "SPECIES_CHATOT",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_ELECTRIKE",
+            "species": "SPECIES_ELECTRIKE",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_YAMPER",
+            "species": "SPECIES_YAMPER",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_VOLTORB",
+            "species": "SPECIES_VOLTORB",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MEOWTH_GALAR",
+            "species": "SPECIES_MEOWTH",
+            "resolve_mode": "base_form_alias",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_KLEFKI",
+            "species": "SPECIES_KLEFKI",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_DURALUDON",
+            "species": "SPECIES_DURALUDON",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_MR_MIME",
+            "species": "SPECIES_MR_MIME",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 42,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_KLINK",
+            "species": "SPECIES_KLINK",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_ELECTRIKE",
+            "species": "SPECIES_ELECTRIKE",
+            "resolve_mode": "exact",
+            "min_level": 41,
+            "max_level": 43,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_MEOWTH_GALAR",
+            "species": "SPECIES_MEOWTH",
+            "resolve_mode": "base_form_alias",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_YAMPER",
+            "species": "SPECIES_YAMPER",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 43,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_VOLTORB",
+            "species": "SPECIES_VOLTORB",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_PAWMI",
+            "species": "SPECIES_PAWMI",
+            "resolve_mode": "exact",
+            "min_level": 42,
+            "max_level": 44,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_KLEFKI",
+            "species": "SPECIES_KLEFKI",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_DURALUDON",
+            "species": "SPECIES_DURALUDON",
+            "resolve_mode": "exact",
+            "min_level": 43,
+            "max_level": 44,
+            "source_weight": 1
+          }
+        ]
+      }
+    },
+    "encounters_route_221": {
+      "source_registry": "SINNOH_MISSING_AREA_AUDIT",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SUDOWOODO",
+            "species": "SPECIES_SUDOWOODO",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_GIRAFARIG",
+            "species": "SPECIES_GIRAFARIG",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 15
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 15
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_NIDORINA",
+            "species": "SPECIES_NIDORINA",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 6
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_NIDORINO",
+            "species": "SPECIES_NIDORINO",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 6
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_FARFETCHD",
+            "species": "SPECIES_FARFETCHD",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 36,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_EXEGGCUTE",
+            "species": "SPECIES_EXEGGCUTE",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 36,
+            "source_weight": 4
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_DODRIO",
+            "species": "SPECIES_DODRIO",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_TROPIUS",
+            "species": "SPECIES_TROPIUS",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_KECLEON",
+            "species": "SPECIES_KECLEON",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 2
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_EEVEE",
+            "species": "SPECIES_EEVEE",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 1
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SUDOWOODO",
+            "species": "SPECIES_SUDOWOODO",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_GIRAFARIG",
+            "species": "SPECIES_GIRAFARIG",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 20
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 15
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 15
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_NIDORINA",
+            "species": "SPECIES_NIDORINA",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 6
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_NIDORINO",
+            "species": "SPECIES_NIDORINO",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 6
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_FARFETCHD",
+            "species": "SPECIES_FARFETCHD",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 36,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_EXEGGCUTE",
+            "species": "SPECIES_EXEGGCUTE",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 36,
+            "source_weight": 4
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_DODRIO",
+            "species": "SPECIES_DODRIO",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_TROPIUS",
+            "species": "SPECIES_TROPIUS",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_KECLEON",
+            "species": "SPECIES_KECLEON",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 2
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_EEVEE",
+            "species": "SPECIES_EEVEE",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 1
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SUDOWOODO",
+            "species": "SPECIES_SUDOWOODO",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 18
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_GIRAFARIG",
+            "species": "SPECIES_GIRAFARIG",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 18
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 14
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 14
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_NIDORINA",
+            "species": "SPECIES_NIDORINA",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 6
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_NIDORINO",
+            "species": "SPECIES_NIDORINO",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 6
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_FARFETCHD",
+            "species": "SPECIES_FARFETCHD",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 36,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_EXEGGCUTE",
+            "species": "SPECIES_EXEGGCUTE",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 36,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_NOCTOWL",
+            "species": "SPECIES_NOCTOWL",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_TROPIUS",
+            "species": "SPECIES_TROPIUS",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_KECLEON",
+            "species": "SPECIES_KECLEON",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_EEVEE",
+            "species": "SPECIES_EEVEE",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 4
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_SUDOWOODO",
+            "species": "SPECIES_SUDOWOODO",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 18
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_GIRAFARIG",
+            "species": "SPECIES_GIRAFARIG",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 18
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 15
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 37,
+            "source_weight": 12
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_NOCTOWL",
+            "species": "SPECIES_NOCTOWL",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_NIDORINA",
+            "species": "SPECIES_NIDORINA",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 5
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_NIDORINO",
+            "species": "SPECIES_NIDORINO",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_EXEGGCUTE",
+            "species": "SPECIES_EXEGGCUTE",
+            "resolve_mode": "exact",
+            "min_level": 34,
+            "max_level": 36,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_KECLEON",
+            "species": "SPECIES_KECLEON",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 4
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MISDREAVUS",
+            "species": "SPECIES_MISDREAVUS",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_TROPIUS",
+            "species": "SPECIES_TROPIUS",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 3
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_EEVEE",
+            "species": "SPECIES_EEVEE",
+            "resolve_mode": "exact",
+            "min_level": 35,
+            "max_level": 37,
+            "source_weight": 2
+          }
+        ]
+      }
+    },
+    "encounters_route_222": {
+      "source_registry": "DISTORTION_ROUTE222_SUNYSHORE",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_ELECTABUZZ",
+            "species": "SPECIES_ELECTABUZZ",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_WINGULL",
+            "species": "SPECIES_WINGULL",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_LUXIO",
+            "species": "SPECIES_LUXIO",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_CHATOT",
+            "species": "SPECIES_CHATOT",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_MAGNETON",
+            "species": "SPECIES_MAGNETON",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_PINCURCHIN",
+            "species": "SPECIES_PINCURCHIN",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_ZEBSTRIKA",
+            "species": "SPECIES_ZEBSTRIKA",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BOLTUND",
+            "species": "SPECIES_BOLTUND",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 3
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_HELIOLISK",
+            "species": "SPECIES_HELIOLISK",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 3
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_ELECTABUZZ",
+            "species": "SPECIES_ELECTABUZZ",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_WINGULL",
+            "species": "SPECIES_WINGULL",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_LUXIO",
+            "species": "SPECIES_LUXIO",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_CHATOT",
+            "species": "SPECIES_CHATOT",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_MAGNETON",
+            "species": "SPECIES_MAGNETON",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_PINCURCHIN",
+            "species": "SPECIES_PINCURCHIN",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_KILOWATTREL",
+            "species": "SPECIES_KILOWATTREL",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BOLTUND",
+            "species": "SPECIES_BOLTUND",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 3
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_HELIOLISK",
+            "species": "SPECIES_HELIOLISK",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 3
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_ELECTABUZZ",
+            "species": "SPECIES_ELECTABUZZ",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_WINGULL",
+            "species": "SPECIES_WINGULL",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_LUXIO",
+            "species": "SPECIES_LUXIO",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_CHATOT",
+            "species": "SPECIES_CHATOT",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 5
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_MAGNETON",
+            "species": "SPECIES_MAGNETON",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_PINCURCHIN",
+            "species": "SPECIES_PINCURCHIN",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_EELEKTRIK",
+            "species": "SPECIES_EELEKTRIK",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_MORPEKO",
+            "species": "SPECIES_MORPEKO",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_BOLTUND",
+            "species": "SPECIES_BOLTUND",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 61,
+            "source_weight": 20
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_ELECTABUZZ",
+            "species": "SPECIES_ELECTABUZZ",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_MAGNEMITE",
+            "species": "SPECIES_MAGNEMITE",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_WINGULL",
+            "species": "SPECIES_WINGULL",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 59,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_LUXIO",
+            "species": "SPECIES_LUXIO",
+            "resolve_mode": "exact",
+            "min_level": 57,
+            "max_level": 60,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_MAGNETON",
+            "species": "SPECIES_MAGNETON",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 10
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_PINCURCHIN",
+            "species": "SPECIES_PINCURCHIN",
+            "resolve_mode": "exact",
+            "min_level": 58,
+            "max_level": 60,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_EELEKTRIK",
+            "species": "SPECIES_EELEKTRIK",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_MORPEKO",
+            "species": "SPECIES_MORPEKO",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 4
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_BOLTUND",
+            "species": "SPECIES_BOLTUND",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 3
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_HELIOLISK",
+            "species": "SPECIES_HELIOLISK",
+            "resolve_mode": "exact",
+            "min_level": 59,
+            "max_level": 61,
+            "source_weight": 3
+          }
+        ]
+      }
+    },
+    "encounters_route_224": {
+      "source_registry": "ROUTE224_MARLEY_BRANCH",
+      "periods": {
+        "Morning": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_BELLSPROUT",
+            "species": "SPECIES_BELLSPROUT",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 15
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_GLOOM",
+            "species": "SPECIES_GLOOM",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_WEEPINBELL",
+            "species": "SPECIES_WEEPINBELL",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_BEAUTIFLY",
+            "species": "SPECIES_BEAUTIFLY",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_SWANNA",
+            "species": "SPECIES_SWANNA",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 5
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_LURANTIS",
+            "species": "SPECIES_LURANTIS",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 5
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_NATU",
+            "species": "SPECIES_NATU",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 8
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_LILLIGANT_HISUI",
+            "species": "SPECIES_LILLIGANT",
+            "resolve_mode": "base_form_alias",
+            "min_level": 70,
+            "max_level": 70,
+            "source_weight": 1
+          }
+        ],
+        "Day": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_BELLSPROUT",
+            "species": "SPECIES_BELLSPROUT",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 12
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_GLOOM",
+            "species": "SPECIES_GLOOM",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_WEEPINBELL",
+            "species": "SPECIES_WEEPINBELL",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_BEAUTIFLY",
+            "species": "SPECIES_BEAUTIFLY",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_LEAVANNY",
+            "species": "SPECIES_LEAVANNY",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 6
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_LURANTIS",
+            "species": "SPECIES_LURANTIS",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 5
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_NATU",
+            "species": "SPECIES_NATU",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 5
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_ROSERADE",
+            "species": "SPECIES_ROSERADE",
+            "resolve_mode": "exact",
+            "min_level": 70,
+            "max_level": 70,
+            "source_weight": 3
+          }
+        ],
+        "Evening": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_BELLSPROUT",
+            "species": "SPECIES_BELLSPROUT",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_GLOOM",
+            "species": "SPECIES_GLOOM",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_WEEPINBELL",
+            "species": "SPECIES_WEEPINBELL",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_BEAUTIFLY",
+            "species": "SPECIES_BEAUTIFLY",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 5
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_DUSTOX",
+            "species": "SPECIES_DUSTOX",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 7
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_XATU",
+            "species": "SPECIES_XATU",
+            "resolve_mode": "exact",
+            "min_level": 69,
+            "max_level": 70,
+            "source_weight": 5
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_DUSKULL",
+            "species": "SPECIES_DUSKULL",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 7
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_ROSERADE",
+            "species": "SPECIES_ROSERADE",
+            "resolve_mode": "exact",
+            "min_level": 70,
+            "max_level": 70,
+            "source_weight": 5
+          }
+        ],
+        "Night": [
+          {
+            "slot": 0,
+            "source_species": "SPECIES_ODDISH",
+            "species": "SPECIES_ODDISH",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 15
+          },
+          {
+            "slot": 1,
+            "source_species": "SPECIES_ROSELIA",
+            "species": "SPECIES_ROSELIA",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 15
+          },
+          {
+            "slot": 2,
+            "source_species": "SPECIES_FLOATZEL",
+            "species": "SPECIES_FLOATZEL",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 3,
+            "source_species": "SPECIES_PELIPPER",
+            "species": "SPECIES_PELIPPER",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 4,
+            "source_species": "SPECIES_GASTRODON",
+            "species": "SPECIES_GASTRODON",
+            "resolve_mode": "exact",
+            "min_level": 67,
+            "max_level": 69,
+            "source_weight": 10
+          },
+          {
+            "slot": 5,
+            "source_species": "SPECIES_GLOOM",
+            "species": "SPECIES_GLOOM",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 6,
+            "source_species": "SPECIES_WEEPINBELL",
+            "species": "SPECIES_WEEPINBELL",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 7,
+            "source_species": "SPECIES_DUSTOX",
+            "species": "SPECIES_DUSTOX",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 8
+          },
+          {
+            "slot": 8,
+            "source_species": "SPECIES_DUSKULL",
+            "species": "SPECIES_DUSKULL",
+            "resolve_mode": "exact",
+            "min_level": 68,
+            "max_level": 70,
+            "source_weight": 6
+          },
+          {
+            "slot": 9,
+            "source_species": "SPECIES_DUSCLOPS",
+            "species": "SPECIES_DUSCLOPS",
+            "resolve_mode": "exact",
+            "min_level": 69,
+            "max_level": 70,
+            "source_weight": 5
+          },
+          {
+            "slot": 10,
+            "source_species": "SPECIES_XATU",
+            "species": "SPECIES_XATU",
+            "resolve_mode": "exact",
+            "min_level": 69,
+            "max_level": 70,
+            "source_weight": 4
+          },
+          {
+            "slot": 11,
+            "source_species": "SPECIES_BELLOSSOM",
+            "species": "SPECIES_BELLOSSOM",
+            "resolve_mode": "exact",
+            "min_level": 70,
+            "max_level": 70,
+            "source_weight": 1
+          }
+        ]
+      }
     }
   }
 }
