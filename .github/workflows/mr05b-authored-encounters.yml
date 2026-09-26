@@ -18,6 +18,7 @@ on:
       - "tools/extend_mr05b_great_marsh_overrides.py"
       - "tools/extend_mr05b_special_areas.py"
       - "tools/extend_mr05b_iron_coronet.py"
+      - "tools/install_mr05c_regi_preleague.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
       - "tools/install_pt04d_species_batch.py"
@@ -113,7 +114,8 @@ jobs:
             tools/build_mr05b_authored_encounter_overrides.py \
             tools/extend_mr05b_great_marsh_overrides.py \
             tools/extend_mr05b_special_areas.py \
-            tools/extend_mr05b_iron_coronet.py
+            tools/extend_mr05b_iron_coronet.py \
+            tools/install_mr05c_regi_preleague.py
 
       - name: Restore MP05 canonical ability architecture
         shell: bash
@@ -340,6 +342,30 @@ jobs:
           grep -q 'WildEncounters_PopulateGrassEncounterTable' vendor/pokeplatinum/src/overlay006/wild_encounters.c
           grep -q 'mercuryTimedGrassMagic' vendor/pokeplatinum/include/overlay006/wild_encounters.h
 
+      - name: Install MR05C pre-League Regi loop
+        shell: bash
+        run: |
+          python3 tools/install_mr05c_regi_preleague.py \
+            vendor/pokeplatinum \
+            --report mr05c-regi-preleague.json
+
+          test "$(jq -r '.status' mr05c-regi-preleague.json)" = "PASS"
+          test "$(jq -r '.snowpoint_temple_preleague_badge' mr05c-regi-preleague.json)" = "ICICLE"
+          test "$(jq -r '.titan_story_flag' mr05c-regi-preleague.json)" = "FLAG_UNUSED_0x0163"
+          test "$(jq -r '.regirock_level' mr05c-regi-preleague.json)" = "55"
+          test "$(jq -r '.regice_level' mr05c-regi-preleague.json)" = "55"
+          test "$(jq -r '.registeel_level' mr05c-regi-preleague.json)" = "55"
+          test "$(jq -r '.regigigas_level' mr05c-regi-preleague.json)" = "1"
+          test "$(jq -r '.external_fateful_regigigas_required' mr05c-regi-preleague.json)" = "false"
+          test "$(jq -r '.hall_of_fame_required' mr05c-regi-preleague.json)" = "false"
+          test "$(jq -r '.national_dex_required' mr05c-regi-preleague.json)" = "false"
+          test "$(jq -r '.retry_on_leave_reenter' mr05c-regi-preleague.json)" = "true"
+          grep -q 'FLAG_MERCURY_TITAN_TABLET' vendor/pokeplatinum/res/field/scripts/scripts_snowpoint_temple_b5f.s
+          grep -q 'StartLegendaryBattle SPECIES_REGIROCK, 55' vendor/pokeplatinum/res/field/scripts/scripts_rock_peak_ruins.s
+          grep -q 'StartLegendaryBattle SPECIES_REGICE, 55' vendor/pokeplatinum/res/field/scripts/scripts_iceberg_ruins.s
+          grep -q 'StartLegendaryBattle SPECIES_REGISTEEL, 55' vendor/pokeplatinum/res/field/scripts/scripts_iron_ruins.s
+          grep -q 'Warp MAP_HEADER_ROCK_PEAK_RUINS, 7, 11, DIR_NORTH' vendor/pokeplatinum/res/field/scripts/scripts_maniac_tunnel.s
+
       - name: Prove CI direct-launch harness is absent
         shell: bash
         run: |
@@ -373,14 +399,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05B authored-encounter ROM
+      - name: Build MR05C encounter + Regi ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05B authored encounter boot in DeSmuME
+      - name: Capture MR05C normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -430,7 +456,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05B_NORMAL_BOOT",
+              "gate": "MERCURY_MR05C_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -438,7 +464,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05b-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05c-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -452,8 +478,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05B_Authored_Encounters.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05B_Authored_Encounters.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05C_Regi_PreLeague.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05C_Regi_PreLeague.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -471,16 +497,17 @@ jobs:
           cp mr05b-special-areas-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-overrides-with-iron-coronet.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-iron-coronet-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05c-regi-preleague.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05b-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05c-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05b-authored-encounters
+          name: mercury-mr05c-regi-preleague
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -490,7 +517,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05B — Authored Encounters"
+            echo "## Mercury MR05C — Authored Encounters + Pre-League Regi Loop"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -510,7 +537,9 @@ jobs:
             echo "- All 7 Iron Island encounter resources and 12 additional Mt. Coronet resources translated from sealed Mercury registries"
             echo "- Riley's Riolu remains a special gift and is not inserted into Iron Island random encounters"
             echo "- Mt. Coronet B1F Feebas is available by normal fishing while special elusive-rod metadata remains preserved"
-            echo "- Regi ruins and Regigigas remain reserved for the separate static/map-event pass"
+            echo "- Pre-League Regi loop installed: Icicle Badge temple access, Titan Tablet flag, Lv55 Regirock/Regice/Registeel, Lv1 Regigigas"
+            echo "- Rock Peak Ruins relocated to the Route 214 Ruin Maniac Tunnel; Route 228 stays postgame"
+            echo "- KO/flee retry behavior preserved by leave/re-enter reset"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Encounter-framework ROM staged as Pokemon_Mercury_MR05B_Authored_Encounters.nds"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05C_Regi_PreLeague.nds"
           } >> "$GITHUB_STEP_SUMMARY"
