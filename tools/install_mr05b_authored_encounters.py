@@ -293,12 +293,15 @@ def c_ident(area: str) -> str:
 
 def build_full_tod_runtime_block(route_specs: dict[str, Any]) -> tuple[str, int]:
     arrays: list[str] = []
-    cases: list[str] = []
+    table_cases: list[str] = []
+    weight_cases: list[str] = []
     installed = 0
 
     routes = route_specs.get("routes", {})
     if not isinstance(routes, dict):
         raise SystemExit("MR05B route specs missing routes object")
+
+    default_weights = (20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1)
 
     for area, spec in routes.items():
         land = spec.get("land") or {}
@@ -315,16 +318,22 @@ def build_full_tod_runtime_block(route_specs: dict[str, Any]) -> tuple[str, int]
 
         ident = c_ident(area)
         for period in TOD_PERIODS:
+            slots = land[period]
+            weights = [
+                int(slot.get("weight", default_weights[index]))
+                for index, slot in enumerate(slots)
+            ]
+            if any(weight <= 0 for weight in weights):
+                raise SystemExit(f"{area}/{period}: all authored weights must be positive")
+            if sum(weights) != 100:
+                raise SystemExit(
+                    f"{area}/{period}: authored weights must total 100, found {sum(weights)}"
+                )
+
             arrays.append(
                 f"static const EncounterSlot sMercury{ident}{period}[MAX_GRASS_ENCOUNTERS] = {{"
             )
-            expected_weights = (20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1)
-            for index, slot in enumerate(land[period]):
-                if int(slot.get("weight", expected_weights[index])) != expected_weights[index]:
-                    raise SystemExit(
-                        f"{area}/{period} slot {index}: expected weight "
-                        f"{expected_weights[index]}, found {slot.get('weight')}"
-                    )
+            for slot in slots:
                 arrays.append(
                     "    { "
                     + species(slot["species"])
@@ -332,9 +341,14 @@ def build_full_tod_runtime_block(route_specs: dict[str, Any]) -> tuple[str, int]
                     + "},"
                 )
             arrays.append("};")
+            arrays.append(
+                f"static const u8 sMercury{ident}{period}Weights[MAX_GRASS_ENCOUNTERS] = {{ "
+                + ", ".join(str(weight) for weight in weights)
+                + " };"
+            )
             arrays.append("")
 
-        cases.extend(
+        table_cases.extend(
             [
                 f"    case {MAP_HEADER_BY_AREA[area]}:",
                 "        switch (timeOfDay) {",
@@ -351,6 +365,23 @@ def build_full_tod_runtime_block(route_specs: dict[str, Any]) -> tuple[str, int]
                 "        }",
             ]
         )
+        weight_cases.extend(
+            [
+                f"    case {MAP_HEADER_BY_AREA[area]}:",
+                "        switch (timeOfDay) {",
+                "        case TIMEOFDAY_MORNING:",
+                f"            return sMercury{ident}MorningWeights;",
+                "        case TIMEOFDAY_DAY:",
+                f"            return sMercury{ident}DayWeights;",
+                "        case TIMEOFDAY_TWILIGHT:",
+                f"            return sMercury{ident}EveningWeights;",
+                "        case TIMEOFDAY_NIGHT:",
+                "        case TIMEOFDAY_LATE_NIGHT:",
+                "        default:",
+                f"            return sMercury{ident}NightWeights;",
+                "        }",
+            ]
+        )
         installed += 1
 
     block = arrays + [
@@ -360,10 +391,42 @@ def build_full_tod_runtime_block(route_specs: dict[str, Any]) -> tuple[str, int]
         "    int timeOfDay = GetTimeOfDay();",
         "",
         "    switch (mapHeaderID) {",
-    ] + cases + [
+    ] + table_cases + [
         "    default:",
         "        return NULL;",
         "    }",
+        "}",
+        "",
+        "static const u8 *Mercury_GetAuthoredLandWeights(int mapHeaderID)",
+        "{",
+        "    int timeOfDay = GetTimeOfDay();",
+        "",
+        "    switch (mapHeaderID) {",
+    ] + weight_cases + [
+        "    default:",
+        "        return NULL;",
+        "    }",
+        "}",
+        "",
+        "static u8 Mercury_GetWeightedLandSlot(int mapHeaderID)",
+        "{",
+        "    const u8 *weights = Mercury_GetAuthoredLandWeights(mapHeaderID);",
+        "    u8 roll;",
+        "    u16 cumulative = 0;",
+        "",
+        "    if (weights == NULL) {",
+        "        return MAX_GRASS_ENCOUNTERS;",
+        "    }",
+        "",
+        "    roll = LCRNG_RandMod(100);",
+        "    for (int i = 0; i < MAX_GRASS_ENCOUNTERS; i++) {",
+        "        cumulative += weights[i];",
+        "        if (roll < cumulative) {",
+        "            return i;",
+        "        }",
+        "    }",
+        "",
+        "    return MAX_GRASS_ENCOUNTERS - 1;",
         "}",
         "",
         "static BOOL Mercury_ApplyAuthoredLandTable(int mapHeaderID, EncounterSlot *encounterTable)",
@@ -410,6 +473,17 @@ def patch_full_tod_runtime(root: Path, route_specs: dict[str, Any]) -> int:
             f"MR05B EncounterSlot anchor mismatch: {text.count(struct_anchor)}"
         )
 
+    field_params_anchor = "    u8 unownTableID;\n} WildEncounters_FieldParams;\n"
+    if text.count(field_params_anchor) != 1:
+        raise SystemExit(
+            f"MR05B encounter field params anchor mismatch: {text.count(field_params_anchor)}"
+        )
+    text = text.replace(
+        field_params_anchor,
+        "    u8 unownTableID;\n    int mapHeaderID;\n} WildEncounters_FieldParams;\n",
+        1,
+    )
+
     runtime_block, installed = build_full_tod_runtime_block(route_specs)
     text = text.replace(
         struct_anchor,
@@ -440,6 +514,34 @@ def patch_full_tod_runtime(root: Path, route_specs: dict[str, Any]) -> int:
         )
     text = text.replace(old_replace, new_replace, 1)
 
+    ground_sig = "static u8 GetGroundEncounterSlot(void)\n{\n"
+    if text.count(ground_sig) != 1:
+        raise SystemExit(
+            f"MR05B ground encounter selector anchor mismatch: {text.count(ground_sig)}"
+        )
+    text = text.replace(
+        ground_sig,
+        "static u8 GetGroundEncounterSlot(const WildEncounters_FieldParams *encounterFieldParams)\n"
+        "{\n"
+        "    u8 mercurySlot = Mercury_GetWeightedLandSlot(encounterFieldParams->mapHeaderID);\n"
+        "\n"
+        "    if (mercurySlot < MAX_GRASS_ENCOUNTERS) {\n"
+        "        return mercurySlot;\n"
+        "    }\n"
+        "\n",
+        1,
+    )
+
+    ground_call = "GetGroundEncounterSlot();"
+    if text.count(ground_call) != 2:
+        raise SystemExit(
+            f"MR05B ground encounter call count mismatch: {text.count(ground_call)}"
+        )
+    text = text.replace(
+        ground_call,
+        "GetGroundEncounterSlot(encounterFieldParams);",
+    )
+
     old_level = "        level = encounterTable[encounterSlot].maxLevel;\n"
     if text.count(old_level) != 1:
         raise SystemExit(
@@ -451,9 +553,20 @@ def patch_full_tod_runtime(root: Path, route_specs: dict[str, Any]) -> int:
         1,
     )
 
+    init_anchor = "    encounterFieldParams->trainerID = TrainerInfo_ID(SaveData_GetTrainerInfo(fieldSystem->saveData));\n"
+    if text.count(init_anchor) != 1:
+        raise SystemExit(
+            f"MR05B encounter field init anchor mismatch: {text.count(init_anchor)}"
+        )
+    text = text.replace(
+        init_anchor,
+        "    encounterFieldParams->mapHeaderID = fieldSystem->location->mapHeaderID;\n"
+        + init_anchor,
+        1,
+    )
+
     path.write_text(text)
     return installed
-
 
 
 RUNTIME_MAP_HEADERS = {
