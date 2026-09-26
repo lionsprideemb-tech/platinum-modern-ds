@@ -21,6 +21,7 @@ on:
       - "tools/install_mr05c_regi_preleague.py"
       - "tools/extend_mr05d_victory_road.py"
       - "tools/extend_mr05e_turnback_sendoff.py"
+      - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
       - "tools/install_pt04d_species_batch.py"
@@ -119,7 +120,8 @@ jobs:
             tools/extend_mr05b_iron_coronet.py \
             tools/install_mr05c_regi_preleague.py \
             tools/extend_mr05d_victory_road.py \
-            tools/extend_mr05e_turnback_sendoff.py
+            tools/extend_mr05e_turnback_sendoff.py \
+            tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
         shell: bash
@@ -411,6 +413,25 @@ jobs:
           grep -q 'StartLegendaryBattle SPECIES_REGISTEEL, 55' vendor/pokeplatinum/res/field/scripts/scripts_iron_ruins.s
           grep -q 'Warp MAP_HEADER_ROCK_PEAK_RUINS, 7, 11, DIR_NORTH' vendor/pokeplatinum/res/field/scripts/scripts_maniac_tunnel.s
 
+      - name: Install MR05F Sinnoh legendary static safety pass
+        shell: bash
+        run: |
+          python3 tools/install_mr05f_sinnoh_legendary_statics.py \
+            vendor/pokeplatinum \
+            --report mr05f-legendary-statics.json
+
+          test "$(jq -r '.status' mr05f-legendary-statics.json)" = "PASS"
+          test "$(jq -r '.turnback_giratina_level_60' mr05f-legendary-statics.json)" = "true"
+          test "$(jq -r '.uxie_level_60' mr05f-legendary-statics.json)" = "true"
+          test "$(jq -r '.azelf_level_60' mr05f-legendary-statics.json)" = "true"
+          test "$(jq -r '.celestic_unlock_post_distortion' mr05f-legendary-statics.json)" = "true"
+          test "$(jq -r '.dialga_state_only_on_capture' mr05f-legendary-statics.json)" = "true"
+          test "$(jq -r '.palkia_state_only_on_capture' mr05f-legendary-statics.json)" = "true"
+          grep -q 'StartLegendaryBattle SPECIES_GIRATINA, 60' vendor/pokeplatinum/res/field/scripts/scripts_turnback_cave_giratina_room.s
+          grep -q 'StartLegendaryBattle SPECIES_UXIE, 60' vendor/pokeplatinum/res/field/scripts/scripts_acuity_cavern.s
+          grep -q 'StartLegendaryBattle SPECIES_AZELF, 60' vendor/pokeplatinum/res/field/scripts/scripts_valor_cavern.s
+          grep -q 'GoToIfGe VAR_EXITED_DISTORTION_WORLD_STATE, 2, CelesticTownNorthHouse_IDidSomeResearch' vendor/pokeplatinum/res/field/scripts/scripts_celestic_town_north_house.s
+
       - name: Prove CI direct-launch harness is absent
         shell: bash
         run: |
@@ -444,14 +465,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05E Turnback + Sendoff ROM
+      - name: Build MR05F legendary-static ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05E normal boot in DeSmuME
+      - name: Capture MR05F normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -501,7 +522,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05E_NORMAL_BOOT",
+              "gate": "MERCURY_MR05F_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -509,7 +530,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05e-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05f-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -523,8 +544,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05E_Turnback_Sendoff.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05E_Turnback_Sendoff.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05F_Legendary_Statics.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05F_Legendary_Statics.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -547,16 +568,17 @@ jobs:
           cp mr05e-authored-overrides-with-turnback.json mr05b-artifact/ 2>/dev/null || true
           cp mr05e-turnback-sendoff-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05c-regi-preleague.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05f-legendary-statics.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05e-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05f-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05e-turnback-sendoff
+          name: mercury-mr05f-legendary-statics
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -566,7 +588,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05E — Turnback Cave + Sendoff Spring"
+            echo "## Mercury MR05F — Legendary Static Safety + Encounter Expansion"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -593,7 +615,10 @@ jobs:
             echo "- Marley / Route 224 branch opens pre-League without National Dex or Hall of Fame"
             echo "- Sendoff Spring has full four-period land plus authored Surf/fishing ecology"
             echo "- All 21 Turnback Cave resources are mapped; 20 maze resources use tiered authored ecology and the Giratina terminal room has no random encounters"
-            echo "- Static Giratina/lake guardian/Spear Pillar legendary scripting remains a separate auditable phase"
+            echo "- Turnback fallback Giratina is Lv60; Uxie and Azelf are Lv60"
+            echo "- Cynthia's grandmother unlocks Dialga/Palkia rifts after Distortion World, pre-League"
+            echo "- Dialga/Palkia remain Lv70 and their rifts are retry-safe until capture"
+            echo "- Mesprit guided pursuit remains isolated for a dedicated tracking pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Player ROM staged as Pokemon_Mercury_MR05E_Turnback_Sendoff.nds"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05F_Legendary_Statics.nds"
           } >> "$GITHUB_STEP_SUMMARY"
