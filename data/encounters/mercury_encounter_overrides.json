@@ -1,0 +1,5 @@
+{
+  "schema": 1,
+  "description": "Central Mercury Redux wild encounter overrides. Empty in MR05B baseline so Platinum encounters remain unchanged.",
+  "areas": {}
+}
