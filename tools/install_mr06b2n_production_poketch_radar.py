@@ -1056,8 +1056,8 @@ static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page)
     Window_PutToTilemap(&header);
 
     DrawFrame(&header, 0, 0, 192, 23, 8);
-    DrawPokeballGlyph(&header, 3, 4);
-    PrintAscii(&header, "RESEARCH RADAR", 23, 4);
+    DrawPokeballGlyph(&header, 3, 3);
+    PrintAscii(&header, "RESEARCH RADAR", 24, 4);
     PrintAscii(&header, "AREA", 154, 4);
 
     Window_LoadTiles(&header);
@@ -1235,7 +1235,7 @@ static void DrawDetailSurface(
             &detail,
             FONT_SYSTEM,
             speciesName,
-            27,
+            30,
             6,
             TEXT_SPEED_NO_TRANSFER,
             TEXT_COLOR(1, 8, 4),
@@ -1248,7 +1248,7 @@ static void DrawDetailSurface(
     // MR06B2P visual pass: reconstruct the approved mockup with native
     // Poketch windows, sprites, text and affine hardware scaling.
     DrawFrame(&detail, 0, 0, 192, 29, 8);
-    DrawPokeballGlyph(&detail, 7, 6);
+    DrawPokeballGlyph(&detail, 7, 5);
     Window_FillRectWithColor(&detail, 8, 128, 4, 1, 21);
     DrawMethodGlyph(&detail, target->methodFlags, 135, 7);
     PrintAscii(&detail, method, 151, 6);
@@ -1325,17 +1325,22 @@ static void DrawFrame(
 
 static void DrawPokeballGlyph(Window *window, int x, int y)
 {
-    Window_FillRectWithColor(window, 8, x + 4, y, 8, 1);
-    Window_FillRectWithColor(window, 8, x + 2, y + 1, 12, 1);
-    Window_FillRectWithColor(window, 8, x + 1, y + 2, 2, 4);
-    Window_FillRectWithColor(window, 8, x + 13, y + 2, 2, 4);
-    Window_FillRectWithColor(window, 8, x, y + 6, 16, 2);
-    Window_FillRectWithColor(window, 8, x + 6, y + 5, 4, 4);
-    Window_FillRectWithColor(window, 4, x + 7, y + 6, 2, 2);
-    Window_FillRectWithColor(window, 8, x + 1, y + 9, 2, 4);
-    Window_FillRectWithColor(window, 8, x + 13, y + 9, 2, 4);
-    Window_FillRectWithColor(window, 8, x + 2, y + 13, 12, 1);
-    Window_FillRectWithColor(window, 8, x + 4, y + 14, 8, 1);
+    // Use Platinum's own Pokeball pocket glyph rather than approximating a
+    // circle with rectangles. This keeps the header crisp at native DS scale.
+    String *symbol = String_Init(4, HEAP_ID_POKETCH_APP);
+    String_AppendChar(symbol, CHAR_POCKET_ICON_POKEBALLS);
+
+    Text_AddPrinterWithParamsAndColor(
+        window,
+        FONT_SYSTEM,
+        symbol,
+        x,
+        y,
+        TEXT_SPEED_NO_TRANSFER,
+        TEXT_COLOR(1, 8, 4),
+        NULL);
+
+    String_Free(symbol);
 }
 
 static void DrawMethodGlyph(Window *window, u8 flags, int x, int y)
