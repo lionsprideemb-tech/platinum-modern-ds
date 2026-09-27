@@ -17,6 +17,7 @@ on:
       - "tools/install_mr07b1_summary_training_editors.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
+      - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
       - "tools/install_mr05b_encounter_framework.py"
       - "tools/install_mr05b_authored_encounters.py"
@@ -148,6 +149,7 @@ jobs:
             tools/install_mr07a_summary_skills.py \
             tools/install_mr07b1_summary_training_editors.py \
             tools/install_mr07a_summary_skills_proof.py \
+            tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
             tools/install_mr05b_encounter_framework.py \
@@ -1378,6 +1380,208 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Install MR07B2 committed-editor runtime proof harness
+        shell: bash
+        run: |
+          python3 tools/install_mr07b2_summary_editor_proof.py \
+            vendor/pokeplatinum \
+            --report mr07b2-summary-editor-proof-harness.json
+
+          test "$(jq -r '.status' mr07b2-summary-editor-proof-harness.json)" = "PASS"
+          test "$(jq -r '.expected_final_evs.total' mr07b2-summary-editor-proof-harness.json)" = "510"
+          grep -q 'SPECIES_MACHAMP' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'MON_DATA_HP_EV' vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Build MR07B2 committed-editor QA ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Prove MR07B2 EV and Primary Ability commits in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr04-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from PIL import ImageChops
+          from desmume.controls import keymask, Keys
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("mr07b2-editor-proof")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start MR07B2 Summary editor QA ROM")
+
+          current = 0
+          captures = []
+
+          def cycle(frames):
+              global current
+              for _ in range(frames):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"MR07B2 emulator stopped near frame {current}")
+
+          def cycle_to(target):
+              if target > current:
+                  cycle(target - current)
+
+          def press(key, hold=8, settle=24):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              cycle(hold)
+              emu.input.keypad_rm_key(mask)
+              cycle(settle)
+
+          def capture(label):
+              img = emu.screenshot().convert("RGB")
+              path = out / f"{label}-{current}.png"
+              img.save(path)
+              top = img.crop((0, 0, 256, 192))
+              bottom = img.crop((0, 192, 256, 384))
+              top_colors = top.getcolors(maxcolors=256 * 192)
+              bottom_colors = bottom.getcolors(maxcolors=256 * 192)
+              captures.append({
+                  "label": label,
+                  "frame": current,
+                  "file": path.name,
+                  "top_unique_colors": len(top_colors) if top_colors is not None else 256 * 192,
+                  "bottom_unique_colors": len(bottom_colors) if bottom_colors is not None else 256 * 192,
+              })
+              return img
+
+          cycle_to(1200)
+          skills = capture("machamp-skills")
+
+          # X -> selection starts on Ability; Down wraps to HP; A opens EV.
+          press(Keys.KEY_X)
+          press(Keys.KEY_DOWN)
+          press(Keys.KEY_A)
+          ev_open = capture("ev-editor-hp-zero")
+
+          # X is MAX in the production EV editor. Starting total is 258, so
+          # HP becomes exactly 252 and total becomes exactly 510.
+          press(Keys.KEY_X)
+          ev_max = capture("ev-editor-hp-252-total-510")
+
+          # A closes EV editor. Up from HP wraps to Ability; A opens Ability.
+          press(Keys.KEY_A)
+          press(Keys.KEY_UP)
+          press(Keys.KEY_A)
+          ability_one = capture("ability-editor-first")
+
+          # Machamp is guaranteed by the harness to have two distinct legal
+          # primary Abilities. Down selects slot 2; A commits it.
+          press(Keys.KEY_DOWN)
+          ability_two = capture("ability-editor-second")
+          press(Keys.KEY_A)
+
+          # Leave field-selection, then close Summary. The field harness now
+          # asserts the saved HP EV and Ability values before it can finish.
+          press(Keys.KEY_X)
+          press(Keys.KEY_B)
+          cycle(240)
+          final_field = capture("post-summary-commit")
+
+          ev_open_diff = ImageChops.difference(
+              skills.crop((0, 192, 256, 384)),
+              ev_open.crop((0, 192, 256, 384)),
+          )
+          ev_open_pixels = sum(1 for px in ev_open_diff.getdata() if px != (0,0,0))
+
+          ev_max_diff = ImageChops.difference(
+              ev_open.crop((0, 0, 256, 192)),
+              ev_max.crop((0, 0, 256, 192)),
+          )
+          ev_max_pixels = sum(1 for px in ev_max_diff.getdata() if px != (0,0,0))
+
+          ability_select_diff = ImageChops.difference(
+              ability_one.crop((0, 192, 256, 384)),
+              ability_two.crop((0, 192, 256, 384)),
+          )
+          ability_select_pixels = sum(
+              1 for px in ability_select_diff.getdata() if px != (0,0,0)
+          )
+
+          if ev_open_pixels < 2000:
+              raise SystemExit(
+                  f"MR07B2 EV editor did not visibly open: {ev_open_pixels}"
+              )
+          if ev_max_pixels < 60:
+              raise SystemExit(
+                  f"MR07B2 MAX did not visibly update stats/EVs: {ev_max_pixels}"
+              )
+          if ability_select_pixels < 80:
+              raise SystemExit(
+                  f"MR07B2 Ability selection did not visibly move: {ability_select_pixels}"
+              )
+          if not emu.is_running():
+              raise SystemExit("MR07B2 stopped after committed editor assertions")
+
+          meta = {
+              "gate": "MERCURY_MR07B2_SUMMARY_EDITOR_END_TO_END_PROOF",
+              "status": "PASS",
+              "pokemon": "Machamp Lv50",
+              "ev_commit": "HP 0 -> 252, total 258 -> 510",
+              "ability_commit": "species Ability 1 -> species Ability 2",
+              "post_close_assertions": [
+                  "MON_DATA_HP_EV == 252",
+                  "MON_DATA_ABILITY == SPECIES_DATA_ABILITY_2",
+              ],
+              "ev_editor_open_bottom_pixel_diff": ev_open_pixels,
+              "ev_max_top_pixel_diff": ev_max_pixels,
+              "ability_selection_bottom_pixel_diff": ability_select_pixels,
+              "captures": captures,
+          }
+          (out / "mr07b2-summary-editor-runtime-meta.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+
+          emu.destroy()
+          PY
+
+      - name: Restore production sources after MR07B2 proof
+        if: always()
+        shell: bash
+        run: |
+          cp /tmp/mr07a-production/src/main.c vendor/pokeplatinum/src/main.c
+          cp /tmp/mr07a-production/src/game_start.c vendor/pokeplatinum/src/game_start.c
+          cp /tmp/mr07a-production/src/field_map_change.c vendor/pokeplatinum/src/field_map_change.c
+          cp /tmp/mr07a-production/src/applications/pokemon_summary_screen/main.c \
+            vendor/pokeplatinum/src/applications/pokemon_summary_screen/main.c
+
+      - name: Stage MR07B2 committed-editor runtime proof
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p mr07b2-editor-proof-artifact
+          cp mr07b1-summary-training-editors.json \
+            mr07b2-editor-proof-artifact/ 2>/dev/null || true
+          cp mr07b2-summary-editor-proof-harness.json \
+            mr07b2-editor-proof-artifact/ 2>/dev/null || true
+          cp mr07b2-editor-proof/*.png \
+            mr07b2-editor-proof-artifact/ 2>/dev/null || true
+          cp mr07b2-editor-proof/mr07b2-summary-editor-runtime-meta.json \
+            mr07b2-editor-proof-artifact/ 2>/dev/null || true
+
+      - name: Upload MR07B2 committed-editor runtime proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr07b2-summary-editor-runtime-proof
+          path: mr07b2-editor-proof-artifact/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Install MR06B2O production Pokétch Radar proof harness
         shell: bash
         run: |
@@ -1592,6 +1796,7 @@ jobs:
             echo "- Closing either MR07B1 editor restores Platinum's normal radial Summary bottom screen"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2 and HP EV 0 -> 252 / total 510 edits, then asserts the committed Pokemon data after Summary closes"
             echo "- MR07B1 DeSmuME proof opens the real EV editor, mutates Attack 252 -> 0 -> MAX with live top-screen recalculation, restores the radial wheel, and opens/closes the Primary Ability selector"
+            echo "- MR07B2 end-to-end proof commits Machamp HP EV 0 -> 252 for a legal 510 total and Primary Ability slot 1 -> slot 2, then asserts both values after Summary closes"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
             echo "- CI-only Garchomp/direct-launch harness excluded"
