@@ -43,11 +43,23 @@ def patch_window(root: Path) -> None:
 
     replace_once(
         path,
-        """        .palette = 15,
+        """    [SUMMARY_WINDOW_MERCURY_SKILLS_PANEL] = {
+        .bgLayer = BG_LAYER_MAIN_1,
+        .tilemapLeft = 13,
+        .tilemapTop = 4,
+        .width = 19,
+        .height = 20,
+        .palette = 15,
         .baseTile = 0x23B,
     },
 };""",
-        """        // Vanilla Platinum Skills-family palette from tiles_main.pal.
+        """    [SUMMARY_WINDOW_MERCURY_SKILLS_PANEL] = {
+        .bgLayer = BG_LAYER_MAIN_1,
+        .tilemapLeft = 13,
+        .tilemapTop = 4,
+        .width = 19,
+        .height = 20,
+        // Vanilla Platinum Skills-family palette from tiles_main.pal.
         .palette = 8,
         .baseTile = 0x23B,
     },
