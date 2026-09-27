@@ -1065,6 +1065,11 @@ jobs:
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
+          mkdir -p "$GITHUB_WORKSPACE/radar-runtime-proof-artifact"
+          cp "$BUILD/pokeplatinum.us.nds" \
+            "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/Pokemon_Mercury_MR06B2H_Radar_QA_Harness.nds"
+          printf 'MR06B2H_QA_BUILD_OK\n' > \
+            "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/QA_BUILD_MARKER.txt"
 
       - name: Capture scanner SEARCH patch and HUD in DeSmuME
         shell: bash
@@ -1198,8 +1203,11 @@ jobs:
           cp mr06b2h-radar-runtime-proof-harness.json radar-runtime-proof-artifact/ 2>/dev/null || true
           cp radar-runtime-proof/*.png radar-runtime-proof-artifact/ 2>/dev/null || true
           cp radar-runtime-proof/mr06b2h-radar-runtime-meta.json radar-runtime-proof-artifact/ 2>/dev/null || true
-          if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" radar-runtime-proof-artifact/Pokemon_Mercury_MR06B2H_Radar_QA_Harness.nds
+
+          # Never relabel the already-staged production ROM as a QA harness.
+          # The QA ROM is copied only by the successful QA build step above.
+          if test -f radar-runtime-proof-artifact/Pokemon_Mercury_MR06B2H_Radar_QA_Harness.nds; then
+            test -f radar-runtime-proof-artifact/QA_BUILD_MARKER.txt
           fi
 
       - name: Upload MR06B2H Radar runtime proof
