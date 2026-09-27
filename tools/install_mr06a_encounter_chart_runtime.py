@@ -62,6 +62,60 @@ def parse_resource_headers(text: str) -> dict[str, list[str]]:
     return result
 
 
+TURNBACK_RUNTIME_LINKS = {
+    "MAP_HEADER_TURNBACK_CAVE_ENTRANCE": "encounters_turnback_cave_entrance",
+    "MAP_HEADER_TURNBACK_CAVE_PILLAR_ROOM": "encounters_turnback_cave_pillar_room",
+    "MAP_HEADER_TURNBACK_CAVE_PILLAR_3_ROOM_6": "encounters_turnback_cave_pillar_3_room_6",
+}
+
+NO_RANDOM_BROWSABLE_HEADERS = {
+    "encounters_turnback_cave_giratina_room": "MAP_HEADER_TURNBACK_CAVE_GIRATINA_ROOM",
+}
+
+
+def patch_turnback_runtime_links(root: Path) -> None:
+    """Activate the three authored Turnback resources Platinum left disconnected.
+
+    MR05E deliberately authored Entrance, generic Pillar Room, and Pillar 3
+    Room 6 as ordinary maze ecology. Vanilla Platinum leaves those three map
+    headers at ENCOUNTERS_NONE even though matching encounter NARC members
+    exist. Giratina's terminal room intentionally remains ENCOUNTERS_NONE.
+    """
+
+    path = root / "include/data/map_headers.h"
+    text = path.read_text()
+
+    for header, encounter in TURNBACK_RUNTIME_LINKS.items():
+        marker = f"[{header}] = {{"
+        start = text.find(marker)
+        if start < 0:
+            raise SystemExit(f"MR06A missing Turnback map header {header}")
+        end = text.find("\n    },", start)
+        if end < 0:
+            raise SystemExit(f"MR06A unterminated Turnback map header {header}")
+
+        block = text[start:end + 7]
+        old = ".wildEncountersArchiveID = ENCOUNTERS_NONE,"
+        new = f".wildEncountersArchiveID = {encounter},"
+        if old not in block:
+            if new in block:
+                continue
+            raise SystemExit(f"{header}: expected ENCOUNTERS_NONE before MR06A link repair")
+
+        block = block.replace(old, new, 1)
+        text = text[:start] + block + text[end + 7:]
+
+    # Terminal Giratina room must remain no-random by sealed MR05E policy.
+    marker = "[MAP_HEADER_TURNBACK_CAVE_GIRATINA_ROOM] = {"
+    start = text.find(marker)
+    end = text.find("\n    },", start)
+    terminal = text[start:end + 7]
+    if ".wildEncountersArchiveID = ENCOUNTERS_NONE," not in terminal:
+        raise SystemExit("MR06A must preserve Giratina terminal room as no-random")
+
+    path.write_text(text)
+
+
 def build_area_header(root: Path, manifest: dict[str, Any], audit: dict[str, Any]) -> dict[str, Any]:
     if manifest.get("schema") != 1 or manifest.get("area_count") != 185:
         raise SystemExit("MR06A requires the final 185-resource encounter manifest")
@@ -92,8 +146,11 @@ def build_area_header(root: Path, manifest: dict[str, Any], audit: dict[str, Any
     for resource in sorted(standard_resources):
         headers = resource_headers.get(resource, [])
         if not headers:
-            unresolved.append(resource)
-            continue
+            fallback = NO_RANDOM_BROWSABLE_HEADERS.get(resource)
+            if fallback is None:
+                unresolved.append(resource)
+                continue
+            headers = [fallback]
         alternate_header_count += max(0, len(headers) - 1)
         resolved.append((resource, headers[0]))
 
@@ -227,6 +284,14 @@ u32 MercuryEncounterChart_GetAreaLabelTextID(int areaIndex)
 
 int MercuryEncounterChart_FindAreaByMapHeader(enum MapHeaderID mapHeaderID)
 {
+    // Exact header matching comes first so intentionally encounter-free areas
+    // such as Giratina's terminal room can still display "No random encounters."
+    for (int i = 0; i < MERCURY_ENCOUNTER_CHART_AREA_COUNT; i++) {
+        if (gMercuryEncounterChartMapHeaders[i] == mapHeaderID) {
+            return i;
+        }
+    }
+
     if (!MapHeader_HasWildEncounters(mapHeaderID)) {
         return -1;
     }
@@ -442,6 +507,20 @@ def validate(root: Path) -> None:
     if "#define MERCURY_ENCOUNTER_CHART_AREA_COUNT 158" not in areas:
         raise SystemExit("MR06A generated area count is not 158")
 
+    map_headers = (root / "include/data/map_headers.h").read_text()
+    for header, encounter in TURNBACK_RUNTIME_LINKS.items():
+        marker = f"[{header}] = {{"
+        start = map_headers.index(marker)
+        end = map_headers.index("\n    },", start)
+        block = map_headers[start:end]
+        if f".wildEncountersArchiveID = {encounter}," not in block:
+            raise SystemExit(f"MR06A Turnback runtime link missing: {header} -> {encounter}")
+
+    terminal_start = map_headers.index("[MAP_HEADER_TURNBACK_CAVE_GIRATINA_ROOM] = {")
+    terminal_end = map_headers.index("\n    },", terminal_start)
+    if ".wildEncountersArchiveID = ENCOUNTERS_NONE," not in map_headers[terminal_start:terminal_end]:
+        raise SystemExit("MR06A Giratina terminal no-random policy regressed")
+
 
 def main() -> None:
     ap = argparse.ArgumentParser()
@@ -455,6 +534,7 @@ def main() -> None:
     manifest = load_json(args.manifest)
     audit = load_json(args.mr05l_audit)
 
+    patch_turnback_runtime_links(root)
     area_info = build_area_header(root, manifest, audit)
     patch_runtime_header(root)
     patch_runtime_c(root)
@@ -476,6 +556,8 @@ def main() -> None:
         "alternate_map_header_count": area_info["alternate_header_count"],
         "generated_area_header": area_info["generated_area_header"],
         "full_tod_resource_count": full_tod,
+        "turnback_runtime_links_repaired": len(TURNBACK_RUNTIME_LINKS),
+        "turnback_giratina_terminal_no_random_preserved": True,
         "supported_land_periods": ["morning", "day", "evening", "night"],
         "period_windows": {
             "morning": "05:00-09:59",
