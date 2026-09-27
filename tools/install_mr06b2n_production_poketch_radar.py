@@ -1055,16 +1055,10 @@ static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page)
     Window_FillTilemap(&header, 4);
     Window_PutToTilemap(&header);
 
-    PrintAscii(&header, "RESEARCH RADAR", 0, 3);
-    PrintAscii(&header, "AREA", 148, 3);
-
-    Window_FillRectWithColor(
-        &header,
-        8,
-        0,
-        23,
-        192,
-        1);
+    DrawFrame(&header, 0, 0, 192, 23, 8);
+    DrawPokeballGlyph(&header, 3, 4);
+    PrintAscii(&header, "RESEARCH RADAR", 23, 4);
+    PrintAscii(&header, "AREA", 154, 4);
 
     Window_LoadTiles(&header);
     Window_Remove(&header);
@@ -1230,9 +1224,7 @@ static void DrawDetailSurface(
     Window_FillTilemap(&detail, 4);
     Window_PutToTilemap(&detail);
 
-    // Small return glyph: touch here or press B to return to the area grid.
-    PrintAscii(&detail, "<", 0, 3);
-
+    // The upper-left Pokeball/header is the touch return target; B also returns.
     String *speciesName =
         MessageUtil_SpeciesName(
             target->species,
