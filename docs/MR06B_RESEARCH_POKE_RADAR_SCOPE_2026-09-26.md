@@ -25,7 +25,79 @@ Keep the Platinum item name **Poké Radar**, but modernize its behavior into Mer
 - no daily rotation;
 - normal authored Mercury route encounters remain unchanged.
 
-Research progression can later reveal extra information such as possible ability, approximate IV quality, Egg Move/special move, held-item chance, and rare-form status.
+## Elite Redux DexNav adaptation
+
+The player-facing scanner should deliberately feel like a **DS-native adaptation of Elite Redux's DexNav**, not like a text encounter list.
+
+### Bottom screen — target browser
+
+- show Pokémon icons in a compact grid instead of species names in a scrolling text list;
+- separate **LOCAL** targets from the fixed **RESEARCH** habitat layer;
+- LOCAL uses the current Morning / Day / Evening / Night land table;
+- RESEARCH is Mercury's foreign/ordinary-species layer and replaces Elite Redux's hidden-species row concept;
+- highlight the selected icon with a cursor and support both D-pad and touch input;
+- show an owned/caught marker on species already captured;
+- unknown Research targets may appear as silhouettes / question marks until discovered;
+- **R** registers or unregisters the selected species as the quick-search target.
+
+Surf and fishing do not become Radar rows.
+
+### Top screen — selected species dossier
+
+For the currently highlighted target, show:
+
+- large species sprite and name;
+- type icon(s);
+- current-area level range;
+- **SEARCH Lv.** / Research Level;
+- caught/owned state;
+- possible Primary Ability information;
+- Potential shown as 0–3 stars;
+- special Egg Move / rare move information as it becomes known;
+- possible held item information;
+- LOCAL or RESEARCH habitat badge.
+
+Mercury's Innates remain controlled by the global Innate Abilities toggle and are not randomized by the Radar. The Radar rolls/displays the Pokémon's **Primary Ability** only.
+
+### Searching in the overworld
+
+Selecting **SEARCH** should:
+
+1. validate that the species belongs to the current LOCAL or RESEARCH target set;
+2. generate the target's level and bonus traits;
+3. immediately locate a valid nearby grass tile;
+4. create a visible rustling / research patch and return the player to the overworld;
+5. show a short-lived search HUD with species icon, level, special move, ability/rare-ability marker, held item and Potential stars as unlocked by Search Level;
+6. start the targeted battle when the player enters that patch.
+
+"Immediate" means there is **no random chance that the selected target fails to appear and no real-time/daily wait**. It does not mean teleporting directly into battle.
+
+If no valid grass tile exists nearby, fail cleanly with a short message rather than changing the normal encounter table.
+
+### Search Level instead of required chains
+
+Use a per-species **Search Level** (0–999) as the long-term progression mechanic, matching the useful part of DexNav while keeping Mercury's locked no-required-chain rule.
+
+Search Level rises when the player successfully finds/battles that species through the Research Poké Radar. Milestones are:
+
+- 0–4
+- 5–9
+- 10–24
+- 25–49
+- 50–99
+- 100+
+
+Higher Search Levels improve the odds of:
+
+- a special Egg Move / compatible rare move;
+- the rarer Primary Ability slot;
+- held items;
+- 1–3 guaranteed perfect IVs (Potential stars);
+- a modest shiny bonus.
+
+The Elite Redux-style chain counter is **not required** in Mercury. There is no chain break punishment, no 50-step battery, and no daily reset. Repeated searches still feel rewarding because Search Level permanently improves that species' Radar quality.
+
+A captured species may reveal more information in the dossier than an uncaught species, preserving the discovery loop without blocking targeting.
 
 ## Explicit exclusions
 
@@ -51,10 +123,15 @@ Mega, Gigantamax, Primal, and similar battle-only forms are never wild Radar tar
 - Keep special encounter systems out of the scanner.
 - Compile cleanly and normal-boot.
 
-### MR06B2 — targeted encounter runtime
+### MR06B2 — Elite Redux-style scanner + targeted encounter runtime
 
-- Selecting a valid target creates that encounter directly.
-- Remove chain dependency, patch lottery, and 50-step recharge from Mercury Radar flow.
+- Build the DS-native icon-grid browser and selected-species dossier.
+- Support D-pad + touch selection and R-button target registration.
+- Selecting SEARCH generates the target and places a guaranteed nearby rustling grass patch.
+- Return to the overworld with a compact search HUD; stepping into the patch starts the battle.
+- Remove chain dependency, patch lottery failure, and 50-step recharge from Mercury Radar flow.
+- Add per-species Search Level persistence and quality milestones.
+- Generate/display level, Primary Ability, special move, held item and Potential stars according to Search Level.
 - Preserve ordinary wild encounter tables and ordinary walking encounters.
 - Validate species and level range against the selected current-area Radar entry.
 
@@ -66,8 +143,10 @@ Mega, Gigantamax, Primal, and similar battle-only forms are never wild Radar tar
 
 ### MR06B4 — research metadata/polish
 
-- Add progressive ability / IV-quality / Egg Move / held-item / rare-form hints.
-- DS/Platinum-quality visual pass.
+- Polish Search Level unlock/reveal behavior and bonus probabilities.
+- Add DS-native silhouettes / discovered / owned presentation.
+- Add registered-species quick search.
+- DS/Platinum-quality visual pass inspired by Elite Redux DexNav information density without copying its GBA graphics.
 - Runtime screenshots and player ROM proof.
 
 ## Regression guards
