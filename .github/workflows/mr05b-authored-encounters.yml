@@ -31,6 +31,7 @@ on:
       - "tools/install_mr05n_instant_honey_trees.py"
       - "tools/install_mr05o_exact_tod_periods.py"
       - "tools/install_mr06a_encounter_chart_runtime.py"
+      - "tools/install_mr06b1_research_radar_foundation.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -609,6 +610,27 @@ jobs:
           grep -q '.wildEncountersArchiveID = encounters_turnback_cave_pillar_3_room_6,' vendor/pokeplatinum/include/data/map_headers.h
           grep -q 'mercuryTime.hour >= 17 && mercuryTime.hour < 21' vendor/pokeplatinum/src/overlay006/wild_encounters.c
 
+      - name: Install MR06B1 Research Poké Radar scanner data foundation
+        shell: bash
+        run: |
+          python3 tools/install_mr06b1_research_radar_foundation.py \
+            vendor/pokeplatinum \
+            --report mr06b1-research-radar-foundation.json
+
+          test "$(jq -r '.status' mr06b1-research-radar-foundation.json)" = "PASS"
+          test "$(jq -r '.standalone_encounter_menu' mr06b1-research-radar-foundation.json)" = "false"
+          test "$(jq -r '.normal_land_targets_from_live_runtime' mr06b1-research-radar-foundation.json)" = "true"
+          test "$(jq -r '.legacy_platinum_radar_slots_exposed' mr06b1-research-radar-foundation.json)" = "4"
+          test "$(jq -r '.surf_targets' mr06b1-research-radar-foundation.json)" = "false"
+          test "$(jq -r '.fishing_targets' mr06b1-research-radar-foundation.json)" = "false"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b1-research-radar-foundation.json)" = "false"
+          grep -q 'MercuryResearchRadar_GetTargets' vendor/pokeplatinum/include/overlay006/wild_encounters.h
+          grep -q 'MERCURY_RESEARCH_RADAR_SOURCE_LEGACY_RESEARCH' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+          if grep -q 'START_MENU_OPTION_ENCOUNTERS' vendor/pokeplatinum/src/start_menu.c; then
+            echo "standalone ENCOUNTERS menu leaked into Research Poké Radar branch" >&2
+            exit 1
+          fi
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -790,8 +812,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR06A_Encounter_Chart_Runtime.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR06A_Encounter_Chart_Runtime.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -828,6 +850,7 @@ jobs:
           cp mr05n-instant-honey-trees.json mr05b-artifact/ 2>/dev/null || true
           cp mr05o-exact-tod-periods.json mr05b-artifact/ 2>/dev/null || true
           cp mr06a-encounter-chart-runtime.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b1-research-radar-foundation.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -842,7 +865,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr06a-encounter-chart-runtime
+          name: mercury-mr06b1-research-radar-foundation
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -852,7 +875,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR06A — Encounter Chart Runtime Foundation"
+            echo "## Mercury MR06B1 — Research Poké Radar Foundation"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -916,6 +939,11 @@ jobs:
             echo "- Current-area lookup resolves through the live Platinum map header / encounter NARC relationship instead of a duplicate hand-authored database"
             echo "- Encounter Chart period selection uses the same exact Mercury RTC windows as MR05O"
             echo "- Honey Tree and Great Marsh lookout special-resource adapters remain the next UI-layer step"
-            echo "- MR06A is the runtime/browser foundation; the next pass can build the actual DS dual-screen presentation on top of it"
-            echo "- Player ROM staged as Pokemon_Mercury_MR06A_Encounter_Chart_Runtime.nds"
+            echo "- MR06A remains the sealed encounter-query foundation; there is no general Start Menu encounter browser"
+            echo "- MR06B1 adds a land-only Research Poké Radar target API over the live current-area encounter runtime"
+            echo "- Current authored land species and legacy Platinum Radar-only slots are tagged separately for scanner use"
+            echo "- Surf, fishing, Honey Trees, Great Marsh special presentation, gifts, statics, and trades are excluded from Radar targeting"
+            echo "- Ordinary encounter tables and vanilla walking encounters are unchanged in MR06B1"
+            echo "- Next pass binds this target API to ITEM_POKE_RADAR and adds species selection before targeted-battle runtime"
+            echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
