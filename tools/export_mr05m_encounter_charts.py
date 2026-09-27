@@ -313,6 +313,12 @@ def main() -> None:
         "resource_count": len(output_rows),
         "full_tod_area_count": full_tod_count,
         "full_tod_slot_count": full_tod_slots,
+        "time_periods": {
+            "morning": {"start": "05:00", "end": "09:59"},
+            "day": {"start": "10:00", "end": "16:59"},
+            "evening": {"start": "17:00", "end": "20:59"},
+            "night": {"start": "21:00", "end": "04:59"},
+        },
         "orphan_resources_excluded": sorted(UNKNOWN_NAMES),
         "areas": output_rows,
     }
@@ -342,6 +348,8 @@ def main() -> None:
         f"**{full_tod_count}** full four-period land areas; **{full_tod_slots:,}** Morning/Day/Evening/Night slots.",
         "",
         "The 25 encounters_unknown_533 through encounters_unknown_557 archive remnants are omitted because MR05L proved they are not runtime-addressable.",
+        "",
+        "**Time periods:** Morning 05:00-09:59 · Day 10:00-16:59 · Evening 17:00-20:59 · Night 21:00-04:59.",
         "",
     ]
     for row in output_rows:
