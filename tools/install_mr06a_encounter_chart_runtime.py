@@ -253,21 +253,25 @@ void MercuryEncounterChart_LoadArea(int areaIndex, WildEncounters *encounterData
 
 enum MercuryEncounterChartMethod MercuryEncounterChart_GetCurrentLandMethod(void)
 {
-    int timeOfDay = GetTimeOfDay();
+    // Keep the chart selector on the exact same Mercury RTC windows used by
+    // MR05O's authored encounter runtime, including the 04:00 and 20:00
+    // boundary corrections.
+    RTCTime mercuryTime;
+    RTC_GetCurrentTime(&mercuryTime);
 
-    if (timeOfDay == TIMEOFDAY_DAY) {
+    if (mercuryTime.hour >= 5 && mercuryTime.hour < 10) {
+        return MERCURY_ENCOUNTER_METHOD_LAND_MORNING;
+    }
+
+    if (mercuryTime.hour >= 10 && mercuryTime.hour < 17) {
         return MERCURY_ENCOUNTER_METHOD_LAND_DAY;
     }
 
-    if (timeOfDay == TIMEOFDAY_TWILIGHT) {
+    if (mercuryTime.hour >= 17 && mercuryTime.hour < 21) {
         return MERCURY_ENCOUNTER_METHOD_LAND_EVENING;
     }
 
-    if (timeOfDay == TIMEOFDAY_NIGHT || timeOfDay == TIMEOFDAY_LATE_NIGHT) {
-        return MERCURY_ENCOUNTER_METHOD_LAND_NIGHT;
-    }
-
-    return MERCURY_ENCOUNTER_METHOD_LAND_MORNING;
+    return MERCURY_ENCOUNTER_METHOD_LAND_NIGHT;
 }
 
 BOOL MercuryEncounterChart_HasMethod(const WildEncounters *encounterData, enum MercuryEncounterChartMethod method)
@@ -473,6 +477,13 @@ def main() -> None:
         "generated_area_header": area_info["generated_area_header"],
         "full_tod_resource_count": full_tod,
         "supported_land_periods": ["morning", "day", "evening", "night"],
+        "period_windows": {
+            "morning": "05:00-09:59",
+            "day": "10:00-16:59",
+            "evening": "17:00-20:59",
+            "night": "21:00-04:59",
+        },
+        "period_selector_matches_mr05o_exact_rtc_windows": True,
         "supported_methods": [
             "land_morning",
             "land_day",
