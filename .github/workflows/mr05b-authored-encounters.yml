@@ -16,6 +16,7 @@ on:
       - "tools/install_mr07a_summary_skills.py"
       - "tools/install_mr07b1_summary_training_editors.py"
       - "tools/install_mr07c_nature_editor.py"
+      - "tools/install_mr07d_summary_visual_polish.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -149,6 +150,7 @@ jobs:
             tools/install_mr07a_summary_skills.py \
             tools/install_mr07b1_summary_training_editors.py \
             tools/install_mr07c_nature_editor.py \
+            tools/install_mr07d_summary_visual_polish.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -318,6 +320,21 @@ jobs:
           test "$(jq -r '.identity_safety.pid_mutated' mr07c-nature-editor.json)" = "false"
           grep -q 'MERCURY_NATURE_OVERRIDE_MAGIC' vendor/pokeplatinum/src/pokemon.c
           grep -q 'MERCURY_SKILLS_EDITOR_NATURE' \
+            vendor/pokeplatinum/src/applications/pokemon_summary_screen/main.c
+
+      - name: Install MR07D Platinum-native Summary visual polish
+        shell: bash
+        run: |
+          python3 tools/install_mr07d_summary_visual_polish.py \
+            vendor/pokeplatinum \
+            --report mr07d-summary-visual-polish.json
+
+          test "$(jq -r '.status' mr07d-summary-visual-polish.json)" = "PASS"
+          test "$(jq -r '.functionality_changed' mr07d-summary-visual-polish.json)" = "false"
+          test "$(jq -r '.innate_backend_added' mr07d-summary-visual-polish.json)" = "false"
+          grep -q 'ColoredArrow_New' \
+            vendor/pokeplatinum/src/applications/pokemon_summary_screen/window.c
+          grep -q 'MercurySkillsEditor_PrintCursor' \
             vendor/pokeplatinum/src/applications/pokemon_summary_screen/main.c
 
       - name: Install MR05A HM-free traversal foundation
@@ -1111,6 +1128,7 @@ jobs:
           cp mr07a-summary-skills.json mr05b-artifact/ 2>/dev/null || true
           cp mr07b1-summary-training-editors.json mr05b-artifact/ 2>/dev/null || true
           cp mr07c-nature-editor.json mr05b-artifact/ 2>/dev/null || true
+          cp mr07d-summary-visual-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1412,6 +1430,7 @@ jobs:
           cp mr07a-summary-skills.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b1-summary-training-editors.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07c-nature-editor.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
+          cp mr07d-summary-visual-polish.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof-harness.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof/*.png mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof/mr07b2-summary-editor-runtime-meta.json \
@@ -1639,6 +1658,7 @@ jobs:
             echo "- MR07B1 makes the Primary Ability editable from the species' real legal ability slots; Innates remain view-only"
             echo "- Closing either MR07B1 editor restores Platinum's normal radial Summary bottom screen"
             echo "- MR07C adds a persistent effective-Nature editor using tagged unused BoxPokemon storage; PID, gender, shininess, and Spinda identity remain untouched"
+            echo "- MR07D visually polishes Skills, EV, Ability, and Nature screens with Platinum-style label tabs, standard frames, and native menu-arrow selection"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
