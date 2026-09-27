@@ -38,6 +38,7 @@ on:
       - "tools/install_mr06b2c1_scanner_session_model.py"
       - "tools/install_mr06b2c2_dual_screen_scanner.py"
       - "tools/install_mr06b2c3_radar_item_target_patch.py"
+      - "tools/install_mr06b2d_dexnav_quality_rolls.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -720,6 +721,23 @@ jobs:
           grep -q 'MercuryRadar_SpawnTargetPatch' vendor/pokeplatinum/src/pokeradar.c
           grep -q 'Pokedex_MercuryRadar_IncrementSearchLevel' vendor/pokeplatinum/src/overlay006/wild_encounters.c
 
+      - name: Install MR06B2D DexNav Search Level quality rolls
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2d_dexnav_quality_rolls.py \
+            vendor/pokeplatinum \
+            --report mr06b2d-dexnav-quality-rolls.json
+
+          test "$(jq -r '.status' mr06b2d-dexnav-quality-rolls.json)" = "PASS"
+          test "$(jq -r '.quality_generated_when_patch_spawns' mr06b2d-dexnav-quality-rolls.json)" = "true"
+          test "$(jq -r '.potential.guaranteed_perfect_ivs_per_star' mr06b2d-dexnav-quality-rolls.json)" = "1"
+          test "$(jq -r '.primary_ability.innates_modified' mr06b2d-dexnav-quality-rolls.json)" = "false"
+          test "$(jq -r '.quality_applied_before_battle' mr06b2d-dexnav-quality-rolls.json)" = "true"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2d-dexnav-quality-rolls.json)" = "false"
+          grep -q 'MercuryRadarTargetQuality' vendor/pokeplatinum/include/pokeradar.h
+          grep -q 'MercuryRadar_GenerateTargetQuality' vendor/pokeplatinum/src/pokeradar.c
+          grep -q 'MercuryResearchRadar_ApplyTargetQuality' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -945,6 +963,7 @@ jobs:
           cp mr06b2c1-scanner-session-model.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2c2-dual-screen-scanner.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2c3-radar-item-target-patch.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2d-dexnav-quality-rolls.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -1053,6 +1072,10 @@ jobs:
             echo "- A SEARCH creates one nearby rustling grass patch and guarantees the selected species within its displayed level range"
             echo "- Entering the target patch increments that species' persistent Search Level; no chain or battery is required"
             echo "- Normal encounter tables remain unchanged"
-            echo "- Next pass applies Search-Level quality rolls to special move, rarer Primary Ability, held item and Potential IVs"
+            echo "- MR06B2D generates target quality at SEARCH time so the upcoming overworld HUD can display it before battle"
+            echo "- Potential stars guarantee 1-3 unique perfect IVs; special moves come from the species Egg Move table"
+            echo "- Radar Primary Ability uses slot 1 normally and Search-Level rare rolls can select distinct slot 2; Innates remain untouched"
+            echo "- Held items use species common/rare slots with Elite Redux-style Search Level influence capped at Lv. 100+"
+            echo "- Next pass renders the overworld search HUD for level, move, ability/item and Potential stars"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
