@@ -37,6 +37,7 @@ on:
       - "tools/install_mr06b2b_radar_save_storage.py"
       - "tools/install_mr06b2c1_scanner_session_model.py"
       - "tools/install_mr06b2c2_dual_screen_scanner.py"
+      - "tools/install_mr06b2c3_radar_item_target_patch.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -700,6 +701,25 @@ jobs:
           grep -q 'applications/mercury_research_radar.c' vendor/pokeplatinum/src/meson.build
           grep -q 'PokeIconSpriteIndex' vendor/pokeplatinum/src/applications/mercury_research_radar.c
 
+      - name: Install MR06B2C3 Poké Radar scanner binding and target patch
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2c3_radar_item_target_patch.py \
+            vendor/pokeplatinum \
+            --report mr06b2c3-radar-item-target-patch.json
+
+          test "$(jq -r '.status' mr06b2c3-radar-item-target-patch.json)" = "PASS"
+          test "$(jq -r '.poke_radar_item_opens_scanner' mr06b2c3-radar-item-target-patch.json)" = "true"
+          test "$(jq -r '.registered_poke_radar_opens_scanner' mr06b2c3-radar-item-target-patch.json)" = "true"
+          test "$(jq -r '.target_patch_count' mr06b2c3-radar-item-target-patch.json)" = "1"
+          test "$(jq -r '.target_species_guaranteed' mr06b2c3-radar-item-target-patch.json)" = "true"
+          test "$(jq -r '.required_chain' mr06b2c3-radar-item-target-patch.json)" = "false"
+          test "$(jq -r '.battery_recharge' mr06b2c3-radar-item-target-patch.json)" = "false"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2c3-radar-item-target-patch.json)" = "false"
+          grep -q 'MercuryResearchRadar_FieldTask' vendor/pokeplatinum/src/item_use_functions.c
+          grep -q 'MercuryRadar_SpawnTargetPatch' vendor/pokeplatinum/src/pokeradar.c
+          grep -q 'Pokedex_MercuryRadar_IncrementSearchLevel' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -924,6 +944,7 @@ jobs:
           cp mr06b2b-radar-save-storage.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2c1-scanner-session-model.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2c2-dual-screen-scanner.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2c3-radar-item-target-patch.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -1028,7 +1049,10 @@ jobs:
             echo "- MR06B2C2 builds the real dual-screen Research Radar application"
             echo "- Bottom screen: 4x4 Pokémon icon grid, D-pad/touch selection, cursor, LOCAL/RESEARCH counts, R registration"
             echo "- Top screen: selected species icon/name, source, level range, Search Lv., caught state and registration state"
-            echo "- ITEM_POKE_RADAR is still intentionally untouched until this application compiles cleanly"
-            echo "- Next pass binds the Poké Radar item and installs guaranteed nearby rustling-patch SEARCH"
+            echo "- MR06B2C3 binds ITEM_POKE_RADAR and its registered-item shortcut directly to the DS scanner"
+            echo "- A SEARCH creates one nearby rustling grass patch and guarantees the selected species within its displayed level range"
+            echo "- Entering the target patch increments that species' persistent Search Level; no chain or battery is required"
+            echo "- Normal encounter tables remain unchanged"
+            echo "- Next pass applies Search-Level quality rolls to special move, rarer Primary Ability, held item and Potential IVs"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
