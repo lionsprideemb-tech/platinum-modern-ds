@@ -1051,7 +1051,7 @@ static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page)
     Window_PutToTilemap(&header);
 
     PrintAscii(&header, "RESEARCH RADAR", 0, 3);
-    PrintAscii(&header, "ALL", 152, 3);
+    PrintAscii(&header, "AREA", 148, 3);
 
     Window_FillRectWithColor(
         &header,
@@ -1144,7 +1144,7 @@ static const char *MethodLabel(u8 flags)
     }
 
     if (flags & RESEARCH_RADAR_METHOD_RESEARCH) {
-        return "RESEARCH";
+        return "RADAR";
     }
 
     if (flags & RESEARCH_RADAR_METHOD_SURF) {
@@ -1204,7 +1204,7 @@ static void DrawDetailSurface(
         PoketchAnimation_SetSpritePosition(
             graphics->sprites[slot],
             FX32_CONST(62),
-            FX32_CONST(86));
+            FX32_CONST(78));
     }
 
     Window detail;
@@ -1254,66 +1254,54 @@ static void DrawDetailSurface(
         192,
         1);
 
-    // Pokétch-native scanner reticle around the native monochrome icon.
-    Window_FillRectWithColor(&detail, 8, 12, 40, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 12, 40, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 66, 40, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 82, 40, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 12, 94, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 12, 78, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 66, 94, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 82, 78, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 46, 34, 4, 2);
-    Window_FillRectWithColor(&detail, 8, 46, 100, 4, 2);
-    Window_FillRectWithColor(&detail, 8, 6, 66, 4, 2);
-    Window_FillRectWithColor(&detail, 8, 88, 66, 4, 2);
+    // Native Poketch two-column hunter card. The left side keeps the
+    // monochrome species icon as the visual focus while the right side
+    // presents only the research values that actually affect hunting.
+    Window_FillRectWithColor(&detail, 8, 96, 32, 1, 72);
+    Window_FillRectWithColor(&detail, 8, 102, 58, 84, 1);
+    Window_FillRectWithColor(&detail, 8, 102, 90, 84, 1);
+    Window_FillRectWithColor(&detail, 8, 0, 106, 192, 1);
 
-    // Real battle level is deliberately separate from Search Level.
-    PrintAscii(&detail, "LV", 2, 111);
-    PrintNumber(&detail, target->minLevel, 2, 24, 111);
-    PrintAscii(&detail, "-", 42, 111);
-    PrintNumber(&detail, target->maxLevel, 2, 50, 111);
+    // Compact scanner brackets around the live native Pokemon icon.
+    Window_FillRectWithColor(&detail, 8, 14, 36, 18, 2);
+    Window_FillRectWithColor(&detail, 8, 14, 36, 2, 18);
+    Window_FillRectWithColor(&detail, 8, 72, 36, 18, 2);
+    Window_FillRectWithColor(&detail, 8, 88, 36, 2, 18);
+    Window_FillRectWithColor(&detail, 8, 14, 96, 18, 2);
+    Window_FillRectWithColor(&detail, 8, 14, 80, 2, 18);
+    Window_FillRectWithColor(&detail, 8, 72, 96, 18, 2);
+    Window_FillRectWithColor(&detail, 8, 88, 80, 2, 18);
+    Window_FillRectWithColor(&detail, 8, 48, 30, 4, 2);
+    Window_FillRectWithColor(&detail, 8, 48, 104, 4, 2);
+    Window_FillRectWithColor(&detail, 8, 8, 66, 4, 2);
+    Window_FillRectWithColor(&detail, 8, 92, 66, 4, 2);
 
-    PrintAscii(&detail, "SEARCH", 102, 39);
-    PrintNumber(&detail, target->searchLevel, 3, 154, 39);
+    // Search Level remains research progression only. Battle level stays
+    // authored by the area table and clamped to the next Gym Leader ace.
+    PrintAscii(&detail, "SEARCH LV", 104, 34);
+    PrintNumber(&detail, target->searchLevel, 3, 164, 34);
 
-    PrintAscii(&detail, "POTENTIAL", 102, 66);
-    PrintPotential(&detail, target->potentialStars, 120, 85);
+    PrintAscii(&detail, "POTENTIAL", 104, 64);
+    PrintPotential(&detail, target->potentialStars, 132, 82);
+
+    PrintAscii(&detail, "BATTLE LV", 4, 112);
+    PrintNumber(&detail, target->minLevel, 2, 66, 112);
+    PrintAscii(&detail, "-", 84, 112);
+    PrintNumber(&detail, target->maxLevel, 2, 94, 112);
 
     if (target->caught) {
-        PrintAscii(&detail, "CAUGHT", 104, 111);
+        PrintAscii(&detail, "CAUGHT", 136, 112);
     }
 
-    // One large hunt action; no redundant move/ability/item fields.
-    Window_FillRectWithColor(
-        &detail,
-        8,
-        8,
-        132,
-        176,
-        2);
-    Window_FillRectWithColor(
-        &detail,
-        8,
-        8,
-        160,
-        176,
-        2);
-    Window_FillRectWithColor(
-        &detail,
-        8,
-        8,
-        132,
-        2,
-        30);
-    Window_FillRectWithColor(
-        &detail,
-        8,
-        182,
-        132,
-        2,
-        30);
-    PrintAscii(&detail, "SEARCH", 70, 139);
+    // Large single-purpose hunt action with an inset edge so it reads as a
+    // touch target without abandoning Platinum's monochrome Poketch UI.
+    Window_FillRectWithColor(&detail, 8, 8, 132, 176, 2);
+    Window_FillRectWithColor(&detail, 8, 8, 160, 176, 2);
+    Window_FillRectWithColor(&detail, 8, 8, 132, 2, 30);
+    Window_FillRectWithColor(&detail, 8, 182, 132, 2, 30);
+    Window_FillRectWithColor(&detail, 8, 12, 136, 168, 1);
+    Window_FillRectWithColor(&detail, 8, 12, 156, 168, 1);
+    PrintAscii(&detail, "SEARCH", 70, 140);
 
     Window_LoadTiles(&detail);
     Window_Remove(&detail);
