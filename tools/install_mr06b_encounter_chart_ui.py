@@ -566,7 +566,7 @@ static void StartMenu_UpdateEncounterChart(FieldTask *fieldTask)
     BOOL redraw = FALSE;
 
     if (JOY_NEW(PAD_BUTTON_B)) {
-        Sound_PlayEffect(SEQ_SE_DP_WIN_CLOSE_sseq);
+        Sound_PlayEffect(SEQ_SE_DP_SELECT78_sseq);
         Window_EraseStandardFrame(&menu->primaryWindow, TRUE);
         Window_Remove(&menu->primaryWindow);
         menu->state = START_MENU_STATE_INIT;
