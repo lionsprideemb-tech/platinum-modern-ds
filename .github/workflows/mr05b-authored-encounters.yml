@@ -15,6 +15,7 @@ on:
       - "tools/install_mr03f_summary_bottom_learner.py"
       - "tools/install_mr07a_summary_skills.py"
       - "tools/install_mr07b1_summary_training_editors.py"
+      - "tools/install_mr07c_nature_editor.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -147,6 +148,7 @@ jobs:
             tools/install_mr03f_summary_bottom_learner.py \
             tools/install_mr07a_summary_skills.py \
             tools/install_mr07b1_summary_training_editors.py \
+            tools/install_mr07c_nature_editor.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -302,6 +304,20 @@ jobs:
           grep -q 'MERCURY_SKILLS_EDITOR_EV' \
             vendor/pokeplatinum/src/applications/pokemon_summary_screen/main.c
           grep -q 'SPECIES_DATA_ABILITY_2' \
+            vendor/pokeplatinum/src/applications/pokemon_summary_screen/main.c
+
+      - name: Install MR07C persistent Nature editor
+        shell: bash
+        run: |
+          python3 tools/install_mr07c_nature_editor.py \
+            vendor/pokeplatinum \
+            --report mr07c-nature-editor.json
+
+          test "$(jq -r '.status' mr07c-nature-editor.json)" = "PASS"
+          test "$(jq -r '.storage.box_pokemon_size_changed' mr07c-nature-editor.json)" = "false"
+          test "$(jq -r '.identity_safety.pid_mutated' mr07c-nature-editor.json)" = "false"
+          grep -q 'MERCURY_NATURE_OVERRIDE_MAGIC' vendor/pokeplatinum/src/pokemon.c
+          grep -q 'MERCURY_SKILLS_EDITOR_NATURE' \
             vendor/pokeplatinum/src/applications/pokemon_summary_screen/main.c
 
       - name: Install MR05A HM-free traversal foundation
@@ -1094,6 +1110,7 @@ jobs:
           cp mr04-summary-bottom-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr07a-summary-skills.json mr05b-artifact/ 2>/dev/null || true
           cp mr07b1-summary-training-editors.json mr05b-artifact/ 2>/dev/null || true
+          cp mr07c-nature-editor.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1590,6 +1607,7 @@ jobs:
             echo "- MR07B1 makes highlighted stats editable through a temporary bottom-screen EV editor with 252-per-stat / 510-total enforcement"
             echo "- MR07B1 makes the Primary Ability editable from the species' real legal ability slots; Innates remain view-only"
             echo "- Closing either MR07B1 editor restores Platinum's normal radial Summary bottom screen"
+            echo "- MR07C adds a persistent effective-Nature editor using tagged unused BoxPokemon storage; PID, gender, shininess, and Spinda identity remain untouched"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2 and HP EV 0 -> 252 / total 510 edits, then asserts the committed Pokemon data after Summary closes"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
