@@ -593,6 +593,8 @@ jobs:
           test "$(jq -r '.standard_browsable_resource_count' mr06a-encounter-chart-runtime.json)" = "158"
           test "$(jq -r '.resolved_resource_count' mr06a-encounter-chart-runtime.json)" = "158"
           test "$(jq -r '.full_tod_resource_count' mr06a-encounter-chart-runtime.json)" = "144"
+          test "$(jq -r '.turnback_runtime_links_repaired' mr06a-encounter-chart-runtime.json)" = "3"
+          test "$(jq -r '.turnback_giratina_terminal_no_random_preserved' mr06a-encounter-chart-runtime.json)" = "true"
           test "$(jq -r '.orphan_unknown_resources_excluded' mr06a-encounter-chart-runtime.json)" = "25"
           test "$(jq -r '.period_selector_matches_mr05o_exact_rtc_windows' mr06a-encounter-chart-runtime.json)" = "true"
           test "$(jq -r '.runtime_uses_installed_encounter_narc' mr06a-encounter-chart-runtime.json)" = "true"
@@ -602,6 +604,9 @@ jobs:
           grep -q 'MERCURY_ENCOUNTER_CHART_AREA_COUNT 158' vendor/pokeplatinum/include/mercury_encounter_chart_areas.h
           grep -q 'MercuryEncounterChart_GetSlot' vendor/pokeplatinum/include/overlay006/wild_encounters.h
           grep -q 'MercuryEncounterChart_FindAreaByMapHeader' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+          grep -q '.wildEncountersArchiveID = encounters_turnback_cave_entrance,' vendor/pokeplatinum/include/data/map_headers.h
+          grep -q '.wildEncountersArchiveID = encounters_turnback_cave_pillar_room,' vendor/pokeplatinum/include/data/map_headers.h
+          grep -q '.wildEncountersArchiveID = encounters_turnback_cave_pillar_3_room_6,' vendor/pokeplatinum/include/data/map_headers.h
           grep -q 'mercuryTime.hour >= 17 && mercuryTime.hour < 21' vendor/pokeplatinum/src/overlay006/wild_encounters.c
 
       - name: Export complete Mercury encounter charts
