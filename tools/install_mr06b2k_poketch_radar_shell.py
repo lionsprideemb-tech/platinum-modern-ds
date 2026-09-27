@@ -230,7 +230,7 @@ def main() -> None:
     args = ap.parse_args()
     root = args.pokeplatinum_root.resolve()
 
-        patch_history_main(root)
+    patch_history_main(root)
     patch_history_title(root)
     patch_history_graphics(root)
     patch_qa_boot(root)
