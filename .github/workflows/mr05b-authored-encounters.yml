@@ -1093,6 +1093,16 @@ jobs:
             fi
           } > "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/crash-symbol-diagnostic.txt"
 
+          # Preserve the QA ELF and a focused disassembly so any emulator trap
+          # can be mapped precisely without another blind CI iteration.
+          cp "$BUILD/main.nef" "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/main.nef"
+          if command -v arm-none-eabi-objdump >/dev/null 2>&1; then
+            arm-none-eabi-objdump -d "$BUILD/main.nef" \
+              --start-address=0x020538C0 \
+              --stop-address=0x02053BC0 \
+              > "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/crash-window-disassembly.txt" 2>&1 || true
+          fi
+
       - name: Capture scanner SEARCH patch and HUD in DeSmuME
         shell: bash
         run: |
@@ -1150,16 +1160,17 @@ jobs:
               images[label] = rgb
               return rgb
 
-          # Capture the direct-new-save path early as well as the intended
-          # scanner window. If the QA ROM traps before scanner init, these frames
-          # show exactly how far the field boot got.
-          for frame in [60, 120, 180, 205]:
+          # Capture startup, then a deliberately stable overworld interval.
+          # The CI harness now waits 300 field frames before opening the Radar,
+          # matching real gameplay rather than using the Key Item during the
+          # map's first live frame.
+          for frame in [60, 120, 180, 205, 320, 440]:
               capture(frame, "boot-diagnostic")
 
           if stopped_at is not None:
               meta = {
                   "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_DIAGNOSTIC",
-                  "status": "EARLY_STOP",
+                  "status": "EARLY_STOP_BEFORE_SCANNER",
                   "stopped_at": stopped_at,
                   "captures": rows,
               }
@@ -1167,11 +1178,29 @@ jobs:
                   json.dumps(meta, indent=2) + "\n"
               )
               emu.destroy()
-              raise SystemExit(f"MR06B2H emulator stopped near frame {stopped_at}")
+              raise SystemExit(f"MR06B2H emulator stopped before scanner near frame {stopped_at}")
 
-          capture(700, "scanner-early")
-          capture(1100, "scanner")
-          pre = capture(1500, "scanner-before-search")
+          scanner_frames = [700, 1100, 1500]
+          scanner_images = []
+          for frame in scanner_frames:
+              img = capture(frame, "scanner")
+              if img is not None:
+                  scanner_images.append(img)
+
+          if stopped_at is not None or not scanner_images:
+              meta = {
+                  "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_DIAGNOSTIC",
+                  "status": "STOPPED_DURING_SCANNER_LAUNCH",
+                  "stopped_at": stopped_at,
+                  "captures": rows,
+              }
+              (out / "mr06b2h-radar-runtime-meta.json").write_text(
+                  json.dumps(meta, indent=2) + "\n"
+              )
+              emu.destroy()
+              raise SystemExit(f"MR06B2H scanner launch stopped near frame {stopped_at}")
+
+          pre = scanner_images[-1]
 
           # Exercise the production A SEARCH input path.
           cycle_to(1600)
@@ -1187,10 +1216,31 @@ jobs:
           post_frames = [1660, 1720, 1800, 1900, 2020]
           post_images = []
           for frame in post_frames:
-              post_images.append(capture(frame, "post-search"))
+              img = capture(frame, "post-search")
+              if img is not None:
+                  post_images.append(img)
 
-          if any(row["blank_like"] for row in rows):
-              raise SystemExit(f"MR06B2H produced blank-like capture(s): {rows}")
+          if stopped_at is not None:
+              meta = {
+                  "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_DIAGNOSTIC",
+                  "status": "STOPPED_AFTER_SEARCH",
+                  "stopped_at": stopped_at,
+                  "captures": rows,
+              }
+              (out / "mr06b2h-radar-runtime-meta.json").write_text(
+                  json.dumps(meta, indent=2) + "\n"
+              )
+              emu.destroy()
+              raise SystemExit(f"MR06B2H stopped after A SEARCH near frame {stopped_at}")
+
+          # Black frames are normal during the direct boot/fade diagnostics.
+          # Only the actual scanner and post-search proof frames must be visible.
+          proof_rows = [
+              row for row in rows
+              if row["label"] in ("scanner", "post-search")
+          ]
+          if not proof_rows or any(row["blank_like"] for row in proof_rows):
+              raise SystemExit(f"MR06B2H scanner/search proof contains blank-like capture(s): {proof_rows}")
 
           # A missed A press would leave the scanner nearly unchanged. Require a
           # substantial framebuffer transition to the returned field/HUD view.
@@ -1215,6 +1265,7 @@ jobs:
               "production_rom_was_staged_before_harness": True,
               "ci_only_harness": True,
               "proof_map": "Route 202",
+              "field_settle_frames_before_radar": 300,
               "input": "A SEARCH at frame 1600",
               "runtime_assertions": [],
               "proof_mode": "visual scanner-to-field transition; targeted telemetry follows once stable",
