@@ -33,6 +33,14 @@ def patch_history_main(root: Path) -> None:
 
     replace_once(
         path,
+        '#include "bg_window.h"\n',
+        '#include "bg_window.h"\n'
+        '#include "field/field_system.h"\n',
+        "MR06B2I field system include",
+    )
+
+    replace_once(
+        path,
         '#include "poketch.h"\n',
         '#include "poketch.h"\n'
         '#include "overlay006/wild_encounters.h"\n',
@@ -104,6 +112,15 @@ def patch_qa_boot(root: Path) -> None:
     game_start = root / "src/game_start.c"
     field_map = root / "src/field_map_change.c"
 
+    game_text = game_start.read_text()
+    if '#include "poketch.h"\n' not in game_text:
+        anchor = '#include "play_time_manager.h"\n'
+        if game_text.count(anchor) != 1:
+            raise SystemExit("MR06B2I missing game_start Pokétch include anchor")
+        game_start.write_text(
+            game_text.replace(anchor, anchor + '#include "poketch.h"\n', 1)
+        )
+
     replace_once(
         game_start,
         "    InitializeNewSave(HEAP_ID_GAME_START, saveData, 1);",
@@ -115,7 +132,67 @@ def patch_qa_boot(root: Path) -> None:
         "MR06B2I force Radar prototype Pokétch app",
     )
 
-    # The MR06B2H QA harness already moved the direct-new-save proof to Route 202.
+    # MR06B2H normally opens the old full-screen scanner after the Route 202
+    # field settles. For this visual proof we deliberately suppress that call:
+    # the top screen must stay in the live overworld while the real Pokétch
+    # renders the Radar area page on the bottom.
+    old_tail = """    case 1:
+        FieldTransition_StartMapAndFadeIn(task);
+        (*state)++;
+        break;
+    case 2: {
+        // A real player cannot use the Key Item on the exact frame the field
+        // finishes booting. Give Route 202, the map-name popup and Poketch
+        // several seconds to settle before invoking the production Radar task.
+        // This keeps the CI harness faithful to real gameplay and avoids
+        // diagnosing field-startup races as Radar failures.
+        static int mr06b2hFieldSettleFrames = 0;
+
+        if (mr06b2hFieldSettleFrames < 300) {
+            mr06b2hFieldSettleFrames++;
+            break;
+        }
+
+        FieldTask_InitCall(
+            task,
+            MercuryResearchRadar_FieldTask,
+            MercuryResearchRadar_NewFieldTaskContext());
+        (*state)++;
+        break;
+    }
+    case 3:
+        // The nested Radar task owns scanner -> SEARCH -> patch/HUD lifecycle.
+        // Once it returns, leave the live Route 202 field on screen so DeSmuME
+        // can capture the rustling target patch and dossier HUD.
+        return TRUE;
+    }
+
+    return FALSE;
+}
+"""
+
+    new_tail = """    case 1:
+        FieldTransition_StartMapAndFadeIn(task);
+        (*state)++;
+        break;
+    case 2:
+        // MR06B2I visual proof: leave the live field running. The Research
+        // Radar is being judged as a native Pokétch app, not a full-screen
+        // child application.
+        return TRUE;
+    }
+
+    return FALSE;
+}
+"""
+
+    replace_once(
+        field_map,
+        old_tail,
+        new_tail,
+        "MR06B2I suppress old scanner for Pokétch visual proof",
+    )
+
     if "MAP_HEADER_ROUTE_202" not in field_map.read_text():
         raise SystemExit("MR06B2I expects MR06B2H Route 202 QA spawn")
 
@@ -135,6 +212,7 @@ def validate(root: Path) -> None:
         "research_radar_title": "RESEARCH RADAR" in title,
         "qa_forces_poketch_enabled": "Poketch_Enable(mr06b2iPoketch)" in game_start,
         "qa_forces_radar_visual_app": "POKETCH_APPID_POKEMONHISTORY" in game_start,
+        "top_screen_left_as_overworld": "MercuryResearchRadar_FieldTask" not in (root / "src/field_map_change.c").read_text(),
     }
     failed = [name for name, ok in checks.items() if not ok]
     if failed:
@@ -179,6 +257,7 @@ def main() -> None:
             "title": "RESEARCH RADAR",
         },
         "purpose": "approve the visual foundation before production interaction/detail-page wiring",
+        "old_fullscreen_scanner_suppressed_in_qa": True,
         "production_player_rom_modified": False,
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
