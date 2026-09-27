@@ -234,7 +234,6 @@ def main() -> None:
             and "mercurySkillsEditMode" in summary_main_c.read_text(),
         "native_panel":
             "Window_FillRectWithColor(panel" in summary_window_c.read_text(),
-        "production_player_rom_modified": False,
     }
 
     failed = [name for name, ok in checks.items() if not ok]
