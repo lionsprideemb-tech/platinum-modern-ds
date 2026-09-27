@@ -59,31 +59,32 @@ def patch_text(root: Path) -> None:
         "PokemonSummary_Text_MercuryEdit": "X EDIT",
         "PokemonSummary_Text_MercuryDone": "X DONE",
         "PokemonSummary_Text_MercuryEvDetail": "EV {STRVAR_1 52, 0, 0}/252  TOT {STRVAR_1 52, 1, 0}/510",
-        "PokemonSummary_Text_MercuryNatureHardy": "(neutral)",
-        "PokemonSummary_Text_MercuryNatureLonely": "(+Atk / -Def)",
-        "PokemonSummary_Text_MercuryNatureBrave": "(+Atk / -Spe)",
-        "PokemonSummary_Text_MercuryNatureAdamant": "(+Atk / -SpA)",
-        "PokemonSummary_Text_MercuryNatureNaughty": "(+Atk / -SpD)",
-        "PokemonSummary_Text_MercuryNatureBold": "(+Def / -Atk)",
-        "PokemonSummary_Text_MercuryNatureDocile": "(neutral)",
-        "PokemonSummary_Text_MercuryNatureRelaxed": "(+Def / -Spe)",
-        "PokemonSummary_Text_MercuryNatureImpish": "(+Def / -SpA)",
-        "PokemonSummary_Text_MercuryNatureLax": "(+Def / -SpD)",
-        "PokemonSummary_Text_MercuryNatureTimid": "(+Spe / -Atk)",
-        "PokemonSummary_Text_MercuryNatureHasty": "(+Spe / -Def)",
-        "PokemonSummary_Text_MercuryNatureSerious": "(neutral)",
-        "PokemonSummary_Text_MercuryNatureJolly": "(+Spe / -SpA)",
-        "PokemonSummary_Text_MercuryNatureNaive": "(+Spe / -SpD)",
-        "PokemonSummary_Text_MercuryNatureModest": "(+SpA / -Atk)",
-        "PokemonSummary_Text_MercuryNatureMild": "(+SpA / -Def)",
-        "PokemonSummary_Text_MercuryNatureQuiet": "(+SpA / -Spe)",
-        "PokemonSummary_Text_MercuryNatureBashful": "(neutral)",
-        "PokemonSummary_Text_MercuryNatureRash": "(+SpA / -SpD)",
-        "PokemonSummary_Text_MercuryNatureCalm": "(+SpD / -Atk)",
-        "PokemonSummary_Text_MercuryNatureGentle": "(+SpD / -Def)",
-        "PokemonSummary_Text_MercuryNatureSassy": "(+SpD / -Spe)",
-        "PokemonSummary_Text_MercuryNatureCareful": "(+SpD / -SpA)",
-        "PokemonSummary_Text_MercuryNatureQuirky": "(neutral)",
+        "PokemonSummary_Text_MercuryHp": "{STRVAR_1 52, 0, 0}/{STRVAR_1 52, 1, 0}",
+        "PokemonSummary_Text_MercuryNatureHardy": "--",
+        "PokemonSummary_Text_MercuryNatureLonely": "+Atk -Def",
+        "PokemonSummary_Text_MercuryNatureBrave": "+Atk -Spe",
+        "PokemonSummary_Text_MercuryNatureAdamant": "+Atk -SpA",
+        "PokemonSummary_Text_MercuryNatureNaughty": "+Atk -SpD",
+        "PokemonSummary_Text_MercuryNatureBold": "+Def -Atk",
+        "PokemonSummary_Text_MercuryNatureDocile": "--",
+        "PokemonSummary_Text_MercuryNatureRelaxed": "+Def -Spe",
+        "PokemonSummary_Text_MercuryNatureImpish": "+Def -SpA",
+        "PokemonSummary_Text_MercuryNatureLax": "+Def -SpD",
+        "PokemonSummary_Text_MercuryNatureTimid": "+Spe -Atk",
+        "PokemonSummary_Text_MercuryNatureHasty": "+Spe -Def",
+        "PokemonSummary_Text_MercuryNatureSerious": "--",
+        "PokemonSummary_Text_MercuryNatureJolly": "+Spe -SpA",
+        "PokemonSummary_Text_MercuryNatureNaive": "+Spe -SpD",
+        "PokemonSummary_Text_MercuryNatureModest": "+SpA -Atk",
+        "PokemonSummary_Text_MercuryNatureMild": "+SpA -Def",
+        "PokemonSummary_Text_MercuryNatureQuiet": "+SpA -Spe",
+        "PokemonSummary_Text_MercuryNatureBashful": "--",
+        "PokemonSummary_Text_MercuryNatureRash": "+SpA -SpD",
+        "PokemonSummary_Text_MercuryNatureCalm": "+SpD -Atk",
+        "PokemonSummary_Text_MercuryNatureGentle": "+SpD -Def",
+        "PokemonSummary_Text_MercuryNatureSassy": "+SpD -Spe",
+        "PokemonSummary_Text_MercuryNatureCareful": "+SpD -SpA",
+        "PokemonSummary_Text_MercuryNatureQuirky": "--",
     }
 
     existing = {row.get("id") for row in data["messages"]}
@@ -378,6 +379,7 @@ def patch_window(root: Path) -> None:
     helper_anchor = "static void DrawSkillsPageWindows(PokemonSummaryScreen *summaryScreen);\n"
     helper_decls = """static void MercurySkills_PrintMessage(PokemonSummaryScreen *summaryScreen, Window *window, u32 entryID, u32 x, u32 y, TextColor color);
 static void MercurySkills_PrintNumber(PokemonSummaryScreen *summaryScreen, Window *window, u32 value, u32 x, u32 y, TextColor color);
+static void MercurySkills_PrintHp(PokemonSummaryScreen *summaryScreen, Window *window, u32 x, u32 y, TextColor color);
 static void MercurySkills_PrintAbility(PokemonSummaryScreen *summaryScreen, Window *window, u16 ability, u32 x, u32 y, TextColor color);
 static void MercurySkills_PrintNature(PokemonSummaryScreen *summaryScreen, Window *window, u32 x, u32 y, TextColor color);
 static void MercurySkills_DrawEditPrompt(PokemonSummaryScreen *summaryScreen);
@@ -457,6 +459,48 @@ static void MercurySkills_PrintNumber(
         summaryScreen->strFormatter,
         0,
         value,
+        3,
+        PADDING_MODE_NONE,
+        CHARSET_MODE_EN);
+    StringTemplate_Format(
+        summaryScreen->strFormatter,
+        summaryScreen->string,
+        fmt);
+    String_Free(fmt);
+
+    Text_AddPrinterWithParamsAndColor(
+        window,
+        FONT_SYSTEM,
+        summaryScreen->string,
+        x,
+        y,
+        TEXT_SPEED_NO_TRANSFER,
+        color,
+        NULL);
+}
+
+static void MercurySkills_PrintHp(
+    PokemonSummaryScreen *summaryScreen,
+    Window *window,
+    u32 x,
+    u32 y,
+    TextColor color)
+{
+    String *fmt = MessageLoader_GetNewString(
+        summaryScreen->msgLoader,
+        PokemonSummary_Text_MercuryHp);
+
+    StringTemplate_SetNumber(
+        summaryScreen->strFormatter,
+        0,
+        summaryScreen->monData.curHP,
+        3,
+        PADDING_MODE_NONE,
+        CHARSET_MODE_EN);
+    StringTemplate_SetNumber(
+        summaryScreen->strFormatter,
+        1,
+        summaryScreen->monData.maxHP,
         3,
         PADDING_MODE_NONE,
         CHARSET_MODE_EN);
@@ -629,29 +673,14 @@ static void DrawSkillsPageWindows(PokemonSummaryScreen *summaryScreen)
             color);
 
         if (i == 0) {
-            // HP keeps current/max information instead of hiding damage.
-            PrintCurrentAndMaxInfo(
+            // Compact current/max renderer keeps HP readable in both normal
+            // and blue-highlight selection states without drawing twice.
+            MercurySkills_PrintHp(
                 summaryScreen,
-                0,
-                PokemonSummary_Text_Slash,
-                PokemonSummary_Text_TemplateCurrentHp,
-                PokemonSummary_Text_TemplateMaxHp,
-                summaryScreen->monData.curHP,
-                summaryScreen->monData.maxHP,
-                3,
-                40,
-                statY[i]);
-            if (selected) {
-                // The native current/max helper prints black; overlay the max
-                // stat value in white so the selected state remains legible.
-                MercurySkills_PrintNumber(
-                    summaryScreen,
-                    panel,
-                    summaryScreen->monData.maxHP,
-                    50,
-                    statY[i],
-                    SUMMARY_TEXT_WHITE);
-            }
+                panel,
+                30,
+                statY[i],
+                color);
         } else {
             MercurySkills_PrintNumber(
                 summaryScreen,
@@ -710,15 +739,15 @@ static void DrawSkillsPageWindows(PokemonSummaryScreen *summaryScreen)
     };
 
     for (u32 row = 0; row < 4; row++) {
-        u32 y = 72 + row * 16;
+        u32 y = 70 + row * 14;
         BOOL selected =
             row == 0
             && summaryScreen->mercurySkillsEditMode
             && summaryScreen->mercurySkillsCursor == 7;
 
-        Window_FillRectWithColor(panel, 4, 0, y - 1, 50, 15);
+        Window_FillRectWithColor(panel, 4, 0, y - 1, 50, 13);
         if (selected) {
-            Window_FillRectWithColor(panel, 4, 50, y - 1, 102, 15);
+            Window_FillRectWithColor(panel, 4, 50, y - 1, 102, 13);
         }
 
         MercurySkills_PrintMessage(
@@ -739,7 +768,7 @@ static void DrawSkillsPageWindows(PokemonSummaryScreen *summaryScreen)
 
     // Bottom detail strip. When a stat is selected, this becomes a live EV
     // readout; otherwise it is the selected primary Ability's real description.
-    Window_FillRectWithColor(panel, 0, 0, 136, 152, 24);
+    Window_FillRectWithColor(panel, 0, 0, 126, 152, 34);
 
     if (summaryScreen->mercurySkillsEditMode
         && summaryScreen->mercurySkillsCursor < 6) {
@@ -770,7 +799,7 @@ static void DrawSkillsPageWindows(PokemonSummaryScreen *summaryScreen)
             FONT_SYSTEM,
             summaryScreen->string,
             4,
-            141,
+            136,
             TEXT_SPEED_NO_TRANSFER,
             SUMMARY_TEXT_WHITE,
             NULL);
@@ -790,7 +819,7 @@ static void DrawSkillsPageWindows(PokemonSummaryScreen *summaryScreen)
             FONT_SYSTEM,
             summaryScreen->string,
             4,
-            138,
+            128,
             TEXT_SPEED_NO_TRANSFER,
             SUMMARY_TEXT_WHITE,
             NULL);
