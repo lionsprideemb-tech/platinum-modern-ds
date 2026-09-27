@@ -608,11 +608,19 @@ static void MercuryEncounterChart_Draw(FieldTask *fieldTask)
     # the special-menu contexts whose vanilla option sets must remain intact.
     replace_once(
         path,
-        """    menu->inUnionRoom = FALSE;
+        """    } else {
+        menu->hideOptionFlags = StartMenu_GetNormalHiddenOptions(fieldSystem);
+    }
+
+    menu->inUnionRoom = FALSE;
 
     if (PlayerAvatar_CheckForceStopMovement(fieldSystem->playerAvatar) == 1) {
 """,
-        """    menu->inUnionRoom = FALSE;
+        """    } else {
+        menu->hideOptionFlags = StartMenu_GetNormalHiddenOptions(fieldSystem);
+    }
+
+    menu->inUnionRoom = FALSE;
     menu->mercuryEncounterChartEnabled =
         Pokedex_IsObtained(SaveData_GetPokedex(fieldSystem->saveData))
         && !SystemFlag_CheckSafariGameActive(SaveData_GetVarsFlags(fieldSystem->saveData))
