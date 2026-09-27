@@ -36,6 +36,7 @@ on:
       - "tools/install_mr06b2a_dexnav_progression.py"
       - "tools/install_mr06b2b_radar_save_storage.py"
       - "tools/install_mr06b2c1_scanner_session_model.py"
+      - "tools/install_mr06b2c2_dual_screen_scanner.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -683,6 +684,22 @@ jobs:
           grep -q 'MercuryResearchRadarScannerState' vendor/pokeplatinum/include/overlay006/wild_encounters.h
           grep -q 'MercuryResearchRadar_InitScannerState' vendor/pokeplatinum/src/overlay006/wild_encounters.c
 
+      - name: Install MR06B2C2 dual-screen DexNav scanner application
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2c2_dual_screen_scanner.py \
+            vendor/pokeplatinum \
+            --report mr06b2c2-dual-screen-scanner.json
+
+          test "$(jq -r '.status' mr06b2c2-dual-screen-scanner.json)" = "PASS"
+          test "$(jq -r '.bottom_screen.pokemon_icon_grid' mr06b2c2-dual-screen-scanner.json)" = "4x4"
+          test "$(jq -r '.bottom_screen.touch_selection' mr06b2c2-dual-screen-scanner.json)" = "true"
+          test "$(jq -r '.bottom_screen.r_button_registration' mr06b2c2-dual-screen-scanner.json)" = "true"
+          test "$(jq -r '.poke_radar_item_rebound' mr06b2c2-dual-screen-scanner.json)" = "false"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2c2-dual-screen-scanner.json)" = "false"
+          grep -q 'applications/mercury_research_radar.c' vendor/pokeplatinum/src/meson.build
+          grep -q 'PokeIconSpriteIndex' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -906,6 +923,7 @@ jobs:
           cp mr06b2a-dexnav-progression.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2b-radar-save-storage.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2c1-scanner-session-model.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2c2-dual-screen-scanner.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -1007,6 +1025,10 @@ jobs:
             echo "- No new save-table ID is added and save-table IDs are not reordered"
             echo "- MR06B2C1 adds the UI-facing scanner session model: LOCAL first, RESEARCH-only second, wrapped selection and registered-target restore"
             echo "- The working vanilla Poké Radar item is intentionally not replaced until the DS scanner application exists"
-            echo "- Next pass builds the actual dual-screen application, then binds ITEM_POKE_RADAR to it atomically"
+            echo "- MR06B2C2 builds the real dual-screen Research Radar application"
+            echo "- Bottom screen: 4x4 Pokémon icon grid, D-pad/touch selection, cursor, LOCAL/RESEARCH counts, R registration"
+            echo "- Top screen: selected species icon/name, source, level range, Search Lv., caught state and registration state"
+            echo "- ITEM_POKE_RADAR is still intentionally untouched until this application compiles cleanly"
+            echo "- Next pass binds the Poké Radar item and installs guaranteed nearby rustling-patch SEARCH"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
