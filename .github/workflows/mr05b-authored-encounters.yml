@@ -823,7 +823,7 @@ jobs:
               press(Keys.KEY_X, settle=180)
               snap("start-menu")
 
-              for _ in range(4):
+              for _ in range(5):
                   press(Keys.KEY_DOWN, settle=55)
               snap("encounters-selected")
 
@@ -844,7 +844,7 @@ jobs:
           meta = {
               "gate": "MERCURY_MR06A_ENCOUNTER_CHART_VISUAL",
               "route": "Route 203",
-              "input_path": "X -> DOWN x4 -> A",
+              "input_path": "X -> DOWN x5 -> A",
               "production_direct_launch": False,
               "captures": captures,
           }
@@ -987,7 +987,7 @@ jobs:
             echo "- L/R changes Morning/Day/Evening/Night for Mercury four-period land tables"
             echo "- UP/DOWN changes pages; duplicate species are merged with exact slot odds and level ranges"
             echo "- Safari, Pal Park, Battle Tower Salon, Union Room, and Colosseum keep their vanilla menu behavior"
-            echo "- CI-only Route 203 proof uses normal controller input to open ENCOUNTERS; the clean player ROM is preserved before harness install"
+            echo "- CI-only Route 203 proof uses normal controller input (X -> DOWN x5 -> A) to open ENCOUNTERS; the clean player ROM is preserved before harness install"
             echo "- Visual proof captures Start Menu, selected ENCOUNTERS row, chart, next time period, page 2, and return path"
             echo "- Player ROM staged as Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds"
           } >> "$GITHUB_STEP_SUMMARY"
