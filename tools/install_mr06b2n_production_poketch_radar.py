@@ -45,6 +45,7 @@ APP_MAIN = r'''#include <nitro.h>
 #include "heap.h"
 #include "map_header_data.h"
 #include "mercury_research_radar_shared.h"
+#include "overlay006/wild_encounters.h"
 #include "party.h"
 #include "pokedex.h"
 #include "poketch.h"
@@ -1661,8 +1662,7 @@ def patch_app_id(root: Path) -> None:
     if "POKETCH_APPID_RESEARCHRADAR" not in text:
         replace_once(
             path,
-            "POKETCH_APPID_POKEMONHISTORY\nPOKETCH_APPID_MAX\n",
-            "POKETCH_APPID_POKEMONHISTORY\n"
+            "POKETCH_APPID_MAX\n",
             "POKETCH_APPID_RESEARCHRADAR\n"
             "POKETCH_APPID_MAX\n",
             "MR06B2N Poketch app ID",
