@@ -47,6 +47,7 @@ on:
       - "tools/install_mr06b2j_scanner_vram_cleanup.py"
       - "tools/install_mr06b2k_poketch_radar_shell.py"
       - "tools/install_mr06b2l_poketch_radar_detail.py"
+      - "tools/install_mr06b2m_poketch_hunter_detail.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -162,6 +163,7 @@ jobs:
             tools/install_mr06b2j_scanner_vram_cleanup.py \
             tools/install_mr06b2k_poketch_radar_shell.py \
             tools/install_mr06b2l_poketch_radar_detail.py \
+            tools/install_mr06b2m_poketch_hunter_detail.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -1608,6 +1610,130 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Install MR06B2M refined Pokétch hunter detail
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2m_poketch_hunter_detail.py \
+            vendor/pokeplatinum \
+            --report mr06b2m-poketch-hunter-detail.json
+
+          test "$(jq -r '.status' mr06b2m-poketch-hunter-detail.json)" = "PASS"
+          test "$(jq -r '.area_page_changed' mr06b2m-poketch-hunter-detail.json)" = "false"
+          test "$(jq -r '.detail_page.moves_shown' mr06b2m-poketch-hunter-detail.json)" = "false"
+          test "$(jq -r '.detail_page.abilities_shown' mr06b2m-poketch-hunter-detail.json)" = "false"
+          test "$(jq -r '.detail_page.held_items_shown' mr06b2m-poketch-hunter-detail.json)" = "false"
+          test "$(jq -r '.production_player_rom_modified' mr06b2m-poketch-hunter-detail.json)" = "false"
+          grep -q 'Scanner reticle' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
+          grep -q 'Pokémon battle level' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
+
+      - name: Build MR06B2M refined Pokétch hunter detail QA ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Capture MR06B2M refined Pokétch hunter detail in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr04-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("poketch-radar-hunter-detail-proof")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start MR06B2M hunter-detail ROM")
+
+          current = 0
+          rows = []
+
+          for target in [800, 1100, 1400]:
+              for _ in range(target - current):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"MR06B2M emulator stopped near frame {current}")
+
+              img = emu.screenshot().convert("RGB")
+              path = out / f"poketch-radar-hunter-detail-{target}.png"
+              img.save(path)
+
+              top = img.crop((0, 0, 256, 192))
+              bottom = img.crop((0, 192, 256, 384))
+              top_colors = top.getcolors(maxcolors=256 * 192)
+              bottom_colors = bottom.getcolors(maxcolors=256 * 192)
+
+              rows.append({
+                  "frame": target,
+                  "file": path.name,
+                  "top_unique_colors": len(top_colors) if top_colors is not None else 256 * 192,
+                  "bottom_unique_colors": len(bottom_colors) if bottom_colors is not None else 256 * 192,
+              })
+
+          emu.destroy()
+
+          stable = [
+              row for row in rows
+              if row["top_unique_colors"] >= 24 and row["bottom_unique_colors"] >= 12
+          ]
+          if len(stable) < 2:
+              raise SystemExit(f"MR06B2M did not produce stable hunter-detail captures: {rows}")
+
+          meta = {
+              "gate": "MERCURY_MR06B2M_POKETCH_HUNTER_DETAIL_VISUAL_PROOF",
+              "status": "PASS",
+              "rom": rom.name,
+              "ci_only_visual_prototype": True,
+              "top_screen": "live Platinum overworld",
+              "bottom_screen": "Poketch Radar refined Bidoof hunter detail",
+              "layout": [
+                  "species header",
+                  "encounter method",
+                  "native Pokemon icon in scanner reticle",
+                  "battle level range",
+                  "Search Level",
+                  "Potential stars",
+                  "wide SEARCH touch target",
+              ],
+              "omitted_redundant_fields": [
+                  "move",
+                  "ability",
+                  "held item",
+              ],
+              "production_player_rom_modified": False,
+              "captures": rows,
+          }
+          (out / "mr06b2m-poketch-hunter-detail-meta.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+          PY
+
+      - name: Stage MR06B2M refined Pokétch hunter detail proof
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p poketch-radar-hunter-detail-proof-artifact
+          cp mr06b2m-poketch-hunter-detail.json poketch-radar-hunter-detail-proof-artifact/ 2>/dev/null || true
+          cp poketch-radar-hunter-detail-proof/*.png poketch-radar-hunter-detail-proof-artifact/ 2>/dev/null || true
+          cp poketch-radar-hunter-detail-proof/mr06b2m-poketch-hunter-detail-meta.json poketch-radar-hunter-detail-proof-artifact/ 2>/dev/null || true
+
+      - name: Upload MR06B2M refined Pokétch hunter detail proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr06b2m-poketch-hunter-detail-proof
+          path: poketch-radar-hunter-detail-proof-artifact/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Summary
         if: always()
         shell: bash
@@ -1724,5 +1850,8 @@ jobs:
             echo "- The old full-screen scanner is intentionally suppressed only in this QA proof so the visual direction can be judged before production rewiring"
             echo "- MR06B2L adds the second approved Pokétch concept page: tap a Pokémon -> native detail page with icon, level range, Search Lv., Potential, method and SEARCH"
             echo "- MR06B2L remains CI-only; production rewiring waits for visual approval"
+            echo "- MR06B2M refines only the detail page around Mercury's actual hunting needs: battle Lv. range, Search Lv., Potential, method and one wide SEARCH control"
+            echo "- MR06B2M removes redundant move/ability/item fields from the Radar UI and adds a four-tone Pokétch scanner reticle around the native Pokémon icon"
+            echo "- Battle level and Search Level are deliberately separated visually; Search Level never represents the encountered Pokémon's battle level"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
