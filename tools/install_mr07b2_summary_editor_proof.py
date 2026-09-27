@@ -99,7 +99,7 @@ def main() -> None:
     insert_include_once(
         field_map_change_c,
         '#include "constants/overworld_weather.h"\n',
-        '#include "constants/items.h"\n\n#include "generated/species.h"\n',
+        '#include "constants/items.h"\n\n#include "generated/natures.h"\n#include "generated/species.h"\n',
         "MR07B2 species/item constants",
     )
     insert_include_once(
@@ -113,6 +113,13 @@ def main() -> None:
         '#include "unk_0203D1B8.h"\n',
         '#include "unk_02054884.h"\n',
         "MR07B2 gift-mon API",
+    )
+
+    insert_include_once(
+        field_map_change_c,
+        '#include "res/text/bank/pokemon_center_2f_common.h"\n',
+        '\nstatic u32 sMercuryMr07ProofPid;\nstatic u8 sMercuryMr07ProofNatureTarget;\n',
+        "MR07B2 Nature proof state",
     )
 
     old_case0 = """    case 0:
@@ -143,6 +150,11 @@ def main() -> None:
         Pokemon *qaMon = Party_GetPokemonBySlotIndex(
             SaveData_GetParty(fieldSystem->saveData),
             0);
+
+        sMercuryMr07ProofPid =
+            Pokemon_GetValue(qaMon, MON_DATA_PERSONALITY, NULL);
+        sMercuryMr07ProofNatureTarget =
+            (u8)((Pokemon_GetNature(qaMon) + 1) % NATURE_COUNT);
 
         u8 ev0 = 0;
         u8 ev6 = 6;
@@ -214,6 +226,12 @@ def main() -> None:
                 qaMon,
                 MON_DATA_ABILITY,
                 NULL) == ability2);
+            GF_ASSERT(Pokemon_GetValue(
+                qaMon,
+                MON_DATA_PERSONALITY,
+                NULL) == sMercuryMr07ProofPid);
+            GF_ASSERT(Pokemon_GetNature(qaMon)
+                == sMercuryMr07ProofNatureTarget);
             return TRUE;
         }
         break;
@@ -266,10 +284,16 @@ def main() -> None:
         "commit_second_ability":
             "MON_DATA_ABILITY" in field_map_change_c.read_text()
             and "== ability2" in field_map_change_c.read_text(),
+        "nature_pid_identity_assertion":
+            "sMercuryMr07ProofPid" in field_map_change_c.read_text()
+            and "MON_DATA_PERSONALITY" in field_map_change_c.read_text()
+            and "sMercuryMr07ProofNatureTarget" in field_map_change_c.read_text()
+            and "Pokemon_GetNature(qaMon)" in field_map_change_c.read_text(),
         "native_summary": "FieldSystem_GetPartyMenuMonSummary" in field_map_change_c.read_text(),
         "production_editors_present":
             "MercurySkillsEditor_OpenEV" in summary_main_c.read_text()
-            and "MercurySkillsEditor_OpenAbility" in summary_main_c.read_text(),
+            and "MercurySkillsEditor_OpenAbility" in summary_main_c.read_text()
+            and "MercurySkillsEditor_OpenNature" in summary_main_c.read_text(),
     }
 
     failed = [name for name, ok in checks.items() if not ok]
@@ -283,6 +307,7 @@ def main() -> None:
         "pokemon": "Machamp Lv50",
         "initial_primary_ability": "species Ability 1",
         "target_primary_ability": "species Ability 2",
+        "nature_flow": "effective Nature -> next Nature, without PID mutation",
         "initial_evs": {
             "hp": 0,
             "attack": 252,
@@ -305,6 +330,8 @@ def main() -> None:
         "post_close_assertions": [
             "MON_DATA_HP_EV == 252",
             "MON_DATA_ABILITY == SPECIES_DATA_ABILITY_2",
+            "MON_DATA_PERSONALITY unchanged",
+            "Pokemon_GetNature == selected next Nature",
         ],
         "player_rom_modified": False,
         "checks": checks,
