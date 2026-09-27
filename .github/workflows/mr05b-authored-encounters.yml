@@ -48,6 +48,7 @@ on:
       - "tools/install_mr06b2k_poketch_radar_shell.py"
       - "tools/install_mr06b2l_poketch_radar_detail.py"
       - "tools/install_mr06b2m_poketch_hunter_detail.py"
+      - "tools/install_mr06b2n_production_poketch_radar.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -164,6 +165,7 @@ jobs:
             tools/install_mr06b2k_poketch_radar_shell.py \
             tools/install_mr06b2l_poketch_radar_detail.py \
             tools/install_mr06b2m_poketch_hunter_detail.py \
+            tools/install_mr06b2n_production_poketch_radar.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -837,6 +839,27 @@ jobs:
           grep -q 'BG_LAYER_SUB_1, 0, 1, 0' vendor/pokeplatinum/src/applications/mercury_research_radar.c
           grep -q 'BG_LAYER_SUB_2, 0, 1, 0' vendor/pokeplatinum/src/applications/mercury_research_radar.c
 
+      - name: Install MR06B2N production Pokétch Research Radar
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2n_production_poketch_radar.py \
+            vendor/pokeplatinum \
+            --report mr06b2n-production-poketch-radar.json
+
+          test "$(jq -r '.status' mr06b2n-production-poketch-radar.json)" = "PASS"
+          test "$(jq -r '.app_id' mr06b2n-production-poketch-radar.json)" = "25"
+          test "$(jq -r '.pokemon_history_preserved' mr06b2n-production-poketch-radar.json)" = "true"
+          test "$(jq -r '.search.instant_encounter' mr06b2n-production-poketch-radar.json)" = "true"
+          test "$(jq -r '.search.rustling_patch' mr06b2n-production-poketch-radar.json)" = "false"
+          test "$(jq -r '.level_safety.search_level_changes_battle_level' mr06b2n-production-poketch-radar.json)" = "false"
+          test "$(jq -r '.level_safety.authored_area_range_respected' mr06b2n-production-poketch-radar.json)" = "true"
+          test "$(jq -r '.old_fullscreen_scanner_launched_by_poke_radar_item' mr06b2n-production-poketch-radar.json)" = "false"
+          grep -q 'POKETCH_APPID_RESEARCHRADAR' vendor/pokeplatinum/generated/poketch_apps.txt
+          grep -q 'FS_OVERLAY_ID(poketch_unused_4)' vendor/pokeplatinum/src/applications/poketch/poketch_system.c
+          grep -q 'MercuryResearchRadar_RequestInstantEncounter' vendor/pokeplatinum/src/applications/poketch/unused/4/main.c
+          grep -q 'MercuryResearchRadar_GetCurrentGymAceCap' vendor/pokeplatinum/src/mercury_research_radar_shared.c
+          grep -q 'Encounter_NewVsWild' vendor/pokeplatinum/src/overlay005/field_control.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -1065,6 +1088,7 @@ jobs:
           cp mr06b2d-dexnav-quality-rolls.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2e-overworld-search-hud.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2f-radar-visual-polish.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2n-production-poketch-radar.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2g-preleague-radar-access.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2i-radar-linker-placement.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2j-scanner-vram-cleanup.json mr05b-artifact/ 2>/dev/null || true
@@ -1850,6 +1874,11 @@ jobs:
             echo "- The old full-screen scanner is intentionally suppressed only in this QA proof so the visual direction can be judged before production rewiring"
             echo "- MR06B2L adds the second approved Pokétch concept page: tap a Pokémon -> native detail page with icon, level range, Search Lv., Potential, method and SEARCH"
             echo "- MR06B2L remains CI-only; production rewiring waits for visual approval"
+            echo "- MR06B2N promotes the approved Pokétch Radar design into the production player ROM as dedicated app ID 25"
+            echo "- The production app lists current-time land, progression-valid Surf, owned-rod fishing and Research slots with 12-per-page touch browsing"
+            echo "- SEARCH now starts the selected wild encounter immediately; no rustling patch, chain, battery or random search failure"
+            echo "- Encounter battle level stays inside its authored area range and is dynamically capped at the next Gym Leader's current ace level"
+            echo "- Search Level remains separate research progression and never raises the Pokémon's battle level"
             echo "- MR06B2M refines only the detail page around Mercury's actual hunting needs: battle Lv. range, Search Lv., Potential, method and one wide SEARCH control"
             echo "- MR06B2M removes redundant move/ability/item fields from the Radar UI and adds a four-tone Pokétch scanner reticle around the native Pokémon icon"
             echo "- Battle level and Search Level are deliberately separated visually; Search Level never represents the encountered Pokémon's battle level"
