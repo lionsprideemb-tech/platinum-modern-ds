@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - feature/mr05b-authored-encounters
+      - feature/mr06b-research-poke-radar
     paths:
       - ".github/workflows/mr05b-authored-encounters.yml"
       - "tools/install_mercury_move_learner.py"
