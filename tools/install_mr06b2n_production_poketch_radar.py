@@ -1721,6 +1721,32 @@ def install_shared_runtime(root: Path) -> None:
             "MR06B2N shared runtime meson",
         )
 
+    # Meson compiling a new source file is not enough for Nitro builds. Every
+    # object must also belong to a linker region in main.lsf. Keep this shared
+    # bridge resident in Static main because both the Pokétch overlay and
+    # overlay5 call it while their own overlays are loaded independently.
+    lsf = root / "platinum.us/main.lsf"
+    lsf_text = lsf.read_text()
+    shared_object = (
+        "\tObject main.nef.p/src_mercury_research_radar_shared.c.o\n"
+    )
+
+    if shared_object not in lsf_text:
+        anchor = "\tObject main.nef.p/src_map_header_data.c.o\n"
+
+        if lsf_text.count(anchor) != 1:
+            raise SystemExit(
+                "MR06B2N shared-runtime Static-main linker anchor missing"
+            )
+
+        lsf.write_text(
+            lsf_text.replace(
+                anchor,
+                anchor + shared_object,
+                1,
+            )
+        )
+
 
 def patch_field_instant_encounter(root: Path) -> None:
     path = root / "src/overlay005/field_control.c"
@@ -2029,6 +2055,9 @@ def validate(root: Path) -> None:
         "instant_request": "MercuryResearchRadar_RequestInstantEncounter" in app,
         "instant_battle": "Encounter_NewVsWild" in field,
         "dynamic_gym_cap": "Trainer_LoadParty" in shared and "sGymLeaders" in shared,
+        "shared_runtime_in_static_main":
+            "Object main.nef.p/src_mercury_research_radar_shared.c.o"
+            in (root / "platinum.us/main.lsf").read_text(),
         "potential_iv_apply": "MON_DATA_HP_IV + stat" in field,
         "search_level_increment": "Pokedex_MercuryRadar_IncrementSearchLevel" in field,
         "old_fullscreen_item_not_launched": "MercuryResearchRadar_FieldTask" not in item[item.find("static void UsePokeRadarFromMenu"):item.find("static void UseSprayDuckFromMenu")],
@@ -2129,6 +2158,7 @@ def main() -> None:
         },
         "potential": "0-3 stars; each star guarantees one unique 31 IV",
         "search_level_increments_on_instant_encounter": True,
+        "shared_runtime_linker_region": "Static main",
         "old_fullscreen_scanner_launched_by_poke_radar_item": False,
         "research_habitat_layer": "uses currently installed Research/radar slots; MR06B3 fixed foreign habitat import remains separate",
         "honey_tree_species_folded_into_radar": False,
