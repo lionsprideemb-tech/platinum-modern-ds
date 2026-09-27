@@ -702,12 +702,9 @@ typedef struct ResearchRadarGraphics {
     PoketchAnimation_AnimationManager *animMan;
     PoketchAnimation_AnimatedSpriteData *sprites[RESEARCH_RADAR_PAGE_SIZE];
     PoketchAnimation_SpriteData spriteData;
-    PoketchAnimation_AnimatedSpriteData *fullSprite;
-    PoketchAnimation_SpriteData fullSpriteData;
     u32 iconIndices[RESEARCH_RADAR_PAGE_SIZE];
     u8 page;
     BOOL spriteDataLoaded;
-    BOOL fullSpriteDataLoaded;
 } ResearchRadarGraphics;
 
 enum ResearchRadarGraphicsTask {
@@ -765,13 +762,14 @@ GRAPHICS_C = r'''#include "applications/poketch/unused/4/graphics.h"
 #define GRID_X(c) (36 + 44 * (c))
 #define GRID_Y(r) (52 + 42 * (r))
 
-#define FULL_MON_TILE_OFFSET          (RESEARCH_RADAR_PAGE_SIZE * 16)
-#define FULL_MON_TILE_BYTES           (10 * 10 * 32)
-#define FULL_MON_PALETTE_SLOT         4
-#define FULL_MON_CELL_MEMBER          6
-#define FULL_MON_ANIM_MEMBER          12
-#define FULL_MON_CENTER_X             52
-#define FULL_MON_CENTER_Y             71
+#define FULL_MON_SOURCE_WIDTH         80
+#define FULL_MON_SOURCE_HEIGHT        80
+#define FULL_MON_SOURCE_BYTES         (10 * 10 * 32)
+#define FULL_MON_RENDER_WIDTH         80
+#define FULL_MON_RENDER_HEIGHT        64
+#define FULL_MON_RENDER_BYTES         (10 * 8 * 32)
+#define FULL_MON_RENDER_X             12
+#define FULL_MON_RENDER_Y             38
 #define FULL_MON_MAX_VISIBLE_WIDTH    68
 #define FULL_MON_MAX_VISIBLE_HEIGHT   54
 
@@ -790,13 +788,10 @@ static void EndTask(PoketchTaskManager *taskMan);
 static void Task_DrawBackground(SysTask *task, void *taskMan);
 static void Task_FreeBackground(SysTask *task, void *taskMan);
 static void RemovePageSprites(ResearchRadarGraphics *graphics);
-static void RemoveFullSprite(ResearchRadarGraphics *graphics);
 static void LoadPageSprites(ResearchRadarGraphics *graphics, int page);
-static void LoadFullSprite(ResearchRadarGraphics *graphics, u16 species);
-static u8 FullSpriteReadPixel(const u8 *tiles, int x, int y);
-static void FullSpriteWritePixel(u8 *tiles, int x, int y, u8 value);
-static void CenterFullSpriteTiles(const u8 *source, u8 *centered, int *visibleWidth, int *visibleHeight);
-static void PackFullSpriteTiles(const u8 *centered, u8 *packed);
+static u8 FullSpriteReadPixel(const u8 *tiles, int tileWidth, int x, int y);
+static void FullSpriteWritePixel(u8 *tiles, int tileWidth, int x, int y, u8 value);
+static void DrawFullPokemonSprite(Window *window, u16 species);
 static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page);
 static void DrawDetailSurface(ResearchRadarGraphics *graphics, int absoluteIndex);
 static void DrawFrame(Window *window, int x, int y, int width, int height, u8 color);
@@ -941,18 +936,6 @@ static void Task_DrawBackground(SysTask *task, void *taskMan)
         HEAP_ID_POKETCH_APP);
     graphics->spriteDataLoaded = TRUE;
 
-    // Reuse Platinum's field-cutin 80x80 Pokemon cell layout on the SUB
-    // engine. Only the live species tiles/palette are replaced per detail
-    // selection, so this stays a genuine Poketch sprite rather than a flat
-    // screenshot.
-    graphics->fullSpriteDataLoaded =
-        PoketchAnimation_LoadSpriteFromNARC(
-            &graphics->fullSpriteData,
-            NARC_INDEX_DATA__FIELD_CUTIN,
-            FULL_MON_CELL_MEMBER,
-            FULL_MON_ANIM_MEMBER,
-            HEAP_ID_POKETCH_APP);
-
     DrawAreaSurface(graphics, 0);
 
     GXSDispCnt dispCnt = GXS_GetDispCnt();
@@ -967,14 +950,7 @@ static void Task_FreeBackground(SysTask *task, void *taskMan)
     ResearchRadarGraphics *graphics =
         PoketchTask_GetTaskData(taskMan);
 
-    RemoveFullSprite(graphics);
     RemovePageSprites(graphics);
-
-    if (graphics->fullSpriteDataLoaded) {
-        PoketchAnimation_FreeSpriteData(
-            &graphics->fullSpriteData);
-        graphics->fullSpriteDataLoaded = FALSE;
-    }
 
     if (graphics->spriteDataLoaded) {
         PoketchAnimation_FreeSpriteData(
@@ -1000,20 +976,17 @@ static void RemovePageSprites(ResearchRadarGraphics *graphics)
     }
 }
 
-static void RemoveFullSprite(ResearchRadarGraphics *graphics)
+static u8 FullSpriteReadPixel(
+    const u8 *tiles,
+    int tileWidth,
+    int x,
+    int y)
 {
-    if (graphics->fullSprite != NULL) {
-        PoketchAnimation_RemoveAnimatedSprite(
-            graphics->animMan,
-            graphics->fullSprite);
-        graphics->fullSprite = NULL;
-    }
-}
-
-static u8 FullSpriteReadPixel(const u8 *tiles, int x, int y)
-{
-    int tile = (y / 8) * 10 + (x / 8);
-    int byteOffset = tile * 32 + (y & 7) * 4 + ((x & 7) >> 1);
+    int tile = (y / 8) * tileWidth + (x / 8);
+    int byteOffset =
+        tile * 32
+        + (y & 7) * 4
+        + ((x & 7) >> 1);
     u8 value = tiles[byteOffset];
 
     if (x & 1) {
@@ -1023,142 +996,36 @@ static u8 FullSpriteReadPixel(const u8 *tiles, int x, int y)
     return value & 0xF;
 }
 
-static void FullSpriteWritePixel(u8 *tiles, int x, int y, u8 value)
+static void FullSpriteWritePixel(
+    u8 *tiles,
+    int tileWidth,
+    int x,
+    int y,
+    u8 value)
 {
-    int tile = (y / 8) * 10 + (x / 8);
-    int byteOffset = tile * 32 + (y & 7) * 4 + ((x & 7) >> 1);
+    int tile = (y / 8) * tileWidth + (x / 8);
+    int byteOffset =
+        tile * 32
+        + (y & 7) * 4
+        + ((x & 7) >> 1);
 
     if (x & 1) {
         tiles[byteOffset] =
-            (tiles[byteOffset] & 0x0F) | (value << 4);
+            (tiles[byteOffset] & 0x0F)
+            | (value << 4);
     } else {
         tiles[byteOffset] =
-            (tiles[byteOffset] & 0xF0) | value;
+            (tiles[byteOffset] & 0xF0)
+            | value;
     }
 }
 
-static void CenterFullSpriteTiles(
-    const u8 *source,
-    u8 *centered,
-    int *visibleWidth,
-    int *visibleHeight)
-{
-    int minX = 80;
-    int minY = 80;
-    int maxX = -1;
-    int maxY = -1;
-
-    MI_CpuClear8(centered, FULL_MON_TILE_BYTES);
-
-    for (int y = 0; y < 80; y++) {
-        for (int x = 0; x < 80; x++) {
-            if (FullSpriteReadPixel(source, x, y) == 0) {
-                continue;
-            }
-
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
-        }
-    }
-
-    if (maxX < minX || maxY < minY) {
-        *visibleWidth = 0;
-        *visibleHeight = 0;
-        return;
-    }
-
-    *visibleWidth = maxX - minX + 1;
-    *visibleHeight = maxY - minY + 1;
-
-    int targetLeft = (80 - *visibleWidth) / 2;
-    int targetTop = (80 - *visibleHeight) / 2;
-    int dx = targetLeft - minX;
-    int dy = targetTop - minY;
-
-    for (int y = minY; y <= maxY; y++) {
-        for (int x = minX; x <= maxX; x++) {
-            u8 pixel = FullSpriteReadPixel(source, x, y);
-
-            if (pixel == 0) {
-                continue;
-            }
-
-            int destX = x + dx;
-            int destY = y + dy;
-
-            if (destX >= 0 && destX < 80
-                && destY >= 0 && destY < 80) {
-                FullSpriteWritePixel(
-                    centered,
-                    destX,
-                    destY,
-                    pixel);
-            }
-        }
-    }
-}
-
-static void PackFullSpriteTiles(const u8 *centered, u8 *packed)
-{
-    // Match the exact six-OAM region order used by Platinum's 80x80
-    // field-cutin Pokemon cell.
-    static const u8 regions[][4] = {
-        { 0, 0, 8, 8 },
-        { 8, 0, 2, 4 },
-        { 8, 4, 2, 4 },
-        { 0, 8, 4, 2 },
-        { 4, 8, 4, 2 },
-        { 8, 8, 2, 2 },
-    };
-
-    int outTile = 0;
-
-    for (int region = 0; region < 6; region++) {
-        int startX = regions[region][0];
-        int startY = regions[region][1];
-        int width = regions[region][2];
-        int height = regions[region][3];
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int sourceTile =
-                    (startY + y) * 10 + (startX + x);
-
-                MI_CpuCopy8(
-                    &centered[sourceTile * 32],
-                    &packed[outTile * 32],
-                    32);
-                outTile++;
-            }
-        }
-    }
-}
-
-static void LoadFullSprite(
-    ResearchRadarGraphics *graphics,
+static void DrawFullPokemonSprite(
+    Window *window,
     u16 species)
 {
-    static const PoketchAnimation_AnimationData animData = {
-        .translation = {
-            FX32_CONST(FULL_MON_CENTER_X),
-            FX32_CONST(FULL_MON_CENTER_Y)
-        },
-        .animIdx = 0,
-        .flip = NNS_G2D_RENDERERFLIP_NONE,
-        .oamPriority = 2,
-        .priority = 0,
-        .hasAffineTransform = TRUE,
-    };
-
-    RemoveFullSprite(graphics);
-
-    if (!graphics->fullSpriteDataLoaded) {
-        return;
-    }
-
     PokemonSpriteTemplate spriteTemplate;
+
     BuildPokemonSpriteTemplate(
         &spriteTemplate,
         species,
@@ -1170,13 +1037,10 @@ static void LoadFullSprite(
 
     u8 *source = Heap_Alloc(
         HEAP_ID_POKETCH_APP,
-        FULL_MON_TILE_BYTES);
-    u8 *centered = Heap_Alloc(
+        FULL_MON_SOURCE_BYTES);
+    u8 *rendered = Heap_Alloc(
         HEAP_ID_POKETCH_APP,
-        FULL_MON_TILE_BYTES);
-    u8 *packed = Heap_Alloc(
-        HEAP_ID_POKETCH_APP,
-        FULL_MON_TILE_BYTES);
+        FULL_MON_RENDER_BYTES);
     u16 *palette =
         CharacterSprite_LoadPalette(
             spriteTemplate.narcID,
@@ -1184,12 +1048,10 @@ static void LoadFullSprite(
             HEAP_ID_POKETCH_APP);
 
     if (source == NULL
-        || centered == NULL
-        || packed == NULL
+        || rendered == NULL
         || palette == NULL) {
         if (source != NULL) Heap_Free(source);
-        if (centered != NULL) Heap_Free(centered);
-        if (packed != NULL) Heap_Free(packed);
+        if (rendered != NULL) Heap_Free(rendered);
         if (palette != NULL) Heap_Free(palette);
         return;
     }
@@ -1204,82 +1066,146 @@ static void LoadFullSprite(
         10,
         source);
 
-    int visibleWidth;
-    int visibleHeight;
+    MI_CpuClear8(
+        rendered,
+        FULL_MON_RENDER_BYTES);
 
-    CenterFullSpriteTiles(
-        source,
-        centered,
-        &visibleWidth,
-        &visibleHeight);
-    PackFullSpriteTiles(centered, packed);
+    int minX = FULL_MON_SOURCE_WIDTH;
+    int minY = FULL_MON_SOURCE_HEIGHT;
+    int maxX = -1;
+    int maxY = -1;
 
-    DC_FlushRange(packed, FULL_MON_TILE_BYTES);
-    GXS_LoadOBJ(
-        packed,
-        FULL_MON_TILE_OFFSET * 0x20,
-        FULL_MON_TILE_BYTES);
+    for (int y = 0; y < FULL_MON_SOURCE_HEIGHT; y++) {
+        for (int x = 0; x < FULL_MON_SOURCE_WIDTH; x++) {
+            if (FullSpriteReadPixel(
+                    source,
+                    10,
+                    x,
+                    y) == 0) {
+                continue;
+            }
 
-    // Preserve the Poketch's four-tone identity while using the actual
-    // battle-front artwork: the species palette is luminance-mapped into the
-    // current Poketch theme and placed after the four icon palettes.
-    PoketchTask_MapToActivePaletteFromLuminance(
-        palette,
-        16);
-    DC_FlushRange(palette, PALETTE_SIZE_BYTES);
-    GXS_LoadOBJPltt(
-        palette,
-        PLTT_OFFSET(FULL_MON_PALETTE_SLOT),
-        PALETTE_SIZE_BYTES);
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+        }
+    }
 
-    graphics->fullSprite =
-        PoketchAnimation_SetupNewAnimatedSprite(
-            graphics->animMan,
-            &animData,
-            &graphics->fullSpriteData);
+    if (maxX >= minX && maxY >= minY) {
+        int sourceWidth = maxX - minX + 1;
+        int sourceHeight = maxY - minY + 1;
 
-    if (graphics->fullSprite != NULL) {
-        PoketchAnimation_SetSpriteCharNo(
-            graphics->fullSprite,
-            FULL_MON_TILE_OFFSET);
-        PoketchAnimation_SetCParam(
-            graphics->fullSprite,
-            FULL_MON_PALETTE_SLOT);
+        // 10-bit fixed-point scale. Fill the scanner confidently, but never
+        // let a small species balloon beyond 125% of its real DS artwork.
+        int widthScale =
+            (FULL_MON_MAX_VISIBLE_WIDTH * 1024)
+            / sourceWidth;
+        int heightScale =
+            (FULL_MON_MAX_VISIBLE_HEIGHT * 1024)
+            / sourceHeight;
+        int scale =
+            widthScale < heightScale
+            ? widthScale
+            : heightScale;
 
-        fx32 scale = FX32_ONE;
+        if (scale > 1280) {
+            scale = 1280;
+        }
 
-        if (visibleWidth > 0 && visibleHeight > 0) {
-            fx32 widthScale =
-                (FULL_MON_MAX_VISIBLE_WIDTH * FX32_ONE)
-                / visibleWidth;
-            fx32 heightScale =
-                (FULL_MON_MAX_VISIBLE_HEIGHT * FX32_ONE)
-                / visibleHeight;
-            fx32 maxScale = (FX32_ONE * 5) / 4;
+        int destWidth =
+            (sourceWidth * scale + 512) / 1024;
+        int destHeight =
+            (sourceHeight * scale + 512) / 1024;
 
-            scale =
-                widthScale < heightScale
-                ? widthScale
-                : heightScale;
+        if (destWidth < 1) destWidth = 1;
+        if (destHeight < 1) destHeight = 1;
 
-            if (scale > maxScale) {
-                scale = maxScale;
+        int destLeft =
+            (FULL_MON_RENDER_WIDTH - destWidth) / 2;
+        int destTop =
+            (FULL_MON_RENDER_HEIGHT - destHeight) / 2;
+
+        // Convert the actual species palette into the same four Poketch ink
+        // levels used by the rest of the app. Pixel 0 stays transparent.
+        static const u8 poketchInk[4] = {
+            1, 8, 15, 4
+        };
+        u8 paletteMap[16];
+
+        paletteMap[0] = 0;
+
+        for (int i = 1; i < 16; i++) {
+            u32 red =
+                (palette[i] & GX_RGB_R_MASK)
+                >> GX_RGB_R_SHIFT;
+            u32 green =
+                (palette[i] & GX_RGB_G_MASK)
+                >> GX_RGB_G_SHIFT;
+            u32 blue =
+                (palette[i] & GX_RGB_B_MASK)
+                >> GX_RGB_B_SHIFT;
+            u32 luminance =
+                ((red * 299)
+                    + (green * 587)
+                    + (blue * 114))
+                / 1000;
+            u32 band = luminance >> 3;
+
+            if (band > 3) {
+                band = 3;
+            }
+
+            paletteMap[i] = poketchInk[band];
+        }
+
+        for (int y = 0; y < destHeight; y++) {
+            int sourceY =
+                minY
+                + (y * sourceHeight)
+                / destHeight;
+
+            for (int x = 0; x < destWidth; x++) {
+                int sourceX =
+                    minX
+                    + (x * sourceWidth)
+                    / destWidth;
+                u8 pixel =
+                    FullSpriteReadPixel(
+                        source,
+                        10,
+                        sourceX,
+                        sourceY);
+
+                if (pixel == 0) {
+                    continue;
+                }
+
+                FullSpriteWritePixel(
+                    rendered,
+                    10,
+                    destLeft + x,
+                    destTop + y,
+                    paletteMap[pixel]);
             }
         }
 
-        PoketchAnimation_SetSpriteScale(
-            graphics->fullSprite,
-            scale,
-            scale);
-        PoketchAnimation_SetSpritePosition(
-            graphics->fullSprite,
-            FX32_CONST(FULL_MON_CENTER_X),
-            FX32_CONST(FULL_MON_CENTER_Y));
+        Window_BlitBitmapRectWithTransparency(
+            window,
+            rendered,
+            0,
+            0,
+            FULL_MON_RENDER_WIDTH,
+            FULL_MON_RENDER_HEIGHT,
+            FULL_MON_RENDER_X,
+            FULL_MON_RENDER_Y,
+            FULL_MON_RENDER_WIDTH,
+            FULL_MON_RENDER_HEIGHT,
+            0);
     }
 
     Heap_Free(source);
-    Heap_Free(centered);
-    Heap_Free(packed);
+    Heap_Free(rendered);
     Heap_Free(palette);
 }
 
@@ -1355,8 +1281,6 @@ static void LoadPageSprites(ResearchRadarGraphics *graphics, int page)
 
 static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page)
 {
-    RemoveFullSprite(graphics);
-
     Bg_FillTilemapRect(
         graphics->bgConfig,
         BG_LAYER_SUB_2,
@@ -1525,12 +1449,6 @@ static void DrawDetailSurface(
             TRUE);
     }
 
-    // Final approval pass: the scanner uses the actual 80x80 battle-front
-    // sprite, automatically centered and scaled to the available viewport.
-    LoadFullSprite(
-        graphics,
-        target->species);
-
     Window detail;
     Window_Add(
         graphics->bgConfig,
@@ -1579,6 +1497,11 @@ static void DrawDetailSurface(
     DrawFrame(&detail, 104, 40, 84, 34, 8);
     DrawFrame(&detail, 104, 78, 84, 42, 8);
     DrawFrame(&detail, 8, 102, 88, 19, 8);
+
+    // Actual battle-front artwork, not the 32x32 Poketch icon.
+    DrawFullPokemonSprite(
+        &detail,
+        target->species);
     DrawScannerReticle(&detail);
 
     // Right-side research readout.
@@ -2658,13 +2581,16 @@ def validate(root: Path) -> None:
         "detail_full_front_sprite":
             "CharacterSprite_LoadTiledData" in gfx
             and "BuildPokemonSpriteTemplate" in gfx
-            and "PackFullSpriteTiles" in gfx,
+            and "DrawFullPokemonSprite" in gfx,
         "detail_sprite_auto_center":
-            "CenterFullSpriteTiles" in gfx
-            and "FULL_MON_MAX_VISIBLE_WIDTH" in gfx
-            and "FULL_MON_MAX_VISIBLE_HEIGHT" in gfx,
+            "FULL_MON_MAX_VISIBLE_WIDTH" in gfx
+            and "FULL_MON_MAX_VISIBLE_HEIGHT" in gfx
+            and "destLeft" in gfx
+            and "destTop" in gfx,
         "detail_sprite_theme_mapped":
-            "PoketchTask_MapToActivePaletteFromLuminance" in gfx,
+            "poketchInk" in gfx
+            and "paletteMap" in gfx
+            and "Window_BlitBitmapRectWithTransparency" in gfx,
         "instant_request": "MercuryResearchRadar_RequestInstantEncounter" in app,
         "instant_battle": "Encounter_NewVsWild" in field,
         "dynamic_gym_cap": "Trainer_LoadParty" in shared and "sGymLeaders" in shared,
@@ -2749,8 +2675,9 @@ def main() -> None:
         },
         "detail_page": {
             "visual_pass": "MR06B2Q native full-front-sprite approval pass",
-            "pokemon_art": "actual battle-front sprite, auto-centered and auto-fit",
-            "poketch_palette_mapping": "four-tone luminance mapping",
+            "pokemon_art": "actual battle-front sprite, auto-centered and auto-fit into native Poketch window",
+            "renderer": "BG-window 4bpp blit; avoids SUB-OAM ownership conflicts",
+            "poketch_palette_mapping": "source-palette luminance converted to four native Poketch ink indices",
             "battle_level_range": True,
             "search_level": True,
             "potential_stars": True,
