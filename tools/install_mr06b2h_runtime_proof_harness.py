@@ -148,15 +148,26 @@ def main() -> None:
         FieldTransition_StartMapAndFadeIn(task);
         (*state)++;
         break;
-    case 2:
-        // Invoke the exact same shared field task used by both Bag and
-        // registered-Key-Item Poké Radar entrypoints.
+    case 2: {
+        // A real player cannot use the Key Item on the exact frame the field
+        // finishes booting. Give Route 202, the map-name popup and Poketch
+        // several seconds to settle before invoking the production Radar task.
+        // This keeps the CI harness faithful to real gameplay and avoids
+        // diagnosing field-startup races as Radar failures.
+        static int mr06b2hFieldSettleFrames = 0;
+
+        if (mr06b2hFieldSettleFrames < 300) {
+            mr06b2hFieldSettleFrames++;
+            break;
+        }
+
         FieldTask_InitCall(
             task,
             MercuryResearchRadar_FieldTask,
             MercuryResearchRadar_NewFieldTaskContext());
         (*state)++;
         break;
+    }
     case 3:
         // The nested Radar task owns scanner -> SEARCH -> patch/HUD lifecycle.
         // Once it returns, leave the live Route 202 field on screen so DeSmuME
@@ -186,6 +197,7 @@ def main() -> None:
         "known_grass_corridor": "180,\n            827," in field_map_change_c.read_text(),
         "real_shared_field_task": "MercuryResearchRadar_FieldTask" in field_map_change_c.read_text(),
         "real_shared_context": "MercuryResearchRadar_NewFieldTaskContext" in field_map_change_c.read_text(),
+        "realistic_field_settle_delay": "mr06b2hFieldSettleFrames < 300" in field_map_change_c.read_text(),
     }
     failed = [name for name, ok in checks.items() if not ok]
     if failed:
@@ -200,6 +212,7 @@ def main() -> None:
         "proof_position": {"x": 180, "z": 827, "facing": "left"},
         "grass_basis": "vanilla Route 202 catching tutorial walks west two tiles into tall grass",
         "runtime_entrypoint": "MercuryResearchRadar_FieldTask",
+        "field_settle_frames_before_radar": 300,
         "runtime_assertions": [],
         "runtime_proof_mode": "non-invasive visual transition first; targeted telemetry follows after scanner stability",
         "expected_flow": [
