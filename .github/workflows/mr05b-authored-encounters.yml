@@ -1200,7 +1200,7 @@ jobs:
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR07B2 EV and Ability editors in DeSmuME
+      - name: Capture MR07B2 EV Ability and Nature editors in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -1288,6 +1288,18 @@ jobs:
           press(Keys.KEY_B)
           ev_closed = capture("ev-committed-radial-restored")
 
+          # HP -> Ability -> Nature. MR07C opens its real scrolling selector;
+          # Down chooses the next Nature and A commits the persistent override.
+          press(Keys.KEY_UP)
+          press(Keys.KEY_UP)
+          nature_selected = capture("skills-edit-nature-highlight")
+          press(Keys.KEY_A)
+          nature_editor = capture("nature-editor-current")
+          press(Keys.KEY_DOWN)
+          nature_next = capture("nature-editor-next")
+          press(Keys.KEY_A)
+          nature_committed = capture("nature-committed-radial-restored")
+
           top = (0, 0, 256, 192)
           bottom = (0, 192, 256, 384)
 
@@ -1308,6 +1320,14 @@ jobs:
                   diff_pixels(ev_before, ev_after, bottom),
               "ev_close_bottom":
                   diff_pixels(ev_after, ev_closed, bottom),
+              "radial_to_nature_editor_bottom":
+                  diff_pixels(nature_selected, nature_editor, bottom),
+              "nature_choice_change_bottom":
+                  diff_pixels(nature_editor, nature_next, bottom),
+              "nature_commit_top":
+                  diff_pixels(nature_selected, nature_committed, top),
+              "nature_close_bottom":
+                  diff_pixels(nature_next, nature_committed, bottom),
           }
 
           if diffs["radial_to_ability_editor_bottom"] < 2500:
@@ -1324,6 +1344,14 @@ jobs:
               raise SystemExit(f"EV MAX did not visibly update EV totals: {diffs}")
           if diffs["ev_close_bottom"] < 2500:
               raise SystemExit(f"EV editor did not visibly restore radial screen: {diffs}")
+          if diffs["radial_to_nature_editor_bottom"] < 2500:
+              raise SystemExit(f"Nature editor did not visibly open: {diffs}")
+          if diffs["nature_choice_change_bottom"] < 100:
+              raise SystemExit(f"Nature selection did not visibly move: {diffs}")
+          if diffs["nature_commit_top"] < 80:
+              raise SystemExit(f"Nature commit did not visibly update top screen: {diffs}")
+          if diffs["nature_close_bottom"] < 2500:
+              raise SystemExit(f"Nature editor did not visibly restore radial screen: {diffs}")
 
           stable = [
               row for row in captures
@@ -1334,7 +1362,8 @@ jobs:
               raise SystemExit(f"MR07B2 blank/unstable capture: {captures}")
 
           # Leave top edit-selection, close Summary, and let the CI-only field
-          # harness assert the real saved mon now has HP EV 252 + Ability 2.
+          # harness assert HP EV 252 + Ability 2 + selected effective Nature,
+          # while also proving the Pokemon personality/PID never changed.
           press(Keys.KEY_X)
           press(Keys.KEY_B)
           cycle(240)
@@ -1348,10 +1377,11 @@ jobs:
               "pokemon": "Machamp Lv50",
               "ability_flow": "Ability 1 -> Ability 2",
               "ev_flow": "HP 0 / total 258 -> HP 252 / total 510",
+              "nature_flow": "current effective Nature -> next Nature; PID unchanged",
               "screens": {
                   "top": "production Mercury Skills renderer with live stat/Ability updates",
                   "bottom_normal": "vanilla Platinum radial Summary navigator",
-                  "bottom_edit": "temporary MR07B1 native EV/Ability editor",
+                  "bottom_edit": "temporary native EV/Ability/Nature editor",
               },
               "pixel_diffs": diffs,
               "captures": captures,
@@ -1381,6 +1411,7 @@ jobs:
           mkdir -p mr07b2-summary-editor-proof-artifact
           cp mr07a-summary-skills.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b1-summary-training-editors.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
+          cp mr07c-nature-editor.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof-harness.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof/*.png mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof/mr07b2-summary-editor-runtime-meta.json \
@@ -1608,7 +1639,7 @@ jobs:
             echo "- MR07B1 makes the Primary Ability editable from the species' real legal ability slots; Innates remain view-only"
             echo "- Closing either MR07B1 editor restores Platinum's normal radial Summary bottom screen"
             echo "- MR07C adds a persistent effective-Nature editor using tagged unused BoxPokemon storage; PID, gender, shininess, and Spinda identity remain untouched"
-            echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2 and HP EV 0 -> 252 / total 510 edits, then asserts the committed Pokemon data after Summary closes"
+            echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
             echo "- CI-only Garchomp/direct-launch harness excluded"
