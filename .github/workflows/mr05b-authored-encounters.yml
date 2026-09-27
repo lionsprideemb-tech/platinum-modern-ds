@@ -41,6 +41,7 @@ on:
       - "tools/install_mr06b2d_dexnav_quality_rolls.py"
       - "tools/install_mr06b2e_overworld_search_hud.py"
       - "tools/install_mr06b2f_radar_visual_polish.py"
+      - "tools/install_mr06b2g_preleague_radar_access.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -774,6 +775,25 @@ jobs:
           grep -q 'MercuryRadarHud_IsRarePrimaryAbility' vendor/pokeplatinum/src/overlay005/mercury_radar_hud.c
           grep -q 'MercuryRadarHud_IsRareHeldItem' vendor/pokeplatinum/src/overlay005/mercury_radar_hud.c
 
+      - name: Install MR06B2G pre-League Research Radar access
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2g_preleague_radar_access.py \
+            vendor/pokeplatinum \
+            --report mr06b2g-preleague-radar-access.json
+
+          test "$(jq -r '.status' mr06b2g-preleague-radar-access.json)" = "PASS"
+          test "$(jq -r '.available_before_first_badge' mr06b2g-preleague-radar-access.json)" = "true"
+          test "$(jq -r '.existing_pokedex_save_catchup' mr06b2g-preleague-radar-access.json)" = "true"
+          test "$(jq -r '.late_duplicate_radar_reward_removed' mr06b2g-preleague-radar-access.json)" = "true"
+          test "$(jq -r '.item_description_mentions_battery' mr06b2g-preleague-radar-access.json)" = "false"
+          test "$(jq -r '.old_chain_tutorial_removed' mr06b2g-preleague-radar-access.json)" = "true"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2g-preleague-radar-access.json)" = "false"
+          test "$(jq -r '.research_habitat_assignments_modified' mr06b2g-preleague-radar-access.json)" = "false"
+          grep -q 'SandgemTownLab_GiveResearchRadarCatchup' vendor/pokeplatinum/res/field/scripts/scripts_sandgem_town_pokemon_research_lab.s
+          grep -q 'chosen target in a rustling patch' vendor/pokeplatinum/res/items/data/poke_radar.json
+          grep -q 'Search Level' vendor/pokeplatinum/res/text/counterpart_talk.json
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -1002,6 +1022,7 @@ jobs:
           cp mr06b2d-dexnav-quality-rolls.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2e-overworld-search-hud.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2f-radar-visual-polish.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2g-preleague-radar-access.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -1120,6 +1141,11 @@ jobs:
             echo "- MR06B2F upgrades the HUD to a Platinum-native two-panel trace using the existing DS Pokemon preview renderer"
             echo "- Premium stars mark special moves, rare Primary Ability rolls and rare held-item rolls; Potential stars remain visible"
             echo "- No GBA DexNav graphics are copied"
+            echo "- MR06B2G gives the Research Poké Radar with Rowan's early Pokédex assignment, before Badge 1"
+            echo "- Existing development saves with a Pokédex but no Radar receive a Rowan catch-up grant"
+            echo "- The obsolete battery description, duplicate post-Sinnoh-Dex reward and old chain tutorial are removed"
+            echo "- Counterpart tips now teach SEARCH, registration, Search Level, Potential and premium traits"
+            echo "- Batch1 fixed RESEARCH habitat assignments are not fabricated and still await source recovery"
             echo "- Next pass is runtime visual proof of scanner -> SEARCH -> rustling patch -> polished HUD"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
