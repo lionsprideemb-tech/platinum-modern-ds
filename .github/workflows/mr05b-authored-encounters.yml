@@ -49,6 +49,7 @@ on:
       - "tools/install_mr06b2l_poketch_radar_detail.py"
       - "tools/install_mr06b2m_poketch_hunter_detail.py"
       - "tools/install_mr06b2n_production_poketch_radar.py"
+      - "tools/install_mr06b2o_production_poketch_proof.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -166,6 +167,7 @@ jobs:
             tools/install_mr06b2l_poketch_radar_detail.py \
             tools/install_mr06b2m_poketch_hunter_detail.py \
             tools/install_mr06b2n_production_poketch_radar.py \
+            tools/install_mr06b2o_production_poketch_proof.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -1041,8 +1043,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR06B2N_Poketch_Research_Radar.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR06B2N_Poketch_Research_Radar.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -1106,71 +1108,36 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr06b1-research-radar-foundation
+          name: mercury-mr06b2n-poketch-research-radar
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
 
-      - name: Install MR06B2H CI-only Radar runtime proof harness
+      - name: Install MR06B2O production Pokétch Radar proof harness
         shell: bash
         run: |
-          python3 tools/install_mr06b2h_runtime_proof_harness.py \
+          python3 tools/install_mr06b2o_production_poketch_proof.py \
             vendor/pokeplatinum \
-            --report mr06b2h-radar-runtime-proof-harness.json
+            --report mr06b2o-production-poketch-proof-harness.json
 
-          test "$(jq -r '.status' mr06b2h-radar-runtime-proof-harness.json)" = "PASS"
-          test "$(jq -r '.player_rom_modified' mr06b2h-radar-runtime-proof-harness.json)" = "false"
-          test "$(jq -r '.proof_map' mr06b2h-radar-runtime-proof-harness.json)" = "MAP_HEADER_ROUTE_202"
+          test "$(jq -r '.status' mr06b2o-production-poketch-proof-harness.json)" = "PASS"
+          test "$(jq -r '.selected_app' mr06b2o-production-poketch-proof-harness.json)" = "POKETCH_APPID_RESEARCHRADAR"
+          test "$(jq -r '.pokemon_history_modified' mr06b2o-production-poketch-proof-harness.json)" = "false"
+          test "$(jq -r '.old_fullscreen_scanner_launched' mr06b2o-production-poketch-proof-harness.json)" = "false"
+          grep -q 'POKETCH_APPID_RESEARCHRADAR' vendor/pokeplatinum/src/game_start.c
           grep -q 'MAP_HEADER_ROUTE_202' vendor/pokeplatinum/src/field_map_change.c
-          grep -q 'MercuryResearchRadar_FieldTask' vendor/pokeplatinum/src/field_map_change.c
-          grep -q 'MAP_HEADER_ROUTE_202' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'MercuryResearchRadar_RequestInstantEncounter' \
+            vendor/pokeplatinum/src/applications/poketch/unused/4/main.c
+          ! grep -q 'MercuryResearchRadar_FieldTask' vendor/pokeplatinum/src/field_map_change.c
 
-      - name: Build MR06B2H Radar QA harness ROM
+      - name: Build MR06B2O production Pokétch Radar QA ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
-          mkdir -p "$GITHUB_WORKSPACE/radar-runtime-proof-artifact"
-          cp "$BUILD/pokeplatinum.us.nds" \
-            "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/Pokemon_Mercury_MR06B2H_Radar_QA_Harness.nds"
-          printf 'MR06B2H_QA_BUILD_OK\n' > \
-            "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/QA_BUILD_MARKER.txt"
 
-          # Symbolize the stable early-boot failure address if the emulator
-          # reports one. These diagnostics are non-fatal and stay QA-only.
-          {
-            echo "MR06B2H symbol diagnostics"
-            echo "main.nef:"
-            file "$BUILD/main.nef" 2>&1 || true
-            echo
-            echo "addr2line 0x02053AA4:"
-            if command -v arm-none-eabi-addr2line >/dev/null 2>&1; then
-              arm-none-eabi-addr2line -f -C -e "$BUILD/main.nef" 0x02053AA4 2>&1 || true
-            else
-              echo "arm-none-eabi-addr2line unavailable"
-            fi
-            echo
-            echo "nearest symbols:"
-            if command -v arm-none-eabi-nm >/dev/null 2>&1; then
-              arm-none-eabi-nm -n "$BUILD/main.nef" 2>/dev/null | \
-                awk '$1 ~ /^[0-9A-Fa-f]+$/ { if (strtonum("0x"$1) <= strtonum("0x02053AA4")) last=$0 } END { print last }' || true
-            else
-              echo "arm-none-eabi-nm unavailable"
-            fi
-          } > "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/crash-symbol-diagnostic.txt"
-
-          # Preserve the QA ELF and a focused disassembly so any emulator trap
-          # can be mapped precisely without another blind CI iteration.
-          cp "$BUILD/main.nef" "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/main.nef"
-          if command -v arm-none-eabi-objdump >/dev/null 2>&1; then
-            arm-none-eabi-objdump -d "$BUILD/main.nef" \
-              --start-address=0x020538C0 \
-              --stop-address=0x02053BC0 \
-              > "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/crash-window-disassembly.txt" 2>&1 || true
-          fi
-
-      - name: Capture scanner SEARCH patch and HUD in DeSmuME
+      - name: Capture production Pokétch Radar area detail and SEARCH in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -1179,582 +1146,167 @@ jobs:
           from pathlib import Path
           import json
           from PIL import ImageChops
-          from desmume.controls import Keys, keymask
           from desmume.emulator import DeSmuME
 
           rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
-          out = Path("radar-runtime-proof")
+          out = Path("poketch-radar-production-proof")
           out.mkdir(exist_ok=True)
 
           emu = DeSmuME()
           emu.open(str(rom))
           if not emu.is_running():
-              raise SystemExit("DeSmuME did not start MR06B2H Radar QA ROM")
+              raise SystemExit("DeSmuME did not start MR06B2O production Poketch QA ROM")
 
           current = 0
           rows = []
           images = {}
 
-          stopped_at = None
-
           def cycle_to(target):
-              global current, stopped_at
+              global current
               for _ in range(target - current):
                   emu.cycle(False)
                   current += 1
                   if not emu.is_running():
-                      stopped_at = current
-                      return False
-              return True
+                      raise SystemExit(f"MR06B2O emulator stopped near frame {current}")
 
           def capture(frame, label):
-              if not cycle_to(frame):
-                  return None
-              img = emu.screenshot()
+              cycle_to(frame)
+              img = emu.screenshot().convert("RGB")
               path = out / f"{label}-{frame}.png"
               img.save(path)
-              rgb = img.convert("RGB")
-              colors = rgb.getcolors(maxcolors=256 * 384)
-              unique = len(colors) if colors is not None else 256 * 384
+
+              top = img.crop((0, 0, 256, 192))
+              bottom = img.crop((0, 192, 256, 384))
+              top_colors = top.getcolors(maxcolors=256 * 192)
+              bottom_colors = bottom.getcolors(maxcolors=256 * 192)
+
               row = {
                   "frame": frame,
                   "label": label,
                   "file": path.name,
-                  "unique_colors": unique,
-                  "blank_like": unique < 16,
+                  "top_unique_colors": len(top_colors) if top_colors is not None else 256 * 192,
+                  "bottom_unique_colors": len(bottom_colors) if bottom_colors is not None else 256 * 192,
               }
               rows.append(row)
-              images[label] = rgb
-              return rgb
+              images[label] = img
+              return img
 
-          # Capture startup, then a deliberately stable overworld interval.
-          # The CI harness now waits 300 field frames before opening the Radar,
-          # matching real gameplay rather than using the Key Item during the
-          # map's first live frame.
-          for frame in [60, 120, 180, 205, 320, 440]:
-              capture(frame, "boot-diagnostic")
+          def touch(x, y, hold=8):
+              global current
+              emu.input.touch_set_pos(x, y)
+              for _ in range(hold):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"MR06B2O stopped while touching ({x},{y})")
+              emu.input.touch_release()
 
-          if stopped_at is not None:
-              meta = {
-                  "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_DIAGNOSTIC",
-                  "status": "EARLY_STOP_BEFORE_SCANNER",
-                  "stopped_at": stopped_at,
-                  "captures": rows,
-              }
-              (out / "mr06b2h-radar-runtime-meta.json").write_text(
-                  json.dumps(meta, indent=2) + "\n"
+          # Give native field + Poketch enough time to settle. These are the
+          # actual production app screens; no Pokemon History substitution.
+          area_a = capture(700, "production-area")
+          area_b = capture(900, "production-area")
+
+          # First 3x4 icon cell.
+          cycle_to(980)
+          touch(36, 52)
+          detail_a = capture(1100, "production-detail")
+          detail_b = capture(1250, "production-detail")
+
+          area_detail_diff = ImageChops.difference(area_b, detail_b)
+          area_detail_pixels = sum(
+              1 for px in area_detail_diff.getdata()
+              if px != (0, 0, 0)
+          )
+          if area_detail_pixels < 2500:
+              raise SystemExit(
+                  "MR06B2O touch did not visibly open the production detail page; "
+                  f"pixel_diff={area_detail_pixels}"
               )
-              emu.destroy()
-              raise SystemExit(f"MR06B2H emulator stopped before scanner near frame {stopped_at}")
 
-          scanner_frames = [700, 1100, 1500]
-          scanner_images = []
-          for frame in scanner_frames:
-              img = capture(frame, "scanner")
-              if img is not None:
-                  scanner_images.append(img)
+          # Wide SEARCH button on the production detail page.
+          cycle_to(1320)
+          touch(100, 150)
 
-          if stopped_at is not None or not scanner_images:
-              meta = {
-                  "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_DIAGNOSTIC",
-                  "status": "STOPPED_DURING_SCANNER_LAUNCH",
-                  "stopped_at": stopped_at,
-                  "captures": rows,
-              }
-              (out / "mr06b2h-radar-runtime-meta.json").write_text(
-                  json.dumps(meta, indent=2) + "\n"
-              )
-              emu.destroy()
-              raise SystemExit(f"MR06B2H scanner launch stopped near frame {stopped_at}")
-
-          pre = scanner_images[-1]
-
-          # Exercise the production A SEARCH input path.
-          cycle_to(1600)
-          a = keymask(Keys.KEY_A)
-          emu.input.keypad_add_key(a)
-          for _ in range(6):
-              emu.cycle(False)
-              current += 1
-          emu.input.keypad_rm_key(a)
-
-          # First proof pass is deliberately non-invasive so a runtime crash
-          # cannot be confused with an intentional QA assertion trap.
-          post_frames = [1660, 1720, 1800, 1900, 2020]
-          post_images = []
-          for frame in post_frames:
+          post = []
+          for frame in [1380, 1500, 1660, 1840, 2040]:
               img = capture(frame, "post-search")
-              if img is not None and not rows[-1]["blank_like"]:
-                  post_images.append(img)
+              post.append(img)
 
-          if stopped_at is not None:
-              meta = {
-                  "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_DIAGNOSTIC",
-                  "status": "STOPPED_AFTER_SEARCH",
-                  "stopped_at": stopped_at,
-                  "captures": rows,
-              }
-              (out / "mr06b2h-radar-runtime-meta.json").write_text(
-                  json.dumps(meta, indent=2) + "\n"
-              )
-              emu.destroy()
-              raise SystemExit(f"MR06B2H stopped after A SEARCH near frame {stopped_at}")
-
-          # The scanner -> overworld handoff deliberately fades through black.
-          # Treat those transition frames as expected, but require stable visible
-          # scanner frames before SEARCH and at least three visible field/HUD
-          # frames after the fade completes.
-          scanner_rows = [
-              row for row in rows
-              if row["label"] == "scanner" and not row["blank_like"]
-          ]
-          post_visible_rows = [
-              row for row in rows
-              if row["label"] == "post-search" and not row["blank_like"]
-          ]
-          transition_fade_frames = [
-              row["frame"] for row in rows
-              if row["label"] == "post-search" and row["blank_like"]
-          ]
-
-          if len(scanner_rows) < 2:
-              raise SystemExit(
-                  f"MR06B2H did not produce stable visible scanner captures: {scanner_rows}"
-              )
-
-          if len(post_visible_rows) < 3 or len(post_images) < 3:
-              raise SystemExit(
-                  "MR06B2H did not produce enough stable post-search field/HUD "
-                  f"captures: rows={post_visible_rows}"
-              )
-
-          # A missed A press would leave the scanner nearly unchanged. Require a
-          # substantial framebuffer transition to the returned field/HUD view.
           diffs = []
-          for img in post_images:
-              diff = ImageChops.difference(pre, img)
-              bbox = diff.getbbox()
-              if bbox is None:
-                  diffs.append(0)
-              else:
-                  diffs.append(sum(1 for px in diff.getdata() if px != (0, 0, 0)))
+          for img in post:
+              diff = ImageChops.difference(detail_b, img)
+              diffs.append(sum(
+                  1 for px in diff.getdata()
+                  if px != (0, 0, 0)
+              ))
 
           if max(diffs, default=0) < 5000:
               raise SystemExit(
-                  "MR06B2H did not visibly transition from scanner after A SEARCH; "
-                  f"pixel_diffs={diffs}"
+                  "MR06B2O SEARCH did not visibly leave the detail page for "
+                  f"the immediate battle path; pixel_diffs={diffs}"
+              )
+
+          stable_area = [
+              row for row in rows
+              if row["label"] == "production-area"
+              and row["top_unique_colors"] >= 24
+              and row["bottom_unique_colors"] >= 8
+          ]
+          stable_detail = [
+              row for row in rows
+              if row["label"] == "production-detail"
+              and row["top_unique_colors"] >= 24
+              and row["bottom_unique_colors"] >= 8
+          ]
+          if len(stable_area) < 2 or len(stable_detail) < 2:
+              raise SystemExit(
+                  "MR06B2O did not produce stable production Poketch frames: "
+                  f"area={stable_area}, detail={stable_detail}"
               )
 
           meta = {
-              "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_VISUAL_PROOF",
-              "rom": rom.name,
+              "gate": "MERCURY_MR06B2O_PRODUCTION_POKETCH_RUNTIME_PROOF",
+              "status": "PASS",
               "production_rom_was_staged_before_harness": True,
               "ci_only_harness": True,
               "proof_map": "Route 202",
-              "field_settle_frames_before_radar": 300,
-              "input": "A SEARCH at frame 1600",
-              "runtime_assertions": [],
-              "proof_mode": "visual scanner-to-field transition; targeted telemetry follows once stable",
-              "expected_visible_flow": [
-                  "dual-screen scanner",
-                  "return to overworld",
-                  "one rustling target patch",
-                  "MR06B2F two-panel target dossier HUD",
+              "screens": {
+                  "top": "live Platinum overworld until normal battle transition",
+                  "bottom": "actual MR06B2N Research Radar Poketch app",
+              },
+              "inputs": [
+                  {"action": "touch first area icon", "x": 36, "y": 52},
+                  {"action": "touch SEARCH", "x": 100, "y": 150},
               ],
-              "pixel_diffs_from_scanner": diffs,
-              "transition_fade_frames": transition_fade_frames,
-              "visible_scanner_frame_count": len(scanner_rows),
-              "visible_post_search_frame_count": len(post_visible_rows),
+              "area_to_detail_pixel_diff": area_detail_pixels,
+              "detail_to_post_search_pixel_diffs": diffs,
               "captures": rows,
-              "visual_review_required": True,
           }
-          (out / "mr06b2h-radar-runtime-meta.json").write_text(
+          (out / "mr06b2o-production-poketch-runtime-meta.json").write_text(
               json.dumps(meta, indent=2) + "\n"
           )
 
           emu.destroy()
           PY
 
-      - name: Stage MR06B2H Radar runtime proof
+      - name: Stage MR06B2O production Pokétch Radar proof
         if: always()
         shell: bash
         run: |
-          mkdir -p radar-runtime-proof-artifact
-          cp mr06b2h-radar-runtime-proof-harness.json radar-runtime-proof-artifact/ 2>/dev/null || true
-          cp radar-runtime-proof/*.png radar-runtime-proof-artifact/ 2>/dev/null || true
-          cp radar-runtime-proof/mr06b2h-radar-runtime-meta.json radar-runtime-proof-artifact/ 2>/dev/null || true
+          mkdir -p poketch-radar-production-proof-artifact
+          cp mr06b2o-production-poketch-proof-harness.json \
+            poketch-radar-production-proof-artifact/ 2>/dev/null || true
+          cp poketch-radar-production-proof/*.png \
+            poketch-radar-production-proof-artifact/ 2>/dev/null || true
+          cp poketch-radar-production-proof/mr06b2o-production-poketch-runtime-meta.json \
+            poketch-radar-production-proof-artifact/ 2>/dev/null || true
 
-          # Never relabel the already-staged production ROM as a QA harness.
-          # The QA ROM is copied only by the successful QA build step above.
-          if test -f radar-runtime-proof-artifact/Pokemon_Mercury_MR06B2H_Radar_QA_Harness.nds; then
-            test -f radar-runtime-proof-artifact/QA_BUILD_MARKER.txt
-          fi
-
-      - name: Upload MR06B2H Radar runtime proof
+      - name: Upload MR06B2O production Pokétch Radar proof
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr06b2h-radar-runtime-proof
-          path: radar-runtime-proof-artifact/
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Install MR06B2K Pokétch-native Radar visual shell
-        shell: bash
-        run: |
-          python3 tools/install_mr06b2k_poketch_radar_shell.py \
-            vendor/pokeplatinum \
-            --report mr06b2k-poketch-radar-shell.json
-
-          test "$(jq -r '.status' mr06b2k-poketch-radar-shell.json)" = "PASS"
-          test "$(jq -r '.production_player_rom_modified' mr06b2k-poketch-radar-shell.json)" = "false"
-          test "$(jq -r '.area_page.layout' mr06b2k-poketch-radar-shell.json)" = "3x4 icon grid"
-          test "$(jq -r '.top_screen' mr06b2k-poketch-radar-shell.json)" = "normal live Platinum overworld"
-          grep -q 'RESEARCH RADAR' vendor/pokeplatinum/res/text/poketch_pokemon_history.json
-          grep -q 'SPECIES_ROCKRUFF' vendor/pokeplatinum/src/applications/poketch/pokemon_history/main.c
-          grep -q 'SPECIES_PAWMI' vendor/pokeplatinum/src/applications/poketch/pokemon_history/main.c
-          grep -q 'POKETCH_APPID_POKEMONHISTORY' vendor/pokeplatinum/src/game_start.c
-
-      - name: Build MR06B2K Pokétch Radar shell QA ROM
-        working-directory: vendor/pokeplatinum
-        shell: bash
-        run: |
-          make rom
-          test -s "$BUILD/pokeplatinum.us.nds"
-
-      - name: Capture MR06B2K Pokétch Radar shell in DeSmuME
-        shell: bash
-        run: |
-          . "$RUNNER_TEMP/mr04-venv/bin/activate"
-          pip install py-desmume
-          python3 - <<'PY'
-          from pathlib import Path
-          import json
-          from desmume.emulator import DeSmuME
-
-          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
-          out = Path("poketch-radar-shell-proof")
-          out.mkdir(exist_ok=True)
-
-          emu = DeSmuME()
-          emu.open(str(rom))
-          if not emu.is_running():
-              raise SystemExit("DeSmuME did not start MR06B2K Pokétch Radar shell ROM")
-
-          current = 0
-          rows = []
-
-          for target in [700, 1000, 1300, 1600]:
-              for _ in range(target - current):
-                  emu.cycle(False)
-                  current += 1
-                  if not emu.is_running():
-                      raise SystemExit(f"MR06B2K emulator stopped near frame {current}")
-
-              img = emu.screenshot().convert("RGB")
-              path = out / f"poketch-radar-shell-{target}.png"
-              img.save(path)
-
-              top = img.crop((0, 0, 256, 192))
-              bottom = img.crop((0, 192, 256, 384))
-              top_colors = top.getcolors(maxcolors=256 * 192)
-              bottom_colors = bottom.getcolors(maxcolors=256 * 192)
-
-              rows.append({
-                  "frame": target,
-                  "file": path.name,
-                  "top_unique_colors": len(top_colors) if top_colors is not None else 256 * 192,
-                  "bottom_unique_colors": len(bottom_colors) if bottom_colors is not None else 256 * 192,
-              })
-
-          emu.destroy()
-
-          stable = [
-              row for row in rows
-              if row["top_unique_colors"] >= 24 and row["bottom_unique_colors"] >= 12
-          ]
-          if len(stable) < 2:
-              raise SystemExit(f"MR06B2K did not produce stable two-screen Pokétch captures: {rows}")
-
-          # The authentic Pokétch LCD intentionally uses a very small
-          # luminance palette. The first real capture produced 18 colors while
-          # clearly rendering the shell, title and all 12 Pokémon silhouettes,
-          # so reject only genuinely flat/blank app surfaces.
-          if max(row["bottom_unique_colors"] for row in stable) < 12:
-              raise SystemExit(f"MR06B2K bottom Pokétch screen lacks visible app detail: {stable}")
-
-          meta = {
-              "gate": "MERCURY_MR06B2K_POKETCH_RADAR_SHELL_VISUAL_PROOF",
-              "status": "PASS",
-              "rom": rom.name,
-              "ci_only_visual_prototype": True,
-              "top_screen": "live Platinum overworld",
-              "bottom_screen": "native Poketch frame plus Research Radar 3x4 icon area page",
-              "production_player_rom_modified": False,
-              "captures": rows,
-          }
-          (out / "mr06b2k-poketch-radar-shell-meta.json").write_text(
-              json.dumps(meta, indent=2) + "\n"
-          )
-          PY
-
-      - name: Stage MR06B2K Pokétch Radar shell proof
-        if: always()
-        shell: bash
-        run: |
-          mkdir -p poketch-radar-shell-proof-artifact
-          cp mr06b2k-poketch-radar-shell.json poketch-radar-shell-proof-artifact/ 2>/dev/null || true
-          cp poketch-radar-shell-proof/*.png poketch-radar-shell-proof-artifact/ 2>/dev/null || true
-          cp poketch-radar-shell-proof/mr06b2k-poketch-radar-shell-meta.json poketch-radar-shell-proof-artifact/ 2>/dev/null || true
-
-      - name: Upload MR06B2K Pokétch Radar shell proof
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mercury-mr06b2k-poketch-radar-shell-proof
-          path: poketch-radar-shell-proof-artifact/
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Install MR06B2L Pokétch Radar detail-page proof
-        shell: bash
-        run: |
-          python3 tools/install_mr06b2l_poketch_radar_detail.py \
-            vendor/pokeplatinum \
-            --report mr06b2l-poketch-radar-detail.json
-
-          test "$(jq -r '.status' mr06b2l-poketch-radar-detail.json)" = "PASS"
-          test "$(jq -r '.production_player_rom_modified' mr06b2l-poketch-radar-detail.json)" = "false"
-          test "$(jq -r '.qa_selected_species' mr06b2l-poketch-radar-detail.json)" = "Bidoof"
-          test "$(jq -r '.qa_search_level' mr06b2l-poketch-radar-detail.json)" = "27"
-          grep -q 'PoketchPokemonHistoryGraphics_ShowDetail' vendor/pokeplatinum/src/applications/poketch/pokemon_history/main.c
-          grep -q 'MessageUtil_SpeciesName' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
-          grep -q '> SEARCH <' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
-
-      - name: Build MR06B2L Pokétch Radar detail QA ROM
-        working-directory: vendor/pokeplatinum
-        shell: bash
-        run: |
-          make rom
-          test -s "$BUILD/pokeplatinum.us.nds"
-
-      - name: Capture MR06B2L Pokétch Radar detail page in DeSmuME
-        shell: bash
-        run: |
-          . "$RUNNER_TEMP/mr04-venv/bin/activate"
-          pip install py-desmume
-          python3 - <<'PY'
-          from pathlib import Path
-          import json
-          from desmume.emulator import DeSmuME
-
-          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
-          out = Path("poketch-radar-detail-proof")
-          out.mkdir(exist_ok=True)
-
-          emu = DeSmuME()
-          emu.open(str(rom))
-          if not emu.is_running():
-              raise SystemExit("DeSmuME did not start MR06B2L Pokétch Radar detail ROM")
-
-          current = 0
-          rows = []
-
-          for target in [800, 1100, 1400]:
-              for _ in range(target - current):
-                  emu.cycle(False)
-                  current += 1
-                  if not emu.is_running():
-                      raise SystemExit(f"MR06B2L emulator stopped near frame {current}")
-
-              img = emu.screenshot().convert("RGB")
-              path = out / f"poketch-radar-detail-{target}.png"
-              img.save(path)
-
-              top = img.crop((0, 0, 256, 192))
-              bottom = img.crop((0, 192, 256, 384))
-              top_colors = top.getcolors(maxcolors=256 * 192)
-              bottom_colors = bottom.getcolors(maxcolors=256 * 192)
-
-              rows.append({
-                  "frame": target,
-                  "file": path.name,
-                  "top_unique_colors": len(top_colors) if top_colors is not None else 256 * 192,
-                  "bottom_unique_colors": len(bottom_colors) if bottom_colors is not None else 256 * 192,
-              })
-
-          emu.destroy()
-
-          stable = [
-              row for row in rows
-              if row["top_unique_colors"] >= 24 and row["bottom_unique_colors"] >= 12
-          ]
-          if len(stable) < 2:
-              raise SystemExit(f"MR06B2L did not produce stable detail-page captures: {rows}")
-
-          meta = {
-              "gate": "MERCURY_MR06B2L_POKETCH_RADAR_DETAIL_VISUAL_PROOF",
-              "status": "PASS",
-              "rom": rom.name,
-              "ci_only_visual_prototype": True,
-              "top_screen": "live Platinum overworld",
-              "bottom_screen": "Poketch Radar Bidoof detail page",
-              "detail_fields": [
-                  "species name",
-                  "Pokemon icon",
-                  "level range",
-                  "Search Level 27",
-                  "Potential 2 stars",
-                  "LAND method",
-                  "SEARCH control",
-              ],
-              "production_player_rom_modified": False,
-              "captures": rows,
-          }
-          (out / "mr06b2l-poketch-radar-detail-meta.json").write_text(
-              json.dumps(meta, indent=2) + "\n"
-          )
-          PY
-
-      - name: Stage MR06B2L Pokétch Radar detail proof
-        if: always()
-        shell: bash
-        run: |
-          mkdir -p poketch-radar-detail-proof-artifact
-          cp mr06b2l-poketch-radar-detail.json poketch-radar-detail-proof-artifact/ 2>/dev/null || true
-          cp poketch-radar-detail-proof/*.png poketch-radar-detail-proof-artifact/ 2>/dev/null || true
-          cp poketch-radar-detail-proof/mr06b2l-poketch-radar-detail-meta.json poketch-radar-detail-proof-artifact/ 2>/dev/null || true
-
-      - name: Upload MR06B2L Pokétch Radar detail proof
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mercury-mr06b2l-poketch-radar-detail-proof
-          path: poketch-radar-detail-proof-artifact/
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Install MR06B2M refined Pokétch hunter detail
-        shell: bash
-        run: |
-          python3 tools/install_mr06b2m_poketch_hunter_detail.py \
-            vendor/pokeplatinum \
-            --report mr06b2m-poketch-hunter-detail.json
-
-          test "$(jq -r '.status' mr06b2m-poketch-hunter-detail.json)" = "PASS"
-          test "$(jq -r '.area_page_changed' mr06b2m-poketch-hunter-detail.json)" = "false"
-          test "$(jq -r '.detail_page.moves_shown' mr06b2m-poketch-hunter-detail.json)" = "false"
-          test "$(jq -r '.detail_page.abilities_shown' mr06b2m-poketch-hunter-detail.json)" = "false"
-          test "$(jq -r '.detail_page.held_items_shown' mr06b2m-poketch-hunter-detail.json)" = "false"
-          test "$(jq -r '.production_player_rom_modified' mr06b2m-poketch-hunter-detail.json)" = "false"
-          grep -q 'Scanner reticle' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
-          grep -q 'Pokémon battle level' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
-
-      - name: Build MR06B2M refined Pokétch hunter detail QA ROM
-        working-directory: vendor/pokeplatinum
-        shell: bash
-        run: |
-          make rom
-          test -s "$BUILD/pokeplatinum.us.nds"
-
-      - name: Capture MR06B2M refined Pokétch hunter detail in DeSmuME
-        shell: bash
-        run: |
-          . "$RUNNER_TEMP/mr04-venv/bin/activate"
-          pip install py-desmume
-          python3 - <<'PY'
-          from pathlib import Path
-          import json
-          from desmume.emulator import DeSmuME
-
-          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
-          out = Path("poketch-radar-hunter-detail-proof")
-          out.mkdir(exist_ok=True)
-
-          emu = DeSmuME()
-          emu.open(str(rom))
-          if not emu.is_running():
-              raise SystemExit("DeSmuME did not start MR06B2M hunter-detail ROM")
-
-          current = 0
-          rows = []
-
-          for target in [800, 1100, 1400]:
-              for _ in range(target - current):
-                  emu.cycle(False)
-                  current += 1
-                  if not emu.is_running():
-                      raise SystemExit(f"MR06B2M emulator stopped near frame {current}")
-
-              img = emu.screenshot().convert("RGB")
-              path = out / f"poketch-radar-hunter-detail-{target}.png"
-              img.save(path)
-
-              top = img.crop((0, 0, 256, 192))
-              bottom = img.crop((0, 192, 256, 384))
-              top_colors = top.getcolors(maxcolors=256 * 192)
-              bottom_colors = bottom.getcolors(maxcolors=256 * 192)
-
-              rows.append({
-                  "frame": target,
-                  "file": path.name,
-                  "top_unique_colors": len(top_colors) if top_colors is not None else 256 * 192,
-                  "bottom_unique_colors": len(bottom_colors) if bottom_colors is not None else 256 * 192,
-              })
-
-          emu.destroy()
-
-          stable = [
-              row for row in rows
-              if row["top_unique_colors"] >= 24 and row["bottom_unique_colors"] >= 12
-          ]
-          if len(stable) < 2:
-              raise SystemExit(f"MR06B2M did not produce stable hunter-detail captures: {rows}")
-
-          meta = {
-              "gate": "MERCURY_MR06B2M_POKETCH_HUNTER_DETAIL_VISUAL_PROOF",
-              "status": "PASS",
-              "rom": rom.name,
-              "ci_only_visual_prototype": True,
-              "top_screen": "live Platinum overworld",
-              "bottom_screen": "Poketch Radar refined Bidoof hunter detail",
-              "layout": [
-                  "species header",
-                  "encounter method",
-                  "native Pokemon icon in scanner reticle",
-                  "battle level range",
-                  "Search Level",
-                  "Potential stars",
-                  "wide SEARCH touch target",
-              ],
-              "omitted_redundant_fields": [
-                  "move",
-                  "ability",
-                  "held item",
-              ],
-              "production_player_rom_modified": False,
-              "captures": rows,
-          }
-          (out / "mr06b2m-poketch-hunter-detail-meta.json").write_text(
-              json.dumps(meta, indent=2) + "\n"
-          )
-          PY
-
-      - name: Stage MR06B2M refined Pokétch hunter detail proof
-        if: always()
-        shell: bash
-        run: |
-          mkdir -p poketch-radar-hunter-detail-proof-artifact
-          cp mr06b2m-poketch-hunter-detail.json poketch-radar-hunter-detail-proof-artifact/ 2>/dev/null || true
-          cp poketch-radar-hunter-detail-proof/*.png poketch-radar-hunter-detail-proof-artifact/ 2>/dev/null || true
-          cp poketch-radar-hunter-detail-proof/mr06b2m-poketch-hunter-detail-meta.json poketch-radar-hunter-detail-proof-artifact/ 2>/dev/null || true
-
-      - name: Upload MR06B2M refined Pokétch hunter detail proof
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mercury-mr06b2m-poketch-hunter-detail-proof
-          path: poketch-radar-hunter-detail-proof-artifact/
+          name: mercury-mr06b2o-production-poketch-radar-proof
+          path: poketch-radar-production-proof-artifact/
           if-no-files-found: error
           retention-days: 14
 
@@ -1840,47 +1392,20 @@ jobs:
             echo "- No new save-table ID is added and save-table IDs are not reordered"
             echo "- MR06B2C1 adds the UI-facing scanner session model: LOCAL first, RESEARCH-only second, wrapped selection and registered-target restore"
             echo "- The working vanilla Poké Radar item is intentionally not replaced until the DS scanner application exists"
-            echo "- MR06B2C2 builds the real dual-screen Research Radar application"
-            echo "- Bottom screen: 4x4 Pokémon icon grid, D-pad/touch selection, cursor, LOCAL/RESEARCH counts, R registration"
-            echo "- Top screen: selected species icon/name, source, level range, Search Lv., caught state and registration state"
-            echo "- MR06B2C3 binds ITEM_POKE_RADAR and its registered-item shortcut directly to the DS scanner"
-            echo "- A SEARCH creates one nearby rustling grass patch and guarantees the selected species within its displayed level range"
-            echo "- Entering the target patch increments that species' persistent Search Level; no chain or battery is required"
-            echo "- Normal encounter tables remain unchanged"
-            echo "- MR06B2D generates target quality at SEARCH time so the upcoming overworld HUD can display it before battle"
-            echo "- Potential stars guarantee 1-3 unique perfect IVs; special moves come from the species Egg Move table"
-            echo "- Radar Primary Ability uses slot 1 normally and Search-Level rare rolls can select distinct slot 2; Innates remain untouched"
-            echo "- Held items use species common/rare slots with Elite Redux-style Search Level influence capped at Lv. 100+"
-            echo "- MR06B2E adds a five-second top-screen overworld HUD after SEARCH"
-            echo "- HUD shows species, level, Search Lv., Potential stars, special move, Primary Ability and held item"
-            echo "- RadarChain owns HUD cleanup so battle, cycling and map changes cannot leave stale UI"
-            echo "- MR06B2F upgrades the HUD to a Platinum-native two-panel trace using the existing DS Pokemon preview renderer"
-            echo "- Premium stars mark special moves, rare Primary Ability rolls and rare held-item rolls; Potential stars remain visible"
-            echo "- No GBA DexNav graphics are copied"
+            echo "- MR06B2C2/C3 through MR06B2J remain retained compatibility/backout code, but their full-screen scanner and rustling-patch flow are no longer the player-facing Radar"
             echo "- MR06B2G gives the Research Poké Radar with Rowan's early Pokédex assignment, before Badge 1"
-            echo "- Existing development saves with a Pokédex but no Radar receive a Rowan catch-up grant"
-            echo "- The obsolete battery description, duplicate post-Sinnoh-Dex reward and old chain tutorial are removed"
-            echo "- Counterpart tips now teach SEARCH, registration, Search Level, Potential and premium traits"
             echo "- Batch1 fixed RESEARCH habitat assignments are not fabricated and still await source recovery"
-            echo "- MR06B2I fixes Nitro linker placement for the new scanner/HUD objects: scanner in Static main, HUD in overlay5"
-            echo "- MR06B2J clears uninitialized tile-0 VRAM on every scanner BG layer, removing the repeating green/striped background corruption"
-            echo "- MR06B2I also removes child-scanner calls back into overlay6 after the field process unloads"
-            echo "- MR06B2H is a CI-only end-to-end visual proof harness applied only after the production ROM is uploaded"
-            echo "- The proof boots Route 202 beside known grass, launches the same MercuryResearchRadar_FieldTask used by the Key Item, and presses A SEARCH in DeSmuME"
-            echo "- Screenshots capture the scanner before SEARCH and the returned field during the rustling-patch / polished-HUD window"
-            echo "- The production player ROM remains the pre-harness build"
-            echo "- MR06B2K is a CI-only visual prototype of the redesigned Radar as a real Pokétch app"
-            echo "- Top screen remains the live Platinum overworld; bottom screen uses Platinum's native Pokétch shell and a 3x4 current-area Pokémon icon grid"
-            echo "- The old full-screen scanner is intentionally suppressed only in this QA proof so the visual direction can be judged before production rewiring"
-            echo "- MR06B2L adds the second approved Pokétch concept page: tap a Pokémon -> native detail page with icon, level range, Search Lv., Potential, method and SEARCH"
-            echo "- MR06B2L remains CI-only; production rewiring waits for visual approval"
-            echo "- MR06B2N promotes the approved Pokétch Radar design into the production player ROM as dedicated app ID 25"
-            echo "- The production app lists current-time land, progression-valid Surf, owned-rod fishing and Research slots with 12-per-page touch browsing"
-            echo "- SEARCH now starts the selected wild encounter immediately; no rustling patch, chain, battery or random search failure"
+            echo "- MR06B2N promotes the approved design into production as dedicated Pokétch app ID 25; Pokémon History remains untouched"
+            echo "- Top screen remains normal live Platinum overworld; bottom screen is the native four-tone Pokétch Research Radar"
+            echo "- Area page shows 12 icons per page and merges current-time land, Relic-Badge-valid Surf, owned-rod fishing, and currently installed Research slots"
+            echo "- Surf appears as soon as the actual Relic Badge field permission is available; rods appear only when owned"
+            echo "- Tap a Pokémon for the polished detail page: species, encounter method, authored battle Lv. range, Search Lv., Potential and caught state"
+            echo "- SEARCH starts the selected wild encounter immediately; no rustling patch, chain, 50-step battery, walking requirement or random search failure"
             echo "- Encounter battle level stays inside its authored area range and is dynamically capped at the next Gym Leader's current ace level"
             echo "- Search Level remains separate research progression and never raises the Pokémon's battle level"
-            echo "- MR06B2M refines only the detail page around Mercury's actual hunting needs: battle Lv. range, Search Lv., Potential, method and one wide SEARCH control"
-            echo "- MR06B2M removes redundant move/ability/item fields from the Radar UI and adds a four-tone Pokétch scanner reticle around the native Pokémon icon"
-            echo "- Battle level and Search Level are deliberately separated visually; Search Level never represents the encountered Pokémon's battle level"
-            echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
+            echo "- Potential remains 0-3 stars and each star guarantees one unique perfect IV on the searched encounter"
+            echo "- Moves, abilities and held-item readouts are intentionally omitted from this Pokétch page because Mercury exposes those systems elsewhere"
+            echo "- MR06B2O replaces obsolete scanner/prototype proofs with an end-to-end DeSmuME proof of the actual production Pokétch area page -> detail page -> instant SEARCH battle path"
+            echo "- The production player ROM is staged before the CI-only proof harness and is not modified by the proof"
+            echo "- Player ROM staged as Pokemon_Mercury_MR06B2N_Poketch_Research_Radar.nds"
           } >> "$GITHUB_STEP_SUMMARY"
