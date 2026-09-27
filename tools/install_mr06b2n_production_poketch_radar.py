@@ -40,6 +40,7 @@ APP_MAIN = r'''#include <nitro.h>
 
 #include "bag.h"
 #include "generated/items.h"
+#include "generated/badges.h"
 #include "generated/moves.h"
 #include "generated/species.h"
 #include "heap.h"
@@ -388,7 +389,7 @@ static void BuildCurrentAreaTargets(PoketchResearchRadar *appData)
     }
 
     TrainerInfo *trainerInfo = SaveData_GetTrainerInfo(saveData);
-    BOOL surfUnlocked = TrainerInfo_HasBadge(trainerInfo, 3);
+    BOOL surfUnlocked = TrainerInfo_HasBadge(trainerInfo, BADGE_ID_RELIC);
 
     if (surfUnlocked && encounters->surfEncounters.encounterRate > 0) {
         for (int i = 0; i < MAX_WATER_ENCOUNTERS; i++) {
@@ -489,6 +490,10 @@ static void BuildCurrentAreaTargets(PoketchResearchRadar *appData)
 
         target->searchLevel =
             Pokedex_MercuryRadar_GetSearchLevel(
+                pokedex,
+                target->species);
+        target->caught =
+            Pokedex_HasCaughtSpecies(
                 pokedex,
                 target->species);
 
@@ -647,6 +652,8 @@ typedef struct ResearchRadarTarget {
     u8 maxLevel;
     u8 methodFlags;
     u8 potentialStars;
+    u8 caught;
+    u8 padding[3];
 } ResearchRadarTarget;
 
 typedef struct ResearchRadarData {
@@ -1239,6 +1246,10 @@ static void DrawDetailSurface(
 
     PrintAscii(&detail, "POTENTIAL", 102, 66);
     PrintPotential(&detail, target->potentialStars, 120, 85);
+
+    if (target->caught) {
+        PrintAscii(&detail, "CAUGHT", 104, 111);
+    }
 
     // One large hunt action; no redundant move/ability/item fields.
     Window_FillRectWithColor(
@@ -2007,6 +2018,8 @@ def validate(root: Path) -> None:
         "pokemon_history_preserved": "Poketch_PokemonHistorySize" in history,
         "all_method_land": "RESEARCH_RADAR_METHOD_LAND" in app,
         "all_method_surf": "RESEARCH_RADAR_METHOD_SURF" in app,
+        "surf_uses_relic_badge": "BADGE_ID_RELIC" in app,
+        "caught_state": "Pokedex_HasCaughtSpecies" in app and '"CAUGHT"' in gfx,
         "all_method_rods": "ITEM_OLD_ROD" in app and "ITEM_SUPER_ROD" in app,
         "research_slots": "radarEncounters" in app,
         "pagination": "RADAR_PAGE_SIZE" in app and "TapAreaPager" in app,
@@ -2082,7 +2095,7 @@ def main() -> None:
             "pagination": True,
             "methods": [
                 "current-time land",
-                "Surf when progression permits",
+                "Surf when Relic Badge permits",
                 "Old Rod when owned",
                 "Good Rod when owned",
                 "Super Rod when owned",
@@ -2094,6 +2107,7 @@ def main() -> None:
             "battle_level_range": True,
             "search_level": True,
             "potential_stars": True,
+            "caught_state": True,
             "encounter_method": True,
             "moves_shown": False,
             "abilities_shown": False,
