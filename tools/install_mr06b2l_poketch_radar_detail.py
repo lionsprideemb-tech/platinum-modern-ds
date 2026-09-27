@@ -424,9 +424,9 @@ static charcode_t DetailAsciiToCharCode(char c)
     case '-':
         return CHAR_MINUS;
     case '>':
-        return CHAR_RARROW;
+        return CHAR_ARROW_RIGHT;
     case '<':
-        return CHAR_LARROW;
+        return CHAR_ARROW_LEFT;
     default:
         return CHAR_SPACE;
     }
