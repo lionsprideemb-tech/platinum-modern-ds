@@ -18,6 +18,7 @@ on:
       - "tools/install_mr07c_nature_editor.py"
       - "tools/install_mr07d_summary_visual_polish.py"
       - "tools/install_mr07d2_summary_selection_polish.py"
+      - "tools/install_mr07d3_vanilla_skills_palette.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -153,6 +154,7 @@ jobs:
             tools/install_mr07c_nature_editor.py \
             tools/install_mr07d_summary_visual_polish.py \
             tools/install_mr07d2_summary_selection_polish.py \
+            tools/install_mr07d3_vanilla_skills_palette.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -349,6 +351,19 @@ jobs:
           test "$(jq -r '.status' mr07d2-summary-selection-polish.json)" = "PASS"
           test "$(jq -r '.functionality_changed' mr07d2-summary-selection-polish.json)" = "false"
           grep -q 'X: EDIT' vendor/pokeplatinum/res/text/pokemon_summary_screen.json
+
+      - name: Install MR07D3 vanilla Platinum Skills palette
+        shell: bash
+        run: |
+          python3 tools/install_mr07d3_vanilla_skills_palette.py \
+            vendor/pokeplatinum \
+            --report mr07d3-vanilla-skills-palette.json
+
+          test "$(jq -r '.status' mr07d3-vanilla-skills-palette.json)" = "PASS"
+          test "$(jq -r '.new_art' mr07d3-vanilla-skills-palette.json)" = "false"
+          test "$(jq -r '.new_palette' mr07d3-vanilla-skills-palette.json)" = "false"
+          grep -q '.palette = 8' \
+            vendor/pokeplatinum/src/applications/pokemon_summary_screen/window.c
 
       - name: Install MR05A HM-free traversal foundation
         shell: bash
@@ -1143,6 +1158,7 @@ jobs:
           cp mr07c-nature-editor.json mr05b-artifact/ 2>/dev/null || true
           cp mr07d-summary-visual-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr07d2-summary-selection-polish.json mr05b-artifact/ 2>/dev/null || true
+          cp mr07d3-vanilla-skills-palette.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1446,6 +1462,7 @@ jobs:
           cp mr07c-nature-editor.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07d-summary-visual-polish.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07d2-summary-selection-polish.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
+          cp mr07d3-vanilla-skills-palette.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof-harness.json mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof/*.png mr07b2-summary-editor-proof-artifact/ 2>/dev/null || true
           cp mr07b2-summary-editor-proof/mr07b2-summary-editor-runtime-meta.json \
@@ -1675,6 +1692,7 @@ jobs:
             echo "- MR07C adds a persistent effective-Nature editor using tagged unused BoxPokemon storage; PID, gender, shininess, and Spinda identity remain untouched"
             echo "- MR07D visually polishes Skills, EV, Ability, and Nature screens with Platinum-style label tabs, standard frames, and native menu-arrow selection"
             echo "- MR07D2 finishes selection/text polish with cursor-only selection and compact BUTTON: ACTION prompts"
+            echo "- MR07D3 replaces the generic white Skills field with Platinum's own Skills-family palette: lavender/purple labels, white/yellow values, blue accents, and pale-yellow description band"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
