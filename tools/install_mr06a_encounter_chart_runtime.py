@@ -270,7 +270,7 @@ int MercuryEncounterChart_GetAreaCount(void)
 enum MapHeaderID MercuryEncounterChart_GetAreaMapHeader(int areaIndex)
 {
     if (areaIndex < 0 || areaIndex >= MERCURY_ENCOUNTER_CHART_AREA_COUNT) {
-        return MAP_HEADER_MYSTERY_ZONE;
+        return MAP_HEADER_NOTHING;
     }
 
     return gMercuryEncounterChartMapHeaders[areaIndex];
