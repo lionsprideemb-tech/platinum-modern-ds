@@ -387,6 +387,16 @@ def patch_top_skills(root: Path) -> None:
 def patch_bottom_editors(root: Path) -> None:
     path = root / "src/applications/pokemon_summary_screen/main.c"
 
+    # MR07B1 used palette 13, where Summary's RED/BLUE TextColor constants map
+    # to unrelated colors. Palette 15 is Platinum Summary's native text palette
+    # and makes the same constants render correctly on the lower editor screen.
+    replace_once(
+        path,
+        "#define MERCURY_SKILLS_EDITOR_TEXT_PLTT  13",
+        "#define MERCURY_SKILLS_EDITOR_TEXT_PLTT  15",
+        "MR07D editor text palette",
+    )
+
     insert_after_once(
         path,
         '#include "bg_window.h"\n',
@@ -710,6 +720,8 @@ def validate(root: Path) -> dict[str, bool]:
             '"+Atk -Def"' in text_json
             and '"+Spe -SpA"' in text_json
             and '"Neutral"' in text_json,
+        "editor_uses_summary_text_palette":
+            "#define MERCURY_SKILLS_EDITOR_TEXT_PLTT  15" in main_c,
         "ev_editor_arrow_selection":
             "MercurySkillsEditor_PrintCursor(body, 4, y)" in main_c
             and "PokemonSummary_Text_MercuryEvEditorValue" in main_c,
