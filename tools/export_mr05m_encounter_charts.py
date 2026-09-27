@@ -270,6 +270,18 @@ def main() -> None:
             "informational_only": name == LOOKOUT,
             "methods": methods,
         }
+        if name == HONEY:
+            row["mercury_mechanics"] = {
+                "honey_cost": 1,
+                "instant_encounter": True,
+                "cooldown": False,
+                "special_tree_lottery": False,
+                "tier_distribution_percent": {
+                    "common": 70,
+                    "uncommon": 20,
+                    "rare": 10,
+                },
+            }
         output_rows.append(row)
         add_reverse_index(reverse, name, display, methods)
 

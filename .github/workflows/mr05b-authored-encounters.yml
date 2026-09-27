@@ -28,6 +28,7 @@ on:
       - "tools/extend_mr05k_final_identified.py"
       - "tools/audit_mr05l_unknown_encounter_resources.py"
       - "tools/export_mr05m_encounter_charts.py"
+      - "tools/install_mr05n_instant_honey_trees.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -135,6 +136,7 @@ jobs:
             tools/extend_mr05k_final_identified.py \
             tools/audit_mr05l_unknown_encounter_resources.py \
             tools/export_mr05m_encounter_charts.py \
+            tools/install_mr05n_instant_honey_trees.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -511,6 +513,31 @@ jobs:
           jq -e '.areas.encounters_honey_tree.uncommon | index("SPECIES_BURMY") == null' mr05b-encounter-manifest.json
           jq -e '.areas.encounters_honey_tree.rare | index("SPECIES_BURMY") == null' mr05b-encounter-manifest.json
 
+      - name: Install MR05N instant Honey Tree runtime
+        shell: bash
+        run: |
+          python3 tools/install_mr05n_instant_honey_trees.py \
+            vendor/pokeplatinum \
+            --report mr05n-instant-honey-trees.json
+
+          test "$(jq -r '.status' mr05n-instant-honey-trees.json)" = "PASS"
+          test "$(jq -r '.honey_consumed_per_encounter' mr05n-instant-honey-trees.json)" = "1"
+          test "$(jq -r '.instant_battle_after_slather' mr05n-instant-honey-trees.json)" = "true"
+          test "$(jq -r '.six_hour_wait_required' mr05n-instant-honey-trees.json)" = "false"
+          test "$(jq -r '.cooldown_after_battle' mr05n-instant-honey-trees.json)" = "false"
+          test "$(jq -r '.same_tree_can_repeat_immediately' mr05n-instant-honey-trees.json)" = "true"
+          test "$(jq -r '.special_tree_lottery' mr05n-instant-honey-trees.json)" = "false"
+          test "$(jq -r '.failed_honey_roll' mr05n-instant-honey-trees.json)" = "false"
+          test "$(jq -r '.tier_distribution_percent.common' mr05n-instant-honey-trees.json)" = "70"
+          test "$(jq -r '.tier_distribution_percent.uncommon' mr05n-instant-honey-trees.json)" = "20"
+          test "$(jq -r '.tier_distribution_percent.rare' mr05n-instant-honey-trees.json)" = "10"
+          grep -q 'tree->minutesRemaining = (18 \* 60);' vendor/pokeplatinum/src/overlay005/honey_tree.c
+          grep -q 'GoTo CommonScript_HoneyTreeEncounter' vendor/pokeplatinum/res/field/scripts/scripts_common.s
+          if sed -n '/void HoneyTree_SlatherTree/,/^}/p' vendor/pokeplatinum/src/overlay005/honey_tree.c | grep -q 'IsMunchlaxTree'; then
+            echo "special Honey Tree lottery still present in Mercury slather flow" >&2
+            exit 1
+          fi
+
       - name: Enable full Mercury four-period encounter runtime
         shell: bash
         run: |
@@ -631,14 +658,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05M chart-certified encounter ROM
+      - name: Build MR05N instant-Honey encounter ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05M normal boot in DeSmuME
+      - name: Capture MR05N normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -688,7 +715,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05M_NORMAL_BOOT",
+              "gate": "MERCURY_MR05N_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -696,7 +723,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05m-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05n-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -710,8 +737,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05M_Encounter_Charts.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05M_Encounter_Charts.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05N_Instant_Honey.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05N_Instant_Honey.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -745,6 +772,7 @@ jobs:
           cp mr05k-final-identified-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05l-unknown-resource-audit.json mr05b-artifact/ 2>/dev/null || true
           cp mr05m-encounter-chart-report.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05n-instant-honey-trees.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -753,13 +781,13 @@ jobs:
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05m-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05n-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05m-encounter-charts
+          name: mercury-mr05n-instant-honey-trees
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -769,7 +797,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05M — Encounter Charts Certified"
+            echo "## Mercury MR05N — Instant Honey Trees + Encounter Charts"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -823,5 +851,8 @@ jobs:
             echo "- Dialga/Palkia remain Lv70 and their rifts are retry-safe until capture"
             echo "- Mesprit guided pursuit remains isolated for a dedicated tracking pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Player ROM staged as Pokemon_Mercury_MR05M_Encounter_Charts.nds"
+            echo "- Honey now works by the locked Mercury rule: spend 1 Honey and immediately enter the encounter, with no six-hour wait"
+            echo "- Honey Trees have no post-battle cooldown; the same tree can be used again immediately with another Honey"
+            echo "- Trainer-ID special-tree lottery and failed Honey rolls are removed; every tree uses Common 70% / Uncommon 20% / Rare 10% premium tiers"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05N_Instant_Honey.nds"
           } >> "$GITHUB_STEP_SUMMARY"
