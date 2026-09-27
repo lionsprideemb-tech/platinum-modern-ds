@@ -637,14 +637,7 @@ GRAPHICS_H = r'''#ifndef POKEPLATINUM_POKETCH_UNUSED_4_GRAPHICS_H
 #define RESEARCH_RADAR_PAGE_SIZE   12
 #define RESEARCH_RADAR_TASK_SLOTS  4
 
-enum ResearchRadarMethodFlags {
-    RESEARCH_RADAR_METHOD_LAND       = (1 << 0),
-    RESEARCH_RADAR_METHOD_SURF       = (1 << 1),
-    RESEARCH_RADAR_METHOD_OLD_ROD    = (1 << 2),
-    RESEARCH_RADAR_METHOD_GOOD_ROD   = (1 << 3),
-    RESEARCH_RADAR_METHOD_SUPER_ROD  = (1 << 4),
-    RESEARCH_RADAR_METHOD_RESEARCH   = (1 << 5),
-};
+#include "mercury_research_radar_shared.h"
 
 typedef struct ResearchRadarTarget {
     u16 species;
@@ -1417,6 +1410,15 @@ SHARED_H = r'''#ifndef POKEPLATINUM_MERCURY_RESEARCH_RADAR_SHARED_H
 
 #include "field/field_system_decl.h"
 #include "savedata.h"
+
+enum MercuryResearchRadarMethodFlags {
+    RESEARCH_RADAR_METHOD_LAND       = (1 << 0),
+    RESEARCH_RADAR_METHOD_SURF       = (1 << 1),
+    RESEARCH_RADAR_METHOD_OLD_ROD    = (1 << 2),
+    RESEARCH_RADAR_METHOD_GOOD_ROD   = (1 << 3),
+    RESEARCH_RADAR_METHOD_SUPER_ROD  = (1 << 4),
+    RESEARCH_RADAR_METHOD_RESEARCH   = (1 << 5),
+};
 
 typedef struct MercuryResearchRadarEncounterRequest {
     u16 species;
