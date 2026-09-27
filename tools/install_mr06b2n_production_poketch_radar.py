@@ -702,9 +702,12 @@ typedef struct ResearchRadarGraphics {
     PoketchAnimation_AnimationManager *animMan;
     PoketchAnimation_AnimatedSpriteData *sprites[RESEARCH_RADAR_PAGE_SIZE];
     PoketchAnimation_SpriteData spriteData;
+    PoketchAnimation_AnimatedSpriteData *fullSprite;
+    PoketchAnimation_SpriteData fullSpriteData;
     u32 iconIndices[RESEARCH_RADAR_PAGE_SIZE];
     u8 page;
     BOOL spriteDataLoaded;
+    BOOL fullSpriteDataLoaded;
 } ResearchRadarGraphics;
 
 enum ResearchRadarGraphicsTask {
@@ -745,10 +748,13 @@ GRAPHICS_C = r'''#include "applications/poketch/unused/4/graphics.h"
 #include "applications/poketch/poketch_task.h"
 
 #include "constants/charcode.h"
+#include "constants/graphics.h"
 
+#include "character_sprite.h"
 #include "font.h"
 #include "heap.h"
 #include "message_util.h"
+#include "pokemon.h"
 #include "pokemon_icon.h"
 #include "string_gf.h"
 #include "sys_task_manager.h"
@@ -758,6 +764,16 @@ GRAPHICS_C = r'''#include "applications/poketch/unused/4/graphics.h"
 
 #define GRID_X(c) (36 + 44 * (c))
 #define GRID_Y(r) (52 + 42 * (r))
+
+#define FULL_MON_TILE_OFFSET          (RESEARCH_RADAR_PAGE_SIZE * 16)
+#define FULL_MON_TILE_BYTES           (10 * 10 * 32)
+#define FULL_MON_PALETTE_SLOT         4
+#define FULL_MON_CELL_MEMBER          6
+#define FULL_MON_ANIM_MEMBER          12
+#define FULL_MON_CENTER_X             52
+#define FULL_MON_CENTER_Y             71
+#define FULL_MON_MAX_VISIBLE_WIDTH    68
+#define FULL_MON_MAX_VISIBLE_HEIGHT   54
 
 #define MON_ANIM_DATA(r, c)                                     \
     {                                                           \
@@ -774,7 +790,13 @@ static void EndTask(PoketchTaskManager *taskMan);
 static void Task_DrawBackground(SysTask *task, void *taskMan);
 static void Task_FreeBackground(SysTask *task, void *taskMan);
 static void RemovePageSprites(ResearchRadarGraphics *graphics);
+static void RemoveFullSprite(ResearchRadarGraphics *graphics);
 static void LoadPageSprites(ResearchRadarGraphics *graphics, int page);
+static void LoadFullSprite(ResearchRadarGraphics *graphics, u16 species);
+static u8 FullSpriteReadPixel(const u8 *tiles, int x, int y);
+static void FullSpriteWritePixel(u8 *tiles, int x, int y, u8 value);
+static void CenterFullSpriteTiles(const u8 *source, u8 *centered, int *visibleWidth, int *visibleHeight);
+static void PackFullSpriteTiles(const u8 *centered, u8 *packed);
 static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page);
 static void DrawDetailSurface(ResearchRadarGraphics *graphics, int absoluteIndex);
 static void DrawFrame(Window *window, int x, int y, int width, int height, u8 color);
@@ -919,6 +941,18 @@ static void Task_DrawBackground(SysTask *task, void *taskMan)
         HEAP_ID_POKETCH_APP);
     graphics->spriteDataLoaded = TRUE;
 
+    // Reuse Platinum's field-cutin 80x80 Pokemon cell layout on the SUB
+    // engine. Only the live species tiles/palette are replaced per detail
+    // selection, so this stays a genuine Poketch sprite rather than a flat
+    // screenshot.
+    graphics->fullSpriteDataLoaded =
+        PoketchAnimation_LoadSpriteFromNARC(
+            &graphics->fullSpriteData,
+            NARC_INDEX_DATA__FIELD_CUTIN,
+            FULL_MON_CELL_MEMBER,
+            FULL_MON_ANIM_MEMBER,
+            HEAP_ID_POKETCH_APP);
+
     DrawAreaSurface(graphics, 0);
 
     GXSDispCnt dispCnt = GXS_GetDispCnt();
@@ -933,7 +967,14 @@ static void Task_FreeBackground(SysTask *task, void *taskMan)
     ResearchRadarGraphics *graphics =
         PoketchTask_GetTaskData(taskMan);
 
+    RemoveFullSprite(graphics);
     RemovePageSprites(graphics);
+
+    if (graphics->fullSpriteDataLoaded) {
+        PoketchAnimation_FreeSpriteData(
+            &graphics->fullSpriteData);
+        graphics->fullSpriteDataLoaded = FALSE;
+    }
 
     if (graphics->spriteDataLoaded) {
         PoketchAnimation_FreeSpriteData(
@@ -957,6 +998,289 @@ static void RemovePageSprites(ResearchRadarGraphics *graphics)
             graphics->sprites[i] = NULL;
         }
     }
+}
+
+static void RemoveFullSprite(ResearchRadarGraphics *graphics)
+{
+    if (graphics->fullSprite != NULL) {
+        PoketchAnimation_RemoveAnimatedSprite(
+            graphics->animMan,
+            graphics->fullSprite);
+        graphics->fullSprite = NULL;
+    }
+}
+
+static u8 FullSpriteReadPixel(const u8 *tiles, int x, int y)
+{
+    int tile = (y / 8) * 10 + (x / 8);
+    int byteOffset = tile * 32 + (y & 7) * 4 + ((x & 7) >> 1);
+    u8 value = tiles[byteOffset];
+
+    if (x & 1) {
+        return value >> 4;
+    }
+
+    return value & 0xF;
+}
+
+static void FullSpriteWritePixel(u8 *tiles, int x, int y, u8 value)
+{
+    int tile = (y / 8) * 10 + (x / 8);
+    int byteOffset = tile * 32 + (y & 7) * 4 + ((x & 7) >> 1);
+
+    if (x & 1) {
+        tiles[byteOffset] =
+            (tiles[byteOffset] & 0x0F) | (value << 4);
+    } else {
+        tiles[byteOffset] =
+            (tiles[byteOffset] & 0xF0) | value;
+    }
+}
+
+static void CenterFullSpriteTiles(
+    const u8 *source,
+    u8 *centered,
+    int *visibleWidth,
+    int *visibleHeight)
+{
+    int minX = 80;
+    int minY = 80;
+    int maxX = -1;
+    int maxY = -1;
+
+    MI_CpuClear8(centered, FULL_MON_TILE_BYTES);
+
+    for (int y = 0; y < 80; y++) {
+        for (int x = 0; x < 80; x++) {
+            if (FullSpriteReadPixel(source, x, y) == 0) {
+                continue;
+            }
+
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+        }
+    }
+
+    if (maxX < minX || maxY < minY) {
+        *visibleWidth = 0;
+        *visibleHeight = 0;
+        return;
+    }
+
+    *visibleWidth = maxX - minX + 1;
+    *visibleHeight = maxY - minY + 1;
+
+    int targetLeft = (80 - *visibleWidth) / 2;
+    int targetTop = (80 - *visibleHeight) / 2;
+    int dx = targetLeft - minX;
+    int dy = targetTop - minY;
+
+    for (int y = minY; y <= maxY; y++) {
+        for (int x = minX; x <= maxX; x++) {
+            u8 pixel = FullSpriteReadPixel(source, x, y);
+
+            if (pixel == 0) {
+                continue;
+            }
+
+            int destX = x + dx;
+            int destY = y + dy;
+
+            if (destX >= 0 && destX < 80
+                && destY >= 0 && destY < 80) {
+                FullSpriteWritePixel(
+                    centered,
+                    destX,
+                    destY,
+                    pixel);
+            }
+        }
+    }
+}
+
+static void PackFullSpriteTiles(const u8 *centered, u8 *packed)
+{
+    // Match the exact six-OAM region order used by Platinum's 80x80
+    // field-cutin Pokemon cell.
+    static const u8 regions[][4] = {
+        { 0, 0, 8, 8 },
+        { 8, 0, 2, 4 },
+        { 8, 4, 2, 4 },
+        { 0, 8, 4, 2 },
+        { 4, 8, 4, 2 },
+        { 8, 8, 2, 2 },
+    };
+
+    int outTile = 0;
+
+    for (int region = 0; region < 6; region++) {
+        int startX = regions[region][0];
+        int startY = regions[region][1];
+        int width = regions[region][2];
+        int height = regions[region][3];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int sourceTile =
+                    (startY + y) * 10 + (startX + x);
+
+                MI_CpuCopy8(
+                    &centered[sourceTile * 32],
+                    &packed[outTile * 32],
+                    32);
+                outTile++;
+            }
+        }
+    }
+}
+
+static void LoadFullSprite(
+    ResearchRadarGraphics *graphics,
+    u16 species)
+{
+    static const PoketchAnimation_AnimationData animData = {
+        .translation = {
+            FX32_CONST(FULL_MON_CENTER_X),
+            FX32_CONST(FULL_MON_CENTER_Y)
+        },
+        .animIdx = 0,
+        .flip = NNS_G2D_RENDERERFLIP_NONE,
+        .oamPriority = 2,
+        .priority = 0,
+        .hasAffineTransform = TRUE,
+    };
+
+    RemoveFullSprite(graphics);
+
+    if (!graphics->fullSpriteDataLoaded) {
+        return;
+    }
+
+    PokemonSpriteTemplate spriteTemplate;
+    BuildPokemonSpriteTemplate(
+        &spriteTemplate,
+        species,
+        0,
+        FACE_FRONT,
+        FALSE,
+        0,
+        0);
+
+    u8 *source = Heap_Alloc(
+        HEAP_ID_POKETCH_APP,
+        FULL_MON_TILE_BYTES);
+    u8 *centered = Heap_Alloc(
+        HEAP_ID_POKETCH_APP,
+        FULL_MON_TILE_BYTES);
+    u8 *packed = Heap_Alloc(
+        HEAP_ID_POKETCH_APP,
+        FULL_MON_TILE_BYTES);
+    u16 *palette =
+        CharacterSprite_LoadPalette(
+            spriteTemplate.narcID,
+            spriteTemplate.palette,
+            HEAP_ID_POKETCH_APP);
+
+    if (source == NULL
+        || centered == NULL
+        || packed == NULL
+        || palette == NULL) {
+        if (source != NULL) Heap_Free(source);
+        if (centered != NULL) Heap_Free(centered);
+        if (packed != NULL) Heap_Free(packed);
+        if (palette != NULL) Heap_Free(palette);
+        return;
+    }
+
+    CharacterSprite_LoadTiledData(
+        spriteTemplate.narcID,
+        spriteTemplate.character,
+        HEAP_ID_POKETCH_APP,
+        0,
+        0,
+        10,
+        10,
+        source);
+
+    int visibleWidth;
+    int visibleHeight;
+
+    CenterFullSpriteTiles(
+        source,
+        centered,
+        &visibleWidth,
+        &visibleHeight);
+    PackFullSpriteTiles(centered, packed);
+
+    DC_FlushRange(packed, FULL_MON_TILE_BYTES);
+    GXS_LoadOBJ(
+        packed,
+        FULL_MON_TILE_OFFSET * 0x20,
+        FULL_MON_TILE_BYTES);
+
+    // Preserve the Poketch's four-tone identity while using the actual
+    // battle-front artwork: the species palette is luminance-mapped into the
+    // current Poketch theme and placed after the four icon palettes.
+    PoketchTask_MapToActivePaletteFromLuminance(
+        palette,
+        16);
+    DC_FlushRange(palette, PALETTE_SIZE_BYTES);
+    GXS_LoadOBJPltt(
+        palette,
+        PLTT_OFFSET(FULL_MON_PALETTE_SLOT),
+        PALETTE_SIZE_BYTES);
+
+    graphics->fullSprite =
+        PoketchAnimation_SetupNewAnimatedSprite(
+            graphics->animMan,
+            &animData,
+            &graphics->fullSpriteData);
+
+    if (graphics->fullSprite != NULL) {
+        PoketchAnimation_SetSpriteCharNo(
+            graphics->fullSprite,
+            FULL_MON_TILE_OFFSET);
+        PoketchAnimation_SetCParam(
+            graphics->fullSprite,
+            FULL_MON_PALETTE_SLOT);
+
+        fx32 scale = FX32_ONE;
+
+        if (visibleWidth > 0 && visibleHeight > 0) {
+            fx32 widthScale =
+                (FULL_MON_MAX_VISIBLE_WIDTH * FX32_ONE)
+                / visibleWidth;
+            fx32 heightScale =
+                (FULL_MON_MAX_VISIBLE_HEIGHT * FX32_ONE)
+                / visibleHeight;
+            fx32 maxScale = (FX32_ONE * 5) / 4;
+
+            scale =
+                widthScale < heightScale
+                ? widthScale
+                : heightScale;
+
+            if (scale > maxScale) {
+                scale = maxScale;
+            }
+        }
+
+        PoketchAnimation_SetSpriteScale(
+            graphics->fullSprite,
+            scale,
+            scale);
+        PoketchAnimation_SetSpritePosition(
+            graphics->fullSprite,
+            FX32_CONST(FULL_MON_CENTER_X),
+            FX32_CONST(FULL_MON_CENTER_Y));
+    }
+
+    Heap_Free(source);
+    Heap_Free(centered);
+    Heap_Free(packed);
+    Heap_Free(palette);
 }
 
 static void LoadPageSprites(ResearchRadarGraphics *graphics, int page)
@@ -1031,6 +1355,8 @@ static void LoadPageSprites(ResearchRadarGraphics *graphics, int page)
 
 static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page)
 {
+    RemoveFullSprite(graphics);
+
     Bg_FillTilemapRect(
         graphics->bgConfig,
         BG_LAYER_SUB_2,
@@ -1196,19 +1522,14 @@ static void DrawDetailSurface(
 
         PoketchAnimation_HideSprite(
             graphics->sprites[i],
-            i != slot);
+            TRUE);
     }
 
-    if (graphics->sprites[slot] != NULL) {
-        PoketchAnimation_SetSpritePosition(
-            graphics->sprites[slot],
-            FX32_CONST(56),
-            FX32_CONST(70));
-        PoketchAnimation_SetSpriteScale(
-            graphics->sprites[slot],
-            FX32_CONST(2),
-            FX32_CONST(2));
-    }
+    // Final approval pass: the scanner uses the actual 80x80 battle-front
+    // sprite, automatically centered and scaled to the available viewport.
+    LoadFullSprite(
+        graphics,
+        target->species);
 
     Window detail;
     Window_Add(
@@ -2334,10 +2655,16 @@ def validate(root: Path) -> None:
         "mockup_layout_frames": "DrawPokeballGlyph" in gfx
             and "DrawScannerReticle" in gfx
             and "DrawSearchCorners" in gfx,
-        "detail_icon_scaled": "PoketchAnimation_SetSpriteScale" in gfx
-            and "PoketchAnimation_SetSpriteScale" in (
-                root / "include/applications/poketch/poketch_animation.h"
-            ).read_text(),
+        "detail_full_front_sprite":
+            "CharacterSprite_LoadTiledData" in gfx
+            and "BuildPokemonSpriteTemplate" in gfx
+            and "PackFullSpriteTiles" in gfx,
+        "detail_sprite_auto_center":
+            "CenterFullSpriteTiles" in gfx
+            and "FULL_MON_MAX_VISIBLE_WIDTH" in gfx
+            and "FULL_MON_MAX_VISIBLE_HEIGHT" in gfx,
+        "detail_sprite_theme_mapped":
+            "PoketchTask_MapToActivePaletteFromLuminance" in gfx,
         "instant_request": "MercuryResearchRadar_RequestInstantEncounter" in app,
         "instant_battle": "Encounter_NewVsWild" in field,
         "dynamic_gym_cap": "Trainer_LoadParty" in shared and "sGymLeaders" in shared,
@@ -2421,8 +2748,9 @@ def main() -> None:
             "duplicates_merged": True,
         },
         "detail_page": {
-            "visual_pass": "MR06B2P native mockup-match reconstruction",
-            "hardware_scaled_detail_icon": "2x",
+            "visual_pass": "MR06B2Q native full-front-sprite approval pass",
+            "pokemon_art": "actual battle-front sprite, auto-centered and auto-fit",
+            "poketch_palette_mapping": "four-tone luminance mapping",
             "battle_level_range": True,
             "search_level": True,
             "potential_stars": True,
