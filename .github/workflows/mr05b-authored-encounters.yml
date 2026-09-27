@@ -6,12 +6,14 @@ on:
     branches:
       - feature/mr05b-authored-encounters
       - feature/mr06b-research-poke-radar
+      - feature/mr07-summary-skills
     paths:
       - ".github/workflows/mr05b-authored-encounters.yml"
       - "tools/install_mercury_move_learner.py"
       - "tools/install_mr03_party_move_learner.py"
       - "tools/install_mr03e_summary_top_shell.py"
       - "tools/install_mr03f_summary_bottom_learner.py"
+      - "tools/install_mr07a_summary_skills.py"
       - "tools/install_mr05a_hm_free_traversal.py"
       - "tools/install_mr05b_encounter_framework.py"
       - "tools/install_mr05b_authored_encounters.py"
@@ -140,6 +142,7 @@ jobs:
             tools/install_mr03_party_move_learner.py \
             tools/install_mr03e_summary_top_shell.py \
             tools/install_mr03f_summary_bottom_learner.py \
+            tools/install_mr07a_summary_skills.py \
             tools/install_mr05a_hm_free_traversal.py \
             tools/install_mr05b_encounter_framework.py \
             tools/install_mr05b_authored_encounters.py \
@@ -263,6 +266,21 @@ jobs:
           grep -q 'SUMMARY_MODE_MERCURY_MOVE_LEARNER_SELECT' \
             vendor/pokeplatinum/include/applications/pokemon_summary_screen/main.h
           grep -q 'Pokemon_ResetMoveSlot' vendor/pokeplatinum/src/start_menu.c
+
+      - name: Install MR07A native Summary Skills visual foundation
+        shell: bash
+        run: |
+          python3 tools/install_mr07a_summary_skills.py \
+            vendor/pokeplatinum \
+            --report mr07a-summary-skills.json
+
+          test "$(jq -r '.status' mr07a-summary-skills.json)" = "PASS"
+          grep -q 'SUMMARY_WINDOW_MERCURY_SKILLS_PANEL' \
+            vendor/pokeplatinum/include/applications/pokemon_summary_screen/main.h
+          grep -q 'PAD_BUTTON_X' \
+            vendor/pokeplatinum/src/applications/pokemon_summary_screen/main.c
+          grep -q 'PokemonSummary_Text_MercuryInnate3' \
+            vendor/pokeplatinum/res/text/pokemon_summary_screen.json
 
       - name: Install MR05A HM-free traversal foundation
         shell: bash
@@ -1052,6 +1070,7 @@ jobs:
           cp mr04-party-entry.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-summary-top-shell.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-summary-bottom-learner.json mr05b-artifact/ 2>/dev/null || true
+          cp mr07a-summary-skills.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1319,6 +1338,9 @@ jobs:
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
+            echo "- MR07A replaces the native Skills information area with the approved Mercury compact stats/Nature/Ability/Innates panel"
+            echo "- MR07A preserves the normal Platinum radial bottom Summary screen and adds X edit-selection on Skills"
+            echo "- MR07A shows real EV telemetry when a stat is highlighted; Innate rows stay unassigned until their backend gate"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
             echo "- CI-only Garchomp/direct-launch harness excluded"
