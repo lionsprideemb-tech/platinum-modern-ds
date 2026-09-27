@@ -266,6 +266,7 @@ def main() -> None:
             "D-pad moved to HP with live EV 6 / total 510 detail",
         ],
         "player_rom_modified": False,
+        "production_player_rom_preserved": True,
         "checks": checks,
     }
 
