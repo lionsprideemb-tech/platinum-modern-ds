@@ -94,16 +94,16 @@ def humanize(name: str) -> str:
         "lake_acuity": "Lake Acuity",
         "lake_valor": "Lake Valor",
         "lake_verity": "Lake Verity",
-        "lake_verity_low_water": "Lake Verity — Low Water",
+        "lake_verity_low_water": "Lake Verity - Low Water",
         "canalave_city": "Canalave City",
         "celestic_town": "Celestic Town",
         "eterna_city": "Eterna City",
         "pastoria_city": "Pastoria City",
         "sunyshore_city": "Sunyshore City",
         "twinleaf_town": "Twinleaf Town",
-        "stark_mountain_outside": "Stark Mountain — Outside",
-        "stark_mountain_room_1": "Stark Mountain — Room 1",
-        "stark_mountain_room_2": "Stark Mountain — Room 2",
+        "stark_mountain_outside": "Stark Mountain - Outside",
+        "stark_mountain_room_1": "Stark Mountain - Room 1",
+        "stark_mountain_room_2": "Stark Mountain - Room 2",
     }
     if value in exact:
         return exact[value]
