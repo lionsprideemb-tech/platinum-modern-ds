@@ -35,6 +35,7 @@ on:
       - "tools/install_mr06b1_research_radar_foundation.py"
       - "tools/install_mr06b2a_dexnav_progression.py"
       - "tools/install_mr06b2b_radar_save_storage.py"
+      - "tools/install_mr06b2c1_scanner_session_model.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -666,6 +667,22 @@ jobs:
           grep -q 'mercuryRadarSearchLevel\[NATIONAL_DEX_COUNT + 1\]' vendor/pokeplatinum/include/pokedex.h
           grep -q 'Pokedex_MercuryRadar_IncrementSearchLevel' vendor/pokeplatinum/src/pokedex.c
 
+      - name: Install MR06B2C1 DexNav scanner session model
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2c1_scanner_session_model.py \
+            vendor/pokeplatinum \
+            --report mr06b2c1-scanner-session-model.json
+
+          test "$(jq -r '.status' mr06b2c1-scanner-session-model.json)" = "PASS"
+          test "$(jq -r '.target_capacity' mr06b2c1-scanner-session-model.json)" = "16"
+          test "$(jq -r '.duplicates_across_layers_shown_once' mr06b2c1-scanner-session-model.json)" = "true"
+          test "$(jq -r '.registered_target_restored_if_present_here' mr06b2c1-scanner-session-model.json)" = "true"
+          test "$(jq -r '.poke_radar_item_rebound_in_this_subphase' mr06b2c1-scanner-session-model.json)" = "false"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2c1-scanner-session-model.json)" = "false"
+          grep -q 'MercuryResearchRadarScannerState' vendor/pokeplatinum/include/overlay006/wild_encounters.h
+          grep -q 'MercuryResearchRadar_InitScannerState' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -888,6 +905,7 @@ jobs:
           cp mr06b1-research-radar-foundation.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2a-dexnav-progression.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2b-radar-save-storage.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2c1-scanner-session-model.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -987,6 +1005,8 @@ jobs:
             echo "- MR06B2B persists Search Level independently for all 1025 species inside the expanded Mercury Pokedex save block"
             echo "- Registered quick-search species is persisted with the same Pokedex progression data"
             echo "- No new save-table ID is added and save-table IDs are not reordered"
-            echo "- Next pass binds ITEM_POKE_RADAR to the DexNav-style scanner UI"
+            echo "- MR06B2C1 adds the UI-facing scanner session model: LOCAL first, RESEARCH-only second, wrapped selection and registered-target restore"
+            echo "- The working vanilla Poké Radar item is intentionally not replaced until the DS scanner application exists"
+            echo "- Next pass builds the actual dual-screen application, then binds ITEM_POKE_RADAR to it atomically"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
