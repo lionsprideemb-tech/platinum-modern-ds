@@ -43,6 +43,7 @@ on:
       - "tools/install_mr06b2f_radar_visual_polish.py"
       - "tools/install_mr06b2g_preleague_radar_access.py"
       - "tools/install_mr06b2h_runtime_proof_harness.py"
+      - "tools/install_mr06b2i_radar_linker_placement.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -154,6 +155,7 @@ jobs:
             tools/install_mr05o_exact_tod_periods.py \
             tools/install_mr06a_encounter_chart_runtime.py \
             tools/install_mr06b2h_runtime_proof_harness.py \
+            tools/install_mr06b2i_radar_linker_placement.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -796,6 +798,22 @@ jobs:
           grep -q 'chosen target in a rustling patch' vendor/pokeplatinum/res/items/data/poke_radar.json
           grep -q 'Search Level' vendor/pokeplatinum/res/text/counterpart_talk.json
 
+      - name: Install MR06B2I Nitro linker placement fix
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2i_radar_linker_placement.py \
+            vendor/pokeplatinum \
+            --report mr06b2i-radar-linker-placement.json
+
+          test "$(jq -r '.status' mr06b2i-radar-linker-placement.json)" = "PASS"
+          test "$(jq -r '.scanner_object_region' mr06b2i-radar-linker-placement.json)" = "Static main"
+          test "$(jq -r '.hud_object_region' mr06b2i-radar-linker-placement.json)" = "overlay5"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2i-radar-linker-placement.json)" = "false"
+          grep -q 'Object main.nef.p/src_applications_mercury_research_radar.c.o' vendor/pokeplatinum/platinum.us/main.lsf
+          grep -q 'Object main.nef.p/src_overlay005_mercury_radar_hud.c.o' vendor/pokeplatinum/platinum.us/main.lsf
+          ! grep -q 'MercuryResearchRadar_MoveSelection(&app->args->scanner' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+          ! grep -q 'MercuryResearchRadar_GetSelectedTarget(&app->args->scanner' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -1025,6 +1043,7 @@ jobs:
           cp mr06b2e-overworld-search-hud.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2f-radar-visual-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2g-preleague-radar-access.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2i-radar-linker-placement.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -1414,6 +1433,8 @@ jobs:
             echo "- The obsolete battery description, duplicate post-Sinnoh-Dex reward and old chain tutorial are removed"
             echo "- Counterpart tips now teach SEARCH, registration, Search Level, Potential and premium traits"
             echo "- Batch1 fixed RESEARCH habitat assignments are not fabricated and still await source recovery"
+            echo "- MR06B2I fixes Nitro linker placement for the new scanner/HUD objects: scanner in Static main, HUD in overlay5"
+            echo "- MR06B2I also removes child-scanner calls back into overlay6 after the field process unloads"
             echo "- MR06B2H is a CI-only end-to-end visual proof harness applied only after the production ROM is uploaded"
             echo "- The proof boots Route 202 beside known grass, launches the same MercuryResearchRadar_FieldTask used by the Key Item, and presses A SEARCH in DeSmuME"
             echo "- Screenshots capture the scanner before SEARCH and the returned field during the rustling-patch / polished-HUD window"
