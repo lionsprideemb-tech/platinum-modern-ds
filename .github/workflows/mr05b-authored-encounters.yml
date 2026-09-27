@@ -1181,7 +1181,7 @@ jobs:
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture real MR07A Skills and X edit-selection in DeSmuME
+      - name: Capture real MR07 Skills EV and Ability editors in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -1260,6 +1260,40 @@ jobs:
           press(Keys.KEY_DOWN)
           ev = capture(1965, "skills-edit-hp-ev")
 
+          # A opens MR07B1's real lower-screen EV editor.
+          cycle_to(2025)
+          press(Keys.KEY_A)
+          ev_editor_hp = capture(2140, "ev-editor-hp")
+
+          # Down selects Attack, which starts at 252 EV in the QA spread.
+          cycle_to(2200)
+          press(Keys.KEY_DOWN)
+          ev_editor_atk = capture(2310, "ev-editor-atk-252")
+
+          # Y zeroes the selected real EV. X then MAXes it back under 252/510.
+          cycle_to(2370)
+          press(Keys.KEY_Y)
+          ev_editor_atk_zero = capture(2480, "ev-editor-atk-zero")
+
+          cycle_to(2540)
+          press(Keys.KEY_X)
+          ev_editor_atk_max = capture(2650, "ev-editor-atk-max")
+
+          # A closes the temporary editor and restores Platinum's radial wheel.
+          cycle_to(2710)
+          press(Keys.KEY_A)
+          radial_restored = capture(2820, "skills-radial-restored")
+
+          # Attack -> HP -> Ability; A opens the Primary Ability selector.
+          cycle_to(2880)
+          press(Keys.KEY_UP)
+          press(Keys.KEY_UP)
+          press(Keys.KEY_A)
+          ability_editor = capture(3050, "ability-editor")
+          cycle_to(3110)
+          press(Keys.KEY_B)
+          ability_closed = capture(3220, "ability-editor-closed")
+
           normal_edit_diff = ImageChops.difference(normal, edit)
           normal_edit_pixels = sum(
               1 for px in normal_edit_diff.getdata()
@@ -1268,6 +1302,51 @@ jobs:
           edit_ev_diff = ImageChops.difference(edit, ev)
           edit_ev_pixels = sum(
               1 for px in edit_ev_diff.getdata()
+              if px != (0, 0, 0)
+          )
+
+          radial_editor_diff = ImageChops.difference(
+              ev.crop((0, 192, 256, 384)),
+              ev_editor_hp.crop((0, 192, 256, 384)),
+          )
+          radial_editor_pixels = sum(
+              1 for px in radial_editor_diff.getdata()
+              if px != (0, 0, 0)
+          )
+
+          atk_zero_diff = ImageChops.difference(
+              ev_editor_atk.crop((0, 0, 256, 192)),
+              ev_editor_atk_zero.crop((0, 0, 256, 192)),
+          )
+          atk_zero_pixels = sum(
+              1 for px in atk_zero_diff.getdata()
+              if px != (0, 0, 0)
+          )
+
+          atk_restore_diff = ImageChops.difference(
+              ev_editor_atk_zero.crop((0, 0, 256, 192)),
+              ev_editor_atk_max.crop((0, 0, 256, 192)),
+          )
+          atk_restore_pixels = sum(
+              1 for px in atk_restore_diff.getdata()
+              if px != (0, 0, 0)
+          )
+
+          ability_open_diff = ImageChops.difference(
+              radial_restored.crop((0, 192, 256, 384)),
+              ability_editor.crop((0, 192, 256, 384)),
+          )
+          ability_open_pixels = sum(
+              1 for px in ability_open_diff.getdata()
+              if px != (0, 0, 0)
+          )
+
+          radial_restore_diff = ImageChops.difference(
+              ev.crop((0, 192, 256, 384)),
+              radial_restored.crop((0, 192, 256, 384)),
+          )
+          radial_restore_pixels = sum(
+              1 for px in radial_restore_diff.getdata()
               if px != (0, 0, 0)
           )
 
@@ -1281,6 +1360,31 @@ jobs:
                   "MR07A D-pad did not visibly move from Ability to HP/EV; "
                   f"pixel_diff={edit_ev_pixels}"
               )
+          if radial_editor_pixels < 2500:
+              raise SystemExit(
+                  "MR07B1 EV editor did not visibly replace the radial bottom screen; "
+                  f"pixel_diff={radial_editor_pixels}"
+              )
+          if atk_zero_pixels < 80:
+              raise SystemExit(
+                  "MR07B1 real Attack EV zero did not visibly recalculate the top screen; "
+                  f"pixel_diff={atk_zero_pixels}"
+              )
+          if atk_restore_pixels < 80:
+              raise SystemExit(
+                  "MR07B1 MAX did not visibly restore the Attack stat; "
+                  f"pixel_diff={atk_restore_pixels}"
+              )
+          if ability_open_pixels < 1500:
+              raise SystemExit(
+                  "MR07B1 Ability editor did not visibly open on the bottom screen; "
+                  f"pixel_diff={ability_open_pixels}"
+              )
+          if radial_restore_pixels > 2500:
+              raise SystemExit(
+                  "MR07B1 did not restore the normal Platinum radial bottom screen; "
+                  f"pixel_diff={radial_restore_pixels}"
+              )
 
           if not any(
               row["top_unique_colors"] >= 24
@@ -1290,7 +1394,7 @@ jobs:
               raise SystemExit("MR07A Summary captures look blank or unstable")
 
           meta = {
-              "gate": "MERCURY_MR07A_SUMMARY_SKILLS_DESMUME_PROOF",
+              "gate": "MERCURY_MR07B1_SUMMARY_SKILLS_EDITOR_DESMUME_PROOF",
               "status": "PASS",
               "production_player_rom_staged_before_harness": True,
               "qa_only_harness": True,
@@ -1303,9 +1407,14 @@ jobs:
               },
               "normal_to_x_edit_pixel_diff": normal_edit_pixels,
               "ability_to_hp_ev_pixel_diff": edit_ev_pixels,
+              "ev_editor_bottom_pixel_diff": radial_editor_pixels,
+              "attack_zero_top_pixel_diff": atk_zero_pixels,
+              "attack_restore_top_pixel_diff": atk_restore_pixels,
+              "ability_editor_bottom_pixel_diff": ability_open_pixels,
+              "radial_restore_bottom_pixel_diff": radial_restore_pixels,
               "screens": {
-                  "top": "actual Mercury Skills renderer inside Platinum Summary",
-                  "bottom": "unmodified vanilla Platinum Summary radial navigator",
+                  "top": "actual Mercury Skills renderer with live EV stat recalculation",
+                  "bottom": "temporary native EV/Ability editor that restores Platinum's radial navigator",
               },
               "captures": captures,
           }
@@ -1558,7 +1667,7 @@ jobs:
             echo "- MR07B1 makes highlighted stats editable through a temporary bottom-screen EV editor with 252-per-stat / 510-total enforcement"
             echo "- MR07B1 makes the Primary Ability editable from the species' real legal ability slots; Innates remain view-only"
             echo "- Closing either MR07B1 editor restores Platinum's normal radial Summary bottom screen"
-            echo "- MR07A DeSmuME proof opens a real Lv50 Garchomp on Skills, presses X into edit-selection, then moves to HP to expose EV 6 / total 510"
+            echo "- MR07B1 DeSmuME proof opens the real EV editor, mutates Attack 252 -> 0 -> MAX with live top-screen recalculation, restores the radial wheel, and opens/closes the Primary Ability selector"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
             echo "- CI-only Garchomp/direct-launch harness excluded"
