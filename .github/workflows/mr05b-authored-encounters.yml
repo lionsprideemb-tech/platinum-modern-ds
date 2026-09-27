@@ -40,6 +40,7 @@ on:
       - "tools/install_mr06b2c3_radar_item_target_patch.py"
       - "tools/install_mr06b2d_dexnav_quality_rolls.py"
       - "tools/install_mr06b2e_overworld_search_hud.py"
+      - "tools/install_mr06b2f_radar_visual_polish.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -755,6 +756,24 @@ jobs:
           grep -q 'MercuryRadarHud_Show' vendor/pokeplatinum/src/pokeradar.c
           grep -q 'CHAR_STAR' vendor/pokeplatinum/src/overlay005/mercury_radar_hud.c
 
+      - name: Install MR06B2F DS-native Radar HUD visual polish
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2f_radar_visual_polish.py \
+            vendor/pokeplatinum \
+            --report mr06b2f-radar-visual-polish.json
+
+          test "$(jq -r '.status' mr06b2f-radar-visual-polish.json)" = "PASS"
+          test "$(jq -r '.gba_graphics_copied' mr06b2f-radar-visual-polish.json)" = "false"
+          test "$(jq -r '.preview_cleanup_with_hud' mr06b2f-radar-visual-polish.json)" = "true"
+          test "$(jq -r '.premium_markers.special_move' mr06b2f-radar-visual-polish.json)" = "true"
+          test "$(jq -r '.premium_markers.rare_primary_ability' mr06b2f-radar-visual-polish.json)" = "true"
+          test "$(jq -r '.premium_markers.rare_held_item' mr06b2f-radar-visual-polish.json)" = "true"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2f-radar-visual-polish.json)" = "false"
+          grep -q 'DrawPokemonPreview' vendor/pokeplatinum/src/overlay005/mercury_radar_hud.c
+          grep -q 'MercuryRadarHud_IsRarePrimaryAbility' vendor/pokeplatinum/src/overlay005/mercury_radar_hud.c
+          grep -q 'MercuryRadarHud_IsRareHeldItem' vendor/pokeplatinum/src/overlay005/mercury_radar_hud.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -982,6 +1001,7 @@ jobs:
           cp mr06b2c3-radar-item-target-patch.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2d-dexnav-quality-rolls.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2e-overworld-search-hud.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2f-radar-visual-polish.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -1097,6 +1117,9 @@ jobs:
             echo "- MR06B2E adds a five-second top-screen overworld HUD after SEARCH"
             echo "- HUD shows species, level, Search Lv., Potential stars, special move, Primary Ability and held item"
             echo "- RadarChain owns HUD cleanup so battle, cycling and map changes cannot leave stale UI"
-            echo "- Next pass adds the species icon/rare markers and performs a DS visual proof pass"
+            echo "- MR06B2F upgrades the HUD to a Platinum-native two-panel trace using the existing DS Pokemon preview renderer"
+            echo "- Premium stars mark special moves, rare Primary Ability rolls and rare held-item rolls; Potential stars remain visible"
+            echo "- No GBA DexNav graphics are copied"
+            echo "- Next pass is runtime visual proof of scanner -> SEARCH -> rustling patch -> polished HUD"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
