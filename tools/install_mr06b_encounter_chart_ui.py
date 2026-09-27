@@ -207,11 +207,9 @@ def patch_source(root: Path) -> None:
 
     replace_once(
         path,
-        """#include "map_header_data.h"
-#include "map_object.h"
+        """#include "message.h"
 """,
-        """#include "map_header_data.h"
-#include "map_object.h"
+        """#include "message.h"
 #include "message_util.h"
 """,
         "MR06B message util include",
