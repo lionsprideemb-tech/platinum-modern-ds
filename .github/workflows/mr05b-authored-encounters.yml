@@ -1383,7 +1383,8 @@ jobs:
           test "$(jq -r '.area_page.layout' mr06b2k-poketch-radar-shell.json)" = "3x4 icon grid"
           test "$(jq -r '.top_screen' mr06b2k-poketch-radar-shell.json)" = "normal live Platinum overworld"
           grep -q 'RESEARCH RADAR' vendor/pokeplatinum/res/text/poketch_pokemon_history.json
-          grep -q 'MercuryResearchRadar_GetTargets' vendor/pokeplatinum/src/applications/poketch/pokemon_history/main.c
+          grep -q 'SPECIES_ROCKRUFF' vendor/pokeplatinum/src/applications/poketch/pokemon_history/main.c
+          grep -q 'SPECIES_PAWMI' vendor/pokeplatinum/src/applications/poketch/pokemon_history/main.c
           grep -q 'POKETCH_APPID_POKEMONHISTORY' vendor/pokeplatinum/src/game_start.c
 
       - name: Build MR06B2K Pokétch Radar shell QA ROM
