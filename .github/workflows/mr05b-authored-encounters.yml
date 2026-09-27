@@ -29,6 +29,7 @@ on:
       - "tools/audit_mr05l_unknown_encounter_resources.py"
       - "tools/export_mr05m_encounter_charts.py"
       - "tools/install_mr06a_encounter_chart_ui.py"
+      - "tools/install_mr06a_encounter_chart_harness.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -137,6 +138,7 @@ jobs:
             tools/audit_mr05l_unknown_encounter_resources.py \
             tools/export_mr05m_encounter_charts.py \
             tools/install_mr06a_encounter_chart_ui.py \
+            tools/install_mr06a_encounter_chart_harness.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -730,14 +732,140 @@ jobs:
               raise SystemExit("all Mercury normal-boot captures were blank")
           PY
 
+      - name: Preserve clean MR06A player ROM
+        shell: bash
+        run: |
+          mkdir -p clean-player
+          cp "$BUILD/pokeplatinum.us.nds" clean-player/Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds
+          sha256sum clean-player/Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds > clean-player/SHA256SUMS.txt
+
+      - name: Install CI-only Route 203 Encounter Chart harness
+        shell: bash
+        run: |
+          python3 tools/install_mr06a_encounter_chart_harness.py \
+            vendor/pokeplatinum \
+            --report mr06a-encounter-chart-harness.json
+
+          test "$(jq -r '.start_map' mr06a-encounter-chart-harness.json)" = "MAP_HEADER_ROUTE_203"
+          test "$(jq -r '.pokedex_obtained' mr06a-encounter-chart-harness.json)" = "true"
+          test "$(jq -r '.direct_chart_launch' mr06a-encounter-chart-harness.json)" = "false"
+
+      - name: Rebuild CI-only Encounter Chart proof ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Capture Route 203 Encounter Chart visual proof
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr04-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+          from desmume.controls import Keys, keymask
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("encounter-chart-preview")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start MR06A chart proof ROM")
+
+          frame = 0
+          captures = []
+
+          def cycle(count):
+              global frame
+              for _ in range(count):
+                  emu.cycle(False)
+                  frame += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"MR06A proof stopped near frame {frame}")
+
+          def press(key, hold=5, settle=120):
+              mask = keymask(key)
+              emu.input.keypad_add_key(mask)
+              cycle(hold)
+              emu.input.keypad_rm_key(mask)
+              cycle(settle)
+
+          def snap(label):
+              image = emu.screenshot().convert("RGB")
+              if image.size != (256, 384):
+                  raise SystemExit(f"unexpected screenshot size {image.size}")
+              full = out / f"mr06a-{len(captures):02d}-{label}-full-{frame:05d}.png"
+              top = out / f"mr06a-{len(captures):02d}-{label}-top-{frame:05d}.png"
+              bottom = out / f"mr06a-{len(captures):02d}-{label}-bottom-{frame:05d}.png"
+              image.save(full)
+              image.crop((0, 0, 256, 192)).save(top)
+              image.crop((0, 192, 256, 384)).save(bottom)
+              colors = image.getcolors(maxcolors=256 * 384)
+              captures.append({
+                  "label": label,
+                  "frame": frame,
+                  "full": full.name,
+                  "top": top.name,
+                  "bottom": bottom.name,
+                  "unique_colors": len(colors) if colors is not None else 256 * 384,
+              })
+
+          try:
+              cycle(3600)
+              snap("route203-field")
+
+              press(Keys.KEY_X, settle=180)
+              snap("start-menu")
+
+              for _ in range(4):
+                  press(Keys.KEY_DOWN, settle=55)
+              snap("encounters-selected")
+
+              press(Keys.KEY_A, settle=220)
+              snap("encounter-chart")
+
+              press(Keys.KEY_R, settle=120)
+              snap("encounter-chart-next-period")
+
+              press(Keys.KEY_DOWN, settle=120)
+              snap("encounter-chart-page-2")
+
+              press(Keys.KEY_B, settle=180)
+              snap("returned-start-menu")
+          finally:
+              emu.destroy()
+
+          meta = {
+              "gate": "MERCURY_MR06A_ENCOUNTER_CHART_VISUAL",
+              "route": "Route 203",
+              "input_path": "X -> DOWN x4 -> A",
+              "production_direct_launch": False,
+              "captures": captures,
+          }
+          (out / "mr06a-encounter-chart-visual.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+
+          if len(captures) != 7:
+              raise SystemExit("MR06A visual proof did not capture every state")
+          if any(row["unique_colors"] < 16 for row in captures):
+              raise SystemExit("MR06A visual proof contains a blank-like capture")
+          PY
+
       - name: Stage player ROM and proof
         if: always()
         shell: bash
         run: |
           mkdir -p mr05b-artifact
-          if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds > mr05b-artifact/SHA256SUMS.txt
+          if test -s clean-player/Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds; then
+            cp clean-player/Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds mr05b-artifact/
+            cp clean-player/SHA256SUMS.txt mr05b-artifact/
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -772,6 +900,7 @@ jobs:
           cp mr05l-unknown-resource-audit.json mr05b-artifact/ 2>/dev/null || true
           cp mr05m-encounter-chart-report.json mr05b-artifact/ 2>/dev/null || true
           cp mr06a-encounter-chart-ui.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06a-encounter-chart-harness.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -781,6 +910,8 @@ jobs:
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/mr06a-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp encounter-chart-preview/*.png mr05b-artifact/ 2>/dev/null || true
+          cp encounter-chart-preview/mr06a-encounter-chart-visual.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
@@ -856,5 +987,7 @@ jobs:
             echo "- L/R changes Morning/Day/Evening/Night for Mercury four-period land tables"
             echo "- UP/DOWN changes pages; duplicate species are merged with exact slot odds and level ranges"
             echo "- Safari, Pal Park, Battle Tower Salon, Union Room, and Colosseum keep their vanilla menu behavior"
+            echo "- CI-only Route 203 proof uses normal controller input to open ENCOUNTERS; the clean player ROM is preserved before harness install"
+            echo "- Visual proof captures Start Menu, selected ENCOUNTERS row, chart, next time period, page 2, and return path"
             echo "- Player ROM staged as Pokemon_Mercury_MR06A_Encounter_Chart_UI.nds"
           } >> "$GITHUB_STEP_SUMMARY"
