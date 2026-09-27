@@ -43,6 +43,7 @@ APP_MAIN = r'''#include <nitro.h>
 #include "generated/badges.h"
 #include "generated/moves.h"
 #include "generated/species.h"
+#include "field/field_system.h"
 #include "heap.h"
 #include "map_header_data.h"
 #include "mercury_research_radar_shared.h"
@@ -66,7 +67,8 @@ typedef struct PoketchResearchRadar {
     u8 detailActive;
     u8 page;
     u8 selectedIndex;
-    u16 padding;
+    u8 dataReady;
+    u8 padding;
     ResearchRadarData data;
     ResearchRadarGraphics *graphics;
     PoketchSystem *poketchSys;
@@ -146,8 +148,13 @@ static BOOL Init(PoketchResearchRadar *appData, PoketchSystem *poketchSys, BgCon
     appData->detailActive = FALSE;
     appData->page = 0;
     appData->selectedIndex = 0;
+    appData->dataReady = FALSE;
 
-    BuildCurrentAreaTargets(appData);
+    // Do not read field encounter data during Pokétch overlay startup.
+    // On a load where Research Radar was the saved active app, the Pokétch
+    // can initialize before MapHeaderData exists. The first update frame after
+    // the field is ready populates the live area list instead.
+    MI_CpuClear8(&appData->data, sizeof(appData->data));
 
     if (!ResearchRadarGraphics_New(
             &appData->graphics,
@@ -224,6 +231,23 @@ static BOOL State_UpdateApp(PoketchResearchRadar *appData)
     if (appData->shouldExit) {
         ChangeState(appData, STATE_SHUTDOWN);
         return FALSE;
+    }
+
+    FieldSystem *fieldSystem =
+        PoketchSystem_GetFieldSystem(appData->poketchSys);
+
+    if (!appData->dataReady) {
+        if (fieldSystem == NULL
+            || fieldSystem->mapHeaderData == NULL
+            || fieldSystem->location == NULL) {
+            return FALSE;
+        }
+
+        BuildCurrentAreaTargets(appData);
+        appData->dataReady = TRUE;
+        ResearchRadarGraphics_ShowArea(
+            appData->graphics,
+            appData->page);
     }
 
     if (JOY_NEW(PAD_BUTTON_B) && appData->detailActive) {
@@ -358,9 +382,18 @@ static void BuildCurrentAreaTargets(PoketchResearchRadar *appData)
 {
     FieldSystem *fieldSystem = PoketchSystem_GetFieldSystem(appData->poketchSys);
     SaveData *saveData = PoketchSystem_GetSaveData(appData->poketchSys);
-    const WildEncounters *encounters = MapHeaderData_GetWildEncounters(fieldSystem);
 
     MI_CpuClear8(&appData->data, sizeof(appData->data));
+
+    if (fieldSystem == NULL
+        || fieldSystem->mapHeaderData == NULL
+        || fieldSystem->location == NULL
+        || saveData == NULL) {
+        return;
+    }
+
+    const WildEncounters *encounters =
+        MapHeaderData_GetWildEncounters(fieldSystem);
 
     if (encounters == NULL) {
         return;
@@ -2025,7 +2058,56 @@ static BOOL UsePokeRadarInField(ItemFieldUseContext *usageContext)
     if old not in text:
         raise SystemExit("MR06B2N old Radar item frontend anchor missing")
 
-    path.write_text(text.replace(old, new, 1))
+    text = text.replace(old, new, 1)
+
+    old_can_use = r'''static enum ItemUseCheckResult CanUsePokeRadar(const ItemUseContext *usageContext)
+{
+    if (usageContext->hasPartner == TRUE) {
+        return ITEM_USE_CANNOT_USE_WITH_PARTNER;
+    }
+
+    if (PlayerAvatar_GetPlayerState(usageContext->fieldSystem->playerAvatar) == 0x1) {
+        return ITEM_USE_CANNOT_USE_GENERIC;
+    }
+
+    MercuryResearchRadarTarget target;
+
+    if (MercuryResearchRadar_GetTargets(
+            usageContext->mapHeaderID,
+            MercuryEncounterChart_GetCurrentLandMethod(),
+            &target,
+            1) <= 0) {
+        return ITEM_USE_CANNOT_USE_GENERIC;
+    }
+
+    return ITEM_USE_CAN_USE;
+}
+'''
+    new_can_use = r'''static enum ItemUseCheckResult CanUsePokeRadar(const ItemUseContext *usageContext)
+{
+    if (usageContext->hasPartner == TRUE) {
+        return ITEM_USE_CANNOT_USE_WITH_PARTNER;
+    }
+
+    if (PlayerAvatar_GetPlayerState(usageContext->fieldSystem->playerAvatar) == 0x1) {
+        return ITEM_USE_CANNOT_USE_GENERIC;
+    }
+
+    // The production Radar is a Pokétch browser, not a grass-only field move.
+    // It may legitimately have only Surf/fishing rows in the current area.
+    if (!Poketch_IsEnabled(
+            SaveData_GetPoketch(usageContext->fieldSystem->saveData))) {
+        return ITEM_USE_CANNOT_USE_GENERIC;
+    }
+
+    return ITEM_USE_CAN_USE;
+}
+'''
+
+    if old_can_use not in text:
+        raise SystemExit("MR06B2N old land-only Radar CanUse anchor missing")
+
+    path.write_text(text.replace(old_can_use, new_can_use, 1))
 
 
 def validate(root: Path) -> None:
@@ -2042,6 +2124,12 @@ def validate(root: Path) -> None:
         "dedicated_app_id": "POKETCH_APPID_RESEARCHRADAR" in app_ids,
         "unused_overlay_repurposed": "POKETCH_APPID_RESEARCHRADAR, FS_OVERLAY_ID(poketch_unused_4)" in system,
         "pokemon_history_preserved": "Poketch_PokemonHistorySize" in history,
+        "startup_field_guard": "fieldSystem->mapHeaderData == NULL" in app
+            and "dataReady" in app,
+        "radar_item_not_land_only": "MercuryResearchRadar_GetTargets(" not in item[
+            item.find("static enum ItemUseCheckResult CanUsePokeRadar"):
+            item.find("static void UseSprayDuckFromMenu")
+        ],
         "all_method_land": "RESEARCH_RADAR_METHOD_LAND" in app,
         "all_method_surf": "RESEARCH_RADAR_METHOD_SURF" in app,
         "surf_uses_relic_badge": "BADGE_ID_RELIC" in app,
@@ -2118,6 +2206,7 @@ def main() -> None:
         "app_id": 25,
         "overlay": "poketch_unused_4 repurposed",
         "pokemon_history_preserved": True,
+        "safe_when_saved_as_active_app": True,
         "top_screen": "normal live Platinum overworld",
         "area_page": {
             "page_size": 12,
