@@ -46,6 +46,7 @@ on:
       - "tools/install_mr06b2i_radar_linker_placement.py"
       - "tools/install_mr06b2j_scanner_vram_cleanup.py"
       - "tools/install_mr06b2k_poketch_radar_shell.py"
+      - "tools/install_mr06b2l_poketch_radar_detail.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -160,6 +161,7 @@ jobs:
             tools/install_mr06b2i_radar_linker_placement.py \
             tools/install_mr06b2j_scanner_vram_cleanup.py \
             tools/install_mr06b2k_poketch_radar_shell.py \
+            tools/install_mr06b2l_poketch_radar_detail.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -1488,6 +1490,124 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Install MR06B2L Pokétch Radar detail-page proof
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2l_poketch_radar_detail.py \
+            vendor/pokeplatinum \
+            --report mr06b2l-poketch-radar-detail.json
+
+          test "$(jq -r '.status' mr06b2l-poketch-radar-detail.json)" = "PASS"
+          test "$(jq -r '.production_player_rom_modified' mr06b2l-poketch-radar-detail.json)" = "false"
+          test "$(jq -r '.qa_selected_species' mr06b2l-poketch-radar-detail.json)" = "Bidoof"
+          test "$(jq -r '.qa_search_level' mr06b2l-poketch-radar-detail.json)" = "27"
+          grep -q 'PoketchPokemonHistoryGraphics_ShowDetail' vendor/pokeplatinum/src/applications/poketch/pokemon_history/main.c
+          grep -q 'MessageUtil_SpeciesName' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
+          grep -q '> SEARCH <' vendor/pokeplatinum/src/applications/poketch/pokemon_history/graphics.c
+
+      - name: Build MR06B2L Pokétch Radar detail QA ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Capture MR06B2L Pokétch Radar detail page in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr04-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("poketch-radar-detail-proof")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start MR06B2L Pokétch Radar detail ROM")
+
+          current = 0
+          rows = []
+
+          for target in [800, 1100, 1400]:
+              for _ in range(target - current):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"MR06B2L emulator stopped near frame {current}")
+
+              img = emu.screenshot().convert("RGB")
+              path = out / f"poketch-radar-detail-{target}.png"
+              img.save(path)
+
+              top = img.crop((0, 0, 256, 192))
+              bottom = img.crop((0, 192, 256, 384))
+              top_colors = top.getcolors(maxcolors=256 * 192)
+              bottom_colors = bottom.getcolors(maxcolors=256 * 192)
+
+              rows.append({
+                  "frame": target,
+                  "file": path.name,
+                  "top_unique_colors": len(top_colors) if top_colors is not None else 256 * 192,
+                  "bottom_unique_colors": len(bottom_colors) if bottom_colors is not None else 256 * 192,
+              })
+
+          emu.destroy()
+
+          stable = [
+              row for row in rows
+              if row["top_unique_colors"] >= 24 and row["bottom_unique_colors"] >= 12
+          ]
+          if len(stable) < 2:
+              raise SystemExit(f"MR06B2L did not produce stable detail-page captures: {rows}")
+
+          meta = {
+              "gate": "MERCURY_MR06B2L_POKETCH_RADAR_DETAIL_VISUAL_PROOF",
+              "status": "PASS",
+              "rom": rom.name,
+              "ci_only_visual_prototype": True,
+              "top_screen": "live Platinum overworld",
+              "bottom_screen": "Poketch Radar Bidoof detail page",
+              "detail_fields": [
+                  "species name",
+                  "Pokemon icon",
+                  "level range",
+                  "Search Level 27",
+                  "Potential 2 stars",
+                  "LAND method",
+                  "SEARCH control",
+              ],
+              "production_player_rom_modified": False,
+              "captures": rows,
+          }
+          (out / "mr06b2l-poketch-radar-detail-meta.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+          PY
+
+      - name: Stage MR06B2L Pokétch Radar detail proof
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p poketch-radar-detail-proof-artifact
+          cp mr06b2l-poketch-radar-detail.json poketch-radar-detail-proof-artifact/ 2>/dev/null || true
+          cp poketch-radar-detail-proof/*.png poketch-radar-detail-proof-artifact/ 2>/dev/null || true
+          cp poketch-radar-detail-proof/mr06b2l-poketch-radar-detail-meta.json poketch-radar-detail-proof-artifact/ 2>/dev/null || true
+
+      - name: Upload MR06B2L Pokétch Radar detail proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr06b2l-poketch-radar-detail-proof
+          path: poketch-radar-detail-proof-artifact/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Summary
         if: always()
         shell: bash
@@ -1602,5 +1722,7 @@ jobs:
             echo "- MR06B2K is a CI-only visual prototype of the redesigned Radar as a real Pokétch app"
             echo "- Top screen remains the live Platinum overworld; bottom screen uses Platinum's native Pokétch shell and a 3x4 current-area Pokémon icon grid"
             echo "- The old full-screen scanner is intentionally suppressed only in this QA proof so the visual direction can be judged before production rewiring"
+            echo "- MR06B2L adds the second approved Pokétch concept page: tap a Pokémon -> native detail page with icon, level range, Search Lv., Potential, method and SEARCH"
+            echo "- MR06B2L remains CI-only; production rewiring waits for visual approval"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
