@@ -33,6 +33,7 @@ on:
       - "tools/install_mr05o_exact_tod_periods.py"
       - "tools/install_mr06a_encounter_chart_runtime.py"
       - "tools/install_mr06b1_research_radar_foundation.py"
+      - "tools/install_mr06b2a_dexnav_progression.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -632,6 +633,22 @@ jobs:
             exit 1
           fi
 
+      - name: Install MR06B2A Elite Redux-style DexNav progression model
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2a_dexnav_progression.py \
+            vendor/pokeplatinum \
+            --report mr06b2a-dexnav-progression.json
+
+          test "$(jq -r '.status' mr06b2a-dexnav-progression.json)" = "PASS"
+          test "$(jq -r '.search_level_cap' mr06b2a-dexnav-progression.json)" = "999"
+          test "$(jq -r '.primary_ability_only' mr06b2a-dexnav-progression.json)" = "true"
+          test "$(jq -r '.chain_required' mr06b2a-dexnav-progression.json)" = "false"
+          test "$(jq -r '.battery_recharge_required' mr06b2a-dexnav-progression.json)" = "false"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2a-dexnav-progression.json)" = "false"
+          grep -q 'MERCURY_RESEARCH_RADAR_SEARCH_LEVEL_CAP 999' vendor/pokeplatinum/include/overlay006/wild_encounters.h
+          grep -q 'MercuryResearchRadar_GetQualityProfile' vendor/pokeplatinum/src/overlay006/wild_encounters.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -852,6 +869,7 @@ jobs:
           cp mr05o-exact-tod-periods.json mr05b-artifact/ 2>/dev/null || true
           cp mr06a-encounter-chart-runtime.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b1-research-radar-foundation.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2a-dexnav-progression.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -945,6 +963,9 @@ jobs:
             echo "- Current authored land species and legacy Platinum Radar-only slots are tagged separately for scanner use"
             echo "- Surf, fishing, Honey Trees, Great Marsh special presentation, gifts, statics, and trades are excluded from Radar targeting"
             echo "- Ordinary encounter tables and vanilla walking encounters are unchanged in MR06B1"
-            echo "- Next pass binds this target API to ITEM_POKE_RADAR and adds species selection before targeted-battle runtime"
+            echo "- MR06B2A adds Elite Redux-style Search Level milestones and Radar quality probabilities"
+            echo "- Search Level cap is 999; chaining and 50-step recharge remain disabled"
+            echo "- Radar quality applies to special move, rare Primary Ability, held item and Potential stars; Innates remain untouched"
+            echo "- Next pass adds per-species Search Level save storage, then ITEM_POKE_RADAR scanner UI"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
