@@ -42,6 +42,7 @@ on:
       - "tools/install_mr06b2e_overworld_search_hud.py"
       - "tools/install_mr06b2f_radar_visual_polish.py"
       - "tools/install_mr06b2g_preleague_radar_access.py"
+      - "tools/install_mr06b2h_runtime_proof_harness.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -152,6 +153,7 @@ jobs:
             tools/install_mr05n_instant_honey_trees.py \
             tools/install_mr05o_exact_tod_periods.py \
             tools/install_mr06a_encounter_chart_runtime.py \
+            tools/install_mr06b2h_runtime_proof_harness.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -1042,6 +1044,173 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Install MR06B2H CI-only Radar runtime proof harness
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2h_runtime_proof_harness.py \
+            vendor/pokeplatinum \
+            --report mr06b2h-radar-runtime-proof-harness.json
+
+          test "$(jq -r '.status' mr06b2h-radar-runtime-proof-harness.json)" = "PASS"
+          test "$(jq -r '.player_rom_modified' mr06b2h-radar-runtime-proof-harness.json)" = "false"
+          test "$(jq -r '.proof_map' mr06b2h-radar-runtime-proof-harness.json)" = "MAP_HEADER_ROUTE_202"
+          grep -q 'MAP_HEADER_ROUTE_202' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'MercuryResearchRadar_FieldTask' vendor/pokeplatinum/src/field_map_change.c
+          grep -q 'GF_ASSERT(ctx->patchSpawned);' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+          grep -q 'GF_ASSERT(MercuryRadar_HasTarget(fieldSystem->chain));' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+
+      - name: Build MR06B2H Radar QA harness ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Capture scanner SEARCH patch and HUD in DeSmuME
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/mr04-venv/bin/activate"
+          pip install py-desmume
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from PIL import ImageChops
+          from desmume.controls import Keys, keymask
+          from desmume.emulator import DeSmuME
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("radar-runtime-proof")
+          out.mkdir(exist_ok=True)
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("DeSmuME did not start MR06B2H Radar QA ROM")
+
+          current = 0
+          rows = []
+          images = {}
+
+          def cycle_to(target):
+              global current
+              for _ in range(target - current):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"MR06B2H emulator stopped near frame {current}")
+
+          def capture(frame, label):
+              cycle_to(frame)
+              img = emu.screenshot()
+              path = out / f"{label}-{frame}.png"
+              img.save(path)
+              rgb = img.convert("RGB")
+              colors = rgb.getcolors(maxcolors=256 * 384)
+              unique = len(colors) if colors is not None else 256 * 384
+              row = {
+                  "frame": frame,
+                  "label": label,
+                  "file": path.name,
+                  "unique_colors": unique,
+                  "blank_like": unique < 16,
+              }
+              rows.append(row)
+              images[label] = rgb
+              return rgb
+
+          # Direct-new-save harness reaches the dual-screen Radar scanner quickly.
+          # Capture multiple stable frames before input so the actual scanner art
+          # can be reviewed rather than relying on a single timing assumption.
+          capture(700, "scanner-early")
+          capture(1100, "scanner")
+          pre = capture(1500, "scanner-before-search")
+
+          # Exercise the production A SEARCH input path.
+          cycle_to(1600)
+          a = keymask(Keys.KEY_A)
+          emu.input.keypad_add_key(a)
+          for _ in range(6):
+              emu.cycle(False)
+              current += 1
+          emu.input.keypad_rm_key(a)
+
+          # The production field task now has CI-only assertions requiring:
+          # SEARCH action -> successful patch spawn -> live Mercury Radar target.
+          post_frames = [1660, 1720, 1800, 1900, 2020]
+          post_images = []
+          for frame in post_frames:
+              post_images.append(capture(frame, "post-search"))
+
+          if any(row["blank_like"] for row in rows):
+              raise SystemExit(f"MR06B2H produced blank-like capture(s): {rows}")
+
+          # A missed A press would leave the scanner nearly unchanged. Require a
+          # substantial framebuffer transition to the returned field/HUD view.
+          diffs = []
+          for img in post_images:
+              diff = ImageChops.difference(pre, img)
+              bbox = diff.getbbox()
+              if bbox is None:
+                  diffs.append(0)
+              else:
+                  diffs.append(sum(1 for px in diff.getdata() if px != (0, 0, 0)))
+
+          if max(diffs, default=0) < 5000:
+              raise SystemExit(
+                  "MR06B2H did not visibly transition from scanner after A SEARCH; "
+                  f"pixel_diffs={diffs}"
+              )
+
+          meta = {
+              "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_VISUAL_PROOF",
+              "rom": rom.name,
+              "production_rom_was_staged_before_harness": True,
+              "ci_only_harness": True,
+              "proof_map": "Route 202",
+              "input": "A SEARCH at frame 1600",
+              "runtime_assertions": [
+                  "scanner exited through SEARCH",
+                  "MercuryRadar_SpawnTargetPatch returned TRUE",
+                  "RadarChain retained a live Mercury target",
+              ],
+              "expected_visible_flow": [
+                  "dual-screen scanner",
+                  "return to overworld",
+                  "one rustling target patch",
+                  "MR06B2F two-panel target dossier HUD",
+              ],
+              "pixel_diffs_from_scanner": diffs,
+              "captures": rows,
+              "visual_review_required": True,
+          }
+          (out / "mr06b2h-radar-runtime-meta.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+
+          emu.destroy()
+          PY
+
+      - name: Stage MR06B2H Radar runtime proof
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p radar-runtime-proof-artifact
+          cp mr06b2h-radar-runtime-proof-harness.json radar-runtime-proof-artifact/ 2>/dev/null || true
+          cp radar-runtime-proof/*.png radar-runtime-proof-artifact/ 2>/dev/null || true
+          cp radar-runtime-proof/mr06b2h-radar-runtime-meta.json radar-runtime-proof-artifact/ 2>/dev/null || true
+          if test -s "$BUILD/pokeplatinum.us.nds"; then
+            cp "$BUILD/pokeplatinum.us.nds" radar-runtime-proof-artifact/Pokemon_Mercury_MR06B2H_Radar_QA_Harness.nds
+          fi
+
+      - name: Upload MR06B2H Radar runtime proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr06b2h-radar-runtime-proof
+          path: radar-runtime-proof-artifact/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Summary
         if: always()
         shell: bash
@@ -1146,6 +1315,9 @@ jobs:
             echo "- The obsolete battery description, duplicate post-Sinnoh-Dex reward and old chain tutorial are removed"
             echo "- Counterpart tips now teach SEARCH, registration, Search Level, Potential and premium traits"
             echo "- Batch1 fixed RESEARCH habitat assignments are not fabricated and still await source recovery"
-            echo "- Next pass is runtime visual proof of scanner -> SEARCH -> rustling patch -> polished HUD"
+            echo "- MR06B2H is a CI-only end-to-end visual proof harness applied only after the production ROM is uploaded"
+            echo "- The proof boots Route 202 beside known grass, launches the same MercuryResearchRadar_FieldTask used by the Key Item, presses A SEARCH in DeSmuME, and asserts a live target patch"
+            echo "- Screenshots capture the scanner before SEARCH and the returned field during the rustling-patch / polished-HUD window"
+            echo "- The production player ROM remains the pre-harness build"
             echo "- Player ROM staged as Pokemon_Mercury_MR06B1_Research_Radar_Foundation.nds"
           } >> "$GITHUB_STEP_SUMMARY"
