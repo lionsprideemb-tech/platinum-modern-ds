@@ -256,7 +256,7 @@ def main() -> None:
         match = re.match(r"encounters_route_(\d+)", name)
         if match:
             route_numbers.add(int(match.group(1)))
-        if re.match(r"encounters_great_marsh_area_\d+$", name):
+        if re.match(r"encounters_great_marsh_\d+$", name):
             great_marsh_biomes.add(name)
 
         methods = build_methods(name, area)
