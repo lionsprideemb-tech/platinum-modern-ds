@@ -116,7 +116,7 @@ def main() -> None:
         "direct_chart_launch": False,
         "required_runtime_input_path": [
             "X: Start Menu",
-            "DOWN x4: ENCOUNTERS",
+            "DOWN x5: ENCOUNTERS",
             "A: Encounter Chart",
         ],
     }
