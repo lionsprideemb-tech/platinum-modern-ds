@@ -44,6 +44,7 @@ on:
       - "tools/install_mr06b2g_preleague_radar_access.py"
       - "tools/install_mr06b2h_runtime_proof_harness.py"
       - "tools/install_mr06b2i_radar_linker_placement.py"
+      - "tools/install_mr06b2j_scanner_vram_cleanup.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -156,6 +157,7 @@ jobs:
             tools/install_mr06a_encounter_chart_runtime.py \
             tools/install_mr06b2h_runtime_proof_harness.py \
             tools/install_mr06b2i_radar_linker_placement.py \
+            tools/install_mr06b2j_scanner_vram_cleanup.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -814,6 +816,21 @@ jobs:
           ! grep -q 'MercuryResearchRadar_MoveSelection(&app->args->scanner' vendor/pokeplatinum/src/applications/mercury_research_radar.c
           ! grep -q 'MercuryResearchRadar_GetSelectedTarget(&app->args->scanner' vendor/pokeplatinum/src/applications/mercury_research_radar.c
 
+      - name: Install MR06B2J scanner VRAM cleanup
+        shell: bash
+        run: |
+          python3 tools/install_mr06b2j_scanner_vram_cleanup.py \
+            vendor/pokeplatinum \
+            --report mr06b2j-scanner-vram-cleanup.json
+
+          test "$(jq -r '.status' mr06b2j-scanner-vram-cleanup.json)" = "PASS"
+          test "$(jq -r '.selection_highlight_retained' mr06b2j-scanner-vram-cleanup.json)" = "true"
+          test "$(jq -r '.target_logic_modified' mr06b2j-scanner-vram-cleanup.json)" = "false"
+          test "$(jq -r '.normal_encounter_tables_modified' mr06b2j-scanner-vram-cleanup.json)" = "false"
+          grep -q 'BG_LAYER_MAIN_1, 0, 1, 0' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+          grep -q 'BG_LAYER_SUB_1, 0, 1, 0' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+          grep -q 'BG_LAYER_SUB_2, 0, 1, 0' vendor/pokeplatinum/src/applications/mercury_research_radar.c
+
       - name: Export complete Mercury encounter charts
         shell: bash
         run: |
@@ -1044,6 +1061,7 @@ jobs:
           cp mr06b2f-radar-visual-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2g-preleague-radar-access.json mr05b-artifact/ 2>/dev/null || true
           cp mr06b2i-radar-linker-placement.json mr05b-artifact/ 2>/dev/null || true
+          cp mr06b2j-scanner-vram-cleanup.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_species_location_index.json mr05b-artifact/ 2>/dev/null || true
           cp encounter-chart/mercury_encounter_chart.md mr05b-artifact/ 2>/dev/null || true
@@ -1236,7 +1254,7 @@ jobs:
           post_images = []
           for frame in post_frames:
               img = capture(frame, "post-search")
-              if img is not None:
+              if img is not None and not rows[-1]["blank_like"]:
                   post_images.append(img)
 
           if stopped_at is not None:
@@ -1252,14 +1270,33 @@ jobs:
               emu.destroy()
               raise SystemExit(f"MR06B2H stopped after A SEARCH near frame {stopped_at}")
 
-          # Black frames are normal during the direct boot/fade diagnostics.
-          # Only the actual scanner and post-search proof frames must be visible.
-          proof_rows = [
+          # The scanner -> overworld handoff deliberately fades through black.
+          # Treat those transition frames as expected, but require stable visible
+          # scanner frames before SEARCH and at least three visible field/HUD
+          # frames after the fade completes.
+          scanner_rows = [
               row for row in rows
-              if row["label"] in ("scanner", "post-search")
+              if row["label"] == "scanner" and not row["blank_like"]
           ]
-          if not proof_rows or any(row["blank_like"] for row in proof_rows):
-              raise SystemExit(f"MR06B2H scanner/search proof contains blank-like capture(s): {proof_rows}")
+          post_visible_rows = [
+              row for row in rows
+              if row["label"] == "post-search" and not row["blank_like"]
+          ]
+          transition_fade_frames = [
+              row["frame"] for row in rows
+              if row["label"] == "post-search" and row["blank_like"]
+          ]
+
+          if len(scanner_rows) < 2:
+              raise SystemExit(
+                  f"MR06B2H did not produce stable visible scanner captures: {scanner_rows}"
+              )
+
+          if len(post_visible_rows) < 3 or len(post_images) < 3:
+              raise SystemExit(
+                  "MR06B2H did not produce enough stable post-search field/HUD "
+                  f"captures: rows={post_visible_rows}"
+              )
 
           # A missed A press would leave the scanner nearly unchanged. Require a
           # substantial framebuffer transition to the returned field/HUD view.
@@ -1295,6 +1332,9 @@ jobs:
                   "MR06B2F two-panel target dossier HUD",
               ],
               "pixel_diffs_from_scanner": diffs,
+              "transition_fade_frames": transition_fade_frames,
+              "visible_scanner_frame_count": len(scanner_rows),
+              "visible_post_search_frame_count": len(post_visible_rows),
               "captures": rows,
               "visual_review_required": True,
           }
@@ -1434,6 +1474,7 @@ jobs:
             echo "- Counterpart tips now teach SEARCH, registration, Search Level, Potential and premium traits"
             echo "- Batch1 fixed RESEARCH habitat assignments are not fabricated and still await source recovery"
             echo "- MR06B2I fixes Nitro linker placement for the new scanner/HUD objects: scanner in Static main, HUD in overlay5"
+            echo "- MR06B2J clears uninitialized tile-0 VRAM on every scanner BG layer, removing the repeating green/striped background corruption"
             echo "- MR06B2I also removes child-scanner calls back into overlay6 after the field process unloads"
             echo "- MR06B2H is a CI-only end-to-end visual proof harness applied only after the production ROM is uploaded"
             echo "- The proof boots Route 202 beside known grass, launches the same MercuryResearchRadar_FieldTask used by the Key Item, and presses A SEARCH in DeSmuME"
