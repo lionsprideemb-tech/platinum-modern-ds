@@ -777,6 +777,11 @@ static void RemovePageSprites(ResearchRadarGraphics *graphics);
 static void LoadPageSprites(ResearchRadarGraphics *graphics, int page);
 static void DrawAreaSurface(ResearchRadarGraphics *graphics, int page);
 static void DrawDetailSurface(ResearchRadarGraphics *graphics, int absoluteIndex);
+static void DrawFrame(Window *window, int x, int y, int width, int height, u8 color);
+static void DrawPokeballGlyph(Window *window, int x, int y);
+static void DrawMethodGlyph(Window *window, u8 flags, int x, int y);
+static void DrawScannerReticle(Window *window);
+static void DrawSearchCorners(Window *window);
 static void PrintAscii(Window *window, const char *ascii, int x, int y);
 static void PrintNumber(Window *window, int value, int digits, int x, int y);
 static void PrintPotential(Window *window, u8 stars, int x, int y);
@@ -1203,8 +1208,12 @@ static void DrawDetailSurface(
     if (graphics->sprites[slot] != NULL) {
         PoketchAnimation_SetSpritePosition(
             graphics->sprites[slot],
-            FX32_CONST(62),
-            FX32_CONST(78));
+            FX32_CONST(56),
+            FX32_CONST(70));
+        PoketchAnimation_SetSpriteScale(
+            graphics->sprites[slot],
+            FX32_CONST(2),
+            FX32_CONST(2));
     }
 
     Window detail;
@@ -1234,8 +1243,8 @@ static void DrawDetailSurface(
             &detail,
             FONT_SYSTEM,
             speciesName,
-            22,
-            3,
+            27,
+            6,
             TEXT_SPEED_NO_TRANSFER,
             TEXT_COLOR(1, 8, 4),
             NULL);
@@ -1243,65 +1252,45 @@ static void DrawDetailSurface(
     }
 
     const char *method = MethodLabel(target->methodFlags);
-    PrintAscii(&detail, method, 132, 3);
 
-    // Header divider.
-    Window_FillRectWithColor(
-        &detail,
-        8,
-        0,
-        21,
-        192,
-        1);
+    // MR06B2P visual pass: reconstruct the approved mockup with native
+    // Poketch windows, sprites, text and affine hardware scaling.
+    DrawFrame(&detail, 0, 0, 192, 29, 8);
+    DrawPokeballGlyph(&detail, 7, 6);
+    Window_FillRectWithColor(&detail, 8, 128, 4, 1, 21);
+    DrawMethodGlyph(&detail, target->methodFlags, 135, 7);
+    PrintAscii(&detail, method, 151, 6);
 
-    // Native Poketch two-column hunter card. The left side keeps the
-    // monochrome species icon as the visual focus while the right side
-    // presents only the research values that actually affect hunting.
-    Window_FillRectWithColor(&detail, 8, 96, 32, 1, 72);
-    Window_FillRectWithColor(&detail, 8, 102, 58, 84, 1);
-    Window_FillRectWithColor(&detail, 8, 102, 90, 84, 1);
-    Window_FillRectWithColor(&detail, 8, 0, 106, 192, 1);
+    // Main scanner card.
+    DrawFrame(&detail, 0, 34, 192, 89, 8);
+    DrawFrame(&detail, 104, 40, 84, 34, 8);
+    DrawFrame(&detail, 104, 78, 84, 42, 8);
+    DrawFrame(&detail, 8, 102, 88, 19, 8);
+    DrawScannerReticle(&detail);
 
-    // Compact scanner brackets around the live native Pokemon icon.
-    Window_FillRectWithColor(&detail, 8, 14, 36, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 14, 36, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 72, 36, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 88, 36, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 14, 96, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 14, 80, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 72, 96, 18, 2);
-    Window_FillRectWithColor(&detail, 8, 88, 80, 2, 18);
-    Window_FillRectWithColor(&detail, 8, 48, 30, 4, 2);
-    Window_FillRectWithColor(&detail, 8, 48, 104, 4, 2);
-    Window_FillRectWithColor(&detail, 8, 8, 66, 4, 2);
-    Window_FillRectWithColor(&detail, 8, 92, 66, 4, 2);
+    // Right-side research readout.
+    PrintAscii(&detail, "SEARCH", 109, 47);
+    PrintNumber(&detail, target->searchLevel, 3, 166, 47);
 
-    // Search Level remains research progression only. Battle level stays
-    // authored by the area table and clamped to the next Gym Leader ace.
-    PrintAscii(&detail, "SEARCH LV", 104, 34);
-    PrintNumber(&detail, target->searchLevel, 3, 164, 34);
+    PrintAscii(&detail, "POTENTIAL", 109, 84);
+    PrintPotential(&detail, target->potentialStars, 121, 102);
 
-    PrintAscii(&detail, "POTENTIAL", 104, 64);
-    PrintPotential(&detail, target->potentialStars, 132, 82);
-
-    PrintAscii(&detail, "BATTLE LV", 4, 112);
-    PrintNumber(&detail, target->minLevel, 2, 66, 112);
-    PrintAscii(&detail, "-", 84, 112);
-    PrintNumber(&detail, target->maxLevel, 2, 94, 112);
+    // Compact battle-level chip under the centered scanner.
+    PrintAscii(&detail, "LV", 14, 104);
+    Window_FillRectWithColor(&detail, 8, 35, 104, 1, 14);
+    PrintNumber(&detail, target->minLevel, 2, 43, 104);
+    PrintAscii(&detail, "-", 61, 104);
+    PrintNumber(&detail, target->maxLevel, 2, 72, 104);
 
     if (target->caught) {
-        PrintAscii(&detail, "CAUGHT", 136, 112);
+        PrintAscii(&detail, "CAUGHT", 136, 104);
     }
 
-    // Large single-purpose hunt action with an inset edge so it reads as a
-    // touch target without abandoning Platinum's monochrome Poketch UI.
-    Window_FillRectWithColor(&detail, 8, 8, 132, 176, 2);
-    Window_FillRectWithColor(&detail, 8, 8, 160, 176, 2);
-    Window_FillRectWithColor(&detail, 8, 8, 132, 2, 30);
-    Window_FillRectWithColor(&detail, 8, 182, 132, 2, 30);
-    Window_FillRectWithColor(&detail, 8, 12, 136, 168, 1);
-    Window_FillRectWithColor(&detail, 8, 12, 156, 168, 1);
-    PrintAscii(&detail, "SEARCH", 70, 140);
+    // Full-width SEARCH touch control with inset corner brackets.
+    DrawFrame(&detail, 0, 128, 192, 38, 8);
+    DrawFrame(&detail, 4, 132, 184, 30, 8);
+    DrawSearchCorners(&detail);
+    PrintAscii(&detail, "SEARCH", 71, 139);
 
     Window_LoadTiles(&detail);
     Window_Remove(&detail);
@@ -1322,6 +1311,114 @@ void ResearchRadarGraphics_ShowDetail(
     DrawDetailSurface(
         graphics,
         absoluteIndex);
+}
+
+static void DrawFrame(
+    Window *window,
+    int x,
+    int y,
+    int width,
+    int height,
+    u8 color)
+{
+    if (width < 2 || height < 2) {
+        return;
+    }
+
+    Window_FillRectWithColor(window, color, x, y, width, 1);
+    Window_FillRectWithColor(window, color, x, y + height - 1, width, 1);
+    Window_FillRectWithColor(window, color, x, y, 1, height);
+    Window_FillRectWithColor(window, color, x + width - 1, y, 1, height);
+}
+
+static void DrawPokeballGlyph(Window *window, int x, int y)
+{
+    Window_FillRectWithColor(window, 8, x + 4, y, 8, 1);
+    Window_FillRectWithColor(window, 8, x + 2, y + 1, 12, 1);
+    Window_FillRectWithColor(window, 8, x + 1, y + 2, 2, 4);
+    Window_FillRectWithColor(window, 8, x + 13, y + 2, 2, 4);
+    Window_FillRectWithColor(window, 8, x, y + 6, 16, 2);
+    Window_FillRectWithColor(window, 8, x + 6, y + 5, 4, 4);
+    Window_FillRectWithColor(window, 4, x + 7, y + 6, 2, 2);
+    Window_FillRectWithColor(window, 8, x + 1, y + 9, 2, 4);
+    Window_FillRectWithColor(window, 8, x + 13, y + 9, 2, 4);
+    Window_FillRectWithColor(window, 8, x + 2, y + 13, 12, 1);
+    Window_FillRectWithColor(window, 8, x + 4, y + 14, 8, 1);
+}
+
+static void DrawMethodGlyph(Window *window, u8 flags, int x, int y)
+{
+    if (flags & RESEARCH_RADAR_METHOD_SURF) {
+        Window_FillRectWithColor(window, 8, x, y + 4, 4, 2);
+        Window_FillRectWithColor(window, 8, x + 4, y + 6, 4, 2);
+        Window_FillRectWithColor(window, 8, x + 8, y + 4, 4, 2);
+        Window_FillRectWithColor(window, 8, x, y + 10, 4, 2);
+        Window_FillRectWithColor(window, 8, x + 4, y + 12, 4, 2);
+        Window_FillRectWithColor(window, 8, x + 8, y + 10, 4, 2);
+        return;
+    }
+
+    if (flags & (RESEARCH_RADAR_METHOD_OLD_ROD
+        | RESEARCH_RADAR_METHOD_GOOD_ROD
+        | RESEARCH_RADAR_METHOD_SUPER_ROD)) {
+        Window_FillRectWithColor(window, 8, x + 2, y, 2, 10);
+        Window_FillRectWithColor(window, 8, x + 4, y + 8, 7, 2);
+        Window_FillRectWithColor(window, 8, x + 9, y + 8, 2, 6);
+        Window_FillRectWithColor(window, 8, x + 6, y + 12, 5, 2);
+        return;
+    }
+
+    if (flags & RESEARCH_RADAR_METHOD_RESEARCH) {
+        DrawFrame(window, x + 1, y + 1, 12, 12, 8);
+        Window_FillRectWithColor(window, 8, x + 6, y + 3, 2, 8);
+        Window_FillRectWithColor(window, 8, x + 3, y + 6, 8, 2);
+        return;
+    }
+
+    Window_FillRectWithColor(window, 8, x + 1, y + 8, 3, 5);
+    Window_FillRectWithColor(window, 8, x + 5, y + 5, 4, 8);
+    Window_FillRectWithColor(window, 8, x + 10, y + 8, 3, 5);
+    Window_FillRectWithColor(window, 8, x, y + 10, 5, 2);
+    Window_FillRectWithColor(window, 8, x + 4, y + 8, 6, 2);
+    Window_FillRectWithColor(window, 8, x + 9, y + 10, 5, 2);
+}
+
+static void DrawScannerReticle(Window *window)
+{
+    Window_FillRectWithColor(window, 8, 12, 42, 18, 2);
+    Window_FillRectWithColor(window, 8, 12, 42, 2, 18);
+    Window_FillRectWithColor(window, 8, 76, 42, 18, 2);
+    Window_FillRectWithColor(window, 8, 92, 42, 2, 18);
+    Window_FillRectWithColor(window, 8, 12, 92, 18, 2);
+    Window_FillRectWithColor(window, 8, 12, 76, 2, 18);
+    Window_FillRectWithColor(window, 8, 76, 92, 18, 2);
+    Window_FillRectWithColor(window, 8, 92, 76, 2, 18);
+
+    Window_FillRectWithColor(window, 8, 50, 38, 6, 2);
+    Window_FillRectWithColor(window, 8, 50, 98, 6, 2);
+    Window_FillRectWithColor(window, 8, 8, 67, 6, 2);
+    Window_FillRectWithColor(window, 8, 92, 67, 6, 2);
+
+    Window_FillRectWithColor(window, 8, 28, 49, 10, 1);
+    Window_FillRectWithColor(window, 8, 68, 49, 10, 1);
+    Window_FillRectWithColor(window, 8, 28, 90, 10, 1);
+    Window_FillRectWithColor(window, 8, 68, 90, 10, 1);
+    Window_FillRectWithColor(window, 8, 21, 57, 1, 10);
+    Window_FillRectWithColor(window, 8, 85, 57, 1, 10);
+    Window_FillRectWithColor(window, 8, 21, 75, 1, 10);
+    Window_FillRectWithColor(window, 8, 85, 75, 1, 10);
+}
+
+static void DrawSearchCorners(Window *window)
+{
+    Window_FillRectWithColor(window, 8, 8, 136, 10, 2);
+    Window_FillRectWithColor(window, 8, 8, 136, 2, 8);
+    Window_FillRectWithColor(window, 8, 174, 136, 10, 2);
+    Window_FillRectWithColor(window, 8, 182, 136, 2, 8);
+    Window_FillRectWithColor(window, 8, 8, 152, 10, 2);
+    Window_FillRectWithColor(window, 8, 8, 146, 2, 8);
+    Window_FillRectWithColor(window, 8, 174, 152, 10, 2);
+    Window_FillRectWithColor(window, 8, 182, 146, 2, 8);
 }
 
 static void PrintAscii(
@@ -1389,12 +1486,16 @@ static void PrintPotential(
     int y)
 {
     String *string =
-        String_Init(4, HEAP_ID_POKETCH_APP);
+        String_Init(8, HEAP_ID_POKETCH_APP);
 
     for (int i = 0; i < 3; i++) {
         String_AppendChar(
             string,
             i < stars ? CHAR_STAR : CHAR_MINUS);
+
+        if (i < 2) {
+            String_AppendChar(string, CHAR_SPACE);
+        }
     }
 
     Text_AddPrinterWithParamsAndColor(
@@ -2098,6 +2199,111 @@ static BOOL UsePokeRadarInField(ItemFieldUseContext *usageContext)
     path.write_text(text.replace(old_can_use, new_can_use, 1))
 
 
+def patch_poketch_sprite_scale(root: Path) -> None:
+    """Add a safe affine-scale hook used by the Radar's selected icon."""
+    header = root / "include/applications/poketch/poketch_animation.h"
+    source = root / "src/applications/poketch/poketch_animation.c"
+
+    header_text = header.read_text()
+    prototype = (
+        "void PoketchAnimation_SetSpriteScale("
+        "PoketchAnimation_AnimatedSpriteData *animatedSprite, "
+        "fx32 scaleX, fx32 scaleY);\n"
+    )
+
+    if "PoketchAnimation_SetSpriteScale(" not in header_text:
+        anchor = (
+            "void PoketchAnimation_SetSpriteRotation("
+            "PoketchAnimation_AnimatedSpriteData *animatedSprite, u16 rotation);\n"
+        )
+        if anchor not in header_text:
+            raise SystemExit("MR06B2P Poketch scale header anchor missing")
+        header.write_text(header_text.replace(anchor, anchor + prototype, 1))
+
+    source_text = source.read_text()
+
+    if "fx32 customScaleX;" not in source_text:
+        anchor = """    u8 flipV;
+    u16 rotZ;
+    u8 mosaic;
+};"""
+        replacement = """    u8 flipV;
+    u16 rotZ;
+    fx32 customScaleX;
+    fx32 customScaleY;
+    u8 mosaic;
+};"""
+        if anchor not in source_text:
+            raise SystemExit("MR06B2P Poketch scale struct anchor missing")
+        source_text = source_text.replace(anchor, replacement, 1)
+
+    if "animatedSprite->customScaleX = FX32_ONE;" not in source_text:
+        anchor = """        animatedSprite->mosaic = FALSE;
+        animatedSprite->rotZ = 0;
+        animatedSprite->affineTransformationPtr = &(animatedSprite->affineTransformation);"""
+        replacement = """        animatedSprite->mosaic = FALSE;
+        animatedSprite->rotZ = 0;
+        animatedSprite->customScaleX = FX32_ONE;
+        animatedSprite->customScaleY = FX32_ONE;
+        animatedSprite->affineTransformationPtr = &(animatedSprite->affineTransformation);"""
+        if anchor not in source_text:
+            raise SystemExit("MR06B2P Poketch scale init anchor missing")
+        source_text = source_text.replace(anchor, replacement, 1)
+
+    if "FX_Inv(animatedSprite->customScaleX)" not in source_text:
+        anchor = """                    if (srtCtrl->srtData.SRT_EnableFlag & NNS_G2D_AFFINEENABLE_SCALE) {
+                        MTX_ScaleApply22(animatedSprite->affineTransformationPtr, animatedSprite->affineTransformationPtr, FX_Inv(srtCtrl->srtData.scale.x), FX_Inv(srtCtrl->srtData.scale.y));
+                    }
+
+                    affineIdx = NNS_G2dEntryOamManagerAffine"""
+        replacement = """                    if (srtCtrl->srtData.SRT_EnableFlag & NNS_G2D_AFFINEENABLE_SCALE) {
+                        MTX_ScaleApply22(animatedSprite->affineTransformationPtr, animatedSprite->affineTransformationPtr, FX_Inv(srtCtrl->srtData.scale.x), FX_Inv(srtCtrl->srtData.scale.y));
+                    }
+
+                    MTX_ScaleApply22(
+                        animatedSprite->affineTransformationPtr,
+                        animatedSprite->affineTransformationPtr,
+                        FX_Inv(animatedSprite->customScaleX),
+                        FX_Inv(animatedSprite->customScaleY));
+
+                    affineIdx = NNS_G2dEntryOamManagerAffine"""
+        if anchor not in source_text:
+            raise SystemExit("MR06B2P Poketch scale render anchor missing")
+        source_text = source_text.replace(anchor, replacement, 1)
+
+    if "void PoketchAnimation_SetSpriteScale(" not in source_text:
+        anchor = """void PoketchAnimation_SetSpriteRotation(PoketchAnimation_AnimatedSpriteData *animatedSprite, u16 rotation)
+{
+    animatedSprite->rotZ = rotation;
+}
+
+"""
+        addition = """void PoketchAnimation_SetSpriteRotation(PoketchAnimation_AnimatedSpriteData *animatedSprite, u16 rotation)
+{
+    animatedSprite->rotZ = rotation;
+}
+
+void PoketchAnimation_SetSpriteScale(
+    PoketchAnimation_AnimatedSpriteData *animatedSprite,
+    fx32 scaleX,
+    fx32 scaleY)
+{
+    if (scaleX <= 0 || scaleY <= 0) {
+        return;
+    }
+
+    animatedSprite->customScaleX = scaleX;
+    animatedSprite->customScaleY = scaleY;
+}
+
+"""
+        if anchor not in source_text:
+            raise SystemExit("MR06B2P Poketch scale function anchor missing")
+        source_text = source_text.replace(anchor, addition, 1)
+
+    source.write_text(source_text)
+
+
 def validate(root: Path) -> None:
     app_ids = (root / "generated/poketch_apps.txt").read_text()
     system = (root / "src/applications/poketch/poketch_system.c").read_text()
@@ -2125,9 +2331,16 @@ def validate(root: Path) -> None:
         "all_method_rods": "ITEM_OLD_ROD" in app and "ITEM_SUPER_ROD" in app,
         "research_slots": "radarEncounters" in app,
         "pagination": "RADAR_PAGE_SIZE" in app and "TapAreaPager" in app,
-        "detail_search_level": '"SEARCH LV"' in gfx,
+        "detail_search_level": '"SEARCH"' in gfx,
         "detail_potential": '"POTENTIAL"' in gfx,
-        "detail_level": '"BATTLE LV"' in gfx,
+        "detail_level": '"LV"' in gfx,
+        "mockup_layout_frames": "DrawPokeballGlyph" in gfx
+            and "DrawScannerReticle" in gfx
+            and "DrawSearchCorners" in gfx,
+        "detail_icon_scaled": "PoketchAnimation_SetSpriteScale" in gfx
+            and "PoketchAnimation_SetSpriteScale" in (
+                root / "include/applications/poketch/poketch_animation.h"
+            ).read_text(),
         "instant_request": "MercuryResearchRadar_RequestInstantEncounter" in app,
         "instant_battle": "Encounter_NewVsWild" in field,
         "dynamic_gym_cap": "Trainer_LoadParty" in shared and "sGymLeaders" in shared,
@@ -2185,6 +2398,7 @@ def main() -> None:
     patch_registration(root)
     patch_item_description(root)
     patch_old_item_frontend(root)
+    patch_poketch_sprite_scale(root)
     validate(root)
 
     report = {
@@ -2210,6 +2424,8 @@ def main() -> None:
             "duplicates_merged": True,
         },
         "detail_page": {
+            "visual_pass": "MR06B2P native mockup-match reconstruction",
+            "hardware_scaled_detail_icon": "2x",
             "battle_level_range": True,
             "search_level": True,
             "potential_stars": True,
