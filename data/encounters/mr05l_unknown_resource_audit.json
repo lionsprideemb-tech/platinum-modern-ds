@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "project": "Pokemon Mercury Redux",
+  "phase": "MR05L",
+  "purpose": "Classify encounters_unknown_533 through encounters_unknown_557 before treating them as unfinished player-facing encounter maps.",
+  "expected_range": {
+    "first": 533,
+    "last": 557,
+    "count": 25
+  },
+  "expected_header_properties": {
+    "wildEncountersArchiveID": "ENCOUNTERS_NONE",
+    "mapLabelTextID": "LocationNames_Text_TurnbackCave",
+    "mapType": "MAP_TYPE_CAVE"
+  },
+  "expected_encounter_file_properties": {
+    "map_type": "dungeon",
+    "map_number": 10
+  },
+  "classification": "orphaned encounter NARC members / non-runtime-addressable Turnback Cave leftovers",
+  "action": "audit only; do not author or attach these tables to live map headers",
+  "completion_rule": "When every UNKNOWN_533..557 map header has ENCOUNTERS_NONE and none references its same-numbered encounter member, the active encounter-map sweep is complete."
+}

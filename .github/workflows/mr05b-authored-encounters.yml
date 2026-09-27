@@ -26,6 +26,7 @@ on:
       - "tools/extend_mr05i_solaceon_ruins.py"
       - "tools/extend_mr05j_identified_maps.py"
       - "tools/extend_mr05k_final_identified.py"
+      - "tools/audit_mr05l_unknown_encounter_resources.py"
       - "tools/install_mr05f_sinnoh_legendary_statics.py"
       - "data/encounters/**"
       - "tools/install_mp05_ability_namespace.py"
@@ -131,6 +132,7 @@ jobs:
             tools/extend_mr05i_solaceon_ruins.py \
             tools/extend_mr05j_identified_maps.py \
             tools/extend_mr05k_final_identified.py \
+            tools/audit_mr05l_unknown_encounter_resources.py \
             tools/install_mr05f_sinnoh_legendary_statics.py
 
       - name: Restore MP05 canonical ability architecture
@@ -469,6 +471,25 @@ jobs:
           test "$(jq -r '.remaining_identified_standard_resources_after_phase' mr05k-final-identified-port.json)" = "0"
           test "$(jq -r '.remaining_unknown_resources_after_phase' mr05k-final-identified-port.json)" = "25"
 
+      - name: Classify unknown 533-557 encounter resources
+        shell: bash
+        run: |
+          python3 tools/audit_mr05l_unknown_encounter_resources.py \
+            vendor/pokeplatinum \
+            data/encounters/mr05l_unknown_resource_audit.json \
+            --report mr05l-unknown-resource-audit.json
+
+          test "$(jq -r '.status' mr05l-unknown-resource-audit.json)" = "PASS"
+          test "$(jq -r '.unknown_resource_count' mr05l-unknown-resource-audit.json)" = "25"
+          test "$(jq -r '.headers_with_encounters_none' mr05l-unknown-resource-audit.json)" = "25"
+          test "$(jq -r '.turnback_cave_labeled_headers' mr05l-unknown-resource-audit.json)" = "25"
+          test "$(jq -r '.direct_runtime_header_references' mr05l-unknown-resource-audit.json)" = "0"
+          test "$(jq -r '.runtime_active_unknown_resources' mr05l-unknown-resource-audit.json)" = "0"
+          test "$(jq -r '.orphaned_encounter_members' mr05l-unknown-resource-audit.json)" = "25"
+          test "$(jq -r '.normal_loader_contract_verified' mr05l-unknown-resource-audit.json)" = "true"
+          test "$(jq -r '.no_table_rewrite_required' mr05l-unknown-resource-audit.json)" = "true"
+          test "$(jq -r '.active_standard_encounter_sweep_complete' mr05l-unknown-resource-audit.json)" = "true"
+
       - name: Install MR05K authored encounter tables
         shell: bash
         run: |
@@ -582,14 +603,14 @@ jobs:
         shell: bash
         run: make configure
 
-      - name: Build MR05K all-identified encounter ROM
+      - name: Build MR05L encounter-complete ROM
         working-directory: vendor/pokeplatinum
         shell: bash
         run: |
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
-      - name: Capture MR05K normal boot in DeSmuME
+      - name: Capture MR05L normal boot in DeSmuME
         shell: bash
         run: |
           . "$RUNNER_TEMP/mr04-venv/bin/activate"
@@ -639,7 +660,7 @@ jobs:
               emu.destroy()
 
           meta = {
-              "gate": "MERCURY_MR05K_NORMAL_BOOT",
+              "gate": "MERCURY_MR05L_NORMAL_BOOT",
               "rom": rom.name,
               "normal_story_boot": True,
               "ci_move_learner_direct_launch": False,
@@ -647,7 +668,7 @@ jobs:
               "stopped_at": stopped_at,
               "captures": rows,
           }
-          (out / "mr05k-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          (out / "mr05l-normal-boot-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
           if stopped_at is not None:
               raise SystemExit(f"Mercury player ROM stopped near frame {stopped_at}")
@@ -661,8 +682,8 @@ jobs:
         run: |
           mkdir -p mr05b-artifact
           if test -s "$BUILD/pokeplatinum.us.nds"; then
-            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05K_All_Identified_Encounters.nds
-            sha256sum mr05b-artifact/Pokemon_Mercury_MR05K_All_Identified_Encounters.nds > mr05b-artifact/SHA256SUMS.txt
+            cp "$BUILD/pokeplatinum.us.nds" mr05b-artifact/Pokemon_Mercury_MR05L_Encounter_Complete.nds
+            sha256sum mr05b-artifact/Pokemon_Mercury_MR05L_Encounter_Complete.nds > mr05b-artifact/SHA256SUMS.txt
           fi
           cp mr04-move-learner.json mr05b-artifact/ 2>/dev/null || true
           cp mr04-modern-moves.json mr05b-artifact/ 2>/dev/null || true
@@ -694,18 +715,19 @@ jobs:
           cp mr05j-identified-maps-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05k-authored-overrides-with-final-identified.json mr05b-artifact/ 2>/dev/null || true
           cp mr05k-final-identified-port.json mr05b-artifact/ 2>/dev/null || true
+          cp mr05l-unknown-resource-audit.json mr05b-artifact/ 2>/dev/null || true
           cp mr05c-regi-preleague.json mr05b-artifact/ 2>/dev/null || true
           cp mr05f-legendary-statics.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-framework.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-encounter-manifest.json mr05b-artifact/ 2>/dev/null || true
           cp runtime-preview/*.png mr05b-artifact/ 2>/dev/null || true
-          cp runtime-preview/mr05k-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
+          cp runtime-preview/mr05l-normal-boot-meta.json mr05b-artifact/ 2>/dev/null || true
 
       - name: Upload Mercury player build
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr05k-all-identified-encounters
+          name: mercury-mr05l-encounter-complete
           path: mr05b-artifact/
           if-no-files-found: error
           retention-days: 30
@@ -715,7 +737,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Mercury MR05K — All Identified Encounter Resources"
+            echo "## Mercury MR05L — Encounter Sweep Complete"
             echo
             echo "- Full 1025-species modern foundation rebuilt"
             echo "- Sealed MR03F dual-screen Move Learner included"
@@ -758,10 +780,13 @@ jobs:
             echo "- Stark Mountain exterior + both main rooms now have authored four-period volcanic ecology"
             echo "- Heatran remains a scripted static and is never inserted into random encounter tables"
             echo "- Resort Area keeps its distinctive high-level Magikarp fishing gimmick, including a Lv100-capable Super Rod roll"
-            echo "- All identified standard encounter resources are now authored; only unknown_533 through unknown_557 require map/header tracing"
+            echo "- All identified standard encounter resources are authored"
+            echo "- unknown_533 through unknown_557 were traced: all 25 matching map headers are Turnback Cave cave headers with ENCOUNTERS_NONE"
+            echo "- None of the 25 unknown encounter members is referenced by any live map header, so they are orphaned/non-runtime-addressable leftovers rather than unfinished player-facing encounter maps"
+            echo "- The active standard encounter-map sweep is complete; no fake tables were attached to unused headers"
             echo "- Cynthia's grandmother unlocks Dialga/Palkia rifts after Distortion World, pre-League"
             echo "- Dialga/Palkia remain Lv70 and their rifts are retry-safe until capture"
             echo "- Mesprit guided pursuit remains isolated for a dedicated tracking pass"
             echo "- Honey Tree pools replaced with Mercury premium pool; Burmy removed"
-            echo "- Player ROM staged as Pokemon_Mercury_MR05K_All_Identified_Encounters.nds"
+            echo "- Player ROM staged as Pokemon_Mercury_MR05L_Encounter_Complete.nds"
           } >> "$GITHUB_STEP_SUMMARY"
