@@ -35,16 +35,8 @@ def patch_history_main(root: Path) -> None:
         path,
         '#include "bg_window.h"\n',
         '#include "bg_window.h"\n'
-        '#include "field/field_system.h"\n',
-        "MR06B2K field system include",
-    )
-
-    replace_once(
-        path,
-        '#include "poketch.h"\n',
-        '#include "poketch.h"\n'
-        '#include "overlay006/wild_encounters.h"\n',
-        "MR06B2K Radar target API include",
+        '#include "generated/species.h"\n',
+        "MR06B2K species constants include",
     )
 
     old = """    Poketch *poketch = PoketchSystem_GetPoketchData(poketchSys);
@@ -55,27 +47,35 @@ def patch_history_main(root: Path) -> None:
         appData->history.mons[i].form = Poketch_PokemonHistoryForm(poketch, i);
     }
 """
-    new = """    FieldSystem *fieldSystem = PoketchSystem_GetFieldSystem(poketchSys);
-    MercuryResearchRadarTarget targets[MAX_HISTORY_SIZE];
+    new = """    // CI-only visual proof set, sourced directly from Mercury's authored
+    // Route 202 Morning table. Hardcoding here avoids illegal cross-overlay
+    // calls from the Pokétch app into overlay006; production wiring will use a
+    // main-memory handoff owned by the field/Radar runtime.
+    static const u16 radarProofSpecies[MAX_HISTORY_SIZE] = {
+        SPECIES_BIDOOF,
+        SPECIES_STARLY,
+        SPECIES_SHINX,
+        SPECIES_KRICKETOT,
+        SPECIES_BUDEW,
+        SPECIES_FLETCHLING,
+        SPECIES_LILLIPUP,
+        SPECIES_PAWMI,
+        SPECIES_BUNEARY,
+        SPECIES_GRUBBIN,
+        SPECIES_RALTS,
+        SPECIES_ROCKRUFF,
+    };
 
-    MI_CpuClear8(targets, sizeof(targets));
     MI_CpuClear8(&appData->history, sizeof(appData->history));
+    appData->history.count = MAX_HISTORY_SIZE;
 
-    int targetCount = MercuryResearchRadar_GetTargets(
-        fieldSystem->location->mapHeaderID,
-        MercuryEncounterChart_GetCurrentLandMethod(),
-        targets,
-        MAX_HISTORY_SIZE);
-
-    appData->history.count = targetCount;
-
-    for (int i = 0; i < targetCount; i++) {
-        appData->history.mons[i].species = targets[i].species;
+    for (int i = 0; i < MAX_HISTORY_SIZE; i++) {
+        appData->history.mons[i].species = radarProofSpecies[i];
         appData->history.mons[i].icon = 0;
         appData->history.mons[i].form = 0;
     }
 """
-    replace_once(path, old, new, "MR06B2K current-area target grid")
+    replace_once(path, old, new, "MR06B2K authored Route 202 proof grid")
 
 
 def patch_history_title(root: Path) -> None:
@@ -205,7 +205,7 @@ def validate(root: Path) -> None:
 
     checks = {
         "real_poketch_app_renderer": "PoketchPokemonHistoryGraphics_New" in main,
-        "current_area_targets": "MercuryResearchRadar_GetTargets" in main,
+        "authored_route202_targets": "SPECIES_ROCKRUFF" in main and "SPECIES_PAWMI" in main,
         "twelve_target_grid": "MAX_HISTORY_SIZE" in main,
         "native_icon_loader": "PoketchTask_LoadPokemonIcons" in gfx,
         "native_luminance_palette": "PoketchTask_LoadPokemonIconLuminancePalette" in gfx,
@@ -230,12 +230,7 @@ def main() -> None:
     args = ap.parse_args()
     root = args.pokeplatinum_root.resolve()
 
-    if "MercuryResearchRadar_GetTargets" not in (
-        root / "include/overlay006/wild_encounters.h"
-    ).read_text():
-        raise SystemExit("MR06B2K requires the Mercury Research Radar target API")
-
-    patch_history_main(root)
+        patch_history_main(root)
     patch_history_title(root)
     patch_history_graphics(root)
     patch_qa_boot(root)
@@ -251,7 +246,7 @@ def main() -> None:
         "area_page": {
             "layout": "3x4 icon grid",
             "visible_targets": 12,
-            "source": "current-area Mercury Research Radar targets",
+            "source": "Mercury authored Route 202 Morning proof set; production runtime handoff comes after visual approval",
             "palette": "native Poketch active luminance palette",
             "icons": "native Pokemon icon resources rendered through Poketch animation system",
             "title": "RESEARCH RADAR",
