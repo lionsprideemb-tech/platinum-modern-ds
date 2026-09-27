@@ -395,8 +395,12 @@ static int StartMenu_EncounterBuildRows(const WildEncounters *encounters, enum M
             rows[found].maxLevel = slot.maxLevel;
             rows[found].chancePercent = 0;
         } else {
-            rows[found].minLevel = MIN(rows[found].minLevel, slot.minLevel);
-            rows[found].maxLevel = MAX(rows[found].maxLevel, slot.maxLevel);
+            if (slot.minLevel < rows[found].minLevel) {
+                rows[found].minLevel = slot.minLevel;
+            }
+            if (slot.maxLevel > rows[found].maxLevel) {
+                rows[found].maxLevel = slot.maxLevel;
+            }
         }
 
         rows[found].chancePercent += slot.chancePercent;
@@ -528,13 +532,19 @@ static void StartMenu_DrawEncounterChart(FieldTask *fieldTask)
         StartMenu_EncounterPrintMessage(window, loader, StartMenu_Text_EncounterOdds, 180, 38);
 
         int rowCount = StartMenu_EncounterBuildRows(&encounters, method, rows);
-        int pages = MAX(1, (rowCount + 3) / 4);
+        int pages = (rowCount + 3) / 4;
+        if (pages < 1) {
+            pages = 1;
+        }
         if (menu->encounterChartPage >= pages) {
             menu->encounterChartPage = 0;
         }
 
         int start = menu->encounterChartPage * 4;
-        int end = MIN(start + 4, rowCount);
+        int end = start + 4;
+        if (end > rowCount) {
+            end = rowCount;
+        }
 
         for (int rowIndex = start; rowIndex < end; rowIndex++) {
             int line = rowIndex - start;
@@ -616,7 +626,10 @@ static void StartMenu_UpdateEncounterChart(FieldTask *fieldTask)
         MercuryEncounterChartDisplayRow rows[MAX_GRASS_ENCOUNTERS];
         enum MercuryEncounterChartMethod method = (enum MercuryEncounterChartMethod)menu->encounterChartMethod;
         int rowCount = StartMenu_EncounterBuildRows(&encounters, method, rows);
-        int pages = MAX(1, (rowCount + 3) / 4);
+        int pages = (rowCount + 3) / 4;
+        if (pages < 1) {
+            pages = 1;
+        }
 
         if (pages > 1) {
             menu->encounterChartPage = (menu->encounterChartPage + 1) % pages;
