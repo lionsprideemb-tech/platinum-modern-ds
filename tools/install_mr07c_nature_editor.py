@@ -162,6 +162,16 @@ void Pokemon_MercuryClearNatureOverride(Pokemon *mon)
 def patch_summary(root: Path) -> None:
     path = root / "src/applications/pokemon_summary_screen/main.c"
 
+    # NATURE_COUNT and NATURE_* live in the generated Nature enum, not in
+    # constants/pokemon.h. Platinum's Summary did not previously need this
+    # include, so MR07C must add it explicitly.
+    insert_after_once(
+        path,
+        '#include "generated/species.h"\n',
+        '#include "generated/natures.h"\n',
+        "MR07C generated Nature enum include",
+    )
+
     # Declarations added by MR07B1.
     replace_once(
         path,
@@ -592,6 +602,8 @@ def validate(root: Path) -> dict[str, bool]:
         "summary_nature_entry":
             "MercurySkillsEditor_OpenNature(summaryScreen)" in summary_c
             and "mercurySkillsCursor == 6" in summary_c,
+        "nature_enum_include":
+            '#include "generated/natures.h"' in summary_c,
         "scrolling_25_natures":
             "MERCURY_SKILLS_EDITOR_NATURE" in summary_c
             and "NATURE_COUNT - 1" in summary_c
