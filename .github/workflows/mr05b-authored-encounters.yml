@@ -1070,6 +1070,29 @@ jobs:
           printf 'MR06B2H_QA_BUILD_OK\n' > \
             "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/QA_BUILD_MARKER.txt"
 
+          # Symbolize the stable early-boot failure address if the emulator
+          # reports one. These diagnostics are non-fatal and stay QA-only.
+          {
+            echo "MR06B2H symbol diagnostics"
+            echo "main.nef:"
+            file "$BUILD/main.nef" 2>&1 || true
+            echo
+            echo "addr2line 0x02053AA4:"
+            if command -v arm-none-eabi-addr2line >/dev/null 2>&1; then
+              arm-none-eabi-addr2line -f -C -e "$BUILD/main.nef" 0x02053AA4 2>&1 || true
+            else
+              echo "arm-none-eabi-addr2line unavailable"
+            fi
+            echo
+            echo "nearest symbols:"
+            if command -v arm-none-eabi-nm >/dev/null 2>&1; then
+              arm-none-eabi-nm -n "$BUILD/main.nef" 2>/dev/null | \
+                awk '$1 ~ /^[0-9A-Fa-f]+$/ { if (strtonum("0x"$1) <= strtonum("0x02053AA4")) last=$0 } END { print last }' || true
+            else
+              echo "arm-none-eabi-nm unavailable"
+            fi
+          } > "$GITHUB_WORKSPACE/radar-runtime-proof-artifact/crash-symbol-diagnostic.txt"
+
       - name: Capture scanner SEARCH patch and HUD in DeSmuME
         shell: bash
         run: |
@@ -1095,16 +1118,21 @@ jobs:
           rows = []
           images = {}
 
+          stopped_at = None
+
           def cycle_to(target):
-              global current
+              global current, stopped_at
               for _ in range(target - current):
                   emu.cycle(False)
                   current += 1
                   if not emu.is_running():
-                      raise SystemExit(f"MR06B2H emulator stopped near frame {current}")
+                      stopped_at = current
+                      return False
+              return True
 
           def capture(frame, label):
-              cycle_to(frame)
+              if not cycle_to(frame):
+                  return None
               img = emu.screenshot()
               path = out / f"{label}-{frame}.png"
               img.save(path)
@@ -1122,9 +1150,25 @@ jobs:
               images[label] = rgb
               return rgb
 
-          # Direct-new-save harness reaches the dual-screen Radar scanner quickly.
-          # Capture multiple stable frames before input so the actual scanner art
-          # can be reviewed rather than relying on a single timing assumption.
+          # Capture the direct-new-save path early as well as the intended
+          # scanner window. If the QA ROM traps before scanner init, these frames
+          # show exactly how far the field boot got.
+          for frame in [60, 120, 180, 205]:
+              capture(frame, "boot-diagnostic")
+
+          if stopped_at is not None:
+              meta = {
+                  "gate": "MERCURY_MR06B2H_RADAR_RUNTIME_DIAGNOSTIC",
+                  "status": "EARLY_STOP",
+                  "stopped_at": stopped_at,
+                  "captures": rows,
+              }
+              (out / "mr06b2h-radar-runtime-meta.json").write_text(
+                  json.dumps(meta, indent=2) + "\n"
+              )
+              emu.destroy()
+              raise SystemExit(f"MR06B2H emulator stopped near frame {stopped_at}")
+
           capture(700, "scanner-early")
           capture(1100, "scanner")
           pre = capture(1500, "scanner-before-search")
