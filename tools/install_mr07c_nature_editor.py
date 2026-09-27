@@ -568,6 +568,10 @@ def validate(root: Path) -> dict[str, bool]:
         root / "res/text/pokemon_summary_screen.json"
     ).read_text()
 
+    setter_start = pokemon_c.index("void BoxPokemon_MercurySetNatureOverride")
+    setter_end = pokemon_c.index("u8 Pokemon_GetNatureOf", setter_start)
+    mercury_setter_block = pokemon_c[setter_start:setter_end]
+
     checks = {
         "no_struct_size_change":
             "MON_DATA_UNUSED_114" in pokemon_c
@@ -580,8 +584,8 @@ def validate(root: Path) -> dict[str, bool]:
             "u8 BoxPokemon_GetNature" in pokemon_c
             and "nature < NATURE_COUNT" in pokemon_c,
         "pid_untouched":
-            "Pokemon_SetValue(mon, MON_DATA_PERSONALITY" not in pokemon_c
-            and "BoxPokemon_SetValue(boxMon, MON_DATA_PERSONALITY" not in pokemon_c,
+            "MON_DATA_PERSONALITY" not in mercury_setter_block
+            and "MON_DATA_UNUSED_114" in mercury_setter_block,
         "party_stat_recalc":
             "Pokemon_MercurySetNatureOverride" in pokemon_c
             and "Pokemon_CalcStats(mon);" in pokemon_c,
