@@ -53,14 +53,13 @@ def main() -> None:
     main_c = root / "src/main.c"
     game_start_c = root / "src/game_start.c"
     field_map_change_c = root / "src/field_map_change.c"
+    radar_app_c = root / "src/applications/mercury_research_radar.c"
 
-    for path in (main_c, game_start_c, field_map_change_c):
+    for path in (main_c, game_start_c, field_map_change_c, radar_app_c):
         if not path.is_file():
             raise SystemExit(f"missing pinned pokeplatinum source file: {path}")
 
-    if "MercuryResearchRadar_FieldTask" not in (
-        root / "src/applications/mercury_research_radar.c"
-    ).read_text():
+    if "MercuryResearchRadar_FieldTask" not in radar_app_c.read_text():
         raise SystemExit("MR06B2H requires the production Research Radar runtime")
 
     # CI-only fast boot. The production ROM has already been copied/uploaded by
@@ -175,6 +174,28 @@ def main() -> None:
         "MR06B2H shared Radar field-task proof",
     )
 
+    # Strengthen the proof: when the A press closes the scanner, the actual
+    # production field task must have received SEARCH and successfully created a
+    # live target patch. A missed input or invalid proof position becomes a hard
+    # CI failure instead of a misleading screenshot.
+    replace_once(
+        radar_app_c,
+        """            if (!ctx->patchSpawned) {
+                ScriptManager_Start(task, SCRIPT_ID(POKE_RADAR, 1), NULL, NULL);
+            }
+        }
+
+        FieldMap_FadeScreen(FADE_TYPE_BRIGHTNESS_IN);""",
+        """            GF_ASSERT(ctx->patchSpawned);
+            GF_ASSERT(MercuryRadar_HasTarget(fieldSystem->chain));
+        } else {
+            GF_ASSERT(FALSE);
+        }
+
+        FieldMap_FadeScreen(FADE_TYPE_BRIGHTNESS_IN);""",
+        "MR06B2H SEARCH/patch assertions",
+    )
+
     checks = {
         "ci_only_direct_boot": "gGameStartNewSaveAppTemplate" in main_c.read_text(),
         "valid_trainer_profile": "radarQaName" in game_start_c.read_text(),
@@ -182,6 +203,9 @@ def main() -> None:
         "known_grass_corridor": "180,\n            827," in field_map_change_c.read_text(),
         "real_shared_field_task": "MercuryResearchRadar_FieldTask" in field_map_change_c.read_text(),
         "real_shared_context": "MercuryResearchRadar_NewFieldTaskContext" in field_map_change_c.read_text(),
+        "search_action_asserted": "GF_ASSERT(FALSE);" in radar_app_c.read_text(),
+        "target_patch_asserted": "GF_ASSERT(ctx->patchSpawned);" in radar_app_c.read_text(),
+        "live_target_asserted": "GF_ASSERT(MercuryRadar_HasTarget(fieldSystem->chain));" in radar_app_c.read_text(),
     }
     failed = [name for name, ok in checks.items() if not ok]
     if failed:
@@ -196,6 +220,11 @@ def main() -> None:
         "proof_position": {"x": 180, "z": 827, "facing": "left"},
         "grass_basis": "vanilla Route 202 catching tutorial walks west two tiles into tall grass",
         "runtime_entrypoint": "MercuryResearchRadar_FieldTask",
+        "runtime_assertions": [
+            "scanner exits through SEARCH action",
+            "target patch spawn returns TRUE",
+            "RadarChain owns a live Mercury target",
+        ],
         "expected_flow": [
             "dual-screen Research Poke Radar scanner",
             "A SEARCH",
