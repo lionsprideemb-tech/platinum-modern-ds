@@ -79,7 +79,8 @@ def validate(root: Path) -> dict[str, bool]:
         "blue_selection_arrow":
             "ColoredArrow_SetColor(arrow, TEXT_COLOR(11, 10, 0));" in window_c,
         "blue_detail_text":
-            window_c.count("            mercuryBlue") >= 3,
+            window_c.count("mercuryBlue") >= 4
+            and "mercuryPurple" not in window_c,
         "vanilla_palette_retained":
             ".palette = 8" in window_c,
         "logic_unchanged":
