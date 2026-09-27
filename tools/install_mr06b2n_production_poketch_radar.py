@@ -1454,6 +1454,7 @@ SHARED_C = r'''#include "mercury_research_radar_shared.h"
 
 #include "generated/trainers.h"
 
+#include "math_util.h"
 #include "party.h"
 #include "pokedex.h"
 #include "system.h"
@@ -1624,7 +1625,9 @@ u8 MercuryResearchRadar_GeneratePotentialStars(
         threeStar = 12;
     }
 
-    u32 roll = LCRNG_RandMod(100);
+    // This helper lives in static main so it must use the resident
+    // Mersenne Twister rather than overlay-local LCRNG_RandMod.
+    u32 roll = MTRNG_Next() % 100;
 
     if (roll < oneStar) {
         return 1;
