@@ -409,8 +409,8 @@ def patch_pokeradar(root: Path) -> None:
 
     replace_once(
         path,
-        '#include "overlay005/fieldmap.h"\n',
-        '#include "overlay005/fieldmap.h"\n'
+        '#include "overlay005/ov5_021F2D20.h"\n',
+        '#include "overlay005/ov5_021F2D20.h"\n'
         '#include "overlay005/mercury_radar_hud.h"\n',
         "MR06B2E HUD include",
     )
