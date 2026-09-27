@@ -94,7 +94,7 @@ def main() -> None:
 
     insert_include_once(
         field_map_change_c,
-        '#include "appearance.h"\n',
+        '#include "field_system.h"\n',
         '#include "applications/mercury_research_radar.h"\n',
         "MR06B2H Research Radar app include",
     )
