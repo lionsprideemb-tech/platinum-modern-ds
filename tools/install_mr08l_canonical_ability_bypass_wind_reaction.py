@@ -55,6 +55,31 @@ def insert_before_once(path: Path, anchor: str, insertion: str, label: str) -> N
     path.write_text(text.replace(anchor, insertion + anchor, 1), encoding="utf-8")
 
 
+def replace_function(path: Path, signature: str, replacement: str, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    definition = signature + "\n{"
+    start = text.find(definition)
+    if start < 0:
+        raise SystemExit(f"{label}: function definition not found in {path}")
+
+    open_brace = start + len(signature) + 1
+    depth = 0
+    end = -1
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+
+    if end < 0:
+        raise SystemExit(f"{label}: closing brace not found in {path}")
+
+    path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
+
+
 def validate_ids(root: Path) -> dict[str, bool]:
     abilities = [
         line.strip()
@@ -158,19 +183,68 @@ def patch_wind_family(root: Path) -> None:
         "Wind Power wind-hit Charge",
     )
 
-    replace_once(
+    replace_function(
         script,
-        """    default:
+        "static BOOL BtlCmd_UpdateVar(BattleSystem *battleSys, BattleContext *battleCtx)",
+        """static BOOL BtlCmd_UpdateVar(BattleSystem *battleSys, BattleContext *battleCtx)
+{
+    BattleScript_Iter(battleCtx, 1);
+    int op = BattleScript_Read(battleCtx);
+    int dstVar = BattleScript_Read(battleCtx);
+    int srcVal = BattleScript_Read(battleCtx);
+
+    int *var = BattleScript_VarAddress(battleSys, battleCtx, dstVar);
+    u32 mask;
+
+    switch (op) {
+    case OPCODE_SET:
+        *var = srcVal;
+        break;
+    case OPCODE_ADD:
+        *var += srcVal;
+        break;
+    case OPCODE_SUB:
+        *var -= srcVal;
+        break;
+    case OPCODE_FLAG_ON:
+        *var |= srcVal;
+        break;
+    case OPCODE_FLAG_OFF:
+        *var &= FLAG_NEGATE(srcVal);
+        break;
+    case OPCODE_MUL:
+        *var *= srcVal;
+        break;
+    case OPCODE_DIV:
+        *var /= srcVal;
+        break;
+    case OPCODE_LEFT_SHIFT:
+        *var = *var << srcVal;
+        break;
+    case OPCODE_RIGHT_SHIFT:
+        mask = *var;
+        mask = mask >> srcVal;
+        *var = mask;
+        break;
+    case OPCODE_FLAG_INDEX:
+        *var = FlagIndex(srcVal);
+        break;
+    case OPCODE_GET:
         GF_ASSERT(FALSE);
         break;
-    }
-
-    return FALSE;
-}
-
-static inline BOOL AbilityBlocksSpecificStatReduction
-""",
-        """    default:
+    case OPCODE_SUB_TO_ZERO:
+        *var -= srcVal;
+        if (*var < 0) {
+            *var = 0;
+        }
+        break;
+    case OPCODE_BITWISE_XOR:
+        *var ^= srcVal;
+        break;
+    case OPCODE_BITWISE_AND:
+        *var &= srcVal;
+        break;
+    default:
         GF_ASSERT(FALSE);
         break;
     }
@@ -199,10 +273,7 @@ static inline BOOL AbilityBlocksSpecificStatReduction
     }
 
     return FALSE;
-}
-
-static inline BOOL AbilityBlocksSpecificStatReduction
-""",
+}""",
         "Tailwind activates Wind Power/Wind Rider",
     )
 
