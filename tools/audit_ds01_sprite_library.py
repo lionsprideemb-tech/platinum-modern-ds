@@ -61,29 +61,44 @@ def species_label(path: str) -> str:
 
 
 def concept_key(path: str) -> str:
-    label = species_label(path)
-    label = re.sub(r"^cpf[_-]?\d+[_-]+", "", label)
-    replacements = {
-        "hisuian": "hisui",
-        "alolan": "alola",
-        "galarian": "galar",
-        "paldean": "paldea",
-    }
-    tokens = [t for t in re.split(r"[^a-z0-9]+", label) if t]
-    tokens = [replacements.get(t, t) for t in tokens if t not in DROP_TOKENS]
+    """Normalize a logical sprite identity without collapsing legitimate roles."""
+    clean = path.replace("\\", "/").lower()
+    # HG-Engine-ready layout: .../sprites/<species>/<gender>/<front|back>.png
+    m = re.search(r"/sprites/([^/]+)/(male|female)/(front|back)\.[a-z0-9]+$", clean)
+    if m:
+        species, gender, view = m.groups()
+        return f"{species} {gender} {view}"
+
+    # Icon identity: .../sprites/<species>/icon.png
+    m = re.search(r"/sprites/([^/]+)/icon\.[a-z0-9]+$", clean)
+    if m:
+        return f"{m.group(1)} icon"
+
+    # Generic source-pack fallback: retain meaningful filename tokens and the
+    # nearest parent directory so alternate forms with generic front/back names
+    # do not all collapse into one bucket.
+    p = Path(clean.split("::")[-1])
+    stem = p.stem
+    parent = p.parent.name
+    tokens = [t for t in re.split(r"[^a-z0-9]+", f"{parent} {stem}") if t]
+    tokens = [t for t in tokens if t not in {"sprite", "sprites", "battle", "battler", "idle", "anim", "animation", "frame", "sheet", "converted", "conversion", "reference", "ref", "ds", "gba"}]
     return " ".join(tokens)
 
 
 def top_bucket(path: str) -> str:
-    parts = [p for p in path.replace("\\", "/").split("/") if p]
-    if not parts:
-        return ""
-    first = parts[0].lower()
-    if first.startswith("ds01_expanded_community_sprite_library") and len(parts) >= 2:
-        return parts[1]
-    if len(parts) >= 2 and first in {"sprites", "assets", "community", "library", "data"}:
-        return parts[1]
-    return parts[0]
+    """Return a useful source/origin bucket rather than the common archive root."""
+    clean = path.replace("\\", "/")
+    if "::" in clean:
+        outer, inner = clean.split("::", 1)
+        return f"nested:{Path(outer).stem}"
+    parts = [p for p in clean.split("/") if p]
+    for marker in ("hg_engine_ready", "partial_assets", "raw_source_packs", "previews", "source_metadata", "manifests"):
+        if marker in parts:
+            idx = parts.index(marker)
+            if idx + 1 < len(parts) and marker in {"partial_assets", "raw_source_packs", "source_metadata", "manifests"}:
+                return f"{marker}:{parts[idx + 1]}"
+            return marker
+    return parts[0] if parts else ""
 
 
 def canonical_palette_hash(img: Image.Image) -> str:
@@ -100,7 +115,7 @@ def canonical_palette_hash(img: Image.Image) -> str:
                 next_id += 1
             idx = mapping[px]
         # DS-style sprites should stay tiny-palette, but two bytes keeps this generic.
-        ids += int(idx).to_bytes(2, "little", signed=False)
+        ids += int(idx).to_bytes(4, "little", signed=False)
     header = f"{rgba.width}x{rgba.height}:".encode("ascii")
     return sha256(header + bytes(ids))
 
@@ -202,51 +217,37 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
     except Exception:
         return None
 
-    # We only need exact color counts for DS-sized, palette-like sprite candidates.
-    # Reference art/screenshots are intentionally kept in the inventory but skipped
-    # for the expensive palette-topology and perceptual-hash passes.
-    color_probe = rgba.getcolors(maxcolors=257)
-    color_count = len(color_probe) if color_probe is not None else 257
+    colors = rgba.getcolors(maxcolors=257)
+    color_count = len(colors) if colors is not None else 257
     candidate = (
         8 <= rgba.width <= 256
         and 8 <= rgba.height <= 256
         and color_count <= 256
     )
 
-    pixel_blob = (
-        f"{rgba.width}x{rgba.height}:RGBA:".encode("ascii")
-        + rgba.tobytes()
-    )
-    pixel_hash = sha256(pixel_blob)
-
-    visual_candidate = candidate and logical_path.lower().replace("\\", "/").endswith("/male/front.png")
-
-    if visual_candidate:
-        canonical_hash = canonical_palette_hash(rgba)
-        visual_hash = dhash64(rgba)
+    pixel_blob = f"{rgba.width}x{rgba.height}:RGBA:".encode("ascii") + rgba.tobytes()
+    if candidate:
+        palette_hash = canonical_palette_hash(rgba)
+        perceptual = dhash64(rgba)
     else:
-        # Keep non-representative frames out of the expensive visual/recolor lane.
-        canonical_hash = sha256(("NON_VISUAL:" + pixel_hash).encode("ascii"))
-        visual_hash = 0
+        palette_hash = ""
+        perceptual = 0
 
     return Entry(
         path=logical_path,
         source_archive=archive_name,
-        species_label=species_label(logical_path),
         width=rgba.width,
         height=rgba.height,
         mode="RGBA",
         byte_sha256=sha256(raw),
-        pixel_sha256=pixel_hash,
-        canonical_palette_sha256=canonical_hash,
-        dhash64=visual_hash,
+        pixel_sha256=sha256(pixel_blob),
+        canonical_palette_sha256=palette_hash,
+        dhash64=perceptual,
         color_count=color_count,
         is_sprite_candidate=candidate,
-        is_visual_candidate=visual_candidate,
         concept_key=concept_key(logical_path),
         top_bucket=top_bucket(logical_path),
     )
-
 
 def scan_zip_bytes(
     blob: bytes,
