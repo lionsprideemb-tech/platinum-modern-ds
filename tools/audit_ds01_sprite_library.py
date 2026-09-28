@@ -1,0 +1,434 @@
+#!/usr/bin/env python3
+"""Audit staged DS01 community sprites for duplicates, recolors, near-duplicates, and concept collisions.
+
+This is an analysis-only tool. It never installs or rewrites sprite assets.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import io
+import json
+import re
+import zipfile
+from collections import defaultdict
+from dataclasses import dataclass, asdict
+from pathlib import Path
+from typing import Iterable
+
+from PIL import Image
+
+IMAGE_EXTS = {".png", ".bmp", ".gif", ".jpg", ".jpeg", ".webp"}
+ARCHIVE_EXTS = {".zip"}
+DROP_TOKENS = {
+    "front", "back", "male", "female", "m", "f", "normal", "regular",
+    "shiny", "icon", "icons", "sprite", "sprites", "battle", "battler",
+    "idle", "anim", "animation", "frame", "palette", "pal", "sheet",
+    "converted", "conversion", "reference", "ref", "ds", "gba",
+}
+
+
+@dataclass
+class Entry:
+    path: str
+    source_archive: str
+    width: int
+    height: int
+    mode: str
+    byte_sha256: str
+    pixel_sha256: str
+    canonical_palette_sha256: str
+    dhash64: int
+    color_count: int
+    is_sprite_candidate: bool
+    concept_key: str
+    top_bucket: str
+
+
+def sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def concept_key(path: str) -> str:
+    stem = Path(path).stem.lower()
+    tokens = [t for t in re.split(r"[^a-z0-9]+", stem) if t]
+    tokens = [t for t in tokens if t not in DROP_TOKENS and not re.fullmatch(r"\d+", t)]
+    return " ".join(tokens)
+
+
+def top_bucket(path: str) -> str:
+    parts = [p for p in path.replace("\\", "/").split("/") if p]
+    if not parts:
+        return ""
+    # Prefer a meaningful source-ish bucket, while tolerating a common archive root.
+    if len(parts) >= 2 and parts[0].lower() in {"sprites", "assets", "community", "library", "data"}:
+        return parts[1]
+    return parts[0]
+
+
+def canonical_palette_hash(img: Image.Image) -> str:
+    rgba = img.convert("RGBA")
+    mapping: dict[tuple[int, int, int, int], int] = {}
+    next_id = 1
+    ids = bytearray()
+    for px in rgba.getdata():
+        if px[3] == 0:
+            idx = 0
+        else:
+            if px not in mapping:
+                mapping[px] = next_id
+                next_id += 1
+            idx = mapping[px]
+        # DS-style sprites should stay tiny-palette, but two bytes keeps this generic.
+        ids += int(idx).to_bytes(2, "little", signed=False)
+    header = f"{rgba.width}x{rgba.height}:".encode("ascii")
+    return sha256(header + bytes(ids))
+
+
+def dhash64(img: Image.Image) -> int:
+    rgba = img.convert("RGBA")
+    base = Image.new("RGBA", rgba.size, (0, 0, 0, 255))
+    base.alpha_composite(rgba)
+    gray = base.convert("L").resize((9, 8), Image.Resampling.BILINEAR)
+    px = list(gray.getdata())
+    out = 0
+    bit = 0
+    for y in range(8):
+        row = y * 9
+        for x in range(8):
+            if px[row + x] > px[row + x + 1]:
+                out |= 1 << bit
+            bit += 1
+    return out
+
+
+def hamming(a: int, b: int) -> int:
+    return (a ^ b).bit_count()
+
+
+class BKNode:
+    __slots__ = ("value", "indices", "children")
+
+    def __init__(self, value: int, index: int):
+        self.value = value
+        self.indices = [index]
+        self.children: dict[int, "BKNode"] = {}
+
+
+class BKTree:
+    def __init__(self):
+        self.root: BKNode | None = None
+
+    def add(self, value: int, index: int) -> None:
+        if self.root is None:
+            self.root = BKNode(value, index)
+            return
+        node = self.root
+        while True:
+            d = hamming(value, node.value)
+            if d == 0:
+                node.indices.append(index)
+                return
+            nxt = node.children.get(d)
+            if nxt is None:
+                node.children[d] = BKNode(value, index)
+                return
+            node = nxt
+
+    def query(self, value: int, radius: int) -> Iterable[tuple[int, int]]:
+        if self.root is None:
+            return []
+        found: list[tuple[int, int]] = []
+        stack = [self.root]
+        while stack:
+            node = stack.pop()
+            d = hamming(value, node.value)
+            if d <= radius:
+                for idx in node.indices:
+                    found.append((idx, d))
+            lo, hi = d - radius, d + radius
+            for edge, child in node.children.items():
+                if lo <= edge <= hi:
+                    stack.append(child)
+        return found
+
+
+class DSU:
+    def __init__(self, n: int):
+        self.p = list(range(n))
+        self.sz = [1] * n
+
+    def find(self, x: int) -> int:
+        while self.p[x] != x:
+            self.p[x] = self.p[self.p[x]]
+            x = self.p[x]
+        return x
+
+    def union(self, a: int, b: int) -> None:
+        ra, rb = self.find(a), self.find(b)
+        if ra == rb:
+            return
+        if self.sz[ra] < self.sz[rb]:
+            ra, rb = rb, ra
+        self.p[rb] = ra
+        self.sz[ra] += self.sz[rb]
+
+
+def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None:
+    try:
+        with Image.open(io.BytesIO(raw)) as im:
+            im.seek(0)
+            rgba = im.convert("RGBA")
+    except Exception:
+        return None
+
+    colors = rgba.getcolors(maxcolors=1_000_000)
+    color_count = len(colors) if colors is not None else 1_000_001
+    pixel_blob = (
+        f"{rgba.width}x{rgba.height}:RGBA:".encode("ascii")
+        + rgba.tobytes()
+    )
+    candidate = (
+        8 <= rgba.width <= 256
+        and 8 <= rgba.height <= 256
+        and color_count <= 256
+    )
+    return Entry(
+        path=logical_path,
+        source_archive=archive_name,
+        width=rgba.width,
+        height=rgba.height,
+        mode="RGBA",
+        byte_sha256=sha256(raw),
+        pixel_sha256=sha256(pixel_blob),
+        canonical_palette_sha256=canonical_palette_hash(rgba),
+        dhash64=dhash64(rgba),
+        color_count=color_count,
+        is_sprite_candidate=candidate,
+        concept_key=concept_key(logical_path),
+        top_bucket=top_bucket(logical_path),
+    )
+
+
+def scan_zip_bytes(blob: bytes, archive_name: str, prefix: str = "") -> list[Entry]:
+    out: list[Entry] = []
+    try:
+        zf = zipfile.ZipFile(io.BytesIO(blob))
+    except zipfile.BadZipFile:
+        return out
+
+    for info in zf.infolist():
+        if info.is_dir():
+            continue
+        name = info.filename.replace("\\", "/")
+        logical = f"{prefix}{name}" if prefix else name
+        ext = Path(name).suffix.lower()
+        try:
+            raw = zf.read(info)
+        except Exception:
+            continue
+        if ext in IMAGE_EXTS:
+            e = load_entry(raw, logical, archive_name)
+            if e is not None:
+                out.append(e)
+        elif ext in ARCHIVE_EXTS:
+            nested_prefix = logical + "::"
+            out.extend(scan_zip_bytes(raw, archive_name, nested_prefix))
+    return out
+
+
+def grouped(entries: list[Entry], attr: str, candidate_only: bool = True) -> list[list[int]]:
+    buckets: dict[str, list[int]] = defaultdict(list)
+    for i, e in enumerate(entries):
+        if candidate_only and not e.is_sprite_candidate:
+            continue
+        buckets[str(getattr(e, attr))].append(i)
+    groups = [g for g in buckets.values() if len(g) > 1]
+    groups.sort(key=lambda g: (-len(g), entries[g[0]].path))
+    return groups
+
+
+def near_groups(entries: list[Entry], radius: int = 4) -> list[list[int]]:
+    candidates = [i for i, e in enumerate(entries) if e.is_sprite_candidate]
+    by_dim: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for i in candidates:
+        e = entries[i]
+        by_dim[(e.width, e.height)].append(i)
+
+    dsu = DSU(len(entries))
+    for _, ids in by_dim.items():
+        tree = BKTree()
+        for i in ids:
+            e = entries[i]
+            for j, dist in tree.query(e.dhash64, radius):
+                if i == j:
+                    continue
+                # Exclude exact rendered duplicates and exact recolors; those get cleaner buckets.
+                if e.pixel_sha256 == entries[j].pixel_sha256:
+                    continue
+                if e.canonical_palette_sha256 == entries[j].canonical_palette_sha256:
+                    continue
+                if dist <= radius:
+                    dsu.union(i, j)
+            tree.add(e.dhash64, i)
+
+    buckets: dict[int, list[int]] = defaultdict(list)
+    for i in candidates:
+        root = dsu.find(i)
+        if dsu.sz[root] > 1:
+            buckets[root].append(i)
+    groups = [g for g in buckets.values() if len(g) > 1]
+    groups.sort(key=lambda g: (-len(g), entries[g[0]].path))
+    return groups
+
+
+def concept_groups(entries: list[Entry]) -> list[list[int]]:
+    buckets: dict[str, list[int]] = defaultdict(list)
+    for i, e in enumerate(entries):
+        if not e.is_sprite_candidate or not e.concept_key:
+            continue
+        buckets[e.concept_key].append(i)
+
+    groups = []
+    for key, ids in buckets.items():
+        if len(ids) < 2:
+            continue
+        # Report only when the concept spans more than one visual or source bucket.
+        pixels = {entries[i].pixel_sha256 for i in ids}
+        origins = {entries[i].top_bucket for i in ids}
+        if len(pixels) > 1 and (len(origins) > 1 or len(ids) >= 3):
+            groups.append(ids)
+    groups.sort(key=lambda g: (-len(g), entries[g[0]].concept_key, entries[g[0]].path))
+    return groups
+
+
+def summarize_group(entries: list[Entry], ids: list[int], kind: str) -> dict:
+    sample = [entries[i] for i in ids]
+    return {
+        "kind": kind,
+        "count": len(ids),
+        "dimensions": sorted({f"{e.width}x{e.height}" for e in sample}),
+        "concept_keys": sorted({e.concept_key for e in sample if e.concept_key}),
+        "source_buckets": sorted({e.top_bucket for e in sample if e.top_bucket}),
+        "paths": [e.path for e in sample],
+    }
+
+
+def write_markdown(report: dict, path: Path) -> None:
+    lines = [
+        "# DS01 Sprite Library Duplicate Audit",
+        "",
+        "Status: ANALYSIS ONLY — no sprite assets were installed, replaced, recolored, or deleted.",
+        "",
+        "## Summary",
+        "",
+        f"- Images scanned: **{report['summary']['images_scanned']}**",
+        f"- Sprite candidates: **{report['summary']['sprite_candidates']}**",
+        f"- Exact byte-duplicate groups: **{report['summary']['exact_byte_groups']}**",
+        f"- Exact rendered-pixel duplicate groups: **{report['summary']['exact_pixel_groups']}**",
+        f"- Palette/recolor candidate groups: **{report['summary']['palette_recolor_groups']}**",
+        f"- Near-visual duplicate groups (dHash <= {report['near_duplicate_radius']}): **{report['summary']['near_visual_groups']}**",
+        f"- Concept-name collision groups: **{report['summary']['concept_collision_groups']}**",
+        "",
+        "### Classification",
+        "",
+        "- **Exact byte duplicate**: identical encoded image bytes.",
+        "- **Exact pixel duplicate**: different files/encodings that render identically.",
+        "- **Palette/recolor candidate**: identical per-pixel color-pattern topology after palette labels are normalized, but different rendered RGB values.",
+        "- **Near visual duplicate**: same dimensions and perceptual dHash distance within the configured threshold, excluding exact/palette matches.",
+        "- **Concept collision**: normalized sprite naming points at the same concept across multiple distinct visuals or source buckets.",
+        "",
+    ]
+
+    sections = [
+        ("Exact byte duplicates", report["groups"]["exact_bytes"]),
+        ("Exact rendered-pixel duplicates", report["groups"]["exact_pixels"]),
+        ("Palette / recolor candidates", report["groups"]["palette_recolors"]),
+        ("Near visual duplicates", report["groups"]["near_visual"]),
+        ("Duplicated concept candidates", report["groups"]["concept_collisions"]),
+    ]
+    for title, groups in sections:
+        lines += [f"## {title}", ""]
+        if not groups:
+            lines += ["None detected.", ""]
+            continue
+        for n, g in enumerate(groups[:100], 1):
+            label = ", ".join(g.get("concept_keys") or []) or "(unnamed)"
+            lines += [
+                f"### {n}. {label} — {g['count']} files",
+                "",
+                f"Dimensions: {', '.join(g['dimensions'])}",
+                "",
+                f"Source buckets: {', '.join(g['source_buckets']) or '(none)'}",
+                "",
+            ]
+            for p in g["paths"][:30]:
+                lines.append(f"- `{p}`")
+            if len(g["paths"]) > 30:
+                lines.append(f"- … {len(g['paths']) - 30} more")
+            lines.append("")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("archive", type=Path)
+    ap.add_argument("--json", dest="json_path", type=Path, required=True)
+    ap.add_argument("--markdown", dest="md_path", type=Path, required=True)
+    ap.add_argument("--near-radius", type=int, default=4)
+    args = ap.parse_args()
+
+    blob = args.archive.read_bytes()
+    entries = scan_zip_bytes(blob, args.archive.name)
+
+    exact_bytes = grouped(entries, "byte_sha256")
+    exact_pixels_all = grouped(entries, "pixel_sha256")
+    # Keep pixel duplicate groups that are not merely the same exact byte hash.
+    exact_pixels = [
+        g for g in exact_pixels_all
+        if len({entries[i].byte_sha256 for i in g}) > 1
+    ]
+    palette_all = grouped(entries, "canonical_palette_sha256")
+    palette_recolors = [
+        g for g in palette_all
+        if len({entries[i].pixel_sha256 for i in g}) > 1
+    ]
+    near = near_groups(entries, radius=args.near_radius)
+    concepts = concept_groups(entries)
+
+    report = {
+        "gate": "MERCURY_DS01_SPRITE_LIBRARY_DUPLICATE_AUDIT",
+        "status": "PASS",
+        "analysis_only": True,
+        "archive": str(args.archive),
+        "archive_sha256": sha256(blob),
+        "near_duplicate_radius": args.near_radius,
+        "summary": {
+            "images_scanned": len(entries),
+            "sprite_candidates": sum(1 for e in entries if e.is_sprite_candidate),
+            "exact_byte_groups": len(exact_bytes),
+            "exact_pixel_groups": len(exact_pixels),
+            "palette_recolor_groups": len(palette_recolors),
+            "near_visual_groups": len(near),
+            "concept_collision_groups": len(concepts),
+        },
+        "groups": {
+            "exact_bytes": [summarize_group(entries, g, "exact_bytes") for g in exact_bytes],
+            "exact_pixels": [summarize_group(entries, g, "exact_pixels") for g in exact_pixels],
+            "palette_recolors": [summarize_group(entries, g, "palette_recolor") for g in palette_recolors],
+            "near_visual": [summarize_group(entries, g, "near_visual") for g in near],
+            "concept_collisions": [summarize_group(entries, g, "concept_collision") for g in concepts],
+        },
+        "entries": [asdict(e) for e in entries],
+    }
+
+    args.json_path.parent.mkdir(parents=True, exist_ok=True)
+    args.json_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    write_markdown(report, args.md_path)
+    print(json.dumps(report["summary"], indent=2))
+
+
+if __name__ == "__main__":
+    main()
