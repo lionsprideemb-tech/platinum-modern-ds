@@ -308,12 +308,18 @@ static BOOL Mercury_ParadoxBoostActive(
 
     # Reset Booster-derived state whenever a battler slot is initialized from
     # the party. This makes switching out end Booster Energy activation.
-    insert_after_once(
+    replace_once(
         path,
-        """    Pokemon *mon = BattleSystem_GetPartyPokemon(battleSys, battler, partySlot);
+        """void BattleSystem_InitBattleMon(BattleSystem *battleSys, BattleContext *battleCtx, int battler, int partySlot)
+{
+    Pokemon *mon = BattleSystem_GetPartyPokemon(battleSys, battler, partySlot);
 
 """,
-        """    battleCtx->mercuryParadoxBoostedStat[battler] = 0;
+        """void BattleSystem_InitBattleMon(BattleSystem *battleSys, BattleContext *battleCtx, int battler, int partySlot)
+{
+    Pokemon *mon = BattleSystem_GetPartyPokemon(battleSys, battler, partySlot);
+
+    battleCtx->mercuryParadoxBoostedStat[battler] = 0;
     battleCtx->mercuryParadoxBoosterActive[battler] = FALSE;
 
 """,
