@@ -138,7 +138,7 @@ void Mercury_SetTerrain(BattleContext *battleCtx, int terrain)
         """BOOL Mercury_IsGroundedForTerrain(BattleContext *battleCtx, int battler);
 void Mercury_SetTerrain(BattleContext *battleCtx, int terrain);
 """,
-        "MR08L public terrain helpers",
+        "MR08M public terrain helpers",
     )
 
 
@@ -147,8 +147,6 @@ def patch_damage_and_speed(root: Path) -> None:
 
     insert_before_once(
         path,
-        """    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
-""",
         """    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
 """,
         """    moveClass = MOVE_DATA(move).class;
