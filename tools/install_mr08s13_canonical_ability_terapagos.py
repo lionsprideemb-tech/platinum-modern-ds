@@ -385,9 +385,9 @@ def patch_special_restrictions(root: Path) -> None:
 
     replace_once(
         lib,
-        """        && ability1 != ABILITY_ILLUSION;
+        """        && ability1 != ABILITY_COMMANDER;
 """,
-        """        && ability1 != ABILITY_ILLUSION
+        """        && ability1 != ABILITY_COMMANDER
         && ability1 != ABILITY_TERA_SHIFT
         && ability1 != ABILITY_TERAFORM_ZERO;
 """,
@@ -395,9 +395,9 @@ def patch_special_restrictions(root: Path) -> None:
     )
     replace_once(
         lib,
-        """        && ability2 != ABILITY_ILLUSION;
+        """        && ability2 != ABILITY_COMMANDER;
 """,
-        """        && ability2 != ABILITY_ILLUSION
+        """        && ability2 != ABILITY_COMMANDER
         && ability2 != ABILITY_TERA_SHIFT
         && ability2 != ABILITY_TERAFORM_ZERO;
 """,
