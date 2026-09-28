@@ -17,6 +17,8 @@ def main() -> None:
     args = ap.parse_args()
 
     top = Counter()
+    depth2 = Counter()
+    depth3 = Counter()
     exts = Counter()
     files_by_top: dict[str, list[str]] = defaultdict(list)
     nested = []
@@ -31,6 +33,10 @@ def main() -> None:
             bucket = parts[0] if parts else "(root)"
             ext = Path(name).suffix.lower() or "(none)"
             top[bucket] += 1
+            if len(parts) >= 2:
+                depth2["/".join(parts[:2])] += 1
+            if len(parts) >= 3:
+                depth3["/".join(parts[:3])] += 1
             exts[ext] += 1
             total_uncompressed += info.file_size
             total_compressed += info.compress_size
@@ -49,6 +55,8 @@ def main() -> None:
         "total_uncompressed_bytes": total_uncompressed,
         "total_compressed_bytes": total_compressed,
         "top_level_counts": dict(top.most_common()),
+        "depth2_counts": dict(depth2.most_common()),
+        "depth3_counts": dict(depth3.most_common()),
         "extension_counts": dict(exts.most_common()),
         "nested_zip_count": len(nested),
         "nested_zips": nested,
