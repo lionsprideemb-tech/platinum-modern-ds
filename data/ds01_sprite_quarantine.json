@@ -142,6 +142,156 @@
       ],
       "evidence": "Confirmed by generated side-by-side collision proof from staged DS-ready sprites.",
       "action": "Recover/select a clearly distinct Mega Kingler design."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "pikachu_partner_mega",
+        "pikachu-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "gengar_mega_x",
+        "gengar-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "sandaconda_mega",
+        "sandaconda-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "blastoise_mega_x",
+        "blastoise-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "toxtricity_mega",
+        "toxtricity-amped-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "copperajah_mega",
+        "copperajah-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "centiskorch_mega",
+        "centiskorch-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "grimmsnarl_mega",
+        "grimmsnarl-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "meowth_partner_mega",
+        "meowth-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "melmetal_mega",
+        "melmetal-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_same_pose_or_render",
+      "severity": "block",
+      "entries": [
+        "orbeetle_mega",
+        "orbeetle-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 0; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_near_duplicate_concept",
+      "severity": "block",
+      "entries": [
+        "cinderace_mega",
+        "cinderace-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 6; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_near_duplicate_concept",
+      "severity": "block",
+      "entries": [
+        "garbodor_mega",
+        "garbodor-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 6; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_near_duplicate_concept",
+      "severity": "block",
+      "entries": [
+        "corviknight_mega",
+        "corviknight-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 12; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
+    },
+    {
+      "collision_type": "gmax_derived_near_duplicate_concept",
+      "severity": "block",
+      "entries": [
+        "rillaboom_mega",
+        "rillaboom-gmax"
+      ],
+      "evidence": "Comprehensive Mega-vs-G-Max similarity pass: pHash distance 14; generated contact-sheet review shows the custom Mega reuses or too closely mirrors the G-Max pose/silhouette/concept.",
+      "action": "Keep quarantined until clearly distinct custom Mega art is approved."
     }
   ],
   "palette_review": [],
@@ -161,6 +311,14 @@
     [
       "fearow_redux",
       "mesprit_redux"
+    ],
+    [
+      "chesnaught",
+      "chesnaught_battle_bond"
+    ],
+    [
+      "litwick",
+      "cpf_0289_litwick_alternate_form_1"
     ]
   ],
   "notes": [
@@ -172,7 +330,10 @@
     "The first-pass recovery search checked the nested downloaded source packs plus staged manifests; broad species-name hits are evidence leads, not automatic replacement approvals.",
     "Darkrai Mega, Heatran Mega, and Zeraora Mega each have a distinct same-concept modern-DS-resource candidate already present in the staged library.",
     "Generated visual proof promoted Lapras Mega, Butterfree Mega, and Kingler Mega to blockers because they reuse or too closely mirror their G-Max designs.",
-    "Tinkaton Mega was visually cleared from the near-duplicate concern; its similarity to base Tinkaton is ordinary same-species continuity."
+    "Tinkaton Mega was visually cleared from the near-duplicate concern; its similarity to base Tinkaton is ordinary same-species continuity.",
+    "The DS-ready Mega-vs-G-Max pass compared every custom Mega that has a staged G-Max counterpart: 46 pair comparisons covering all such forms.",
+    "Twenty-seven custom Mega targets crossed the strong similarity threshold and are now quarantined as G-Max-derived duplicates/near-duplicates pending distinct art.",
+    "The strong cross-species similarity pass found no additional unrelated near-copy problem beyond the four-way placeholder collision; Latias/Latios Mega and Finizen/Palafin-Zero similarities are expected canonical relationships."
   ],
   "exact_form_review": [
     {
@@ -287,6 +448,14 @@
       ],
       "evidence": "All staged type-form icons are byte-identical, while battle sprites contain palette distinctions.",
       "action": "Review whether Mercury wants type-colored form icons; this is not a battle-sprite blocker."
+    },
+    {
+      "entries": [
+        "darmanitan_redux",
+        "darmanitan_redux_bond"
+      ],
+      "evidence": "Male/front DS-ready renders are exact matches despite separate Redux and Bond labels.",
+      "action": "Verify whether Bond is an intentional state alias or needs distinct form art."
     }
   ],
   "recovery_assessment": {
@@ -457,6 +626,208 @@
         "finding": "The Mega and base Tinkaton are visibly distinct enough in silhouette/details/hammer treatment; similarity is normal same-species continuity.",
         "status": "clear_exact_and_near_duplicate_concern"
       }
+    ]
+  },
+  "gmax_similarity_audit": {
+    "method": "Male/front DS-ready sprites were normalized to the first animation frame, transparency-cropped, and compared with perceptual hash plus alpha-silhouette overlap. Every custom Mega with a corresponding G-Max form was checked.",
+    "comparison_count": 46,
+    "strong_similarity_threshold": "pHash distance <= 14 with high silhouette overlap",
+    "strong_target_count": 27,
+    "disposition": "Quarantine strong matches until distinct art is approved; no automatic deletion or replacement.",
+    "strong_matches": [
+      {
+        "target": "pikachu_partner_mega",
+        "comparison": "pikachu-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "urshifu_mega",
+        "comparison": "urshifu-single-strike-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "urshifu_rapid_strike_style_mega",
+        "comparison": "urshifu-rapid-strike-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "charizard_mega_z",
+        "comparison": "charizard-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "gengar_mega_x",
+        "comparison": "gengar-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "snorlax_mega",
+        "comparison": "snorlax-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "coalossal_mega",
+        "comparison": "coalossal-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "sandaconda_mega",
+        "comparison": "sandaconda-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "hatterene_mega",
+        "comparison": "hatterene-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "machamp_mega",
+        "comparison": "machamp-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "blastoise_mega_x",
+        "comparison": "blastoise-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "inteleon_mega",
+        "comparison": "inteleon-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "toxtricity_mega",
+        "comparison": "toxtricity-amped-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "copperajah_mega",
+        "comparison": "copperajah-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "centiskorch_mega",
+        "comparison": "centiskorch-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "grimmsnarl_mega",
+        "comparison": "grimmsnarl-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "drednaw_mega",
+        "comparison": "drednaw-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "meowth_partner_mega",
+        "comparison": "meowth-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "melmetal_mega",
+        "comparison": "melmetal-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "orbeetle_mega",
+        "comparison": "orbeetle-gmax",
+        "phash_distance": 0,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "lapras_mega",
+        "comparison": "lapras-gmax",
+        "phash_distance": 2,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "cinderace_mega",
+        "comparison": "cinderace-gmax",
+        "phash_distance": 6,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "garbodor_mega",
+        "comparison": "garbodor-gmax",
+        "phash_distance": 6,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "kingler_mega",
+        "comparison": "kingler-gmax",
+        "phash_distance": 8,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "corviknight_mega",
+        "comparison": "corviknight-gmax",
+        "phash_distance": 12,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "butterfree_mega",
+        "comparison": "butterfree-gmax",
+        "phash_distance": 12,
+        "status": "block_distinct_art_required"
+      },
+      {
+        "target": "rillaboom_mega",
+        "comparison": "rillaboom-gmax",
+        "phash_distance": 14,
+        "status": "block_distinct_art_required"
+      }
+    ],
+    "manual_overlap_review": [
+      {
+        "target": "eevee_partner_mega",
+        "comparison": "eevee-gmax",
+        "phash_distance": 18,
+        "status": "manual_concept_review",
+        "reason": "Not a direct copy, but both use the oversized fluffy-Eevee concept and need design-level review."
+      },
+      {
+        "target": "alcremie_mega",
+        "comparison": "alcremie-gmax",
+        "phash_distance": 24,
+        "status": "manual_concept_review",
+        "reason": "Different pixels but both use a tall layered-cake transformation concept; verify the Mega is distinct enough."
+      },
+      {
+        "target": "venusaur_mega_x",
+        "comparison": "venusaur-gmax",
+        "phash_distance": 24,
+        "status": "manual_concept_review",
+        "reason": "Custom canopy treatment is visibly different, but the large-canopy concept overlaps enough to warrant one design check."
+      }
+    ],
+    "distinct_alternatives_not_blocked": [
+      "kingler_redux_mega",
+      "machamp_mega_redux",
+      "toxtricity_redux_mega",
+      "toxtricity_redux_fuzz_mega",
+      "lapras_mega_x",
+      "snorlax_redux_mega"
     ]
   }
 }
