@@ -25,6 +25,15 @@ jobs:
             staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip \
             --out ds01-sprite-archive-inventory.json
 
+      - name: Preview combined sprite index
+        run: |
+          echo "=== COMBINED_SPRITE_INDEX.csv ==="
+          unzip -p staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip \
+            '*/COMBINED_SPRITE_INDEX.csv' | sed -n '1,120p'
+          echo "=== LIBRARY_SUMMARY.json ==="
+          unzip -p staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip \
+            '*/LIBRARY_SUMMARY.json' | sed -n '1,220p'
+
       - name: Upload inventory
         uses: actions/upload-artifact@v4
         with:
