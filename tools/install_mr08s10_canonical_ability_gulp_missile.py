@@ -461,10 +461,6 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
     mummy_end = lib.index("static BOOL Mercury_AbilityCanSwapWithWanderingSpirit", mummy_start)
     mummy = lib[mummy_start:mummy_end]
 
-    trace_start = lib.index("static BOOL Mercury_TraceCandidate")
-    trace_end = lib.index("static BOOL Mercury_AbilityCanBeReceived", trace_start)
-    trace = lib[trace_start:trace_end]
-
     checks = {
         "battle_state":
             "mercuryGulpMissileState[MAX_BATTLERS]" in ctx,
@@ -512,7 +508,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "role_play_blocked":
             copy.count("ABILITY_GULP_MISSILE") >= 2,
         "trace_allowed_gen9":
-            "ABILITY_GULP_MISSILE" not in trace,
+            "ability1 != ABILITY_GULP_MISSILE" not in lib
+            and "ability2 != ABILITY_GULP_MISSILE" not in lib,
         "skill_swap_allowed_gen9":
             "ABILITY_GULP_MISSILE" not in swap,
         "receiver_allowed_gen9":
