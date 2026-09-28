@@ -110,7 +110,7 @@ def patch_controller(root: Path) -> None:
     }
 
     switch (move) {
-    case MOVE_SELF_DESTRUCT:
+    case MOVE_SELFDESTRUCT:
     case MOVE_EXPLOSION:
     case MOVE_FLING:
     case MOVE_UPROAR:
@@ -271,7 +271,7 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "Move_IsMultiTurn(battleCtx, move) == TRUE" in controller,
         "special_single_strike_exclusions":
             "case MOVE_FLING:" in controller
-            and "case MOVE_SELF_DESTRUCT:" in controller
+            and "case MOVE_SELFDESTRUCT:" in controller
             and "case MOVE_EXPLOSION:" in controller
             and "case MOVE_ENDEAVOR:" in controller,
         "spread_single_target_rule":
