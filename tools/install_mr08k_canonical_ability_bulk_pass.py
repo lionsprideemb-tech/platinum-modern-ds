@@ -346,7 +346,7 @@ def patch_sheer_force(root: Path) -> None:
 
     insert_before_once(
         path,
-        """BOOL BattleSystem_TriggerSecondaryEffect(BattleSystem *battleSys, BattleContext *battleCtx)
+        """BOOL BattleSystem_TriggerSecondaryEffect(BattleSystem *battleSys, BattleContext *battleCtx, int *effect)
 {
     BOOL result = FALSE;
 """,
@@ -356,11 +356,11 @@ def patch_sheer_force(root: Path) -> None:
 
     replace_once(
         path,
-        """BOOL BattleSystem_TriggerSecondaryEffect(BattleSystem *battleSys, BattleContext *battleCtx)
+        """BOOL BattleSystem_TriggerSecondaryEffect(BattleSystem *battleSys, BattleContext *battleCtx, int *effect)
 {
     BOOL result = FALSE;
 """,
-        """BOOL BattleSystem_TriggerSecondaryEffect(BattleSystem *battleSys, BattleContext *battleCtx)
+        """BOOL BattleSystem_TriggerSecondaryEffect(BattleSystem *battleSys, BattleContext *battleCtx, int *effect)
 {
     BOOL result = FALSE;
 
