@@ -7,7 +7,8 @@ It does not install mechanics. It certifies that:
 - every one is present in the implemented-Ability registry;
 - the registry contains no duplicate modern entries;
 - every modern Ability is owned by an MR08 installer's IMPLEMENTED declaration;
-- no modern Ability is claimed by more than one installer.
+- every modern Ability has exactly one primary MR08 mechanic owner; explicitly
+  declared supplemental interaction installers may extend that owner.
 
 The gate intentionally keeps custom / non-canon Abilities out of this count.
 """
@@ -25,6 +26,13 @@ from typing import Iterable
 MODERN_FIRST_ID = 124
 MODERN_LAST_ID = 310
 MODERN_COUNT = MODERN_LAST_ID - MODERN_FIRST_ID + 1
+
+# These installers intentionally add later interaction coverage to Abilities
+# whose primary implementation lives in another MR08 batch. They are not
+# duplicate mechanic owners.
+SUPPLEMENTAL_INSTALLERS = {
+    "install_mr08k_canonical_ability_redirect_copy_control.py",
+}
 
 
 def flatten_strings(value: object) -> Iterable[str]:
@@ -115,11 +123,21 @@ def main() -> None:
     owners, unreadable_installers = installer_ownership(installers_dir)
     missing_registry = [token for token in modern if token not in registry_set]
     missing_owner = [token for token in modern if token not in owners]
-    duplicate_owners = {
-        token: owners[token]
-        for token in modern
-        if len(owners.get(token, [])) > 1
-    }
+    supplemental_overlaps: dict[str, list[str]] = {}
+    conflicting_primary_owners: dict[str, list[str]] = {}
+    for token in modern:
+        token_owners = owners.get(token, [])
+        if len(token_owners) <= 1:
+            continue
+
+        primary = [
+            owner for owner in token_owners
+            if owner not in SUPPLEMENTAL_INSTALLERS
+        ]
+        if len(primary) == 1:
+            supplemental_overlaps[token] = token_owners
+        else:
+            conflicting_primary_owners[token] = token_owners
 
     modern_registry_rows = [token for token in registry_rows if token in modern_set]
     duplicate_registry = sorted(
@@ -137,7 +155,8 @@ def main() -> None:
         "all_187_in_implemented_registry": len(missing_registry) == 0,
         "no_duplicate_modern_registry_entries": len(duplicate_registry) == 0,
         "all_187_owned_by_mr08_installers": len(missing_owner) == 0,
-        "no_duplicate_mr08_implementation_owners": len(duplicate_owners) == 0,
+        "no_conflicting_primary_mr08_owners":
+            len(conflicting_primary_owners) == 0,
         "all_mr08_implemented_declarations_parse": len(unreadable_installers) == 0,
     }
 
@@ -160,7 +179,9 @@ def main() -> None:
         "installer_ownership": {
             "owned_modern_count": sum(1 for token in modern if token in owners),
             "missing": missing_owner,
-            "duplicate_owners": duplicate_owners,
+            "supplemental_overlaps": supplemental_overlaps,
+            "conflicting_primary_owners": conflicting_primary_owners,
+            "supplemental_installers": sorted(SUPPLEMENTAL_INSTALLERS),
             "unreadable_installers": unreadable_installers,
         },
         "custom_abilities_included": False,
