@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "id_policy": "Mercury custom abilities begin immediately after canonical Gen 9 ID 310. IDs 311-321 are reserved for the approved health-redesign set in original audit order.",
+  "capacity_note": "Existing MP05 save/runtime architecture supports ability IDs through 1023.",
+  "abilities": [
+    {
+      "id": 311,
+      "token": "ABILITY_PRISMATIC_PELT",
+      "display_name": "Prismatic Pelt",
+      "source_name": "Prismatic Fur",
+      "source": "Elite Redux",
+      "mechanics_status": "planned",
+      "description": [
+        "On entry, gains a 3-turn veil that\n",
+        "weakens super-effective hits."
+      ]
+    },
+    {
+      "id": 312,
+      "token": "ABILITY_LOCKDOWN_PROTOCOL",
+      "display_name": "Lockdown Protocol",
+      "source_name": "Stop \\\\PN",
+      "source": "Pokémon Rejuvenation",
+      "mechanics_status": "planned",
+      "description": [
+        "Marks a foe for 3 turns, weakening\n",
+        "damage and repeat status moves."
+      ]
+    },
+    {
+      "id": 313,
+      "token": "ABILITY_STORM_SEQUENCE",
+      "display_name": "Storm Sequence",
+      "source_name": "Storm-9",
+      "source": "Pokémon Rejuvenation",
+      "mechanics_status": "planned",
+      "description": [
+        "On entry, choose Rain, Sun, or\n",
+        "Sandstorm and gain its bonus."
+      ]
+    },
+    {
+      "id": 314,
+      "token": "ABILITY_FIELD_COMMISSIONER",
+      "display_name": "Field Commissioner",
+      "source_name": "Commissioner",
+      "source": "Radical Red Showdown mod",
+      "mechanics_status": "planned",
+      "description": [
+        "On entry, choose Advance, Fortify,\n",
+        "or Disrupt."
+      ]
+    },
+    {
+      "id": 315,
+      "token": "ABILITY_CONTROLLED_FURY",
+      "display_name": "Controlled Fury",
+      "source_name": "Berserk Fury",
+      "source": "Pokémon Exceeded",
+      "mechanics_status": "planned",
+      "description": [
+        "At half HP once, raises Attack and\n",
+        "Speed and enters a 3-turn fury."
+      ]
+    },
+    {
+      "id": 316,
+      "token": "ABILITY_ETERNAL_LIFE",
+      "display_name": "Eternal Life",
+      "source_name": "Eternal Life",
+      "source": "Pokémon Exceeded",
+      "mechanics_status": "planned",
+      "description": [
+        "At half HP once, heals 1/4, cures\n",
+        "status, and clears stat drops."
+      ]
+    },
+    {
+      "id": 317,
+      "token": "ABILITY_HOLLOW_SHELL",
+      "display_name": "Hollow Shell",
+      "source_name": "Hollow Shell",
+      "source": "Pokémon Exceeded",
+      "mechanics_status": "planned",
+      "description": [
+        "If KO'd by direct damage, the foe\n",
+        "loses 1/4 HP but cannot faint."
+      ]
+    },
+    {
+      "id": 318,
+      "token": "ABILITY_MIND_GAMES",
+      "display_name": "Mind Games",
+      "source_name": "Mind Game",
+      "source": "Pokémon Exceeded",
+      "mechanics_status": "planned",
+      "description": [
+        "On entry, seals the foe's last-used\n",
+        "move for 2 turns."
+      ]
+    },
+    {
+      "id": 319,
+      "token": "ABILITY_PROTEAN_MAXIMA",
+      "display_name": "Protean Maxima",
+      "source_name": "Protean Maxima",
+      "source": "Pokémon Insurgence",
+      "mechanics_status": "planned",
+      "description": [
+        "Mega Eevee changes form after using\n",
+        "an eligible damaging move."
+      ]
+    },
+    {
+      "id": 320,
+      "token": "ABILITY_THE_LOOK",
+      "display_name": "The Look",
+      "source_name": "The Look",
+      "source": "Radical Red Showdown mod",
+      "mechanics_status": "planned",
+      "description": [
+        "Foes cannot use the same move twice\n",
+        "in a row while the user is active."
+      ]
+    },
+    {
+      "id": 321,
+      "token": "ABILITY_ADAPTIVE_GENOME",
+      "display_name": "Adaptive Genome",
+      "source_name": "Bioengineering",
+      "source": "Pokémon Exceeded",
+      "mechanics_status": "planned",
+      "description": [
+        "First super-effective hit each stay\n",
+        "raises the matching defense."
+      ]
+    }
+  ]
+}
