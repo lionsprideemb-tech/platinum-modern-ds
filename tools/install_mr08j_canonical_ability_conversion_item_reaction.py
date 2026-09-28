@@ -324,7 +324,7 @@ def patch_type_conversion_family(root: Path) -> None:
         "-ate/Liquid Voice immunity-path type",
     )
 
-    replace_all_exact(
+    replace_once(
         path,
         """    case ABILITY_COLOR_CHANGE:
         u8 moveType;
@@ -372,7 +372,6 @@ def patch_type_conversion_family(root: Path) -> None:
             moveType = CURRENT_MOVE_DATA.type;
         }
 """,
-        2,
         "-ate/Liquid Voice Color Change type",
     )
 
