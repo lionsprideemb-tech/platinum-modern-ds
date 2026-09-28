@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "status": "REVIEW_ONLY",
+  "purpose": "Map quarantined duplicate/near-duplicate custom sprites to distinct staged alternatives when one already exists. No replacement is authorized by this file.",
+  "direct_same_concept_recovery": [
+    {
+      "target": "darkrai_mega",
+      "candidates": [
+        "darkrai-mega"
+      ],
+      "quality": "strong",
+      "reason": "Distinct DS-style Mega Darkrai already staged; visually confirmed not to be the question-mark placeholder."
+    },
+    {
+      "target": "heatran_mega",
+      "candidates": [
+        "heatran-mega"
+      ],
+      "quality": "strong",
+      "reason": "Distinct DS-style Mega Heatran already staged; visually confirmed not to be the question-mark placeholder."
+    },
+    {
+      "target": "zeraora_mega",
+      "candidates": [
+        "zeraora-mega"
+      ],
+      "quality": "strong",
+      "reason": "Distinct DS-style Mega Zeraora already staged; visually confirmed not to be the question-mark placeholder."
+    }
+  ],
+  "distinct_custom_alternatives": [
+    {
+      "target": "lapras_mega",
+      "candidates": [
+        "lapras_mega_x"
+      ],
+      "quality": "strong",
+      "reason": "Clearly distinct custom Mega design instead of the recolored G-Max sprite."
+    },
+    {
+      "target": "machamp_mega",
+      "candidates": [
+        "machamp_mega_redux"
+      ],
+      "quality": "strong",
+      "reason": "Clearly distinct custom Machamp transformation; does not reuse G-Max art."
+    },
+    {
+      "target": "toxtricity_mega",
+      "candidates": [
+        "toxtricity_redux_mega",
+        "toxtricity_redux_fuzz_mega"
+      ],
+      "quality": "strong",
+      "reason": "Both are clearly distinct from Toxtricity G-Max and from one another."
+    },
+    {
+      "target": "kingler_mega",
+      "candidates": [
+        "kingler_redux_mega",
+        "cpf_0053_kingler_alternate_form_2"
+      ],
+      "quality": "strong_to_moderate",
+      "reason": "Redux Mega is the stronger distinct transformation candidate; CPF alternate is a second option."
+    },
+    {
+      "target": "cinderace_mega",
+      "candidates": [
+        "cpf_0354_cinderace_alternate_form_2"
+      ],
+      "quality": "moderate",
+      "reason": "Visually distinct humanoid Cinderace concept; requires approval as the intended Mega design."
+    },
+    {
+      "target": "rillaboom_mega",
+      "candidates": [
+        "cpf_0351_rillaboom_alternate_form_2"
+      ],
+      "quality": "moderate",
+      "reason": "Visibly distinct from Rillaboom G-Max and avoids the copied tree/drum silhouette."
+    },
+    {
+      "target": "garbodor_mega",
+      "candidates": [
+        "cpf_0275_garbodor_alternate_form_1"
+      ],
+      "quality": "moderate",
+      "reason": "Distinct Garbodor concept, but less overtly Mega-like; design review required."
+    },
+    {
+      "target": "gengar_mega_x",
+      "candidates": [
+        "cpf_0047_gengar_alternate_form_2",
+        "cpf_0048_gengar_alternate_form_3"
+      ],
+      "quality": "moderate",
+      "reason": "Both are distinct from Gengar G-Max; choose only if one fits the intended Mega X identity."
+    },
+    {
+      "target": "butterfree_mega",
+      "candidates": [
+        "cpf_0002_butterfree_alternate_form_1"
+      ],
+      "quality": "moderate",
+      "reason": "Distinct from Butterfree G-Max, but reads more like an alternate form than a dramatic Mega."
+    },
+    {
+      "target": "inteleon_mega",
+      "candidates": [
+        "cpf_0357_inteleon_alternate_form_2"
+      ],
+      "quality": "moderate",
+      "reason": "Clearly distinct spy/lizard concept; provenance does not establish it as the intended Mega."
+    },
+    {
+      "target": "snorlax_mega",
+      "candidates": [
+        "snorlax_redux_mega",
+        "snorlax_primal"
+      ],
+      "quality": "mixed",
+      "reason": "Both avoid G-Max duplication, but Redux Mega needs quality review and Primal is a different transformation concept."
+    }
+  ],
+  "no_distinct_local_replacement": [
+    "slate",
+    "blastoise_mega_x",
+    "centiskorch_mega",
+    "charizard_mega_z",
+    "coalossal_mega",
+    "copperajah_mega",
+    "corviknight_mega",
+    "drednaw_mega",
+    "grimmsnarl_mega",
+    "hatterene_mega",
+    "melmetal_mega",
+    "meowth_partner_mega",
+    "orbeetle_mega",
+    "pikachu_partner_mega",
+    "sandaconda_mega",
+    "urshifu_mega",
+    "urshifu_rapid_strike_style_mega"
+  ],
+  "concept_overlap_manual_review": [
+    {
+      "target": "eevee_partner_mega",
+      "comparison": "eevee-gmax",
+      "reason": "Not a pixel copy, but both center the transformation on an oversized fluffy Eevee silhouette."
+    },
+    {
+      "target": "alcremie_mega",
+      "comparison": "alcremie-gmax",
+      "reason": "Distinct pixels but the tall layered-cake transformation concept substantially overlaps G-Max Alcremie."
+    },
+    {
+      "target": "venusaur_mega_x",
+      "comparison": "venusaur-gmax",
+      "reason": "Distinct art but both emphasize a massive canopy; verify identity before approval."
+    },
+    {
+      "target": "chesnaught_battle_bond",
+      "comparison": "chesnaught",
+      "reason": "Nearly identical silhouette with mainly palette/detail changes; confirm whether Battle Bond is intentionally subtle."
+    },
+    {
+      "target": "cpf_0289_litwick_alternate_form_1",
+      "comparison": "litwick",
+      "reason": "Nearly identical silhouette; verify that a palette/detail alternate is intentional."
+    },
+    {
+      "target": "darmanitan_redux_bond",
+      "comparison": "darmanitan_redux",
+      "reason": "Exact render match; verify state alias versus missing distinct form art."
+    }
+  ],
+  "rules": {
+    "install_from_this_mapping": false,
+    "overwrite_existing_assets": false,
+    "generated_new_art": false,
+    "require_user_design_approval_before_replacement": true,
+    "preserve_provenance": true
+  }
+}
