@@ -63,6 +63,29 @@ def insert_after_once(path: Path, anchor: str, insertion: str, label: str) -> No
     path.write_text(text.replace(anchor, anchor + insertion, 1), encoding="utf-8")
 
 
+def replace_function(path: Path, signature: str, replacement: str, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    definition = signature + "\n{"
+    start = text.find(definition)
+    if start < 0:
+        raise SystemExit(f"{label}: function definition not found in {path}")
+
+    open_brace = start + len(signature) + 1
+    depth = 0
+    end = -1
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end < 0:
+        raise SystemExit(f"{label}: could not find function end in {path}")
+    path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
+
+
 def insert_before_once(path: Path, anchor: str, insertion: str, label: str) -> None:
     text = path.read_text(encoding="utf-8")
     if insertion in text:
@@ -151,25 +174,45 @@ def patch_receiver_restriction(root: Path) -> None:
 def patch_trace_restriction(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
-    old1 = """        && battleCtx->battleMons[defender1].ability != ABILITY_MULTITYPE
-"""
-    new1 = """        && battleCtx->battleMons[defender1].ability != ABILITY_MULTITYPE
-        && battleCtx->battleMons[defender1].ability != ABILITY_EMBODY_ASPECT
-        && battleCtx->battleMons[defender1].ability != ABILITY_EMBODY_ASPECT_2
-        && battleCtx->battleMons[defender1].ability != ABILITY_EMBODY_ASPECT_3
-        && battleCtx->battleMons[defender1].ability != ABILITY_EMBODY_ASPECT_4
-"""
-    old2 = """        && battleCtx->battleMons[defender2].ability != ABILITY_MULTITYPE
-"""
-    new2 = """        && battleCtx->battleMons[defender2].ability != ABILITY_MULTITYPE
-        && battleCtx->battleMons[defender2].ability != ABILITY_EMBODY_ASPECT
-        && battleCtx->battleMons[defender2].ability != ABILITY_EMBODY_ASPECT_2
-        && battleCtx->battleMons[defender2].ability != ABILITY_EMBODY_ASPECT_3
-        && battleCtx->battleMons[defender2].ability != ABILITY_EMBODY_ASPECT_4
-"""
-    replace_all_required(path, old1, new1, "Embody Aspect Trace defender1")
-    replace_all_required(path, old2, new2, "Embody Aspect Trace defender2")
+    replacement = """static int ChooseTraceTarget(BattleSystem *battleSys, BattleContext *battleCtx, int defender1, int defender2)
+{
+    int trace = BATTLER_NONE;
+    int ability1 = battleCtx->battleMons[defender1].ability;
+    int ability2 = battleCtx->battleMons[defender2].ability;
+    BOOL eligible1 = battleCtx->battleMons[defender1].curHP
+        && ability1 != ABILITY_FORECAST
+        && ability1 != ABILITY_TRACE
+        && ability1 != ABILITY_MULTITYPE
+        && ability1 != ABILITY_EMBODY_ASPECT
+        && ability1 != ABILITY_EMBODY_ASPECT_2
+        && ability1 != ABILITY_EMBODY_ASPECT_3
+        && ability1 != ABILITY_EMBODY_ASPECT_4;
+    BOOL eligible2 = battleCtx->battleMons[defender2].curHP
+        && ability2 != ABILITY_FORECAST
+        && ability2 != ABILITY_TRACE
+        && ability2 != ABILITY_MULTITYPE
+        && ability2 != ABILITY_EMBODY_ASPECT
+        && ability2 != ABILITY_EMBODY_ASPECT_2
+        && ability2 != ABILITY_EMBODY_ASPECT_3
+        && ability2 != ABILITY_EMBODY_ASPECT_4;
 
+    if (eligible1 && eligible2) {
+        trace = (BattleSystem_RandNext(battleSys) & 1) ? defender2 : defender1;
+    } else if (eligible1) {
+        trace = defender1;
+    } else if (eligible2) {
+        trace = defender2;
+    }
+
+    return trace;
+}
+"""
+    replace_function(
+        path,
+        "static int ChooseTraceTarget(BattleSystem *battleSys, BattleContext *battleCtx, int defender1, int defender2)",
+        replacement,
+        "Embody Aspect Trace restriction",
+    )
 
 def patch_role_play_skill_swap(root: Path) -> None:
     copy = root / "res/battle/scripts/subscripts/subscript_copy_ability.s"
@@ -248,7 +291,9 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "ABILITY_EMBODY_ASPECT_4:" in lib
             and "MOVE_SUBSCRIPT_PTR_DEFENSE_UP_1_STAGE" in lib,
         "trace_blocked":
-            lib.count("ABILITY_EMBODY_ASPECT_4") >= 3,
+            "BOOL eligible1 =" in lib
+            and "BOOL eligible2 =" in lib
+            and lib.count("ABILITY_EMBODY_ASPECT_4") >= 3,
         "receiver_blocked":
             "case ABILITY_EMBODY_ASPECT:" in lib
             and "case ABILITY_TERA_SHIFT:" in lib,
