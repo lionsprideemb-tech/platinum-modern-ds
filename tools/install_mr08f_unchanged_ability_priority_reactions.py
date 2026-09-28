@@ -76,6 +76,33 @@ def insert_before_once(path: Path, anchor: str, insertion: str, label: str) -> N
     path.write_text(text.replace(anchor, insertion + anchor, 1), encoding="utf-8")
 
 
+def replace_function(path: Path, signature: str, replacement: str, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    start = text.find(signature)
+    if start < 0:
+        raise SystemExit(f"{label}: function signature not found in {path}")
+
+    open_brace = text.find("{", start)
+    if open_brace < 0:
+        raise SystemExit(f"{label}: opening brace not found in {path}")
+
+    depth = 0
+    end = -1
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+
+    if end < 0:
+        raise SystemExit(f"{label}: closing brace not found in {path}")
+
+    path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
+
+
 def validate_ids(root: Path) -> dict[str, bool]:
     abilities = [
         line.strip()
@@ -441,29 +468,33 @@ def patch_team_status_checks(root: Path) -> None:
         "team Ability holder helper",
     )
 
-    replace_once(
+    replace_function(
         path,
-        """    } else {
-        battler = BattleScript_Battler(battleSys, battleCtx, inBattler);
+        "static BOOL BtlCmd_CheckAbility(BattleSystem *battleSys, BattleContext *battleCtx)",
+        """static BOOL BtlCmd_CheckAbility(BattleSystem *battleSys, BattleContext *battleCtx)
+{
+    BattleScript_Iter(battleCtx, 1);
+    int op = BattleScript_Read(battleCtx);
+    int inBattler = BattleScript_Read(battleCtx);
+    int ability = BattleScript_Read(battleCtx);
+    int jump = BattleScript_Read(battleCtx);
 
-        if (op == CHECK_HAVE) {
-            if (Battler_Ability(battleCtx, battler) == ability) {
-                BattleScript_Iter(battleCtx, jump);
-                battleCtx->abilityMon = battler;
+    int battler;
+    if (inBattler == BTLSCR_ALL_BATTLERS) {
+        int maxBattlers = BattleSystem_GetMaxBattlers(battleSys);
+
+        for (battler = 0; battler < maxBattlers; battler++) {
+            if (op == CHECK_HAVE) {
+                if (Battler_Ability(battleCtx, battler) == ability) {
+                    BattleScript_Iter(battleCtx, jump);
+                    battleCtx->abilityMon = battler;
+                    break;
+                }
+            } else if (Battler_Ability(battleCtx, battler) == ability) {
+                break;
             }
-        } else if (Battler_Ability(battleCtx, battler) != ability) {
-            BattleScript_Iter(battleCtx, jump);
-            battleCtx->abilityMon = battler;
         }
-    }
-
-    return FALSE;
-}
-
-/**
- * @brief Generate a random value
-""",
-        """    } else {
+    } else {
         battler = BattleScript_Battler(battleSys, battleCtx, inBattler);
         int holder = BATTLER_NONE;
 
@@ -486,39 +517,43 @@ def patch_team_status_checks(root: Path) -> None:
     }
 
     return FALSE;
-}
-
-/**
- * @brief Generate a random value
-""",
+}""",
         "team-aware CheckAbility",
     )
 
-    replace_once(
+    replace_function(
         path,
-        """    } else {
-        battler = BattleScript_Battler(battleSys, battleCtx, inBattler);
+        "static BOOL BtlCmd_CheckIgnorableAbility(BattleSystem *battleSys, BattleContext *battleCtx)",
+        """static BOOL BtlCmd_CheckIgnorableAbility(BattleSystem *battleSys, BattleContext *battleCtx)
+{
+    BattleScript_Iter(battleCtx, 1);
+    int op = BattleScript_Read(battleCtx);
+    int inBattler = BattleScript_Read(battleCtx);
+    int ability = BattleScript_Read(battleCtx);
+    int jump = BattleScript_Read(battleCtx);
 
-        if (op == CHECK_HAVE) {
-            if (Battler_IgnorableAbility(battleCtx, battleCtx->attacker, battler, ability) == TRUE
-                && battleCtx->battleMons[battler].curHP) {
+    int battler;
+    if (inBattler == BTLSCR_ALL_BATTLERS) {
+        int maxBattlers = BattleSystem_GetMaxBattlers(battleSys);
+
+        for (int i = 0; i < maxBattlers; i++) {
+            battler = battleCtx->monSpeedOrder[i];
+
+            if (op == CHECK_HAVE) {
+                if (Battler_IgnorableAbility(battleCtx, battleCtx->attacker, battler, ability) == TRUE
+                    && battleCtx->battleMons[battler].curHP) {
+                    BattleScript_Iter(battleCtx, jump);
+                    battleCtx->abilityMon = battler;
+                    break;
+                }
+            } else if (Battler_IgnorableAbility(battleCtx, battleCtx->attacker, battler, ability) == FALSE
+                || battleCtx->battleMons[battler].curHP == 0) {
                 BattleScript_Iter(battleCtx, jump);
                 battleCtx->abilityMon = battler;
+                break;
             }
-        } else if (Battler_IgnorableAbility(battleCtx, battleCtx->attacker, battler, ability) == FALSE
-            || battleCtx->battleMons[battler].curHP == 0) {
-            BattleScript_Iter(battleCtx, jump);
-            battleCtx->abilityMon = battler;
         }
-    }
-
-    return FALSE;
-}
-
-/**
- * @brief GoTo forward
-""",
-        """    } else {
+    } else {
         battler = BattleScript_Battler(battleSys, battleCtx, inBattler);
         int holder = BATTLER_NONE;
 
@@ -543,14 +578,9 @@ def patch_team_status_checks(root: Path) -> None:
     }
 
     return FALSE;
-}
-
-/**
- * @brief GoTo forward
-""",
+}""",
         "team-aware CheckIgnorableAbility",
     )
-
 
 def patch_status_scripts(root: Path) -> None:
     sleep = root / "res/battle/scripts/subscripts/subscript_fall_asleep.s"
