@@ -33,6 +33,7 @@ on:
       - "tools/install_mr08i_canonical_ability_reaction_type.py"
       - "tools/install_mr08j_canonical_ability_conversion_item_reaction.py"
       - "tools/install_mr08k_canonical_ability_bulk_pass.py"
+      - "tools/install_mr08l_canonical_ability_terrain_infiltration.py"
       - "tools/install_mr08l_canonical_ability_bypass_wind_reaction.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
@@ -183,6 +184,7 @@ jobs:
             tools/install_mr08i_canonical_ability_reaction_type.py \
             tools/install_mr08j_canonical_ability_conversion_item_reaction.py \
             tools/install_mr08k_canonical_ability_bulk_pass.py \
+            tools/install_mr08l_canonical_ability_terrain_infiltration.py \
             tools/install_mr08l_canonical_ability_bypass_wind_reaction.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
@@ -536,6 +538,27 @@ jobs:
           for ability in \
             ABILITY_INFILTRATOR ABILITY_WIND_RIDER ABILITY_WIND_POWER \
             ABILITY_OPPORTUNIST ABILITY_POISON_PUPPETEER; do
+            grep -qx "$ability" mr04-implemented-abilities.txt
+          done
+
+      - name: Install MR08L canonical Ability terrain/infiltration family
+        shell: bash
+        run: |
+          python3 tools/install_mr08l_canonical_ability_terrain_infiltration.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08l-canonical-ability-terrain-infiltration.json
+
+          test "$(jq -r '.status' mr08l-canonical-ability-terrain-infiltration.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08l-canonical-ability-terrain-infiltration.json)" = "9"
+          test "$(jq -r '.running_modern_mechanics_total' mr08l-canonical-ability-terrain-infiltration.json)" = "144"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08l-canonical-ability-terrain-infiltration.json)" = "43"
+          test "$(jq -r '[.checks[]] | all' mr08l-canonical-ability-terrain-infiltration.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08l-canonical-ability-terrain-infiltration.json)" = "false"
+          for ability in \
+            ABILITY_INFILTRATOR ABILITY_GRASS_PELT ABILITY_SURGE_SURFER \
+            ABILITY_ELECTRIC_SURGE ABILITY_PSYCHIC_SURGE ABILITY_MISTY_SURGE \
+            ABILITY_GRASSY_SURGE ABILITY_SEED_SOWER ABILITY_HADRON_ENGINE; do
             grep -qx "$ability" mr04-implemented-abilities.txt
           done
 
