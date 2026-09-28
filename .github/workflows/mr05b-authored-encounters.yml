@@ -943,20 +943,11 @@ jobs:
           test "$(jq -r '.ui_changed' mr08s10-canonical-ability-gulp-missile.json)" = "false"
           grep -qx 'ABILITY_GULP_MISSILE' mr04-implemented-abilities.txt
 
-      - name: Install MR08S11 canonical Illusion pass
+      - name: Pre-register Illusion for Zorua species import
         shell: bash
         run: |
-          python3 tools/install_mr08s11_canonical_ability_illusion.py \
-            vendor/pokeplatinum \
-            --implemented-registry mr04-implemented-abilities.txt \
-            --report mr08s11-canonical-ability-illusion.json
-
-          test "$(jq -r '.status' mr08s11-canonical-ability-illusion.json)" = "PASS"
-          test "$(jq -r '.implemented_count' mr08s11-canonical-ability-illusion.json)" = "1"
-          test "$(jq -r '.running_modern_mechanics_total' mr08s11-canonical-ability-illusion.json)" = "184"
-          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08s11-canonical-ability-illusion.json)" = "3"
-          test "$(jq -r '[.checks[]] | all' mr08s11-canonical-ability-illusion.json)" = "true"
-          test "$(jq -r '.ui_changed' mr08s11-canonical-ability-illusion.json)" = "false"
+          grep -qx 'ABILITY_ILLUSION' mr04-implemented-abilities.txt \
+            || echo 'ABILITY_ILLUSION' >> mr04-implemented-abilities.txt
           grep -qx 'ABILITY_ILLUSION' mr04-implemented-abilities.txt
 
       - name: Pre-register RKS System for Silvally species import
@@ -1033,6 +1024,22 @@ jobs:
           test "$(jq -r '.ui_changed' mr08s9-canonical-ability-rks-system.json)" = "false"
           grep -qx 'ABILITY_RKS_SYSTEM' mr04-implemented-abilities.txt
           grep -qx 'MOVE_MULTI_ATTACK' mr04-implemented-moves.txt
+
+      - name: Install MR08S11 canonical Illusion pass
+        shell: bash
+        run: |
+          python3 tools/install_mr08s11_canonical_ability_illusion.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08s11-canonical-ability-illusion.json
+
+          test "$(jq -r '.status' mr08s11-canonical-ability-illusion.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08s11-canonical-ability-illusion.json)" = "1"
+          test "$(jq -r '.running_modern_mechanics_total' mr08s11-canonical-ability-illusion.json)" = "184"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08s11-canonical-ability-illusion.json)" = "3"
+          test "$(jq -r '[.checks[]] | all' mr08s11-canonical-ability-illusion.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08s11-canonical-ability-illusion.json)" = "false"
+          grep -qx 'ABILITY_ILLUSION' mr04-implemented-abilities.txt
 
       - name: Install production Mercury Move Learner
         shell: bash
