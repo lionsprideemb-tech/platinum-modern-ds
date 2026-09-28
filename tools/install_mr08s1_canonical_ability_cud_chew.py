@@ -223,12 +223,8 @@ def patch_battle_lib(root: Path) -> None:
     # attacker, so the generic RemoveItem hook cannot identify the consumer.
     insert_after_once(
         path,
-        """BOOL BattleSystem_PluckBerry(BattleSystem *battleSys, BattleContext *battleCtx, int battler)
-{
-    BOOL result = FALSE;
-    int nextSeq = 0;
-    int effect = Battler_ItemPluckEffect(battleCtx, battler);
-    int power = Battler_HeldItemPower(battleCtx, battler, 1);
+        """    BOOL mercuryRipen = Mercury_RipenApplies(
+        battleCtx, battleCtx->attacker, battleCtx->battleMons[battler].heldItem);
 
 """,
         """    Mercury_RecordCudChew(
