@@ -269,7 +269,7 @@ def patch_infiltrator(root: Path) -> None:
     )
 
 
-def patch_myc​​elium_might(root: Path) -> None:
+def patch_mycelium_might(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
     insert_before_once(
@@ -541,7 +541,7 @@ def main() -> None:
 
     patch_wind_family(root)
     patch_infiltrator(root)
-    patch_myc​​elium_might(root)
+    patch_mycelium_might(root)
     patch_soul_heart(root)
     patch_supersweet_syrup(root)
     update_registry(registry)
