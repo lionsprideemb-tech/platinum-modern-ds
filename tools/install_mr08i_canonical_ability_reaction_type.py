@@ -109,6 +109,18 @@ def validate_ids(root: Path) -> dict[str, bool]:
 def patch_helpers(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
+    # CompareBattlerSpeed lives earlier in battle_lib.c than the shared helper
+    # definitions, so Triage needs a narrow forward declaration.
+    insert_before_once(
+        path,
+        """u8 BattleSystem_CompareBattlerSpeed(BattleSystem *battleSys, BattleContext *battleCtx, int battler1, int battler2, BOOL ignoreQuickClaw)
+""",
+        """static BOOL Mercury_MoveIsTriageHealing(int move);
+
+""",
+        "Triage helper forward declaration",
+    )
+
     insert_before_once(
         path,
         """static BOOL Mercury_MoveIsBallOrBomb(int move)
@@ -520,7 +532,6 @@ def patch_reaction_family(root: Path) -> None:
                 || DEFENDER_SELF_TURN_FLAGS.specialDamageTaken)
             && ATTACKING_MON.moveEffectsData.disabledMove == MOVE_NONE
             && battleCtx->moveCur != MOVE_NONE
-            && CURRENT_MOVE_DATA.power
             && BattleSystem_RandNext(battleSys) % 10 < 3) {
             int moveSlot;
 
@@ -686,7 +697,7 @@ def patch_reaction_family(root: Path) -> None:
 def patch_defiant_competitive(root: Path) -> None:
     path = root / "src/battle/battle_script.c"
 
-    insert_before_once(
+    replace_once(
         path,
         """        if (mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] < MIN_STAT_STAGE) {
             mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] = MIN_STAT_STAGE;
@@ -696,7 +707,11 @@ def patch_defiant_competitive(root: Path) -> None:
     return FALSE;
 }
 """,
-        """        if (battleCtx->attacker != battleCtx->sideEffectMon
+        """        if (mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] < MIN_STAT_STAGE) {
+            mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] = MIN_STAT_STAGE;
+        }
+
+        if (battleCtx->attacker != battleCtx->sideEffectMon
             && BattleSystem_GetBattlerSide(battleSys, battleCtx->attacker)
                 != BattleSystem_GetBattlerSide(
                     battleSys, battleCtx->sideEffectMon)) {
@@ -717,7 +732,10 @@ def patch_defiant_competitive(root: Path) -> None:
                 }
             }
         }
+    }
 
+    return FALSE;
+}
 """,
         "Defiant / Competitive opponent stat-drop response",
     )
