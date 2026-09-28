@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 """MR08S10 — canonical Gulp Missile battle-state pass.
 
-Implements current-mainline Gulp Missile:
-- Cramorant loads Gulping (> 1/2 HP) or Gorging (<= 1/2 HP) after a successful
-  Surf or Dive use;
-- a damaging hit makes it spit the loaded prey and return to normal, even if
-  Cramorant itself faints from that hit;
-- the attacker takes 1/4 max HP damage unless protected by Magic Guard;
-- Gulping additionally lowers the attacker's Defense by one stage;
-- Gorging additionally attempts to paralyze the attacker;
-- loaded prey resets when Cramorant leaves battle;
-- Gulp Missile is cantsuppress and notransform under current-mainline rules,
-  while remaining copyable/swappable/traceable/receivable as in current data.
+Implements current-mainline Cramorant / Gulp Missile mechanics:
+- successful Surf damage arms Gulping (> 50% HP) or Gorging (<= 50%);
+- the successful first turn of Dive arms the same state immediately;
+- a damaging hit on an armed Cramorant fires the prey even if Cramorant faints;
+- no projectile fires while Cramorant itself is still semi-invulnerable;
+- the attacker loses 1/4 max HP unless protected by Magic Guard;
+- Gulping lowers the surviving attacker's Defense by one stage;
+- Gorging attempts to paralyze the surviving attacker;
+- Cramorant returns to normal after firing and when it switches out;
+- transformed users can possess Gulp Missile but cannot arm its prey state;
+- current Gen IX rules allow Trace, Skill Swap, Wandering Spirit and Receiver
+  to acquire Gulp Missile, while Role Play still fails;
+- Gastro Acid and Worry Seed fail, Mummy/Lingering Aroma cannot overwrite it,
+  and Neutralizing Gas cannot suppress it.
 
-Type-specific Cramorant form graphics are deferred to Mercury's form-asset pass.
-Locked MR07 Summary/editor visuals remain untouched.
+Gulping / Gorging sprite presentation is deferred to Mercury's later form-asset
+phase. Locked MR07 Summary/editor visuals remain untouched.
 """
 
 from __future__ import annotations
@@ -112,243 +115,298 @@ def patch_context(root: Path) -> None:
         """    u32 battleProgressFlag : 1;
 """,
         """    // Mercury MR08S10: 0 normal, 1 Gulping/Arrokuda, 2 Gorging/Pikachu.
-    u8 mercuryGulpMissileForm[MAX_BATTLERS];
-    u8 mercuryGulpMissileFollowup;
-    u8 mercuryGulpMissileSource;
+    u8 mercuryGulpMissileState[MAX_BATTLERS];
 
 """,
-        "Gulp Missile state",
+        "Gulp Missile battle state",
     )
 
 
-def patch_public_helpers(root: Path) -> None:
-    path = root / "include/battle/battle_lib.h"
-    insert_before_once(
-        path,
-        """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);
-""",
-        """void Mercury_TryLoadGulpMissile(BattleSystem *battleSys, BattleContext *battleCtx);
-BOOL Mercury_TryGulpMissileFollowup(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);
+def patch_subscript(root: Path) -> None:
+    scripts = root / "res/battle/scripts/subscripts"
 
+    (scripts / "subscript_mercury_gulp_missile.s").write_text(
+        """#include "macros/btlcmd.inc"
+
+
+_000:
+    // {0} has {1}!
+    PrintMessage BattleStrings_Text_PokemonWasAbility_Ally, TAG_NICKNAME_ABILITY, BTLSCR_DEFENDER, BTLSCR_DEFENDER
+    Wait
+    WaitButtonABTime 15
+
+    // Magic Guard leaves HP_CALC_TEMP at zero; the secondary effect still runs.
+    CompareVarToValue OPCODE_EQU, BTLVAR_HP_CALC_TEMP, 0, _Survived
+    UpdateVar OPCODE_FLAG_ON, BTLVAR_BATTLE_CTX_STATUS, SYSCTL_SKIP_SPRITE_BLINK
+    Call BATTLE_SUBSCRIPT_UPDATE_HP
+
+    // Showdown/current-mainline behavior applies the secondary only if the
+    // attacker survived the projectile.
+    CompareMonDataToValue OPCODE_EQU, BTLSCR_SIDE_EFFECT_MON, BATTLEMON_CUR_HP, 0, _End
+
+_Survived:
+    Call BATTLE_SUBSCRIPT_PUSH_ATTACKER_AND_DEFENDER
+    // Attribute the stat/status effect to Cramorant rather than to the attacker.
+    UpdateVarFromVar OPCODE_SET, BTLVAR_ATTACKER, BTLVAR_DEFENDER
+    CompareVarToValue OPCODE_EQU, BTLVAR_CALC_TEMP, 1, _Arrokuda
+
+    // Pikachu: Electric types cannot be paralyzed in modern mechanics.
+    CompareMonDataToValue OPCODE_EQU, BTLSCR_SIDE_EFFECT_MON, BATTLEMON_TYPE_1, TYPE_ELECTRIC, _Restore
+    CompareMonDataToValue OPCODE_EQU, BTLSCR_SIDE_EFFECT_MON, BATTLEMON_TYPE_2, TYPE_ELECTRIC, _Restore
+    Call BATTLE_SUBSCRIPT_PARALYZE
+    GoTo _Restore
+
+_Arrokuda:
+    Call BATTLE_SUBSCRIPT_UPDATE_STAT_STAGE
+
+_Restore:
+    Call BATTLE_SUBSCRIPT_POP_ATTACKER_AND_DEFENDER
+
+_End:
+    End
 """,
-        "Gulp Missile helper declarations",
+        encoding="utf-8",
+    )
+
+    insert_after_once(
+        scripts / "sub_seq.order",
+        "subscript_mercury_ice_face_restore\n",
+        "subscript_mercury_gulp_missile\n",
+        "Gulp Missile subscript order",
+    )
+    insert_after_once(
+        scripts / "meson.build",
+        "    'subscript_mercury_ice_face_restore.s',\n",
+        "    'subscript_mercury_gulp_missile.s',\n",
+        "Gulp Missile subscript build list",
     )
 
 
-def patch_battle_lib(root: Path) -> None:
+def patch_switch_reset_and_reaction(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
-
-    insert_before_once(
-        path,
-        """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript)
-""",
-        """void Mercury_TryLoadGulpMissile(
-    BattleSystem *battleSys,
-    BattleContext *battleCtx)
-{
-    int battler = battleCtx->attacker;
-
-    if (battler >= BattleSystem_GetMaxBattlers(battleSys)
-        || battleCtx->battleMons[battler].curHP == 0
-        || battleCtx->battleMons[battler].species != SPECIES_CRAMORANT
-        || Battler_Ability(battleCtx, battler) != ABILITY_GULP_MISSILE
-        || battleCtx->mercuryGulpMissileForm[battler] != 0
-        || (battleCtx->battleMons[battler].statusVolatile
-            & VOLATILE_CONDITION_TRANSFORM)) {
-        return;
-    }
-
-    if (battleCtx->moveCur != MOVE_SURF
-        && battleCtx->moveCur != MOVE_DIVE) {
-        return;
-    }
-
-    if (battleCtx->moveStatusFlags & MOVE_STATUS_DID_NOT_HIT) {
-        // Dive's charge turn deliberately carries FIRST_OF_MULTI_TURN and is
-        // still a successful use for Gulp Missile.
-        if (battleCtx->moveCur != MOVE_DIVE
-            || (battleCtx->battleStatusMask & SYSCTL_FIRST_OF_MULTI_TURN) == 0) {
-            return;
-        }
-    }
-
-    if (battleCtx->battleMons[battler].curHP
-        <= battleCtx->battleMons[battler].maxHP / 2) {
-        battleCtx->mercuryGulpMissileForm[battler] = 2;
-    } else {
-        battleCtx->mercuryGulpMissileForm[battler] = 1;
-    }
-}
-
-BOOL Mercury_TryGulpMissileFollowup(
-    BattleSystem *battleSys,
-    BattleContext *battleCtx,
-    int *subscript)
-{
-    int followup = battleCtx->mercuryGulpMissileFollowup;
-    int source = battleCtx->mercuryGulpMissileSource;
-
-    if (followup == 0) {
-        return FALSE;
-    }
-
-    battleCtx->mercuryGulpMissileFollowup = 0;
-
-    if (battleCtx->attacker >= BattleSystem_GetMaxBattlers(battleSys)
-        || battleCtx->battleMons[battleCtx->attacker].curHP == 0) {
-        return FALSE;
-    }
-
-    battleCtx->sideEffectMon = battleCtx->attacker;
-    battleCtx->sideEffectType = SIDE_EFFECT_TYPE_ABILITY;
-    battleCtx->msgBattlerTemp = source;
-
-    if (followup == 1) {
-        battleCtx->sideEffectParam = MOVE_SUBSCRIPT_PTR_DEFENSE_DOWN_1_STAGE;
-        *subscript = subscript_update_stat_stage;
-    } else {
-        *subscript = subscript_paralyze;
-    }
-
-    return TRUE;
-}
-
-""",
-        "Gulp Missile helpers",
-    )
 
     replace_in_function(
         path,
         "void BattleSystem_InitBattleMon(BattleSystem *battleSys, BattleContext *battleCtx, int battler, int partySlot)",
-        """    battleCtx->mercuryZenActive[battler] = FALSE;
+        """    battleCtx->mercuryPowerConstructActive[battler] = FALSE;
 """,
-        """    battleCtx->mercuryGulpMissileForm[battler] = 0;
-
-    battleCtx->mercuryZenActive[battler] = FALSE;
+        """    battleCtx->mercuryGulpMissileState[battler] = 0;
+    battleCtx->mercuryPowerConstructActive[battler] = FALSE;
 """,
         "Gulp Missile switch reset",
+    )
+
+    # Surf must actually hit/damage a target. This is intentionally before the
+    # defender-substitute early return: damage to a target's Substitute still
+    # counts as a successful Surf for Cramorant's form change.
+    replace_in_function(
+        path,
+        "BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript)",
+        """    if (Battler_SubstituteWasHit(battleCtx, battleCtx->defender) == TRUE) {
+        return result;
+    }
+
+""",
+        """    if (battleCtx->moveCur == MOVE_SURF
+        && ATTACKING_MON.species == SPECIES_CRAMORANT
+        && Battler_Ability(battleCtx, battleCtx->attacker)
+            == ABILITY_GULP_MISSILE
+        && battleCtx->mercuryGulpMissileState[battleCtx->attacker] == 0
+        && (ATTACKING_MON.statusVolatile
+            & VOLATILE_CONDITION_TRANSFORM) == FALSE
+        && (battleCtx->moveStatusFlags & MOVE_STATUS_NO_EFFECTS) == FALSE
+        && ((DEFENDER_SELF_TURN_FLAGS.physicalDamageTaken
+                || DEFENDER_SELF_TURN_FLAGS.specialDamageTaken)
+            || Battler_SubstituteWasHit(
+                battleCtx, battleCtx->defender) == TRUE)) {
+        battleCtx->mercuryGulpMissileState[battleCtx->attacker] =
+            ATTACKING_MON.curHP <= ATTACKING_MON.maxHP / 2 ? 2 : 1;
+    }
+
+    if (Battler_SubstituteWasHit(battleCtx, battleCtx->defender) == TRUE) {
+        return result;
+    }
+
+""",
+        "Gulp Missile Surf arm",
     )
 
     replace_in_function(
         path,
         "BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript)",
-        """    case ABILITY_COLOR_CHANGE:
+        """    switch (Battler_Ability(battleCtx, battleCtx->defender)) {
+    case ABILITY_STATIC:
 """,
-        """    case ABILITY_GULP_MISSILE:
-        if (ATTACKING_MON.curHP
-            && battleCtx->mercuryGulpMissileForm[battleCtx->defender] != 0
+        """    switch (Battler_Ability(battleCtx, battleCtx->defender)) {
+    case ABILITY_GULP_MISSILE: {
+        int gulpState =
+            battleCtx->mercuryGulpMissileState[battleCtx->defender];
+
+        if (DEFENDING_MON.species == SPECIES_CRAMORANT
+            && gulpState
+            && ATTACKING_MON.curHP
+            && (DEFENDING_MON.moveEffectsMask
+                & MOVE_EFFECT_SEMI_INVULNERABLE) == FALSE
+            && (battleCtx->moveStatusFlags & MOVE_STATUS_NO_EFFECTS) == FALSE
             && (DEFENDER_SELF_TURN_FLAGS.physicalDamageTaken
                 || DEFENDER_SELF_TURN_FLAGS.specialDamageTaken)) {
-            int form =
-                battleCtx->mercuryGulpMissileForm[battleCtx->defender];
+            // Spitting the prey always returns Cramorant to its base state,
+            // including when the incoming hit also knocked Cramorant out.
+            battleCtx->mercuryGulpMissileState[battleCtx->defender] = 0;
+            battleCtx->calcTemp = gulpState;
+            battleCtx->msgBattlerTemp = battleCtx->attacker;
+            battleCtx->sideEffectType = SIDE_EFFECT_TYPE_ABILITY;
+            battleCtx->sideEffectMon = battleCtx->attacker;
 
-            // Spit the loaded prey immediately; Cramorant returns to normal
-            // even if the projectile's damage is blocked by Magic Guard.
-            battleCtx->mercuryGulpMissileForm[battleCtx->defender] = 0;
-            battleCtx->mercuryGulpMissileFollowup = form;
-            battleCtx->mercuryGulpMissileSource = battleCtx->defender;
-
-            if (Battler_Ability(battleCtx, battleCtx->attacker)
-                != ABILITY_MAGIC_GUARD) {
-                battleCtx->hpCalcTemp =
-                    -(ATTACKING_MON.maxHP / 4);
-                if (battleCtx->hpCalcTemp == 0) {
-                    battleCtx->hpCalcTemp = -1;
-                }
-                battleCtx->msgBattlerTemp = battleCtx->defender;
-                *subscript = subscript_rough_skin;
-                result = TRUE;
+            if (gulpState == 1) {
+                battleCtx->sideEffectParam =
+                    MOVE_SUBSCRIPT_PTR_DEFENSE_DOWN_1_STAGE;
             }
+
+            if (Battler_Ability(
+                    battleCtx, battleCtx->attacker) == ABILITY_MAGIC_GUARD) {
+                battleCtx->hpCalcTemp = 0;
+            } else {
+                battleCtx->hpCalcTemp =
+                    BattleSystem_Divide(ATTACKING_MON.maxHP * -1, 4);
+            }
+
+            *subscript = subscript_mercury_gulp_missile;
+            result = TRUE;
         }
         break;
+    }
 
-    case ABILITY_COLOR_CHANGE:
+    case ABILITY_STATIC:
 """,
-        "Gulp Missile damaging-hit trigger",
+        "Gulp Missile retaliation",
     )
 
-    # Current-mainline Gulp Missile is receivable; remove the older HG-Engine
-    # exclusion inherited by MR08K.
+
+def patch_dive_arm_and_substitute_rule(root: Path) -> None:
+    path = root / "src/battle/battle_script.c"
+
     replace_in_function(
         path,
+        "static BOOL BtlCmd_UpdateMonData(BattleSystem *battleSys, BattleContext *battleCtx)",
+        """    BattleMon_Set(battleCtx, battler, paramID, &monData);
+    BattleMon_CopyToParty(battleSys, battleCtx, battler);
+
+""",
+        """    BattleMon_Set(battleCtx, battler, paramID, &monData);
+
+    // Dive catches prey on the successful first turn as soon as the
+    // underwater state is installed. This also covers charge-skipping items.
+    if (op == OPCODE_FLAG_ON
+        && paramID == BATTLEMON_MOVE_EFFECTS_MASK
+        && (srcVal & MOVE_EFFECT_UNDERWATER)
+        && battler == battleCtx->attacker
+        && battleCtx->moveCur == MOVE_DIVE
+        && battleCtx->battleMons[battler].species == SPECIES_CRAMORANT
+        && Battler_Ability(battleCtx, battler) == ABILITY_GULP_MISSILE
+        && battleCtx->mercuryGulpMissileState[battler] == 0
+        && (battleCtx->battleMons[battler].statusVolatile
+            & VOLATILE_CONDITION_TRANSFORM) == FALSE) {
+        battleCtx->mercuryGulpMissileState[battler] =
+            battleCtx->battleMons[battler].curHP
+                <= battleCtx->battleMons[battler].maxHP / 2
+            ? 2
+            : 1;
+    }
+
+    BattleMon_CopyToParty(battleSys, battleCtx, battler);
+
+""",
+        "Gulp Missile Dive arm",
+    )
+
+    # The projectile bypasses the attacker's Substitute. Preserve normal
+    # Substitute behavior for every other Ability/stat-stage source.
+    replace_in_function(
+        path,
+        "static BOOL BtlCmd_ChangeStatStage(BattleSystem *battleSys, BattleContext *battleCtx)",
+        """                } else if (battleCtx->battleMons[battleCtx->sideEffectMon].statusVolatile & VOLATILE_CONDITION_SUBSTITUTE) {
+                    result = 2;
+                }
+""",
+        """                } else if ((battleCtx->battleMons[battleCtx->sideEffectMon].statusVolatile
+                        & VOLATILE_CONDITION_SUBSTITUTE)
+                    && !(battleCtx->sideEffectType == SIDE_EFFECT_TYPE_ABILITY
+                        && Battler_Ability(
+                            battleCtx, battleCtx->attacker)
+                            == ABILITY_GULP_MISSILE
+                        && battleCtx->sideEffectParam
+                            == MOVE_SUBSCRIPT_PTR_DEFENSE_DOWN_1_STAGE)) {
+                    result = 2;
+                }
+""",
+        "Gulp Missile projectile bypasses attacker Substitute",
+    )
+
+
+def patch_gen9_interactions(root: Path) -> None:
+    lib = root / "src/battle/battle_lib.c"
+    copy = root / "res/battle/scripts/subscripts/subscript_copy_ability.s"
+    swap = root / "res/battle/scripts/subscripts/subscript_exchange_abilities.s"
+    suppress = root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s"
+    worry = root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s"
+
+    # Scarlet/Violet 3.0+: Receiver and Wandering Spirit can acquire/swap Gulp
+    # Missile. Mummy and Lingering Aroma remain blocked by their older helper.
+    replace_in_function(
+        lib,
         "static BOOL Mercury_AbilityCanBeReceived(int ability)",
         """    case ABILITY_GULP_MISSILE:
 """,
-        """""",
-        "Gulp Missile Receiver current-mainline rule",
+        "",
+        "Gulp Missile Receiver Gen IX allowance",
     )
 
-
-def patch_controller(root: Path) -> None:
-    path = root / "src/battle/battle_controller_player.c"
-
-    replace_in_function(
-        path,
-        "static void BattleControllerPlayer_AfterMoveMessage(BattleSystem *battleSys, BattleContext *battleCtx)",
-        """        case ONE_HIT_EXTRA_FLINCH:
-            battleCtx->afterMoveMessageState++;
+    insert_before_once(
+        lib,
+        """static int Mercury_CountFaintedPartyMons(
 """,
-        """        case ONE_HIT_EXTRA_FLINCH:
-            int gulpSeq;
-            if (Mercury_TryGulpMissileFollowup(
-                    battleSys, battleCtx, &gulpSeq)) {
-                LOAD_SUBSEQ(gulpSeq);
-                battleCtx->commandNext = battleCtx->command;
-                battleCtx->command = BATTLE_CONTROL_EXEC_SCRIPT;
-                return;
-            }
-
-            battleCtx->afterMoveMessageState++;
-""",
-        "Gulp Missile one-hit followup",
-    )
-
-    replace_in_function(
-        path,
-        "static void BattleControllerPlayer_AfterMoveMessage(BattleSystem *battleSys, BattleContext *battleCtx)",
-        """        case MULTI_HIT_STATUS:
-            battleCtx->afterMoveMessageState++;
-""",
-        """        case MULTI_HIT_STATUS:
-            int gulpSeq;
-            if (Mercury_TryGulpMissileFollowup(
-                    battleSys, battleCtx, &gulpSeq)) {
-                LOAD_SUBSEQ(gulpSeq);
-                battleCtx->commandNext = battleCtx->command;
-                battleCtx->command = BATTLE_CONTROL_EXEC_SCRIPT;
-                return;
-            }
-
-            battleCtx->afterMoveMessageState++;
-""",
-        "Gulp Missile multi-hit followup",
-    )
-
-    replace_in_function(
-        path,
-        "static void BattleControllerPlayer_AfterMoveEffects(BattleSystem *battleSys, BattleContext *battleCtx)",
-        """    default:
-        break;
+        """static BOOL Mercury_AbilityCanSwapWithWanderingSpirit(int ability)
+{
+    if (ability == ABILITY_GULP_MISSILE) {
+        return TRUE;
     }
 
-    battleCtx->afterMoveEffectState = AFTER_MOVE_EFFECT_START;
-""",
-        """    default:
-        Mercury_TryLoadGulpMissile(battleSys, battleCtx);
-        break;
-    }
+    return Mercury_AbilityCanBeOverwrittenByMummy(ability);
+}
 
-    battleCtx->afterMoveEffectState = AFTER_MOVE_EFFECT_START;
 """,
-        "Gulp Missile Surf/Dive load hook",
+        "Gulp Missile Wandering Spirit helper",
     )
 
+    replace_once(
+        lib,
+        """            && Mercury_AbilityCanBeOverwrittenByMummy(
+                Battler_Ability(battleCtx, battleCtx->attacker))
+            && Mercury_AbilityCanBeOverwrittenByMummy(
+                Battler_Ability(battleCtx, battleCtx->defender))) {
+""",
+        """            && Mercury_AbilityCanSwapWithWanderingSpirit(
+                Battler_Ability(battleCtx, battleCtx->attacker))
+            && Mercury_AbilityCanSwapWithWanderingSpirit(
+                Battler_Ability(battleCtx, battleCtx->defender))) {
+""",
+        "Gulp Missile Wandering Spirit Gen IX allowance",
+    )
 
-def patch_current_mainline_flags(root: Path) -> None:
-    suppress = root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s"
-    worry = root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s"
-    transform = root / "res/battle/scripts/subscripts/subscript_transform_into_target.s"
-    lib = root / "src/battle/battle_lib.c"
+    # Role Play still fails if either Pokémon has Gulp Missile in current Gen IX.
+    insert_after_once(
+        copy,
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_GULP_MISSILE, _091\n",
+        "Gulp Missile Role Play target lock",
+    )
+    insert_after_once(
+        copy,
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_GULP_MISSILE, _091\n",
+        "Gulp Missile Role Play user lock",
+    )
 
     insert_after_once(
         suppress,
@@ -362,25 +420,9 @@ def patch_current_mainline_flags(root: Path) -> None:
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_GULP_MISSILE, _041\n",
         "Gulp Missile Worry Seed lock",
     )
-    insert_before_once(
-        transform,
-        "    Call BATTLE_SUBSCRIPT_ATTACK_MESSAGE_AND_ANIMATION\n",
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_GULP_MISSILE, _023\n",
-        "Gulp Missile Transform target lock",
-    )
 
-    replace_once(
-        lib,
-        """                    || (battleCtx->battleMons[target].moveEffectsMask
-                        & MOVE_EFFECT_SEMI_INVULNERABLE)) {
-""",
-        """                    || (battleCtx->battleMons[target].moveEffectsMask
-                        & MOVE_EFFECT_SEMI_INVULNERABLE)
-                    || battleCtx->battleMons[target].ability
-                        == ABILITY_GULP_MISSILE) {
-""",
-        "Gulp Missile Imposter target lock",
-    )
+    # Deliberately do not add Gulp Missile to Trace or Skill Swap exclusions.
+    _ = swap
 
 
 def update_registry(path: Path) -> None:
@@ -398,10 +440,13 @@ def update_registry(path: Path) -> None:
 def validate(root: Path, registry: Path) -> dict[str, bool]:
     ctx = (root / "include/battle/battle_context.h").read_text(encoding="utf-8")
     lib = (root / "src/battle/battle_lib.c").read_text(encoding="utf-8")
-    controller = (root / "src/battle/battle_controller_player.c").read_text(encoding="utf-8")
+    script = (root / "src/battle/battle_script.c").read_text(encoding="utf-8")
+    sub = (root / "res/battle/scripts/subscripts/subscript_mercury_gulp_missile.s").read_text(encoding="utf-8")
+    order = (root / "res/battle/scripts/subscripts/sub_seq.order").read_text(encoding="utf-8")
+    copy = (root / "res/battle/scripts/subscripts/subscript_copy_ability.s").read_text(encoding="utf-8")
+    swap = (root / "res/battle/scripts/subscripts/subscript_exchange_abilities.s").read_text(encoding="utf-8")
     suppress = (root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s").read_text(encoding="utf-8")
     worry = (root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s").read_text(encoding="utf-8")
-    transform = (root / "res/battle/scripts/subscripts/subscript_transform_into_target.s").read_text(encoding="utf-8")
     registry_lines = set(registry.read_text(encoding="utf-8").splitlines())
 
     cannot_start = lib.index("static BOOL Mercury_AbilityCannotBeNeutralized")
@@ -409,44 +454,74 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
     cannot = lib[cannot_start:cannot_end]
 
     receiver_start = lib.index("static BOOL Mercury_AbilityCanBeReceived")
-    receiver_end = lib.index("static int Mercury_CountFaintedPartyMons", receiver_start)
+    receiver_end = lib.index("static BOOL Mercury_AbilityCanSwapWithWanderingSpirit", receiver_start)
     receiver = lib[receiver_start:receiver_end]
 
+    mummy_start = lib.index("static BOOL Mercury_AbilityCanBeOverwrittenByMummy")
+    mummy_end = lib.index("static BOOL Mercury_AbilityCanSwapWithWanderingSpirit", mummy_start)
+    mummy = lib[mummy_start:mummy_end]
+
+    trace_start = lib.index("static BOOL Mercury_TraceCandidate")
+    trace_end = lib.index("static BOOL Mercury_AbilityCanBeReceived", trace_start)
+    trace = lib[trace_start:trace_end]
+
     checks = {
-        "gulp_state":
-            "mercuryGulpMissileForm[MAX_BATTLERS]" in ctx
-            and "mercuryGulpMissileFollowup" in ctx,
-        "surf_dive_load":
-            "MOVE_SURF" in lib
-            and "MOVE_DIVE" in lib
-            and "mercuryGulpMissileForm[battler] = 2" in lib
-            and "mercuryGulpMissileForm[battler] = 1" in lib,
-        "half_hp_form_split":
-            "<= battleCtx->battleMons[battler].maxHP / 2" in lib,
-        "quarter_hp_projectile":
-            "-(ATTACKING_MON.maxHP / 4)" in lib,
-        "magic_guard_blocks_damage":
-            "!= ABILITY_MAGIC_GUARD" in lib,
+        "battle_state":
+            "mercuryGulpMissileState[MAX_BATTLERS]" in ctx,
+        "switch_resets_state":
+            "mercuryGulpMissileState[battler] = 0;" in lib,
+        "surf_requires_successful_hit":
+            "battleCtx->moveCur == MOVE_SURF" in lib
+            and "DEFENDER_SELF_TURN_FLAGS.specialDamageTaken" in lib
+            and "Battler_SubstituteWasHit" in lib,
+        "dive_first_turn_arm":
+            "battleCtx->moveCur == MOVE_DIVE" in script
+            and "MOVE_EFFECT_UNDERWATER" in script
+            and "mercuryGulpMissileState[battler]" in script,
+        "half_hp_form_selection":
+            "<= battleCtx->battleMons[battler].maxHP / 2" in script
+            and "ATTACKING_MON.curHP <= ATTACKING_MON.maxHP / 2" in lib,
+        "semi_invulnerable_does_not_spit":
+            "DEFENDING_MON.moveEffectsMask" in lib
+            and "MOVE_EFFECT_SEMI_INVULNERABLE" in lib,
+        "quarter_hp_retaliation":
+            "ATTACKING_MON.maxHP * -1, 4" in lib
+            and "subscript_mercury_gulp_missile" in lib,
+        "magic_guard_damage_immunity":
+            "ABILITY_MAGIC_GUARD" in lib
+            and "battleCtx->hpCalcTemp = 0;" in lib,
         "gulping_defense_drop":
             "MOVE_SUBSCRIPT_PTR_DEFENSE_DOWN_1_STAGE" in lib
-            and "subscript_update_stat_stage" in lib,
+            and "BATTLE_SUBSCRIPT_UPDATE_STAT_STAGE" in sub,
         "gorging_paralysis":
-            "subscript_paralyze" in lib,
-        "followup_controller":
-            controller.count("Mercury_TryGulpMissileFollowup") >= 2
-            and "Mercury_TryLoadGulpMissile" in controller,
-        "switch_resets_prey":
-            "mercuryGulpMissileForm[battler] = 0;" in lib,
+            "BATTLE_SUBSCRIPT_PARALYZE" in sub
+            and sub.count("TYPE_ELECTRIC") >= 2,
+        "projectile_bypasses_attacker_substitute":
+            "ABILITY_GULP_MISSILE" in script
+            and "MOVE_SUBSCRIPT_PTR_DEFENSE_DOWN_1_STAGE" in script,
+        "transformed_user_cannot_arm":
+            "VOLATILE_CONDITION_TRANSFORM" in lib
+            and "VOLATILE_CONDITION_TRANSFORM" in script,
+        "subscript_registered":
+            "subscript_mercury_gulp_missile" in order,
         "neutralizing_gas_cannot_suppress":
             "ABILITY_GULP_MISSILE" in cannot,
         "gastro_and_worry_seed_fail":
             "ABILITY_GULP_MISSILE" in suppress
             and "ABILITY_GULP_MISSILE" in worry,
-        "not_transformable":
-            "ABILITY_GULP_MISSILE" in transform
-            and "== ABILITY_GULP_MISSILE" in lib,
-        "current_receiver_rule":
+        "role_play_blocked":
+            copy.count("ABILITY_GULP_MISSILE") >= 2,
+        "trace_allowed_gen9":
+            "ABILITY_GULP_MISSILE" not in trace,
+        "skill_swap_allowed_gen9":
+            "ABILITY_GULP_MISSILE" not in swap,
+        "receiver_allowed_gen9":
             "ABILITY_GULP_MISSILE" not in receiver,
+        "wandering_spirit_allowed_gen9":
+            "Mercury_AbilityCanSwapWithWanderingSpirit" in lib
+            and "ability == ABILITY_GULP_MISSILE" in lib,
+        "mummy_lingering_aroma_blocked":
+            "ABILITY_GULP_MISSILE" in mummy,
         "implemented_registry_updated":
             all(token in registry_lines for token in IMPLEMENTED),
     }
@@ -469,10 +544,10 @@ def main() -> None:
     registry = args.implemented_registry.resolve()
 
     patch_context(root)
-    patch_public_helpers(root)
-    patch_battle_lib(root)
-    patch_controller(root)
-    patch_current_mainline_flags(root)
+    patch_subscript(root)
+    patch_switch_reset_and_reaction(root)
+    patch_dive_arm_and_substitute_rule(root)
+    patch_gen9_interactions(root)
     update_registry(registry)
 
     checks = validate(root, registry)
@@ -487,7 +562,7 @@ def main() -> None:
         "running_modern_mechanics_total": 183,
         "remaining_modern_canonical_mechanics": 4,
         "form_visuals_deferred": True,
-        "policy": "Current-mainline Gulp Missile Surf/Dive prey loading, retaliatory damage and Arrokuda/Pikachu follow-up effects.",
+        "policy": "Current Gen IX Gulp Missile: successful Surf / first-turn Dive prey state, quarter-max-HP retaliation, Arrokuda Defense drop / Pikachu paralysis, plus post-3.0 copy/swap/Receiver rules.",
         "checks": checks,
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
