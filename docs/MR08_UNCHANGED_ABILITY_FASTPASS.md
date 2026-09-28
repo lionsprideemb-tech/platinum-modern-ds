@@ -82,7 +82,7 @@ hook they need before entering the implemented registry:
 - Sand Spit
 - Ripen
 - Screen Cleaner
-- Perish Body
+- Screen Cleaner
 - Gorilla Tactics
 - Pastel Veil
 
