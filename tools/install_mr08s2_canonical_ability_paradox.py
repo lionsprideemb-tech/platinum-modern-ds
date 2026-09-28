@@ -434,14 +434,19 @@ def patch_special_restrictions(root: Path) -> None:
     suppress = root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s"
     worry = root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s"
 
-    # Receiver / Power of Alchemy.
-    insert_before_once(
+    # Receiver / Power of Alchemy. MR08R4 inserts the Embody Aspect family
+    # immediately before Tera Shift, so anchor to that unique tail.
+    replace_once(
         lib,
-        """    case ABILITY_TERA_SHIFT:
+        """    case ABILITY_EMBODY_ASPECT_4:
+    case ABILITY_TERA_SHIFT:
         return FALSE;
 """,
-        """    case ABILITY_PROTOSYNTHESIS:
+        """    case ABILITY_EMBODY_ASPECT_4:
+    case ABILITY_PROTOSYNTHESIS:
     case ABILITY_QUARK_DRIVE:
+    case ABILITY_TERA_SHIFT:
+        return FALSE;
 """,
         "Paradox Receiver restriction",
     )
