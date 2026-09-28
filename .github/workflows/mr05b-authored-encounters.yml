@@ -32,6 +32,7 @@ on:
       - "tools/install_mr08h_canonical_ability_field_families.py"
       - "tools/install_mr08i_canonical_ability_reaction_type.py"
       - "tools/install_mr08j_canonical_ability_conversion_item_reaction.py"
+      - "tools/install_mr08k_canonical_ability_bulk_pass.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -180,6 +181,7 @@ jobs:
             tools/install_mr08h_canonical_ability_field_families.py \
             tools/install_mr08i_canonical_ability_reaction_type.py \
             tools/install_mr08j_canonical_ability_conversion_item_reaction.py \
+            tools/install_mr08k_canonical_ability_bulk_pass.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -486,6 +488,32 @@ jobs:
             ABILITY_UNNERVE ABILITY_POISON_TOUCH ABILITY_HARVEST ABILITY_CHEEK_POUCH \
             ABILITY_STAKEOUT ABILITY_CORROSION ABILITY_HOSPITALITY ABILITY_TOXIC_DEBRIS \
             ABILITY_TOXIC_CHAIN ABILITY_INNARDS_OUT ABILITY_MIRROR_ARMOR; do
+            grep -qx "$ability" mr04-implemented-abilities.txt
+          done
+
+      - name: Install MR08K accelerated canonical Ability bulk pass
+        shell: bash
+        run: |
+          python3 tools/install_mr08k_canonical_ability_bulk_pass.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08k-canonical-ability-bulk-pass.json
+
+          test "$(jq -r '.status' mr08k-canonical-ability-bulk-pass.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08k-canonical-ability-bulk-pass.json)" = "25"
+          test "$(jq -r '.running_modern_mechanics_total' mr08k-canonical-ability-bulk-pass.json)" = "135"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08k-canonical-ability-bulk-pass.json)" = "52"
+          test "$(jq -r '[.checks[]] | all' mr08k-canonical-ability-bulk-pass.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08k-canonical-ability-bulk-pass.json)" = "false"
+          for ability in \
+            ABILITY_PICKPOCKET ABILITY_SHEER_FORCE ABILITY_MOODY ABILITY_MAGIC_BOUNCE \
+            ABILITY_PROTEAN ABILITY_MAGICIAN ABILITY_BATTLE_BOND ABILITY_SOUL_HEART \
+            ABILITY_RECEIVER ABILITY_POWER_OF_ALCHEMY ABILITY_INTREPID_SWORD \
+            ABILITY_DAUNTLESS_SHIELD ABILITY_LIBERO ABILITY_PROPELLER_TAIL \
+            ABILITY_STALWART ABILITY_WANDERING_SPIRIT ABILITY_CURIOUS_MEDICINE \
+            ABILITY_AS_ONE_GLASTRIER ABILITY_AS_ONE_SPECTRIER ABILITY_ORICHALCUM_PULSE \
+            ABILITY_SUPREME_OVERLORD ABILITY_COSTAR ABILITY_MYCELIUM_MIGHT \
+            ABILITY_MINDS_EYE ABILITY_SUPERSWEET_SYRUP; do
             grep -qx "$ability" mr04-implemented-abilities.txt
           done
 
@@ -1487,6 +1515,7 @@ jobs:
           cp mr08h-canonical-ability-field-families.json mr05b-artifact/ 2>/dev/null || true
           cp mr08i-canonical-ability-reaction-type.json mr05b-artifact/ 2>/dev/null || true
           cp mr08j-canonical-ability-conversion-item-reaction.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08k-canonical-ability-bulk-pass.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -2035,6 +2064,7 @@ jobs:
             echo "- MR08H fast-ports 15 canonical field/shared mechanics: Sap Sipper, Victory Star, Turboblaze, Teravolt, Dark Aura, Fairy Aura, Aura Break, Slush Rush, Long Reach, Transistor, Dragon's Maw, Vessel of Ruin, Sword of Ruin, Tablets of Ruin, and Beads of Ruin (80 modern mechanics total)"
             echo "- MR08I fast-ports 15 canonical reaction/type mechanics: Defiant, Cursed Body, Weak Armor, Overcoat, Mummy, Rattled, Competitive, Refrigerate, Mega Launcher, Triage, Cotton Down, Unseen Fist, Lingering Aroma, Anger Shell, and Electromorphosis (95 modern mechanics total)"
             echo "- MR08J fast-ports 15 canonical conversion/item/reaction mechanics: Pixilate, Aerilate, Galvanize, Liquid Voice, Unnerve, Poison Touch, Harvest, Cheek Pouch, Stakeout, Corrosion, Hospitality, Toxic Debris, Toxic Chain, Innards Out, and Mirror Armor (110 modern mechanics total)"
+            echo "- MR08K accelerates the canonical pass with 25 more mechanics across item theft, KO/faint, targeting, switch-in, ability-bypass, and once-per-battle families (135 modern mechanics total; 52 remain)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
