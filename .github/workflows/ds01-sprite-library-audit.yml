@@ -48,6 +48,13 @@ jobs:
             data/ds01_sprite_library_audit.json
             docs/DS01_SPRITE_LIBRARY_AUDIT.md
 
+      - name: Upload source archive for deep audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: ds01-sprite-source-archive
+          path: staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip
+          compression-level: 0
+
       - name: Commit audit reports on push runs
         if: github.event_name == 'push'
         run: |
