@@ -28,6 +28,7 @@ on:
       - "tools/install_mr08d_unchanged_ability_shared_hooks.py"
       - "tools/install_mr08e_unchanged_ability_stat_damage.py"
       - "tools/install_mr08f_unchanged_ability_priority_reactions.py"
+      - "tools/install_mr08g_canonical_ability_late_shared_hooks.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -360,6 +361,39 @@ jobs:
           grep -qx 'ABILITY_QUICK_DRAW' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_CHILLING_NEIGH' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_GRIM_NEIGH' mr04-implemented-abilities.txt
+
+      - name: Install MR08G canonical Ability late shared hooks
+        shell: bash
+        run: |
+          python3 tools/install_mr08g_canonical_ability_late_shared_hooks.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08g-canonical-ability-late-shared-hooks.json
+
+          test "$(jq -r '.status' mr08g-canonical-ability-late-shared-hooks.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08g-canonical-ability-late-shared-hooks.json)" = "10"
+          test "$(jq -r '.running_modern_mechanics_total' mr08g-canonical-ability-late-shared-hooks.json)" = "65"
+          test "$(jq -r '.checks.beast_boost_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.thermal_exchange_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.purifying_salt_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.well_baked_body_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.guard_dog_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.rocky_payload_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.good_as_gold_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.sharpness_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.armor_tail_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.earth_eater_hook' mr08g-canonical-ability-late-shared-hooks.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08g-canonical-ability-late-shared-hooks.json)" = "false"
+          grep -qx 'ABILITY_BEAST_BOOST' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_THERMAL_EXCHANGE' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_PURIFYING_SALT' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_WELL_BAKED_BODY' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_GUARD_DOG' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_ROCKY_PAYLOAD' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_GOOD_AS_GOLD' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_SHARPNESS' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_ARMOR_TAIL' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_EARTH_EATER' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1355,6 +1389,7 @@ jobs:
           cp mr08d-unchanged-ability-shared-hooks.json mr05b-artifact/ 2>/dev/null || true
           cp mr08e-unchanged-ability-stat-damage.json mr05b-artifact/ 2>/dev/null || true
           cp mr08f-unchanged-ability-priority-reactions.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08g-canonical-ability-late-shared-hooks.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1899,6 +1934,7 @@ jobs:
             echo "- MR08D fast-ports 10 more shared-hook canonical mechanics: Iron Barbs, Wonder Skin, Analytic, Bulletproof, Queenly Majesty, Battery, Dazzling, Tangling Hair, Shadow Shield, and Prism Armor (35 modern mechanics total)"
             echo "- MR08E fast-ports 10 more canonical stat/damage mechanics: Defeatist, Friend Guard, Flare Boost, Toxic Boost, Sand Rush, Stamina, Water Compaction, Merciless, Steelworker, and Steely Spirit (45 modern mechanics total)"
             echo "- MR08F fast-ports 10 more canonical priority/reaction mechanics: Strong Jaw, Sweet Veil, Steam Engine, Punk Rock, Sand Spit, Perish Body, Pastel Veil, Quick Draw, Chilling Neigh, and Grim Neigh (55 modern mechanics total); Water Bubble burn immunity is also completed"
+            echo "- MR08G fast-ports 10 more canonical late-generation mechanics: Beast Boost, Thermal Exchange, Purifying Salt, Well-Baked Body, Guard Dog, Rocky Payload, Good as Gold, Sharpness, Armor Tail, and Earth Eater (65 modern mechanics total)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
