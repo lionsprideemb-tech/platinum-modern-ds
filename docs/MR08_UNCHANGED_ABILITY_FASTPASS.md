@@ -49,10 +49,20 @@ being silently replaced by Redux-specific rebalances.
 
 MR08C adds 10 more unchanged canonical mechanics:
 
+- Healer
+- Telepathy
+- Regenerator
+- Moxie
+- Justified
+- Prankster
+- Gooey
+- Berserk
+- Gorilla Tactics
+- Screen Cleaner
 
 This raises the implemented modern-Ability mechanics total to **25**. The batch
 uses Platinum-native switch-out, end-turn, priority, immunity, on-hit, KO,
-choice-lock, and Perish Song state hooks. No MR07 Summary/editor visuals are
+choice-lock, and switch-in screen hooks. No MR07 Summary/editor visuals are
 changed.
 
 ## Next unchanged candidates
@@ -61,13 +71,7 @@ These remain in the fast-pass lane but are intentionally grouped by the battle
 hook they need before entering the implemented registry:
 
 - Analytic
-- Regenerator
-- Moxie
-- Justified
 - Magic Bounce
-- Prankster
-- Healer
-- Telepathy
 - Aroma Veil
 - Flower Veil
 - Cheek Pouch
@@ -75,15 +79,10 @@ hook they need before entering the implemented registry:
 - Competitive
 - Sweet Veil
 - Symbiosis
-- Gooey
-- Berserk
 - Cotton Down
 - Mirror Armor
 - Sand Spit
 - Ripen
-- Screen Cleaner
-- Screen Cleaner
-- Gorilla Tactics
 - Pastel Veil
 
 These are not marked implemented merely because their names/descriptions exist.
