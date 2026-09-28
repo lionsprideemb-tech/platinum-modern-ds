@@ -8651,6 +8651,97 @@
       "implementation_class": "existing_hook",
       "approval_state": "locked",
       "implementation_ready": true
+    },
+    {
+      "name": "Magical Dust",
+      "source": "Elite Redux v2.65 beta — exact constants/runtime semantics",
+      "exact_effect": "When the user is hit by a qualifying contact move, the attacker gains Psychic as an additional battle typing.",
+      "trigger": "After a successful damaging contact hit is received.",
+      "restrictions": "Does not add Psychic if the attacker is already Psychic-type; uses Mercury's battle-only added-type rules.",
+      "known_users": [],
+      "mechanic_family": "contact_add_psychic_to_attacker",
+      "duplicate_status": "Exact ER custom ability; aliases, NO USE entries, canon duplicates, and unresolved HOLD mechanics excluded.",
+      "implementation_class": "new_engine_system",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Phantom",
+      "source": "Elite Redux v2.65 beta — exact constants/runtime semantics",
+      "exact_effect": "Adds Ghost as an additional battle typing.",
+      "trigger": "On switch-in / battle-state initialization.",
+      "restrictions": "Does not add a duplicate Ghost typing; uses Mercury's battle-only added-type rules.",
+      "known_users": [],
+      "mechanic_family": "add_ghost_type",
+      "duplicate_status": "Exact ER custom ability; aliases, NO USE entries, canon duplicates, and unresolved HOLD mechanics excluded.",
+      "implementation_class": "new_engine_system",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Volcano Rage",
+      "source": "Elite Redux v2.65 beta — exact constants/runtime semantics",
+      "exact_effect": "After a successful Fire-type move, the user follows up with a 50-BP Eruption.",
+      "trigger": "After a successful qualifying Fire-type move.",
+      "restrictions": "Requires the locked ER extra-move legality check; the generated Eruption uses 50 base power.",
+      "known_users": [],
+      "mechanic_family": "fire_move_followup_eruption_50",
+      "duplicate_status": "Exact ER custom ability; aliases, NO USE entries, canon duplicates, and unresolved HOLD mechanics excluded.",
+      "implementation_class": "new_engine_system",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Low Blow",
+      "source": "Elite Redux v2.65 beta — exact constants/runtime semantics",
+      "exact_effect": "Automatically attacks with Feint Attack on entry.",
+      "trigger": "On switch-in.",
+      "restrictions": "Runs once for the relevant entry and requires a legal opposing target under ER's entry-action rules.",
+      "known_users": [],
+      "mechanic_family": "entry_auto_feint_attack",
+      "duplicate_status": "Exact ER custom ability; aliases, NO USE entries, canon duplicates, and unresolved HOLD mechanics excluded.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Pyro Shells",
+      "source": "Elite Redux v2.65 beta — exact constants/runtime semantics",
+      "exact_effect": "After a successful Mega Launcher-class move, the user follows up with a 50-BP Outburst.",
+      "trigger": "After a successful qualifying Mega Launcher-class move.",
+      "restrictions": "Requires the locked ER extra-move legality check; the generated Outburst uses 50 base power.",
+      "known_users": [],
+      "mechanic_family": "launcher_move_followup_outburst_50",
+      "duplicate_status": "Exact ER custom ability; aliases, NO USE entries, canon duplicates, and unresolved HOLD mechanics excluded.",
+      "implementation_class": "new_engine_system",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Cheap Tactics",
+      "source": "Elite Redux v2.65 beta — exact constants/runtime semantics",
+      "exact_effect": "Automatically attacks with Scratch on entry.",
+      "trigger": "On switch-in.",
+      "restrictions": "Runs once for the relevant entry and requires a legal opposing target under ER's entry-action rules.",
+      "known_users": [],
+      "mechanic_family": "entry_auto_scratch",
+      "duplicate_status": "Exact ER custom ability; aliases, NO USE entries, canon duplicates, and unresolved HOLD mechanics excluded.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Friend Guard",
+      "source": "Elite Redux v2.65 beta — modified vanilla runtime semantics",
+      "exact_effect": "Damage taken by the user's active ally from attacks is reduced by 50%.",
+      "trigger": "Continuous while the holder and its ally are both active.",
+      "restrictions": "Applies to the ally rather than the holder; verified ER runtime uses a 0.5 multiplier, overriding the stale 25% header description.",
+      "known_users": [],
+      "mechanic_family": "ally_damage_reduction_50",
+      "duplicate_status": "Vanilla ability retained by name but staged with Elite Redux's modified runtime multiplier.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
     }
   ]
 }
