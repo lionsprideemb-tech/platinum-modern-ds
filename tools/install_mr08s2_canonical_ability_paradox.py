@@ -434,20 +434,53 @@ def patch_special_restrictions(root: Path) -> None:
     suppress = root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s"
     worry = root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s"
 
-    # Receiver / Power of Alchemy. MR08R4 inserts the Embody Aspect family
-    # immediately before Tera Shift, so anchor to that unique tail.
-    replace_once(
+    # Receiver / Power of Alchemy. Replace the helper as a unit instead of
+    # anchoring on Tera Shift; MR08N has another special-Ability switch with a
+    # similar tail, so a scoped function replacement is deterministic.
+    replace_function(
         lib,
-        """    case ABILITY_EMBODY_ASPECT_4:
-    case ABILITY_TERA_SHIFT:
-        return FALSE;
-""",
-        """    case ABILITY_EMBODY_ASPECT_4:
+        "static BOOL Mercury_AbilityCanBeReceived(int ability)",
+        """static BOOL Mercury_AbilityCanBeReceived(int ability)
+{
+    switch (ability) {
+    case ABILITY_NONE:
+    case ABILITY_TRACE:
+    case ABILITY_FORECAST:
+    case ABILITY_FLOWER_GIFT:
+    case ABILITY_MULTITYPE:
+    case ABILITY_ILLUSION:
+    case ABILITY_IMPOSTER:
+    case ABILITY_ZEN_MODE:
+    case ABILITY_STANCE_CHANGE:
+    case ABILITY_RECEIVER:
+    case ABILITY_POWER_OF_ALCHEMY:
+    case ABILITY_SCHOOLING:
+    case ABILITY_DISGUISE:
+    case ABILITY_BATTLE_BOND:
+    case ABILITY_POWER_CONSTRUCT:
+    case ABILITY_RKS_SYSTEM:
+    case ABILITY_COMATOSE:
+    case ABILITY_SHIELDS_DOWN:
+    case ABILITY_GULP_MISSILE:
+    case ABILITY_ICE_FACE:
+    case ABILITY_HUNGER_SWITCH:
+    case ABILITY_NEUTRALIZING_GAS:
+    case ABILITY_AS_ONE_GLASTRIER:
+    case ABILITY_AS_ONE_SPECTRIER:
+    case ABILITY_ZERO_TO_HERO:
+    case ABILITY_COMMANDER:
+    case ABILITY_EMBODY_ASPECT:
+    case ABILITY_EMBODY_ASPECT_2:
+    case ABILITY_EMBODY_ASPECT_3:
+    case ABILITY_EMBODY_ASPECT_4:
     case ABILITY_PROTOSYNTHESIS:
     case ABILITY_QUARK_DRIVE:
     case ABILITY_TERA_SHIFT:
         return FALSE;
-""",
+    default:
+        return TRUE;
+    }
+}""",
         "Paradox Receiver restriction",
     )
 
