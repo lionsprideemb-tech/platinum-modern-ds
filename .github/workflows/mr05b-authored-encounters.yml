@@ -29,6 +29,7 @@ on:
       - "tools/install_mr08e_unchanged_ability_stat_damage.py"
       - "tools/install_mr08f_unchanged_ability_priority_reactions.py"
       - "tools/install_mr08g_canonical_ability_late_shared_hooks.py"
+      - "tools/install_mr08h_canonical_ability_field_families.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -172,6 +173,9 @@ jobs:
             tools/install_mr08c_unchanged_ability_interactions.py \
             tools/install_mr08d_unchanged_ability_shared_hooks.py \
             tools/install_mr08e_unchanged_ability_stat_damage.py \
+            tools/install_mr08f_unchanged_ability_priority_reactions.py \
+            tools/install_mr08g_canonical_ability_late_shared_hooks.py \
+            tools/install_mr08h_canonical_ability_field_families.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -394,6 +398,50 @@ jobs:
           grep -qx 'ABILITY_SHARPNESS' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_ARMOR_TAIL' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_EARTH_EATER' mr04-implemented-abilities.txt
+
+      - name: Install MR08H canonical Ability field/shared families
+        shell: bash
+        run: |
+          python3 tools/install_mr08h_canonical_ability_field_families.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08h-canonical-ability-field-families.json
+
+          test "$(jq -r '.status' mr08h-canonical-ability-field-families.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08h-canonical-ability-field-families.json)" = "15"
+          test "$(jq -r '.running_modern_mechanics_total' mr08h-canonical-ability-field-families.json)" = "80"
+          test "$(jq -r '.checks.sap_sipper_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.victory_star_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.turboblaze_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.teravolt_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.dark_aura_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.fairy_aura_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.aura_break_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.slush_rush_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.long_reach_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.transistor_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.dragons_maw_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.vessel_of_ruin_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.sword_of_ruin_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.tablets_of_ruin_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.beads_of_ruin_hook' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.checks.mold_breaker_family_shared' mr08h-canonical-ability-field-families.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08h-canonical-ability-field-families.json)" = "false"
+          grep -qx 'ABILITY_SAP_SIPPER' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_VICTORY_STAR' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_TURBOBLAZE' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_TERAVOLT' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_DARK_AURA' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_FAIRY_AURA' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_AURA_BREAK' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_SLUSH_RUSH' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_LONG_REACH' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_TRANSISTOR' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_DRAGONS_MAW' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_VESSEL_OF_RUIN' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_SWORD_OF_RUIN' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_TABLETS_OF_RUIN' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_BEADS_OF_RUIN' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1390,6 +1438,7 @@ jobs:
           cp mr08e-unchanged-ability-stat-damage.json mr05b-artifact/ 2>/dev/null || true
           cp mr08f-unchanged-ability-priority-reactions.json mr05b-artifact/ 2>/dev/null || true
           cp mr08g-canonical-ability-late-shared-hooks.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08h-canonical-ability-field-families.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1935,6 +1984,7 @@ jobs:
             echo "- MR08E fast-ports 10 more canonical stat/damage mechanics: Defeatist, Friend Guard, Flare Boost, Toxic Boost, Sand Rush, Stamina, Water Compaction, Merciless, Steelworker, and Steely Spirit (45 modern mechanics total)"
             echo "- MR08F fast-ports 10 more canonical priority/reaction mechanics: Strong Jaw, Sweet Veil, Steam Engine, Punk Rock, Sand Spit, Perish Body, Pastel Veil, Quick Draw, Chilling Neigh, and Grim Neigh (55 modern mechanics total); MR08B Water Bubble burn immunity remains verified"
             echo "- MR08G fast-ports 10 more canonical late-generation mechanics: Beast Boost, Thermal Exchange, Purifying Salt, Well-Baked Body, Guard Dog, Rocky Payload, Good as Gold, Sharpness, Armor Tail, and Earth Eater (65 modern mechanics total)"
+            echo "- MR08H fast-ports 15 canonical field/shared mechanics: Sap Sipper, Victory Star, Turboblaze, Teravolt, Dark Aura, Fairy Aura, Aura Break, Slush Rush, Long Reach, Transistor, Dragon's Maw, Vessel of Ruin, Sword of Ruin, Tablets of Ruin, and Beads of Ruin (80 modern mechanics total)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
