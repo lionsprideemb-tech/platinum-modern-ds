@@ -25,6 +25,7 @@ on:
       - "tools/install_mr08a_canonical_ability_batch.py"
       - "tools/install_mr08b_unchanged_ability_fastpass.py"
       - "tools/install_mr08c_unchanged_ability_interactions.py"
+      - "tools/install_mr08d_unchanged_ability_shared_hooks.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -166,6 +167,7 @@ jobs:
             tools/install_mr08a_canonical_ability_batch.py \
             tools/install_mr08b_unchanged_ability_fastpass.py \
             tools/install_mr08c_unchanged_ability_interactions.py \
+            tools/install_mr08d_unchanged_ability_shared_hooks.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -271,6 +273,29 @@ jobs:
           grep -qx 'ABILITY_BERSERK' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_GORILLA_TACTICS' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_SCREEN_CLEANER' mr04-implemented-abilities.txt
+
+      - name: Install MR08D unchanged canonical Ability shared hooks
+        shell: bash
+        run: |
+          python3 tools/install_mr08d_unchanged_ability_shared_hooks.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08d-unchanged-ability-shared-hooks.json
+
+          test "$(jq -r '.status' mr08d-unchanged-ability-shared-hooks.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08d-unchanged-ability-shared-hooks.json)" = "10"
+          test "$(jq -r '.running_modern_mechanics_total' mr08d-unchanged-ability-shared-hooks.json)" = "35"
+          test "$(jq -r '.checks.iron_barbs_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.wonder_skin_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.analytic_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.bulletproof_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.queenly_majesty_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.battery_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.dazzling_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.tangling_hair_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.shadow_shield_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.checks.prism_armor_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08d-unchanged-ability-shared-hooks.json)" = "false"
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1263,6 +1288,7 @@ jobs:
           cp mr08a-canonical-ability-batch.json mr05b-artifact/ 2>/dev/null || true
           cp mr08b-unchanged-ability-fastpass.json mr05b-artifact/ 2>/dev/null || true
           cp mr08c-unchanged-ability-interactions.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08d-unchanged-ability-shared-hooks.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1803,7 +1829,8 @@ jobs:
             echo "- MR07D5 replaces the remaining white lower editor sheets with Platinum's native lower-screen cream/tan/blue palette while retaining standard frames"
             echo "- MR08A ports Contrary, Big Pecks, and Full Metal Body battle mechanics and widens remaining 10-bit Ability runtime paths before species import"
             echo "- MR08B fast-ports 12 unchanged canonical Ability mechanics in one shared-hook family; modified Redux versions remain in a separate review lane"
-            echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Screen Cleaner (25 modern mechanics total)"
+            echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Perish Body (25 modern mechanics total)"
+            echo "- MR08D fast-ports 10 more shared-hook canonical mechanics: Iron Barbs, Wonder Skin, Analytic, Bulletproof, Queenly Majesty, Battery, Dazzling, Tangling Hair, Shadow Shield, and Prism Armor (35 modern mechanics total)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
