@@ -223,7 +223,8 @@ static BOOL Mercury_PriorityBlockerActive(
     replace_once(
         path,
         """    case ABILITY_ROUGH_SKIN:
-        if (Battler_Ability(battleCtx, battleCtx->attacker) != ABILITY_MAGIC_GUARD
+        if (ATTACKING_MON.curHP
+            && Battler_Ability(battleCtx, battleCtx->attacker) != ABILITY_MAGIC_GUARD
 """,
         """    case ABILITY_ROUGH_SKIN:
     case ABILITY_IRON_BARBS:
