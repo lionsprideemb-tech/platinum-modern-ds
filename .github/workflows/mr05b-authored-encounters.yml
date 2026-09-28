@@ -259,7 +259,7 @@ jobs:
           test "$(jq -r '.checks.moxie_hook' mr08c-unchanged-ability-interactions.json)" = "true"
           test "$(jq -r '.checks.prankster_priority' mr08c-unchanged-ability-interactions.json)" = "true"
           test "$(jq -r '.checks.gorilla_tactics_hook' mr08c-unchanged-ability-interactions.json)" = "true"
-          test "$(jq -r '.checks.perish_body_hook' mr08c-unchanged-ability-interactions.json)" = "true"
+          test "$(jq -r '.checks.screen_cleaner_hook' mr08c-unchanged-ability-interactions.json)" = "true"
           test "$(jq -r '.ui_changed' mr08c-unchanged-ability-interactions.json)" = "false"
           grep -qx 'ABILITY_HEALER' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_TELEPATHY' mr04-implemented-abilities.txt
@@ -270,7 +270,7 @@ jobs:
           grep -qx 'ABILITY_GOOEY' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_BERSERK' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_GORILLA_TACTICS' mr04-implemented-abilities.txt
-          grep -qx 'ABILITY_PERISH_BODY' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_SCREEN_CLEANER' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1803,7 +1803,7 @@ jobs:
             echo "- MR07D5 replaces the remaining white lower editor sheets with Platinum's native lower-screen cream/tan/blue palette while retaining standard frames"
             echo "- MR08A ports Contrary, Big Pecks, and Full Metal Body battle mechanics and widens remaining 10-bit Ability runtime paths before species import"
             echo "- MR08B fast-ports 12 unchanged canonical Ability mechanics in one shared-hook family; modified Redux versions remain in a separate review lane"
-            echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Perish Body (25 modern mechanics total)"
+            echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Screen Cleaner (25 modern mechanics total)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
