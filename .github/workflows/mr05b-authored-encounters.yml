@@ -27,6 +27,7 @@ on:
       - "tools/install_mr08c_unchanged_ability_interactions.py"
       - "tools/install_mr08d_unchanged_ability_shared_hooks.py"
       - "tools/install_mr08e_unchanged_ability_stat_damage.py"
+      - "tools/install_mr08f_unchanged_ability_priority_reactions.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -325,6 +326,40 @@ jobs:
           grep -qx 'ABILITY_MERCILESS' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_STEELWORKER' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_STEELY_SPIRIT' mr04-implemented-abilities.txt
+
+      - name: Install MR08F unchanged canonical Ability priority/reaction family
+        shell: bash
+        run: |
+          python3 tools/install_mr08f_unchanged_ability_priority_reactions.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08f-unchanged-ability-priority-reactions.json
+
+          test "$(jq -r '.status' mr08f-unchanged-ability-priority-reactions.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08f-unchanged-ability-priority-reactions.json)" = "10"
+          test "$(jq -r '.running_modern_mechanics_total' mr08f-unchanged-ability-priority-reactions.json)" = "55"
+          test "$(jq -r '.checks.strong_jaw_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.sweet_veil_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.steam_engine_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.punk_rock_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.sand_spit_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.perish_body_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.pastel_veil_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.quick_draw_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.chilling_neigh_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.grim_neigh_hook' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.checks.water_bubble_burn_fix' mr08f-unchanged-ability-priority-reactions.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08f-unchanged-ability-priority-reactions.json)" = "false"
+          grep -qx 'ABILITY_STRONG_JAW' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_SWEET_VEIL' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_STEAM_ENGINE' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_PUNK_ROCK' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_SAND_SPIT' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_PERISH_BODY' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_PASTEL_VEIL' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_QUICK_DRAW' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_CHILLING_NEIGH' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_GRIM_NEIGH' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1319,6 +1354,7 @@ jobs:
           cp mr08c-unchanged-ability-interactions.json mr05b-artifact/ 2>/dev/null || true
           cp mr08d-unchanged-ability-shared-hooks.json mr05b-artifact/ 2>/dev/null || true
           cp mr08e-unchanged-ability-stat-damage.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08f-unchanged-ability-priority-reactions.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1862,6 +1898,7 @@ jobs:
             echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Screen Cleaner (25 modern mechanics total)"
             echo "- MR08D fast-ports 10 more shared-hook canonical mechanics: Iron Barbs, Wonder Skin, Analytic, Bulletproof, Queenly Majesty, Battery, Dazzling, Tangling Hair, Shadow Shield, and Prism Armor (35 modern mechanics total)"
             echo "- MR08E fast-ports 10 more canonical stat/damage mechanics: Defeatist, Friend Guard, Flare Boost, Toxic Boost, Sand Rush, Stamina, Water Compaction, Merciless, Steelworker, and Steely Spirit (45 modern mechanics total)"
+            echo "- MR08F fast-ports 10 more canonical priority/reaction mechanics: Strong Jaw, Sweet Veil, Steam Engine, Punk Rock, Sand Spit, Perish Body, Pastel Veil, Quick Draw, Chilling Neigh, and Grim Neigh (55 modern mechanics total); Water Bubble burn immunity is also completed"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
