@@ -75,6 +75,16 @@ def replace_once(path: Path, old: str, new: str, label: str) -> None:
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
+def replace_all_exact(path: Path, old: str, new: str, expected: int, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    count = text.count(old)
+    if count != expected:
+        raise SystemExit(
+            f"{label}: expected exactly {expected} matches in {path}, found {count}"
+        )
+    path.write_text(text.replace(old, new), encoding="utf-8")
+
+
 def insert_before_once(path: Path, anchor: str, insertion: str, label: str) -> None:
     text = path.read_text(encoding="utf-8")
     if insertion in text:
@@ -314,7 +324,7 @@ def patch_type_conversion_family(root: Path) -> None:
         "-ate/Liquid Voice immunity-path type",
     )
 
-    replace_once(
+    replace_all_exact(
         path,
         """    case ABILITY_COLOR_CHANGE:
         u8 moveType;
@@ -362,6 +372,7 @@ def patch_type_conversion_family(root: Path) -> None:
             moveType = CURRENT_MOVE_DATA.type;
         }
 """,
+        2,
         "-ate/Liquid Voice Color Change type",
     )
 
