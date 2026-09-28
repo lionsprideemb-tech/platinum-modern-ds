@@ -250,35 +250,52 @@ def grouped(entries: list[Entry], attr: str, candidate_only: bool = True) -> lis
 
 
 def near_groups(entries: list[Entry], radius: int = 4) -> list[list[int]]:
+    """Cluster perceptually close sprite candidates without quadratic duplicate-hash blowups."""
     candidates = [i for i, e in enumerate(entries) if e.is_sprite_candidate]
-    by_dim: dict[tuple[int, int], list[int]] = defaultdict(list)
+    by_dim_hash: dict[tuple[int, int], dict[int, list[int]]] = defaultdict(lambda: defaultdict(list))
     for i in candidates:
         e = entries[i]
-        by_dim[(e.width, e.height)].append(i)
+        by_dim_hash[(e.width, e.height)][e.dhash64].append(i)
 
     dsu = DSU(len(entries))
-    for _, ids in by_dim.items():
+
+    for _, hash_map in by_dim_hash.items():
+        # Same dHash value is already a distance-0 perceptual match. Union once per member.
+        for ids in hash_map.values():
+            anchor = ids[0]
+            for i in ids[1:]:
+                dsu.union(anchor, i)
+
+        # Compare unique dHash values only. This avoids O(n^2) behavior when many
+        # sprites share a common silhouette/hash (blank frames, icons, palettes, etc.).
         tree = BKTree()
-        for i in ids:
-            e = entries[i]
-            for j, dist in tree.query(e.dhash64, radius):
-                if i == j:
-                    continue
-                # Exclude exact rendered duplicates and exact recolors; those get cleaner buckets.
-                if e.pixel_sha256 == entries[j].pixel_sha256:
-                    continue
-                if e.canonical_palette_sha256 == entries[j].canonical_palette_sha256:
-                    continue
+        representative_for_hash: dict[int, int] = {}
+        for dh, ids in hash_map.items():
+            rep = ids[0]
+            for other_rep, dist in tree.query(dh, radius):
                 if dist <= radius:
-                    dsu.union(i, j)
-            tree.add(e.dhash64, i)
+                    dsu.union(rep, other_rep)
+            tree.add(dh, rep)
+            representative_for_hash[dh] = rep
 
     buckets: dict[int, list[int]] = defaultdict(list)
     for i in candidates:
         root = dsu.find(i)
         if dsu.sz[root] > 1:
             buckets[root].append(i)
-    groups = [g for g in buckets.values() if len(g) > 1]
+
+    groups: list[list[int]] = []
+    for g in buckets.values():
+        if len(g) < 2:
+            continue
+        # Pure exact-pixel and pure palette-recolor groups are already reported
+        # in cleaner categories; keep only groups that add genuine near-visual signal.
+        if len({entries[i].pixel_sha256 for i in g}) == 1:
+            continue
+        if len({entries[i].canonical_palette_sha256 for i in g}) == 1:
+            continue
+        groups.append(g)
+
     groups.sort(key=lambda g: (-len(g), entries[g[0]].path))
     return groups
 
