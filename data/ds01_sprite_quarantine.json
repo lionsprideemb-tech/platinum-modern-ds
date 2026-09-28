@@ -159,7 +159,9 @@
     "The broad first-pass dHash cluster is treated as noisy and does not block integration.",
     "No sprite listed here has been installed, removed, renamed, recolored, or replaced.",
     "Exact duplicates between intentionally identical storage aliases remain informational unless the forms are expected to look different.",
-    "Secondary form/icon collisions are held for visual/provenance review rather than auto-rejected."
+    "Secondary form/icon collisions are held for visual/provenance review rather than auto-rejected.",
+    "The first-pass recovery search checked the nested downloaded source packs plus staged manifests; broad species-name hits are evidence leads, not automatic replacement approvals.",
+    "Darkrai Mega, Heatran Mega, and Zeraora Mega each have a distinct same-concept modern-DS-resource candidate already present in the staged library."
   ],
   "exact_form_review": [
     {
@@ -275,5 +277,133 @@
       "evidence": "All staged type-form icons are byte-identical, while battle sprites contain palette distinctions.",
       "action": "Review whether Mercury wants type-colored form icons; this is not a battle-sprite blocker."
     }
-  ]
+  ],
+  "recovery_assessment": {
+    "status": "SOURCE_SEARCH_COMPLETE_FIRST_PASS",
+    "rule": "A candidate is not approved merely because it exists. Same-concept distinct art is preferred; adjacent forms remain manual-review only.",
+    "confirmed_same_concept_alternatives": [
+      {
+        "target": "darkrai_mega",
+        "candidate": "darkrai-mega",
+        "source_family": "modern_ds_resource",
+        "evidence": "The staged modern DS resource contains a separately rendered darkrai-mega whose male/front pixel hash differs from the quarantined Elite Redux darkrai_mega placeholder.",
+        "status": "candidate_found_visual_review_required"
+      },
+      {
+        "target": "heatran_mega",
+        "candidate": "heatran-mega",
+        "source_family": "modern_ds_resource",
+        "evidence": "The staged modern DS resource contains a separately rendered heatran-mega whose male/front pixel hash differs from the quarantined Elite Redux heatran_mega placeholder.",
+        "status": "candidate_found_visual_review_required"
+      },
+      {
+        "target": "zeraora_mega",
+        "candidate": "zeraora-mega",
+        "source_family": "modern_ds_resource",
+        "evidence": "The staged modern DS resource contains a separately rendered zeraora-mega whose male/front pixel hash differs from the quarantined Elite Redux zeraora_mega placeholder.",
+        "status": "candidate_found_visual_review_required"
+      }
+    ],
+    "adjacent_custom_candidates": [
+      {
+        "target": "toxtricity_mega",
+        "candidates": [
+          "toxtricity_redux_mega",
+          "toxtricity_redux_fuzz_mega"
+        ],
+        "status": "manual_concept_review",
+        "reason": "Distinct custom Mega-like art exists, but the labels represent Redux variants rather than a verified one-to-one replacement for toxtricity_mega."
+      },
+      {
+        "target": "inteleon_mega",
+        "candidates": [
+          "cpf_0357_inteleon_alternate_form_2"
+        ],
+        "status": "manual_concept_review",
+        "reason": "A distinct alternate Inteleon concept exists, but provenance does not establish it as the intended Mega."
+      },
+      {
+        "target": "machamp_mega",
+        "candidates": [
+          "machamp_mega_redux"
+        ],
+        "status": "manual_concept_review",
+        "reason": "A distinct Mega Redux concept exists and may be usable, but it must not silently replace the quarantined Mega."
+      },
+      {
+        "target": "snorlax_mega",
+        "candidates": [
+          "snorlax_redux_mega",
+          "snorlax_primal"
+        ],
+        "status": "manual_concept_review",
+        "reason": "Distinct custom Snorlax forms exist, but neither is automatically equivalent to the intended Mega Snorlax."
+      },
+      {
+        "target": "lapras_mega",
+        "candidates": [
+          "lapras_mega_x"
+        ],
+        "status": "manual_concept_review",
+        "reason": "lapras_mega_x is visually distinct from both lapras_mega and Lapras G-Max and is a strong alternate custom-Mega candidate, but requires design approval."
+      }
+    ],
+    "no_verified_distinct_replacement": [
+      {
+        "target": "slate",
+        "status": "needs_art_recovery_or_new_art",
+        "reason": "No distinct raw-source image candidate was found; the staged Slate art is part of the four-way exact-byte placeholder collision."
+      },
+      {
+        "target": "charizard_mega_z",
+        "status": "needs_art_recovery_or_new_art",
+        "reason": "The library contains Charizard, Mega X, Mega Y, and G-Max art, but no distinct same-concept Mega Z replacement."
+      },
+      {
+        "target": "coalossal_mega",
+        "status": "needs_art_recovery_or_new_art",
+        "reason": "Only base/G-Max source-family art was found; the quarantined Mega currently renders as the G-Max form."
+      },
+      {
+        "target": "drednaw_mega",
+        "status": "needs_art_recovery_or_new_art",
+        "reason": "Only base/G-Max source-family art was found; the quarantined Mega currently renders as the G-Max form."
+      },
+      {
+        "target": "hatterene_mega",
+        "status": "needs_art_recovery_or_new_art",
+        "reason": "Only base/G-Max source-family art was found; the quarantined Mega currently renders as the G-Max form."
+      },
+      {
+        "target": "urshifu_mega",
+        "status": "needs_art_recovery_or_new_art",
+        "reason": "No distinct same-concept custom Mega replacement was found beyond Single-Strike base/G-Max source-family art."
+      },
+      {
+        "target": "urshifu_rapid_strike_style_mega",
+        "status": "needs_art_recovery_or_new_art",
+        "reason": "No distinct same-concept custom Mega replacement was found beyond Rapid-Strike base/G-Max source-family art."
+      }
+    ],
+    "near_review_disposition": [
+      {
+        "target": "butterfree_mega",
+        "comparison": "butterfree-gmax",
+        "status": "keep_for_visual_review_only",
+        "reason": "The files have different rendered-pixel and normalized-palette hashes; this is not an exact or recolor duplicate."
+      },
+      {
+        "target": "kingler_mega",
+        "comparison": "kingler-gmax",
+        "status": "keep_for_visual_review_only",
+        "reason": "The files have different rendered-pixel and normalized-palette hashes; this is not an exact or recolor duplicate."
+      },
+      {
+        "target": "tinkaton_mega",
+        "comparison": "tinkaton",
+        "status": "keep_for_visual_review_only",
+        "reason": "The files have different rendered-pixel and normalized-palette hashes; this is not an exact or recolor duplicate."
+      }
+    ]
+  }
 }
