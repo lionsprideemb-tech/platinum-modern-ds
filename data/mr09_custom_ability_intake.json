@@ -188,6 +188,111 @@
       "implementation_class": "existing_hook",
       "approval_state": "locked",
       "implementation_ready": true
+    },
+    {
+      "name": "Aura Mantle",
+      "source": "Pokémon Mercury Redux — locked Mega Lucario Z Pokédex amendment",
+      "exact_effect": "Damage the user takes from contact moves is reduced by 40%. When the user deals damage with an Aura or Pulse move, it restores HP equal to 25% of the actual damage dealt.",
+      "trigger": "Contact-damage reduction is checked during incoming damage calculation; healing resolves after a qualifying Aura/Pulse move deals damage.",
+      "restrictions": "The healing amount is based on actual damage dealt. Non-contact incoming moves are not reduced, and non-Aura/non-Pulse attacks do not heal.",
+      "known_users": [
+        "Mega Lucario Z"
+      ],
+      "mechanic_family": "contact_damage_reduction_pulse_lifesteal",
+      "duplicate_status": "Locked signature Ability; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Sand Skimmer",
+      "source": "Pokémon Mercury Redux — locked Mega Garchomp Z design",
+      "exact_effect": "The user is immune to sandstorm damage. While sandstorm is active, its Speed is multiplied by 1.30 and damaging Ground-type moves cannot hit it.",
+      "trigger": "Continuous while the user is active; the Speed and Ground-move protection portions are active only during sandstorm.",
+      "restrictions": "Does not grant permanent Ground immunity outside sandstorm. Sandstorm damage immunity remains active regardless.",
+      "known_users": [
+        "Mega Garchomp Z"
+      ],
+      "mechanic_family": "sand_immunity_weather_speed_conditional_ground_immunity",
+      "duplicate_status": "Locked signature Ability; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Calamity Edge",
+      "source": "Pokémon Mercury Redux — locked Mega Absol Z design",
+      "exact_effect": "Slicing moves used by the user deal 30% more damage and ignore the target's positive Defense stat stages.",
+      "trigger": "During damage calculation for the user's slicing moves.",
+      "restrictions": "Only slicing moves qualify. Negative or neutral Defense stages are not ignored.",
+      "known_users": [
+        "Mega Absol Z"
+      ],
+      "mechanic_family": "slicing_damage_boost_positive_defense_stage_bypass",
+      "duplicate_status": "Locked signature Ability; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Permafrost",
+      "source": "Pokémon Mercury Redux — locked Mega Baxcalibur design",
+      "exact_effect": "Super-effective damage taken by the user is multiplied by 0.65.",
+      "trigger": "During incoming damage calculation when the attack is super-effective.",
+      "restrictions": "Applies only to super-effective damage.",
+      "known_users": [
+        "Mega Baxcalibur"
+      ],
+      "mechanic_family": "super_effective_damage_reduction",
+      "duplicate_status": "Filter/Solid Rock family variant intentionally retained as a distinct signature Ability; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Dam Builder",
+      "source": "Pokémon Mercury Redux — locked Youngster Martin / Mega Bibarel design",
+      "exact_effect": "When the user enters battle, it gains +1 Defense and +1 Special Defense.",
+      "trigger": "On each entry to battle, once for that entry.",
+      "restrictions": "The boost is applied once per entry; ordinary stat-stage caps still apply.",
+      "known_users": [
+        "Mega Bibarel"
+      ],
+      "mechanic_family": "switch_in_dual_defense_boost",
+      "duplicate_status": "Locked signature Ability; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Nerve Agent",
+      "source": "Pokémon Mercury Redux — locked Mega Drapion design",
+      "exact_effect": "When the user hits a target with a damaging Poison-type contact move, make one 30% effect roll for that target and move. On success, choose Poison or Paralysis with equal probability; if the chosen status is invalid, use the other status when legal.",
+      "trigger": "After a damaging Poison-type contact move successfully hits a target.",
+      "restrictions": "Rolls once per target per move, not once per hit on multi-hit moves. Does not replace an existing major status condition and obeys normal status immunities.",
+      "known_users": [
+        "Mega Drapion"
+      ],
+      "mechanic_family": "poison_contact_status_roll_with_fallback",
+      "duplicate_status": "Locked signature Ability; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Siege Engine",
+      "source": "Pokémon Mercury Redux — locked Mega Rhyperior design",
+      "exact_effect": "Siege-class attacks used by the user deal 30% more damage. The user does not take recoil or crash damage caused by its own moves.",
+      "trigger": "Damage boost is checked during damage calculation for moves carrying the Siege-class flag; recoil/crash prevention is checked when self-inflicted move recoil or crash damage would resolve.",
+      "restrictions": "Does not prevent Explosion/Self-Destruct self-KO, Life Orb recoil, Struggle recoil, or other non-move-recoil HP costs. Siege qualification uses a dedicated move flag.",
+      "known_users": [
+        "Mega Rhyperior"
+      ],
+      "mechanic_family": "flagged_move_damage_boost_recoil_crash_immunity",
+      "duplicate_status": "Locked signature Ability; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
     }
   ]
 }
