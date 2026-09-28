@@ -693,7 +693,12 @@ def patch_transform_and_special_rules(root: Path) -> None:
     # Receiver exclusion already exists in the MR08K helper. Keep Illusion
     # suppressible: do not add it to the cantsuppress helper or Worry/Gastro
     # failure scripts.
-    if "case ABILITY_ILLUSION:" not in lib[lib.index("static BOOL Mercury_AbilityCanBeReceived"):lib.index("static int Mercury_CountFaintedPartyMons")]:
+    lib_text = lib.read_text(encoding="utf-8")
+    receiver_start = lib_text.index("static BOOL Mercury_AbilityCanBeReceived")
+    receiver_end = lib_text.index(
+        "static int Mercury_CountFaintedPartyMons", receiver_start
+    )
+    if "case ABILITY_ILLUSION:" not in lib_text[receiver_start:receiver_end]:
         raise SystemExit("Illusion Receiver exclusion unexpectedly missing")
 
 
