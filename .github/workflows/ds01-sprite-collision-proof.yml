@@ -1,0 +1,44 @@
+name: DS01 Sprite Collision Proof
+
+on:
+  push:
+    branches:
+      - audit/ds01-sprite-dedup-20260928
+    paths:
+      - "tools/render_ds01_sprite_collision_proof.py"
+      - ".github/workflows/ds01-sprite-collision-proof.yml"
+      - "data/ds01_sprite_quarantine.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Pillow
+        run: python -m pip install "Pillow>=10,<13"
+
+      - name: Render proof sheet
+        run: |
+          python tools/render_ds01_sprite_collision_proof.py \
+            staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip \
+            --out ds01_sprite_collision_proof.png \
+            --json ds01_sprite_collision_proof.json
+
+      - name: Upload proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: ds01-sprite-collision-proof
+          path: |
+            ds01_sprite_collision_proof.png
+            ds01_sprite_collision_proof.json
