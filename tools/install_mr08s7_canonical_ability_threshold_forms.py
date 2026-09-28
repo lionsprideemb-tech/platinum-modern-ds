@@ -347,8 +347,9 @@ def patch_switch_in(root: Path) -> None:
 def patch_end_turn(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
-    insert_before_once(
+    replace_in_function(
         path,
+        "BOOL BattleSystem_TriggerTurnEndAbility(BattleSystem *battleSys, BattleContext *battleCtx, int battler)",
         """    case ABILITY_HUNGER_SWITCH:
 """,
         """    case ABILITY_ZEN_MODE: {
@@ -430,6 +431,7 @@ def patch_end_turn(root: Path) -> None:
         break;
     }
 
+    case ABILITY_HUNGER_SWITCH:
 """,
         "threshold form end-turn checks",
     )
