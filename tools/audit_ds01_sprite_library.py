@@ -33,6 +33,7 @@ DROP_TOKENS = {
 class Entry:
     path: str
     source_archive: str
+    species_label: str
     width: int
     height: int
     mode: str
@@ -50,10 +51,25 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def species_label(path: str) -> str:
+    parts = [p for p in path.replace("\\", "/").split("/") if p]
+    for i, part in enumerate(parts):
+        if part.lower() == "sprites" and i + 1 < len(parts):
+            return parts[i + 1].lower()
+    return Path(path).stem.lower()
+
+
 def concept_key(path: str) -> str:
-    stem = Path(path).stem.lower()
-    tokens = [t for t in re.split(r"[^a-z0-9]+", stem) if t]
-    tokens = [t for t in tokens if t not in DROP_TOKENS and not re.fullmatch(r"\d+", t)]
+    label = species_label(path)
+    label = re.sub(r"^cpf[_-]?\d+[_-]+", "", label)
+    replacements = {
+        "hisuian": "hisui",
+        "alolan": "alola",
+        "galarian": "galar",
+        "paldean": "paldea",
+    }
+    tokens = [t for t in re.split(r"[^a-z0-9]+", label) if t]
+    tokens = [replacements.get(t, t) for t in tokens if t not in DROP_TOKENS]
     return " ".join(tokens)
 
 
@@ -61,8 +77,10 @@ def top_bucket(path: str) -> str:
     parts = [p for p in path.replace("\\", "/").split("/") if p]
     if not parts:
         return ""
-    # Prefer a meaningful source-ish bucket, while tolerating a common archive root.
-    if len(parts) >= 2 and parts[0].lower() in {"sprites", "assets", "community", "library", "data"}:
+    first = parts[0].lower()
+    if first.startswith("ds01_expanded_community_sprite_library") and len(parts) >= 2:
+        return parts[1]
+    if len(parts) >= 2 and first in {"sprites", "assets", "community", "library", "data"}:
         return parts[1]
     return parts[0]
 
@@ -210,6 +228,7 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
     return Entry(
         path=logical_path,
         source_archive=archive_name,
+        species_label=species_label(logical_path),
         width=rgba.width,
         height=rgba.height,
         mode="RGBA",
@@ -224,7 +243,12 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
     )
 
 
-def scan_zip_bytes(blob: bytes, archive_name: str, prefix: str = "") -> list[Entry]:
+def scan_zip_bytes(
+    blob: bytes,
+    archive_name: str,
+    prefix: str = "",
+    path_contains: str | None = None,
+) -> list[Entry]:
     out: list[Entry] = []
     try:
         zf = zipfile.ZipFile(io.BytesIO(blob))
@@ -237,17 +261,24 @@ def scan_zip_bytes(blob: bytes, archive_name: str, prefix: str = "") -> list[Ent
         name = info.filename.replace("\\", "/")
         logical = f"{prefix}{name}" if prefix else name
         ext = Path(name).suffix.lower()
-        try:
-            raw = zf.read(info)
-        except Exception:
-            continue
+
         if ext in IMAGE_EXTS:
+            if path_contains and path_contains not in logical:
+                continue
+            try:
+                raw = zf.read(info)
+            except Exception:
+                continue
             e = load_entry(raw, logical, archive_name)
             if e is not None:
                 out.append(e)
-        elif ext in ARCHIVE_EXTS:
+        elif ext in ARCHIVE_EXTS and path_contains is None:
+            try:
+                raw = zf.read(info)
+            except Exception:
+                continue
             nested_prefix = logical + "::"
-            out.extend(scan_zip_bytes(raw, archive_name, nested_prefix))
+            out.extend(scan_zip_bytes(raw, archive_name, nested_prefix, path_contains=None))
     return out
 
 
@@ -321,13 +352,12 @@ def concept_groups(entries: list[Entry]) -> list[list[int]]:
         buckets[e.concept_key].append(i)
 
     groups = []
-    for key, ids in buckets.items():
-        if len(ids) < 2:
+    for _, ids in buckets.items():
+        labels = {entries[i].species_label for i in ids}
+        if len(labels) < 2:
             continue
-        # Report only when the concept spans more than one visual or source bucket.
         pixels = {entries[i].pixel_sha256 for i in ids}
-        origins = {entries[i].top_bucket for i in ids}
-        if len(pixels) > 1 and (len(origins) > 1 or len(ids) >= 3):
+        if len(pixels) > 1:
             groups.append(ids)
     groups.sort(key=lambda g: (-len(g), entries[g[0]].concept_key, entries[g[0]].path))
     return groups
@@ -340,6 +370,7 @@ def summarize_group(entries: list[Entry], ids: list[int], kind: str) -> dict:
         "count": len(ids),
         "dimensions": sorted({f"{e.width}x{e.height}" for e in sample}),
         "concept_keys": sorted({e.concept_key for e in sample if e.concept_key}),
+        "species_labels": sorted({e.species_label for e in sample if e.species_label}),
         "source_buckets": sorted({e.top_bucket for e in sample if e.top_bucket}),
         "paths": [e.path for e in sample],
     }
@@ -408,10 +439,11 @@ def main() -> None:
     ap.add_argument("--json", dest="json_path", type=Path, required=True)
     ap.add_argument("--markdown", dest="md_path", type=Path, required=True)
     ap.add_argument("--near-radius", type=int, default=4)
+    ap.add_argument("--path-contains", default=None)
     args = ap.parse_args()
 
     blob = args.archive.read_bytes()
-    entries = scan_zip_bytes(blob, args.archive.name)
+    entries = scan_zip_bytes(blob, args.archive.name, path_contains=args.path_contains)
 
     exact_bytes = grouped(entries, "byte_sha256")
     exact_pixels_all = grouped(entries, "pixel_sha256")
@@ -435,6 +467,7 @@ def main() -> None:
         "archive": str(args.archive),
         "archive_sha256": sha256(blob),
         "near_duplicate_radius": args.near_radius,
+        "path_filter": args.path_contains,
         "summary": {
             "images_scanned": len(entries),
             "sprite_candidates": sum(1 for e in entries if e.is_sprite_candidate),
