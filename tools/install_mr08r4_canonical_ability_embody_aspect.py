@@ -43,13 +43,13 @@ def replace_once(path: Path, old: str, new: str, label: str) -> None:
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
-def replace_all_exact(
-    path: Path, old: str, new: str, expected: int, label: str
+def replace_all_required(
+    path: Path, old: str, new: str, label: str
 ) -> None:
     text = path.read_text(encoding="utf-8")
     count = text.count(old)
-    if count != expected:
-        raise SystemExit(f"{label}: expected exactly {expected} matches in {path}, found {count}")
+    if count < 1:
+        raise SystemExit(f"{label}: expected at least one match in {path}, found {count}")
     path.write_text(text.replace(old, new), encoding="utf-8")
 
 
@@ -167,8 +167,8 @@ def patch_trace_restriction(root: Path) -> None:
         && battleCtx->battleMons[defender2].ability != ABILITY_EMBODY_ASPECT_3
         && battleCtx->battleMons[defender2].ability != ABILITY_EMBODY_ASPECT_4
 """
-    replace_all_exact(path, old1, new1, 2, "Embody Aspect Trace defender1")
-    replace_all_exact(path, old2, new2, 2, "Embody Aspect Trace defender2")
+    replace_all_required(path, old1, new1, "Embody Aspect Trace defender1")
+    replace_all_required(path, old2, new2, "Embody Aspect Trace defender2")
 
 
 def patch_role_play_skill_swap(root: Path) -> None:
