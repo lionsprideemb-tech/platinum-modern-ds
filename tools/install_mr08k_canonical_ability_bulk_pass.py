@@ -168,7 +168,9 @@ def patch_battle_lib_helpers(root: Path) -> None:
         path,
         """static BOOL Mercury_MoveIsBallOrBomb(int move)
 """,
-        """static BOOL Mercury_MoveHasSheerForceSecondary(int move)
+        """static BOOL Mercury_MoveHasSheerForceSecondary(
+    BattleContext *battleCtx,
+    int move)
 {
     return MOVE_DATA(move).power != 0 && MOVE_DATA(move).effectChance != 0;
 }
@@ -290,7 +292,7 @@ static BOOL Mercury_HasOpposingUnnerveFamily(
         """    if (attackerParams.ability == ABILITY_STAKEOUT
 """,
         """    if (attackerParams.ability == ABILITY_SHEER_FORCE
-        && Mercury_MoveHasSheerForceSecondary(move)) {
+        && Mercury_MoveHasSheerForceSecondary(battleCtx, move)) {
         movePower = movePower * 13 / 10;
     }
 
@@ -365,7 +367,7 @@ def patch_sheer_force(root: Path) -> None:
     BOOL result = FALSE;
 
     if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_SHEER_FORCE
-        && Mercury_MoveHasSheerForceSecondary(battleCtx->moveCur)) {
+        && Mercury_MoveHasSheerForceSecondary(battleCtx, battleCtx->moveCur)) {
         battleCtx->sideEffectIndirectFlags = 0;
         battleCtx->battleStatusMask &= ~SYSCTL_APPLY_SECONDARY_EFFECT;
         return FALSE;
