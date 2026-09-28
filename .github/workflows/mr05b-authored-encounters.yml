@@ -26,6 +26,7 @@ on:
       - "tools/install_mr08b_unchanged_ability_fastpass.py"
       - "tools/install_mr08c_unchanged_ability_interactions.py"
       - "tools/install_mr08d_unchanged_ability_shared_hooks.py"
+      - "tools/install_mr08e_unchanged_ability_stat_damage.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -168,6 +169,7 @@ jobs:
             tools/install_mr08b_unchanged_ability_fastpass.py \
             tools/install_mr08c_unchanged_ability_interactions.py \
             tools/install_mr08d_unchanged_ability_shared_hooks.py \
+            tools/install_mr08e_unchanged_ability_stat_damage.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -296,6 +298,33 @@ jobs:
           test "$(jq -r '.checks.shadow_shield_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
           test "$(jq -r '.checks.prism_armor_hook' mr08d-unchanged-ability-shared-hooks.json)" = "true"
           test "$(jq -r '.ui_changed' mr08d-unchanged-ability-shared-hooks.json)" = "false"
+
+      - name: Install MR08E unchanged canonical Ability stat/damage family
+        shell: bash
+        run: |
+          python3 tools/install_mr08e_unchanged_ability_stat_damage.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08e-unchanged-ability-stat-damage.json
+
+          test "$(jq -r '.status' mr08e-unchanged-ability-stat-damage.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08e-unchanged-ability-stat-damage.json)" = "10"
+          test "$(jq -r '.running_modern_mechanics_total' mr08e-unchanged-ability-stat-damage.json)" = "45"
+          test "$(jq -r '.checks.friend_guard_hook' mr08e-unchanged-ability-stat-damage.json)" = "true"
+          test "$(jq -r '.checks.sand_rush_hook' mr08e-unchanged-ability-stat-damage.json)" = "true"
+          test "$(jq -r '.checks.merciless_hook' mr08e-unchanged-ability-stat-damage.json)" = "true"
+          test "$(jq -r '.checks.steely_spirit_hook' mr08e-unchanged-ability-stat-damage.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08e-unchanged-ability-stat-damage.json)" = "false"
+          grep -qx 'ABILITY_DEFEATIST' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_FRIEND_GUARD' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_FLARE_BOOST' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_TOXIC_BOOST' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_SAND_RUSH' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_STAMINA' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_WATER_COMPACTION' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_MERCILESS' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_STEELWORKER' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_STEELY_SPIRIT' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1289,6 +1318,7 @@ jobs:
           cp mr08b-unchanged-ability-fastpass.json mr05b-artifact/ 2>/dev/null || true
           cp mr08c-unchanged-ability-interactions.json mr05b-artifact/ 2>/dev/null || true
           cp mr08d-unchanged-ability-shared-hooks.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08e-unchanged-ability-stat-damage.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1831,6 +1861,7 @@ jobs:
             echo "- MR08B fast-ports 12 unchanged canonical Ability mechanics in one shared-hook family; modified Redux versions remain in a separate review lane"
             echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Screen Cleaner (25 modern mechanics total)"
             echo "- MR08D fast-ports 10 more shared-hook canonical mechanics: Iron Barbs, Wonder Skin, Analytic, Bulletproof, Queenly Majesty, Battery, Dazzling, Tangling Hair, Shadow Shield, and Prism Armor (35 modern mechanics total)"
+            echo "- MR08E fast-ports 10 more canonical stat/damage mechanics: Defeatist, Friend Guard, Flare Boost, Toxic Boost, Sand Rush, Stamina, Water Compaction, Merciless, Steelworker, and Steely Spirit (45 modern mechanics total)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
