@@ -554,9 +554,11 @@ def patch_attacker_reactions(root: Path) -> None:
     replace_once(
         controller,
         """    ONE_HIT_TRIGGER_ABILITY,
+    ONE_HIT_TRIGGER_ATTACKER_KO_ABILITY,
     ONE_HIT_EXTRA_FLINCH,
 """,
         """    ONE_HIT_TRIGGER_ABILITY,
+    ONE_HIT_TRIGGER_ATTACKER_KO_ABILITY,
     ONE_HIT_TRIGGER_ATTACKER_ABILITY,
     ONE_HIT_EXTRA_FLINCH,
 """,
@@ -565,9 +567,11 @@ def patch_attacker_reactions(root: Path) -> None:
     replace_once(
         controller,
         """    MULTI_HIT_TRIGGER_ABILITY,
+    MULTI_HIT_TRIGGER_ATTACKER_KO_ABILITY,
     MULTI_HIT_STATUS,
 """,
         """    MULTI_HIT_TRIGGER_ABILITY,
+    MULTI_HIT_TRIGGER_ATTACKER_KO_ABILITY,
     MULTI_HIT_TRIGGER_ATTACKER_ABILITY,
     MULTI_HIT_STATUS,
 """,
