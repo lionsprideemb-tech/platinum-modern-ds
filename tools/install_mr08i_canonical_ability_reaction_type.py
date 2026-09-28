@@ -168,7 +168,7 @@ static BOOL Mercury_MoveIsTriageHealing(int move)
     case MOVE_ROOST:
     case MOVE_SHORE_UP:
     case MOVE_SLACK_OFF:
-    case MOVE_SOFT_BOILED:
+    case MOVE_SOFTBOILED:
     case MOVE_STRENGTH_SAP:
     case MOVE_SWALLOW:
     case MOVE_SYNTHESIS:
