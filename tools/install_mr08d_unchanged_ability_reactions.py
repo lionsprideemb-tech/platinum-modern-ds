@@ -98,17 +98,27 @@ def validate_ids(root: Path) -> dict[str, bool]:
 def patch_power_and_damage(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
-    # Analytic: 1.3x if the user is the final battler with an unfinished action.
-    # waitingBattlers is recomputed by the Platinum action dispatcher before
-    # each action and therefore naturally includes switches and other actions.
+    # Analytic: boost when the selected target already completed its action.
+    # Action order includes switches/items as well as attacks, which matches
+    # the mechanic more closely than a raw Speed comparison in doubles.
     insert_before_once(
         path,
         """    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
 """,
         """    if (attackerParams.ability == ABILITY_ANALYTIC
-        && battleCtx->waitingBattlers == 1
-        && MOVE_DATA(move).effect != BATTLE_EFFECT_HIT_IN_3_TURNS) {
-        movePower = movePower * 13 / 10;
+        && defender != BATTLER_NONE) {
+        int defenderAlreadyActed = FALSE;
+
+        for (i = 0; i < battleCtx->turnOrderCounter; i++) {
+            if (battleCtx->battlerActionOrder[i] == defender) {
+                defenderAlreadyActed = TRUE;
+                break;
+            }
+        }
+
+        if (defenderAlreadyActed) {
+            movePower = movePower * 13 / 10;
+        }
     }
 
     if (attackerParams.ability == ABILITY_STEELWORKER
@@ -237,50 +247,21 @@ static int Mercury_EffectiveMovePriority(BattleContext *battleCtx, int attacker)
     }
 
     if (attacker != defender
-        && BattleSystem_GetBattlerSide(NULL, attacker) != BattleSystem_GetBattlerSide(NULL, defender)) {
-        // placeholder: side check replaced below by parity-safe DS battler layout
-    }
-
-    if (attacker != defender
         && ((attacker & 1) != (defender & 1))
         && Battler_Ability(battleCtx, attacker) != ABILITY_MOLD_BREAKER
         && Mercury_EffectiveMovePriority(battleCtx, attacker) > 0
         && (Battler_Ability(battleCtx, defender) == ABILITY_QUEENLY_MAJESTY
             || Battler_Ability(battleCtx, defender) == ABILITY_DAZZLING
-            || Mercury_AllyHasAbility(NULL, battleCtx, defender, ABILITY_QUEENLY_MAJESTY)
-            || Mercury_AllyHasAbility(NULL, battleCtx, defender, ABILITY_DAZZLING))) {
+            || ((defender ^ 2) < MAX_BATTLERS
+                && battleCtx->battleMons[defender ^ 2].curHP
+                && (Battler_Ability(battleCtx, defender ^ 2) == ABILITY_QUEENLY_MAJESTY
+                    || Battler_Ability(battleCtx, defender ^ 2) == ABILITY_DAZZLING)))) {
         return subscript_blocked_by_soundproof;
     }
 
 """,
         "Bulletproof / Queenly Majesty / Dazzling immunity hooks",
     )
-
-    # BattleSystem_TriggerImmunityAbility historically lacks BattleSystem*.
-    # Replace the two helper calls above with parity-based ally lookup that
-    # remains valid for Platinum's fixed 0/2 and 1/3 side layout.
-    text = path.read_text(encoding="utf-8")
-    text = text.replace(
-        """    if (attacker != defender
-        && BattleSystem_GetBattlerSide(NULL, attacker) != BattleSystem_GetBattlerSide(NULL, defender)) {
-        // placeholder: side check replaced below by parity-safe DS battler layout
-    }
-
-""",
-        "",
-    )
-    text = text.replace(
-        """            || Mercury_AllyHasAbility(NULL, battleCtx, defender, ABILITY_QUEENLY_MAJESTY)
-            || Mercury_AllyHasAbility(NULL, battleCtx, defender, ABILITY_DAZZLING))) {
-""",
-        """            || ((defender ^ 2) < MAX_BATTLERS
-                && battleCtx->battleMons[defender ^ 2].curHP
-                && (Battler_Ability(battleCtx, defender ^ 2) == ABILITY_QUEENLY_MAJESTY
-                    || Battler_Ability(battleCtx, defender ^ 2) == ABILITY_DAZZLING)))) {
-""",
-    )
-    path.write_text(text, encoding="utf-8")
-
 
 def patch_on_hit(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
@@ -401,7 +382,7 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
     checks = {
         "analytic_hook":
             "ABILITY_ANALYTIC" in battle_lib
-            and "battleCtx->waitingBattlers == 1" in battle_lib,
+            and "battleCtx->battlerActionOrder[i] == defender" in battle_lib,
         "bulletproof_hook":
             "Mercury_IsBallOrBombMove" in battle_lib
             and "ABILITY_BULLETPROOF" in battle_lib,
