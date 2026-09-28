@@ -43,6 +43,7 @@ on:
       - "tools/install_mr08q2_canonical_ability_comatose.py"
       - "tools/install_mr08r1_canonical_ability_ball_fetch.py"
       - "tools/install_mr08r2_canonical_ability_ripen.py"
+      - "tools/install_mr08r3_canonical_ability_parental_bond.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -202,6 +203,7 @@ jobs:
             tools/install_mr08q2_canonical_ability_comatose.py \
             tools/install_mr08r1_canonical_ability_ball_fetch.py \
             tools/install_mr08r2_canonical_ability_ripen.py \
+            tools/install_mr08r3_canonical_ability_parental_bond.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -714,6 +716,22 @@ jobs:
           test "$(jq -r '[.checks[]] | all' mr08r2-canonical-ability-ripen.json)" = "true"
           test "$(jq -r '.ui_changed' mr08r2-canonical-ability-ripen.json)" = "false"
           grep -qx 'ABILITY_RIPEN' mr04-implemented-abilities.txt
+
+      - name: Install MR08R3 canonical Parental Bond pass
+        shell: bash
+        run: |
+          python3 tools/install_mr08r3_canonical_ability_parental_bond.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08r3-canonical-ability-parental-bond.json
+
+          test "$(jq -r '.status' mr08r3-canonical-ability-parental-bond.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08r3-canonical-ability-parental-bond.json)" = "1"
+          test "$(jq -r '.running_modern_mechanics_total' mr08r3-canonical-ability-parental-bond.json)" = "164"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08r3-canonical-ability-parental-bond.json)" = "23"
+          test "$(jq -r '[.checks[]] | all' mr08r3-canonical-ability-parental-bond.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08r3-canonical-ability-parental-bond.json)" = "false"
+          grep -qx 'ABILITY_PARENTAL_BOND' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1724,6 +1742,7 @@ jobs:
           cp mr08q2-canonical-ability-comatose.json mr05b-artifact/ 2>/dev/null || true
           cp mr08r1-canonical-ability-ball-fetch.json mr05b-artifact/ 2>/dev/null || true
           cp mr08r2-canonical-ability-ripen.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08r3-canonical-ability-parental-bond.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -2283,6 +2302,7 @@ jobs:
             echo "- MR08Q2 adds canonical Comatose status immunity and asleep-state interactions (161 modern mechanics total; 26 remain)"
             echo "- MR08R1 adds canonical Ball Fetch first-failed-Poke-Ball retrieval (162 modern mechanics total; 25 remain)"
             echo "- MR08R2 adds canonical Ripen Berry-effect doubling, including Pluck/Fling/resist/recoil paths (163 modern mechanics total; 24 remain)"
+            echo "- MR08R3 adds canonical Parental Bond two-strike behavior with a 25% child strike and Platinum-native per-hit processing (164 modern mechanics total; 23 remain)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
