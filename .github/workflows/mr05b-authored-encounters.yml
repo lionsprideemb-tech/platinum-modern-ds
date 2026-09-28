@@ -21,6 +21,7 @@ on:
       - "tools/install_mr07d3_vanilla_skills_palette.py"
       - "tools/install_mr07d4_summary_typography_polish.py"
       - "tools/install_mr07d5_summary_editor_color_polish.py"
+      - "tools/install_mr08a_canonical_ability_batch.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -159,6 +160,7 @@ jobs:
             tools/install_mr07d3_vanilla_skills_palette.py \
             tools/install_mr07d4_summary_typography_polish.py \
             tools/install_mr07d5_summary_editor_color_polish.py \
+            tools/install_mr08a_canonical_ability_batch.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -393,6 +395,19 @@ jobs:
           test "$(jq -r '.new_art' mr07d5-summary-editor-color-polish.json)" = "false"
           test "$(jq -r '.new_palette' mr07d5-summary-editor-color-polish.json)" = "false"
           test "$(jq -r '.functionality_changed' mr07d5-summary-editor-color-polish.json)" = "false"
+
+      - name: Install MR08A canonical ability mechanics batch 1
+        shell: bash
+        run: |
+          python3 tools/install_mr08a_canonical_ability_batch.py \
+            vendor/pokeplatinum \
+            --report mr08a-canonical-ability-batch.json
+
+          test "$(jq -r '.status' mr08a-canonical-ability-batch.json)" = "PASS"
+          test "$(jq -r '.checks.contrary_hook' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.checks.big_pecks_hook' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.checks.full_metal_body_hook' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08a-canonical-ability-batch.json)" = "false"
 
       - name: Install MR05A HM-free traversal foundation
         shell: bash
@@ -1190,6 +1205,7 @@ jobs:
           cp mr07d3-vanilla-skills-palette.json mr05b-artifact/ 2>/dev/null || true
           cp mr07d4-summary-typography-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr07d5-summary-editor-color-polish.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08a-canonical-ability-batch.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
