@@ -233,9 +233,22 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
         palette_hash = ""
         perceptual = 0
 
+    clean = logical_path.replace("\\", "/").lower()
+    visual_candidate = bool(
+        candidate
+        and (
+            clean.endswith("/male/front.png")
+            or (
+                "/male/front.png" not in clean
+                and clean.endswith("/female/front.png")
+            )
+        )
+    )
+
     return Entry(
         path=logical_path,
         source_archive=archive_name,
+        species_label=species_label(logical_path),
         width=rgba.width,
         height=rgba.height,
         mode="RGBA",
@@ -245,6 +258,7 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
         dhash64=perceptual,
         color_count=color_count,
         is_sprite_candidate=candidate,
+        is_visual_candidate=visual_candidate,
         concept_key=concept_key(logical_path),
         top_bucket=top_bucket(logical_path),
     )
