@@ -157,6 +157,123 @@
   "notes": [
     "Canonical form/gender storage duplication is not automatically a defect.",
     "The broad first-pass dHash cluster is treated as noisy and does not block integration.",
-    "No sprite listed here has been installed, removed, renamed, recolored, or replaced."
+    "No sprite listed here has been installed, removed, renamed, recolored, or replaced.",
+    "Exact duplicates between intentionally identical storage aliases remain informational unless the forms are expected to look different.",
+    "Secondary form/icon collisions are held for visual/provenance review rather than auto-rejected."
+  ],
+  "exact_form_review": [
+    {
+      "entries": [
+        "cpf_0340_ribombee_bluetowel_alternate_form_form_1",
+        "cpf_0341_ribombee_bluetowel_alternate_form_form_2"
+      ],
+      "evidence": "Front and back sheets are byte-identical across two separately named alternate-form entries.",
+      "action": "Verify whether these are accidental duplicate concepts or intended aliases before either is approved."
+    },
+    {
+      "entries": [
+        "latias-mega",
+        "latios-mega"
+      ],
+      "evidence": "Male/front rendered pixels are identical in the staged DS-ready set.",
+      "action": "Verify the conversion retained the intended visual distinction before integration."
+    },
+    {
+      "entries": [
+        "alcremie-matcha-cream-love-sweet",
+        "alcremie-ruby-cream-love-sweet"
+      ],
+      "evidence": "Back renders are identical while the corresponding front renders are palette variants.",
+      "action": "Review back-sprite palette fidelity; do not assume the duplicate back art is correct."
+    },
+    {
+      "entries": [
+        "alcremie-matcha-cream-ribbon-sweet",
+        "alcremie-ruby-cream-ribbon-sweet"
+      ],
+      "evidence": "Back renders are identical while the corresponding front renders are palette variants.",
+      "action": "Review back-sprite palette fidelity."
+    },
+    {
+      "entries": [
+        "alcremie-mint-cream-ribbon-sweet",
+        "alcremie-salted-cream-ribbon-sweet"
+      ],
+      "evidence": "Back renders are identical while the corresponding front renders are palette variants.",
+      "action": "Review back-sprite palette fidelity."
+    },
+    {
+      "entries": [
+        "alcremie-matcha-cream-clover-sweet",
+        "alcremie-ruby-cream-clover-sweet"
+      ],
+      "evidence": "Back renders are identical while the corresponding front renders are palette variants.",
+      "action": "Review back-sprite palette fidelity."
+    },
+    {
+      "entries": [
+        "alcremie-matcha-cream-star-sweet",
+        "alcremie-ruby-cream-star-sweet"
+      ],
+      "evidence": "Back renders are identical while the corresponding front renders are palette variants.",
+      "action": "Review back-sprite palette fidelity."
+    },
+    {
+      "entries": [
+        "alcremie-caramel-swirl-flower-sweet",
+        "alcremie-ruby-swirl-flower-sweet"
+      ],
+      "evidence": "Back renders are identical while the corresponding front renders are palette variants.",
+      "action": "Review back-sprite palette fidelity."
+    },
+    {
+      "entries": [
+        "alcremie-mint-cream-love-sweet",
+        "alcremie-salted-cream-love-sweet"
+      ],
+      "evidence": "Back renders are identical while the corresponding front renders are palette variants.",
+      "action": "Review back-sprite palette fidelity."
+    },
+    {
+      "entries": [
+        "mothim-plant",
+        "mothim-sandy",
+        "mothim-trash"
+      ],
+      "evidence": "The separately named Mothim form entries share byte-identical front/back art.",
+      "action": "Confirm whether the form split is intentional; otherwise collapse or replace duplicate concepts later."
+    },
+    {
+      "entries": [
+        "floette-blue",
+        "floette-red"
+      ],
+      "evidence": "Form icons are byte-identical despite distinct flower-color forms.",
+      "action": "Review icon fidelity; battle sprites are not blocked by this icon-only collision."
+    },
+    {
+      "entries": [
+        "silvally-bug",
+        "silvally-dark",
+        "silvally-dragon",
+        "silvally-electric",
+        "silvally-fairy",
+        "silvally-fighting",
+        "silvally-fire",
+        "silvally-flying",
+        "silvally-ghost",
+        "silvally-grass",
+        "silvally-ground",
+        "silvally-ice",
+        "silvally-normal",
+        "silvally-poison",
+        "silvally-psychic",
+        "silvally-rock",
+        "silvally-steel",
+        "silvally-water"
+      ],
+      "evidence": "All staged type-form icons are byte-identical, while battle sprites contain palette distinctions.",
+      "action": "Review whether Mercury wants type-colored form icons; this is not a battle-sprite blocker."
+    }
   ]
 }
