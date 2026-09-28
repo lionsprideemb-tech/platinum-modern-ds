@@ -43,6 +43,7 @@ class Entry:
     dhash64: int
     color_count: int
     is_sprite_candidate: bool
+    is_visual_candidate: bool
     concept_key: str
     top_bucket: str
 
@@ -218,11 +219,14 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
     )
     pixel_hash = sha256(pixel_blob)
 
-    if candidate:
+    visual_candidate = candidate and logical_path.lower().replace("\\", "/").endswith("/male/front.png")
+
+    if visual_candidate:
         canonical_hash = canonical_palette_hash(rgba)
         visual_hash = dhash64(rgba)
     else:
-        canonical_hash = sha256(("NON_SPRITE:" + pixel_hash).encode("ascii"))
+        # Keep non-representative frames out of the expensive visual/recolor lane.
+        canonical_hash = sha256(("NON_VISUAL:" + pixel_hash).encode("ascii"))
         visual_hash = 0
 
     return Entry(
@@ -238,6 +242,7 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
         dhash64=visual_hash,
         color_count=color_count,
         is_sprite_candidate=candidate,
+        is_visual_candidate=visual_candidate,
         concept_key=concept_key(logical_path),
         top_bucket=top_bucket(logical_path),
     )
@@ -282,10 +287,17 @@ def scan_zip_bytes(
     return out
 
 
-def grouped(entries: list[Entry], attr: str, candidate_only: bool = True) -> list[list[int]]:
+def grouped(
+    entries: list[Entry],
+    attr: str,
+    candidate_only: bool = True,
+    visual_only: bool = False,
+) -> list[list[int]]:
     buckets: dict[str, list[int]] = defaultdict(list)
     for i, e in enumerate(entries):
         if candidate_only and not e.is_sprite_candidate:
+            continue
+        if visual_only and not e.is_visual_candidate:
             continue
         buckets[str(getattr(e, attr))].append(i)
     groups = [g for g in buckets.values() if len(g) > 1]
@@ -295,7 +307,7 @@ def grouped(entries: list[Entry], attr: str, candidate_only: bool = True) -> lis
 
 def near_groups(entries: list[Entry], radius: int = 4) -> list[list[int]]:
     """Cluster perceptually close sprite candidates without quadratic duplicate-hash blowups."""
-    candidates = [i for i, e in enumerate(entries) if e.is_sprite_candidate]
+    candidates = [i for i, e in enumerate(entries) if e.is_visual_candidate]
     by_dim_hash: dict[tuple[int, int], dict[int, list[int]]] = defaultdict(lambda: defaultdict(list))
     for i in candidates:
         e = entries[i]
@@ -347,7 +359,7 @@ def near_groups(entries: list[Entry], radius: int = 4) -> list[list[int]]:
 def concept_groups(entries: list[Entry]) -> list[list[int]]:
     buckets: dict[str, list[int]] = defaultdict(list)
     for i, e in enumerate(entries):
-        if not e.is_sprite_candidate or not e.concept_key:
+        if not e.is_visual_candidate or not e.concept_key:
             continue
         buckets[e.concept_key].append(i)
 
@@ -386,6 +398,7 @@ def write_markdown(report: dict, path: Path) -> None:
         "",
         f"- Images scanned: **{report['summary']['images_scanned']}**",
         f"- Sprite candidates: **{report['summary']['sprite_candidates']}**",
+        f"- Male/front visual representatives: **{report['summary']['visual_representatives']}**",
         f"- Exact byte-duplicate groups: **{report['summary']['exact_byte_groups']}**",
         f"- Exact rendered-pixel duplicate groups: **{report['summary']['exact_pixel_groups']}**",
         f"- Palette/recolor candidate groups: **{report['summary']['palette_recolor_groups']}**",
@@ -452,7 +465,7 @@ def main() -> None:
         g for g in exact_pixels_all
         if len({entries[i].byte_sha256 for i in g}) > 1
     ]
-    palette_all = grouped(entries, "canonical_palette_sha256")
+    palette_all = grouped(entries, "canonical_palette_sha256", visual_only=True)
     palette_recolors = [
         g for g in palette_all
         if len({entries[i].pixel_sha256 for i in g}) > 1
@@ -471,6 +484,7 @@ def main() -> None:
         "summary": {
             "images_scanned": len(entries),
             "sprite_candidates": sum(1 for e in entries if e.is_sprite_candidate),
+            "visual_representatives": sum(1 for e in entries if e.is_visual_candidate),
             "exact_byte_groups": len(exact_bytes),
             "exact_pixel_groups": len(exact_pixels),
             "palette_recolor_groups": len(palette_recolors),
