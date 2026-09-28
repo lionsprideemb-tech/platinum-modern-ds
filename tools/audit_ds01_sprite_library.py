@@ -41,6 +41,8 @@ class Entry:
     pixel_sha256: str
     canonical_palette_sha256: str
     dhash64: int
+    alpha_hash256: int
+    opaque_count: int
     color_count: int
     is_sprite_candidate: bool
     is_visual_candidate: bool
@@ -118,6 +120,18 @@ def canonical_palette_hash(img: Image.Image) -> str:
         ids += int(idx).to_bytes(4, "little", signed=False)
     header = f"{rgba.width}x{rgba.height}:".encode("ascii")
     return sha256(header + bytes(ids))
+
+
+def alpha_hash256(img: Image.Image) -> tuple[int, int]:
+    """Return a 16x16 alpha-silhouette hash and opaque-pixel count."""
+    alpha = img.convert("RGBA").getchannel("A")
+    opaque_count = sum(1 for v in alpha.getdata() if v >= 32)
+    small = alpha.resize((16, 16), Image.Resampling.BILINEAR)
+    out = 0
+    for bit, v in enumerate(small.getdata()):
+        if v >= 64:
+            out |= 1 << bit
+    return out, opaque_count
 
 
 def dhash64(img: Image.Image) -> int:
@@ -229,9 +243,12 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
     if candidate:
         palette_hash = canonical_palette_hash(rgba)
         perceptual = dhash64(rgba)
+        alpha_sig, opaque_count = alpha_hash256(rgba)
     else:
         palette_hash = ""
         perceptual = 0
+        alpha_sig = 0
+        opaque_count = 0
 
     clean = logical_path.replace("\\", "/").lower()
     visual_candidate = bool(
@@ -256,6 +273,8 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
         pixel_sha256=sha256(pixel_blob),
         canonical_palette_sha256=palette_hash,
         dhash64=perceptual,
+        alpha_hash256=alpha_sig,
+        opaque_count=opaque_count,
         color_count=color_count,
         is_sprite_candidate=candidate,
         is_visual_candidate=visual_candidate,
@@ -321,33 +340,44 @@ def grouped(
 
 
 def near_groups(entries: list[Entry], radius: int = 4) -> list[list[int]]:
-    """Cluster perceptually close sprite candidates without quadratic duplicate-hash blowups."""
+    """Cluster conservative near-duplicate visual candidates.
+
+    Alpha silhouette is the primary filter; dHash is only a secondary check.
+    This avoids giant false-positive clusters caused by transparent 64x64
+    Pokémon canvases sharing similar low-resolution luminance hashes.
+    """
     candidates = [i for i, e in enumerate(entries) if e.is_visual_candidate]
-    by_dim_hash: dict[tuple[int, int], dict[int, list[int]]] = defaultdict(lambda: defaultdict(list))
+    by_dim_alpha: dict[tuple[int, int], dict[int, list[int]]] = defaultdict(lambda: defaultdict(list))
     for i in candidates:
         e = entries[i]
-        by_dim_hash[(e.width, e.height)][e.dhash64].append(i)
+        by_dim_alpha[(e.width, e.height)][e.alpha_hash256].append(i)
 
     dsu = DSU(len(entries))
+    alpha_radius = 12  # <= 4.7% of the 16x16 silhouette may differ.
 
-    for _, hash_map in by_dim_hash.items():
-        # Same dHash value is already a distance-0 perceptual match. Union once per member.
-        for ids in hash_map.values():
-            anchor = ids[0]
-            for i in ids[1:]:
-                dsu.union(anchor, i)
-
-        # Compare unique dHash values only. This avoids O(n^2) behavior when many
-        # sprites share a common silhouette/hash (blank frames, icons, palettes, etc.).
+    for _, hash_map in by_dim_alpha.items():
         tree = BKTree()
-        representative_for_hash: dict[int, int] = {}
-        for dh, ids in hash_map.items():
+
+        # One representative per exact alpha silhouette keeps the search compact.
+        for alpha_sig, ids in hash_map.items():
             rep = ids[0]
-            for other_rep, dist in tree.query(dh, radius):
-                if dist <= radius:
+
+            # Within an exact alpha silhouette, retain only visually close members.
+            for i in ids[1:]:
+                a, b = entries[rep], entries[i]
+                denom = max(a.opaque_count, b.opaque_count, 1)
+                if hamming(a.dhash64, b.dhash64) <= radius and abs(a.opaque_count - b.opaque_count) / denom <= 0.10:
+                    dsu.union(rep, i)
+
+            # Compare this silhouette to nearby prior silhouettes.
+            for other_rep, alpha_dist in tree.query(alpha_sig, alpha_radius):
+                a, b = entries[rep], entries[other_rep]
+                denom = max(a.opaque_count, b.opaque_count, 1)
+                opaque_delta = abs(a.opaque_count - b.opaque_count) / denom
+                if alpha_dist <= alpha_radius and hamming(a.dhash64, b.dhash64) <= radius and opaque_delta <= 0.10:
                     dsu.union(rep, other_rep)
-            tree.add(dh, rep)
-            representative_for_hash[dh] = rep
+
+            tree.add(alpha_sig, rep)
 
     buckets: dict[int, list[int]] = defaultdict(list)
     for i in candidates:
@@ -359,8 +389,7 @@ def near_groups(entries: list[Entry], radius: int = 4) -> list[list[int]]:
     for g in buckets.values():
         if len(g) < 2:
             continue
-        # Pure exact-pixel and pure palette-recolor groups are already reported
-        # in cleaner categories; keep only groups that add genuine near-visual signal.
+        # Exact rendered duplicates and exact palette swaps already have cleaner buckets.
         if len({entries[i].pixel_sha256 for i in g}) == 1:
             continue
         if len({entries[i].canonical_palette_sha256 for i in g}) == 1:
@@ -369,7 +398,6 @@ def near_groups(entries: list[Entry], radius: int = 4) -> list[list[int]]:
 
     groups.sort(key=lambda g: (-len(g), entries[g[0]].path))
     return groups
-
 
 def concept_groups(entries: list[Entry]) -> list[list[int]]:
     buckets: dict[str, list[int]] = defaultdict(list)
