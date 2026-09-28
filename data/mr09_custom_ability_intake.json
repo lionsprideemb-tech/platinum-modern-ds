@@ -423,6 +423,81 @@
       "implementation_class": "light_extension",
       "approval_state": "locked",
       "implementation_ready": true
+    },
+    {
+      "name": "Aerial Predator",
+      "source": "Pokémon Mercury Redux — locked Mega Yanmega ability redesign (2026-09-14)",
+      "exact_effect": "If the user acts before its target, its damaging move deals 1.30× damage. The user's moves also ignore the target's positive Evasion stat stages.",
+      "trigger": "Damage multiplier is checked when the user acts before the target for the current move; Evasion bypass is continuous for the user's move accuracy checks.",
+      "restrictions": "Uses the effective Speed/order comparison for the turn. The 1.30× damage bonus does not apply when the user does not act before the target.",
+      "known_users": [
+        "Mega Yanmega"
+      ],
+      "mechanic_family": "turn_order_damage_boost_positive_evasion_bypass",
+      "duplicate_status": "Locked Mercury signature redesign; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Dynamo Fist",
+      "source": "Pokémon Mercury Redux — locked Mega Electivire ability redesign (2026-09-14)",
+      "exact_effect": "After the user successfully lands a damaging punching move, it gains Charge. The next damaging Electric-type move it uses deals 1.30× damage and consumes that Charge.",
+      "trigger": "Charge is gained after a successful damaging punching move; the boost is consumed when the user's next damaging Electric-type move resolves.",
+      "restrictions": "Charge does not stack. A miss or move stopped by Protect does not grant Charge. Switching out removes Charge. An Electric punching move that consumes an existing Charge cannot immediately grant a new Charge from the same hit.",
+      "known_users": [
+        "Mega Electivire"
+      ],
+      "mechanic_family": "punch_hit_arms_single_use_electric_damage_charge",
+      "duplicate_status": "Locked Mercury signature redesign; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Sovereign Arsenal",
+      "source": "Pokémon Mercury Redux — locked Mega Aegislash ability redesign (2026-09-14)",
+      "exact_effect": "Slicing moves used by the user deal 1.25× damage. Damage the user takes from contact moves is reduced by 25%.",
+      "trigger": "Slicing boost is checked during outgoing damage calculation; contact reduction is checked during incoming damage calculation.",
+      "restrictions": "Always active. Does not cause or depend on form changes.",
+      "known_users": [
+        "Mega Aegislash"
+      ],
+      "mechanic_family": "slicing_damage_boost_contact_damage_reduction",
+      "duplicate_status": "Locked Mercury signature redesign; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Deadeye",
+      "source": "Pokémon Mercury Redux — locked Arbalistia ability package (2026-09-14)",
+      "exact_effect": "Projectile-, shot-, and arrow-tagged damaging moves used by the user cannot miss and gain +1 critical-hit stage.",
+      "trigger": "During accuracy and critical-hit calculations for qualifying damaging moves.",
+      "restrictions": "Only damaging moves carrying the projectile, shot, or arrow classification qualify.",
+      "known_users": [
+        "Arbalistia"
+      ],
+      "mechanic_family": "flagged_move_always_hit_critical_stage_boost",
+      "duplicate_status": "Locked Mercury Arbalistia Primary Ability; duplicate resolution complete against the broader donor Deadeye entry.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Cold Calculation",
+      "source": "Pokémon Mercury Redux — locked Mega Cryonessa signature ability",
+      "exact_effect": "The user's Special Attack is doubled while this Ability is active.",
+      "trigger": "Continuous while the user is active and the Ability is functioning.",
+      "restrictions": "Applies only to Special Attack.",
+      "known_users": [
+        "Mega Cryonessa"
+      ],
+      "mechanic_family": "continuous_special_attack_multiplier",
+      "duplicate_status": "Locked Mercury signature Ability; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
     }
   ]
 }
