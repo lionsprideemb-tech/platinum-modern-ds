@@ -64,6 +64,30 @@ def replace_once(path: Path, old: str, new: str, label: str) -> None:
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
+def replace_function(path: Path, signature: str, replacement: str, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    definition = signature + "\n{"
+    start = text.find(definition)
+    if start < 0:
+        raise SystemExit(f"{label}: function definition not found in {path}")
+
+    open_brace = start + len(signature) + 1
+    depth = 0
+    end = -1
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end < 0:
+        raise SystemExit(f"{label}: closing brace not found in {path}")
+
+    path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
+
+
 def validate_ids(root: Path) -> dict[str, bool]:
     abilities = [
         line.strip()
@@ -440,30 +464,42 @@ def patch_break_and_restore(root: Path) -> None:
 def patch_neutralizing_gas_rules(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
-    replace_once(
+    # MR08N originally grouped several special form Abilities as immune to
+    # Neutralizing Gas. Disguise and Ice Face are canonically suppressible, so
+    # replace that helper as a unit to avoid matching the similar Receiver list.
+    replace_function(
         path,
-        """    case ABILITY_SHIELDS_DOWN:
-    case ABILITY_DISGUISE:
+        "static BOOL Mercury_AbilityCannotBeNeutralized(int ability)",
+        """static BOOL Mercury_AbilityCannotBeNeutralized(int ability)
+{
+    switch (ability) {
+    case ABILITY_MULTITYPE:
+    case ABILITY_ZEN_MODE:
+    case ABILITY_STANCE_CHANGE:
+    case ABILITY_SCHOOLING:
+    case ABILITY_COMATOSE:
+    case ABILITY_SHIELDS_DOWN:
     case ABILITY_BATTLE_BOND:
-""",
-        """    case ABILITY_SHIELDS_DOWN:
-    case ABILITY_BATTLE_BOND:
-""",
-        "Disguise Neutralizing Gas suppression",
-    )
-
-    replace_once(
-        path,
-        """    case ABILITY_GULP_MISSILE:
-    case ABILITY_ICE_FACE:
+    case ABILITY_POWER_CONSTRUCT:
+    case ABILITY_RKS_SYSTEM:
+    case ABILITY_GULP_MISSILE:
     case ABILITY_HUNGER_SWITCH:
-""",
-        """    case ABILITY_GULP_MISSILE:
-    case ABILITY_HUNGER_SWITCH:
-""",
-        "Ice Face Neutralizing Gas suppression",
-    )
+    case ABILITY_AS_ONE_GLASTRIER:
+    case ABILITY_AS_ONE_SPECTRIER:
+    case ABILITY_ZERO_TO_HERO:
+    case ABILITY_COMMANDER:
+    case ABILITY_EMBODY_ASPECT:
+    case ABILITY_EMBODY_ASPECT_2:
+    case ABILITY_EMBODY_ASPECT_3:
+    case ABILITY_EMBODY_ASPECT_4:
+    case ABILITY_TERA_SHIFT:
+        return TRUE;
+    }
 
+    return FALSE;
+}""",
+        "Disguise / Ice Face Neutralizing Gas behavior",
+    )
 
 def patch_special_restrictions(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
