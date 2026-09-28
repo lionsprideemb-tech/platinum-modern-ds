@@ -15,7 +15,7 @@ Implemented:
 - Gooey
 - Berserk
 - Gorilla Tactics
-- Perish Body
+- Screen Cleaner
 
 This pass changes battle logic only. Locked MR07 Summary/Skills visuals remain
 untouched.
@@ -38,7 +38,7 @@ IMPLEMENTED = (
     "ABILITY_GOOEY",
     "ABILITY_BERSERK",
     "ABILITY_GORILLA_TACTICS",
-    "ABILITY_PERISH_BODY",
+    "ABILITY_SCREEN_CLEANER",
 )
 
 EXPECTED_IDS = {
@@ -51,7 +51,7 @@ EXPECTED_IDS = {
     "ABILITY_GOOEY": 183,
     "ABILITY_BERSERK": 201,
     "ABILITY_GORILLA_TACTICS": 255,
-    "ABILITY_PERISH_BODY": 253,
+    "ABILITY_SCREEN_CLEANER": 251,
 }
 
 
@@ -262,21 +262,6 @@ def patch_on_hit_family(root: Path) -> None:
         break;
     }
 
-    case ABILITY_PERISH_BODY:
-        if ((battleCtx->moveStatusFlags & MOVE_STATUS_NO_EFFECTS) == FALSE
-            && (DEFENDER_SELF_TURN_FLAGS.physicalDamageTaken
-                || DEFENDER_SELF_TURN_FLAGS.specialDamageTaken)
-            && (CURRENT_MOVE_DATA.flags & MOVE_FLAG_MAKES_CONTACT)) {
-            if ((ATTACKING_MON.moveEffectsMask & MOVE_EFFECT_PERISH_SONG) == FALSE) {
-                ATTACKING_MON.moveEffectsMask |= MOVE_EFFECT_PERISH_SONG;
-                ATTACKING_MON.moveEffectsData.perishSongTurns = 3;
-            }
-            if ((DEFENDING_MON.moveEffectsMask & MOVE_EFFECT_PERISH_SONG) == FALSE) {
-                DEFENDING_MON.moveEffectsMask |= MOVE_EFFECT_PERISH_SONG;
-                DEFENDING_MON.moveEffectsData.perishSongTurns = 3;
-            }
-        }
-        break;
     }
 """,
         "Justified/Gooey/Berserk/Perish Body on-hit family",
@@ -458,6 +443,45 @@ def patch_healer(root: Path) -> None:
     )
 
 
+
+def patch_screen_cleaner(root: Path) -> None:
+    path = root / "src/battle/battle_lib.c"
+
+    replace_once(
+        path,
+        """                    case ABILITY_SNOW_WARNING:
+                        battleCtx->battleMons[battler].weatherAbilityAnnounced = TRUE;
+
+                        if ((battleCtx->fieldConditionsMask & FIELD_CONDITION_HAILING_PERM) == FALSE) {
+                            subscript = subscript_snow_warning;
+                            result = SWITCH_IN_CHECK_RESULT_BREAK;
+                        }
+                        break;
+""",
+        """                    case ABILITY_SNOW_WARNING:
+                        battleCtx->battleMons[battler].weatherAbilityAnnounced = TRUE;
+
+                        if ((battleCtx->fieldConditionsMask & FIELD_CONDITION_HAILING_PERM) == FALSE) {
+                            subscript = subscript_snow_warning;
+                            result = SWITCH_IN_CHECK_RESULT_BREAK;
+                        }
+                        break;
+
+                    case ABILITY_SCREEN_CLEANER:
+                        battleCtx->battleMons[battler].weatherAbilityAnnounced = TRUE;
+                        battleCtx->sideConditionsMask[0] &=
+                            ~(SIDE_CONDITION_REFLECT | SIDE_CONDITION_LIGHT_SCREEN);
+                        battleCtx->sideConditionsMask[1] &=
+                            ~(SIDE_CONDITION_REFLECT | SIDE_CONDITION_LIGHT_SCREEN);
+                        battleCtx->sideConditions[0].reflectTurns = 0;
+                        battleCtx->sideConditions[0].lightScreenTurns = 0;
+                        battleCtx->sideConditions[1].reflectTurns = 0;
+                        battleCtx->sideConditions[1].lightScreenTurns = 0;
+                        break;
+""",
+        "Screen Cleaner switch-in hook",
+    )
+
 def patch_gorilla_tactics(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
     controller = root / "src/battle/battle_controller_player.c"
@@ -569,9 +593,9 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "gorilla_tactics_hook":
             battle_lib.count("ABILITY_GORILLA_TACTICS") >= 2
             and controller.count("ABILITY_GORILLA_TACTICS") >= 2,
-        "perish_body_hook":
-            "case ABILITY_PERISH_BODY:" in battle_lib
-            and battle_lib.count("MOVE_EFFECT_PERISH_SONG") >= 3,
+        "screen_cleaner_hook":
+            "case ABILITY_SCREEN_CLEANER:" in battle_lib
+            and "SIDE_CONDITION_REFLECT | SIDE_CONDITION_LIGHT_SCREEN" in battle_lib,
         "implemented_registry_updated":
             all(token in registry_lines for token in IMPLEMENTED),
     }
@@ -603,6 +627,7 @@ def main() -> None:
     patch_moxie(root)
     patch_regenerator(root)
     patch_healer(root)
+    patch_screen_cleaner(root)
     patch_gorilla_tactics(root)
     update_registry(registry)
 
