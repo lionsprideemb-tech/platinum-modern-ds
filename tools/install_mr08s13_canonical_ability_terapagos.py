@@ -407,25 +407,25 @@ def patch_special_restrictions(root: Path) -> None:
     for token in IMPLEMENTED:
         insert_after_once(
             copy,
-            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _091\n",
+            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_COMMANDER, _091\n",
             f"    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, {token}, _091\n",
             f"{token} Role Play target",
         )
         insert_after_once(
             copy,
-            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _091\n",
+            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_COMMANDER, _091\n",
             f"    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, {token}, _091\n",
             f"{token} Role Play user",
         )
         insert_after_once(
             swap,
-            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _156\n",
+            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_COMMANDER, _156\n",
             f"    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, {token}, _156\n",
             f"{token} Skill Swap target",
         )
         insert_after_once(
             swap,
-            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _156\n",
+            "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_COMMANDER, _156\n",
             f"    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, {token}, _156\n",
             f"{token} Skill Swap user",
         )
