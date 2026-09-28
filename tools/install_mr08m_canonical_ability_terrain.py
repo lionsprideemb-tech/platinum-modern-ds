@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """MR08M — accelerated canonical terrain Ability pass.
 
-Adds nine official/current-mainline mechanics on top of MR08K:
-Infiltrator, Grass Pelt, Surge Surfer, Electric Surge, Psychic Surge,
-Misty Surge, Grassy Surge, Seed Sower, and Hadron Engine.
+Adds eight official/current-mainline mechanics after MR08L:
+Grass Pelt, Surge Surfer, Electric Surge, Psychic Surge, Misty Surge,
+Grassy Surge, Seed Sower, and Hadron Engine.
 
 This pass also adds the shared DS-side terrain state needed by those Abilities.
 Locked MR07 Summary/editor visuals are not touched.
