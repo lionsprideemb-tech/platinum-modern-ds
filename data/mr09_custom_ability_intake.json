@@ -26,5 +26,71 @@
     "light_extension",
     "new_engine_system"
   ],
-  "abilities": []
+  "abilities": [
+    {
+      "name": "Controlled Fury",
+      "source": "Pokémon Mercury Redux — Ability Game Health redesign audit (owner-approved 2026-09-28)",
+      "exact_effect": "The first time the user falls below 50% HP, it gains +1 Attack and +1 Speed. For the next 3 turns, its damaging moves deal 10% more damage, and each direct damaging move it uses causes recoil equal to 10% of its max HP.",
+      "trigger": "Once per battle, when the user's HP first falls below 50%.",
+      "restrictions": "The 3-turn damage/recoil window begins on activation. Recoil applies only after the user's direct damaging moves; status moves do not cause recoil.",
+      "known_users": [],
+      "mechanic_family": "threshold_self_buff_timed_damage_recoil",
+      "duplicate_status": "Resolved as a distinct Mercury redesign; no unresolved duplicate in the locked intake set.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Eternal Life",
+      "source": "Pokémon Mercury Redux — Ability Game Health redesign audit (owner-approved 2026-09-28)",
+      "exact_effect": "The first time the user reaches 50% HP or less, it restores 25% of its max HP, cures any major status condition, and removes all negative stat stages.",
+      "trigger": "Once per battle, when the user's HP first reaches 50% or less while it is still conscious.",
+      "restrictions": "Cannot activate at 0 HP and does not revive a fainted user. Triggers only once per battle.",
+      "known_users": [],
+      "mechanic_family": "threshold_recovery_cleanse_stat_reset",
+      "duplicate_status": "Resolved replacement for the retired long-delay revival concept; no unresolved duplicate in the locked intake set.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Hollow Shell",
+      "source": "Pokémon Mercury Redux — Ability Game Health redesign audit (owner-approved 2026-09-28)",
+      "exact_effect": "If the user is actually knocked out by a direct damaging move, the attacker loses 25% of its max HP. This damage cannot reduce the attacker below 1 HP.",
+      "trigger": "When the user faints as the direct result of an opponent's damaging move.",
+      "restrictions": "Does not trigger from poison, burn, weather, hazards, recoil, self-KO effects, temporary revival effects, or other indirect KOs. Retaliation is nonlethal and leaves the attacker at a minimum of 1 HP.",
+      "known_users": [],
+      "mechanic_family": "direct_ko_retaliation_nonlethal",
+      "duplicate_status": "Resolved Mercury redesign of the prior attacker-faints-on-KO concept; no unresolved duplicate in the locked intake set.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Mind Games",
+      "source": "Pokémon Mercury Redux — Ability Game Health redesign audit (owner-approved 2026-09-28)",
+      "exact_effect": "On switch-in, the opponent's actual last-used move is sealed for 2 turns.",
+      "trigger": "When the user enters battle and the opposing active Pokémon has a recorded last-used move.",
+      "restrictions": "Has no effect if the target has no prior recorded move. Only one move is sealed at a time. The seal lasts 2 turns and is cleared if the affected Pokémon switches out.",
+      "known_users": [],
+      "mechanic_family": "switch_in_last_move_seal",
+      "duplicate_status": "Resolved Mercury redesign of Mind Game; distinct from ordinary Disable by trigger and targeting rule.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "The Look",
+      "source": "Pokémon Mercury Redux — Ability Game Health audit (locked 2026-09-28)",
+      "exact_effect": "While the user is active, opposing active Pokémon cannot use the same move they used immediately before.",
+      "trigger": "Continuous while the ability holder is active; checked when an opposing active Pokémon selects a move.",
+      "restrictions": "The restriction ends when the ability holder leaves the field. Switching the opposing Pokémon naturally resets its own immediately-previous-move context.",
+      "known_users": [],
+      "mechanic_family": "active_move_repeat_lock",
+      "duplicate_status": "Mechanically Torment-like but retained as a distinct continuous ability effect; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
+    }
+  ]
 }
