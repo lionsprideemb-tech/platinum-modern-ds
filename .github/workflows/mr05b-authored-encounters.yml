@@ -23,6 +23,7 @@ on:
       - "tools/install_mr07d4_summary_typography_polish.py"
       - "tools/install_mr07d5_summary_editor_color_polish.py"
       - "tools/install_mr08a_canonical_ability_batch.py"
+      - "tools/install_mr08b_unchanged_ability_fastpass.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -162,6 +163,7 @@ jobs:
             tools/install_mr07d4_summary_typography_polish.py \
             tools/install_mr07d5_summary_editor_color_polish.py \
             tools/install_mr08a_canonical_ability_batch.py \
+            tools/install_mr08b_unchanged_ability_fastpass.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -224,6 +226,22 @@ jobs:
           grep -qx 'ABILITY_CONTRARY' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_BIG_PECKS' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_FULL_METAL_BODY' mr04-implemented-abilities.txt
+
+      - name: Install MR08B unchanged canonical Ability fast pass
+        shell: bash
+        run: |
+          python3 tools/install_mr08b_unchanged_ability_fastpass.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08b-unchanged-ability-fastpass.json
+
+          test "$(jq -r '.status' mr08b-unchanged-ability-fastpass.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08b-unchanged-ability-fastpass.json)" = "12"
+          test "$(jq -r '.checks.water_bubble_burn_hook' mr08b-unchanged-ability-fastpass.json)" = "true"
+          test "$(jq -r '.checks.gale_wings_hook' mr08b-unchanged-ability-fastpass.json)" = "true"
+          test "$(jq -r '.checks.neuroforce_hook' mr08b-unchanged-ability-fastpass.json)" = "true"
+          test "$(jq -r '.checks.power_spot_hook' mr08b-unchanged-ability-fastpass.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08b-unchanged-ability-fastpass.json)" = "false"
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1214,6 +1232,7 @@ jobs:
           cp mr07d4-summary-typography-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr07d5-summary-editor-color-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr08a-canonical-ability-batch.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08b-unchanged-ability-fastpass.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1753,6 +1772,7 @@ jobs:
             echo "- MR07D4 keeps purple/lavender only in the background accents; all player-facing detail text and selection arrows use Platinum dark/blue ink"
             echo "- MR07D5 replaces the remaining white lower editor sheets with Platinum's native lower-screen cream/tan/blue palette while retaining standard frames"
             echo "- MR08A ports Contrary, Big Pecks, and Full Metal Body battle mechanics and widens remaining 10-bit Ability runtime paths before species import"
+            echo "- MR08B fast-ports 12 unchanged canonical Ability mechanics in one shared-hook family; modified Redux versions remain in a separate review lane"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
