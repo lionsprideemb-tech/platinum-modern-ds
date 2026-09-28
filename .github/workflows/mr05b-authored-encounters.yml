@@ -59,6 +59,7 @@ on:
       - "tools/install_mr08s11_canonical_ability_illusion.py"
       - "tools/install_mr08s12_canonical_ability_commander.py"
       - "tools/install_mr08s13_canonical_ability_terapagos.py"
+      - "tools/audit_mr08_final_canonical_abilities.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -234,6 +235,7 @@ jobs:
             tools/install_mr08s11_canonical_ability_illusion.py \
             tools/install_mr08s12_canonical_ability_commander.py \
             tools/install_mr08s13_canonical_ability_terapagos.py \
+            tools/audit_mr08_final_canonical_abilities.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -1094,6 +1096,22 @@ jobs:
           test "$(jq -r '.ui_changed' mr08s13-canonical-ability-terapagos.json)" = "false"
           grep -qx 'ABILITY_TERA_SHIFT' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_TERAFORM_ZERO' mr04-implemented-abilities.txt
+
+      - name: Certify all 187 canonical modern Ability mechanics
+        shell: bash
+        run: |
+          python3 tools/audit_mr08_final_canonical_abilities.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --installers-dir tools \
+            --report mr08-final-canonical-ability-certification.json
+
+          test "$(jq -r '.status' mr08-final-canonical-ability-certification.json)" = "PASS"
+          test "$(jq -r '.canonical_modern_range.count' mr08-final-canonical-ability-certification.json)" = "187"
+          test "$(jq -r '.implemented_registry.modern_count' mr08-final-canonical-ability-certification.json)" = "187"
+          test "$(jq -r '.installer_ownership.owned_modern_count' mr08-final-canonical-ability-certification.json)" = "187"
+          test "$(jq -r '[.checks[]] | all' mr08-final-canonical-ability-certification.json)" = "true"
+          test "$(jq -r '.custom_abilities_included' mr08-final-canonical-ability-certification.json)" = "false"
 
       - name: Install production Mercury Move Learner
         shell: bash
@@ -2071,6 +2089,7 @@ jobs:
           cp mr08s11-canonical-ability-illusion.json mr05b-artifact/ 2>/dev/null || true
           cp mr08s12-canonical-ability-commander.json mr05b-artifact/ 2>/dev/null || true
           cp mr08s13-canonical-ability-terapagos.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08-final-canonical-ability-certification.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
