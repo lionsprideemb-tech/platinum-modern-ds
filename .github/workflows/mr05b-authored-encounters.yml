@@ -8,6 +8,7 @@ on:
       - feature/mr06b-research-poke-radar
       - feature/mr07-summary-skills
       - feature/mr08-canonical-abilities
+      - feature/mr09-custom-abilities
     paths:
       - ".github/workflows/mr05b-authored-encounters.yml"
       - "tools/install_mercury_move_learner.py"
@@ -60,6 +61,8 @@ on:
       - "tools/install_mr08s12_canonical_ability_commander.py"
       - "tools/install_mr08s13_canonical_ability_terapagos.py"
       - "tools/audit_mr08_final_canonical_abilities.py"
+      - "tools/install_mr09a_custom_ability_namespace.py"
+      - "data/mercury_custom_ability_namespace.json"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -236,6 +239,7 @@ jobs:
             tools/install_mr08s12_canonical_ability_commander.py \
             tools/install_mr08s13_canonical_ability_terapagos.py \
             tools/audit_mr08_final_canonical_abilities.py \
+            tools/install_mr09a_custom_ability_namespace.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -1112,6 +1116,22 @@ jobs:
           test "$(jq -r '.installer_ownership.owned_modern_count' mr08-final-canonical-ability-certification.json)" = "187"
           test "$(jq -r '[.checks[]] | all' mr08-final-canonical-ability-certification.json)" = "true"
           test "$(jq -r '.custom_abilities_included' mr08-final-canonical-ability-certification.json)" = "false"
+
+      - name: Reserve MR09 custom Ability namespace
+        shell: bash
+        run: |
+          python3 tools/install_mr09a_custom_ability_namespace.py \
+            vendor/pokeplatinum \
+            --namespace data/mercury_custom_ability_namespace.json \
+            --report mr09a-custom-ability-namespace.json
+
+          test "$(jq -r '.status' mr09a-custom-ability-namespace.json)" = "PASS"
+          test "$(jq -r '.custom_reserved_range[0]' mr09a-custom-ability-namespace.json)" = "311"
+          test "$(jq -r '.custom_reserved_range[1]' mr09a-custom-ability-namespace.json)" = "321"
+          test "$(jq -r '.custom_reserved_count' mr09a-custom-ability-namespace.json)" = "11"
+          test "$(jq -r '.implemented_in_this_gate' mr09a-custom-ability-namespace.json)" = "0"
+          test "$(sed -n '312p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_CONTROLLED_FURY"
+          test "$(sed -n '322p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_PROTEAN_MAXIMA"
 
       - name: Install production Mercury Move Learner
         shell: bash
@@ -2090,6 +2110,7 @@ jobs:
           cp mr08s12-canonical-ability-commander.json mr05b-artifact/ 2>/dev/null || true
           cp mr08s13-canonical-ability-terapagos.json mr05b-artifact/ 2>/dev/null || true
           cp mr08-final-canonical-ability-certification.json mr05b-artifact/ 2>/dev/null || true
+          cp mr09a-custom-ability-namespace.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
