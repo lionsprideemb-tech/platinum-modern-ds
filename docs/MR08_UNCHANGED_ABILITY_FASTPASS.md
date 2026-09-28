@@ -1,0 +1,104 @@
+# MR08 — Unchanged Canonical Ability Fast Pass
+
+Date: 2026-09-27
+Branch: `feature/mr08-canonical-abilities`
+
+## Rule
+
+This pass is for official Pokémon Abilities whose core battle mechanic remains
+canonical in the pinned Elite Redux source. Mercury may reuse DS-native code
+patterns from hg-engine or another public DS project, but the resulting mechanic
+must remain the official/mainline mechanic.
+
+An Ability with an Elite Redux buff, rewrite, expanded move list, altered
+multiplier, or ambiguous/conflicting Redux documentation is **not** eligible for
+this fast pass. Those Abilities go to the separate modified-Ability review.
+
+## MR08B — first large unchanged-mechanics family
+
+The following 12 Abilities are moved together as one implementation family:
+
+- Heavy Metal
+- Light Metal
+- Multiscale
+- Sand Force
+- Fur Coat
+- Gale Wings
+- Tough Claws
+- Water Bubble
+- Fluffy
+- Neuroforce
+- Ice Scales
+- Power Spot
+
+Shared implementation hooks cover:
+- effective weight;
+- move power;
+- physical/special/final damage modifiers;
+- weather chip immunity;
+- move priority;
+- super-effective damage;
+- ally damage support;
+- burn immunity.
+
+The implementation source of truth for DS hooks is the pinned hg-engine commit.
+Elite Redux is used as the comparison source to ensure these mechanics are not
+being silently replaced by Redux-specific rebalances.
+
+## Next unchanged candidates
+
+These remain in the fast-pass lane but are intentionally grouped by the battle
+hook they need before entering the implemented registry:
+
+- Analytic
+- Regenerator
+- Moxie
+- Justified
+- Magic Bounce
+- Prankster
+- Healer
+- Telepathy
+- Aroma Veil
+- Flower Veil
+- Cheek Pouch
+- Bulletproof
+- Competitive
+- Sweet Veil
+- Symbiosis
+- Gooey
+- Stakeout
+- Berserk
+- Cotton Down
+- Mirror Armor
+- Sand Spit
+- Ripen
+- Screen Cleaner
+- Perish Body
+- Gorilla Tactics
+- Pastel Veil
+
+These are not marked implemented merely because their names/descriptions exist.
+Each is promoted only when its complete battle hook is installed and certified.
+
+## Modified / review lane
+
+Examples that must not be swept into the unchanged fast pass include:
+
+- Big Pecks — Elite Redux explicitly rewrites it into a contact-move damage
+  boost instead of the canonical Defense-drop protection.
+- Strong Jaw — Elite Redux explicitly expands the affected move list.
+- Any Ability whose Redux constants/comments and player-facing description
+  disagree about its multiplier or effect is held for review instead of guessed.
+
+The already-installed canonical Big Pecks hook from MR08A remains technically
+valid for the official mechanic, but its final Mercury behavior is provisional
+until the modified-Ability review decides whether Mercury keeps canonical Big
+Pecks or adopts the Redux rewrite.
+
+## Batch policy
+
+Fast-pass work should normally move in double-digit mechanic families rather
+than tiny 2-3 Ability commits. Stateful/form-changing mechanics remain eligible
+for smaller exception batches when required for correctness.
+
+The locked MR07 Summary / EV / Nature / Ability visual design remains untouched.
