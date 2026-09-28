@@ -336,11 +336,11 @@ BOOL Mercury_TryBreakIllusionByAbilityLoss(
     # Imposter also cannot copy a target while Illusion is active.
     replace_once(
         path,
-        """                    || battleCtx->battleMons[target].ability
-                        == ABILITY_GULP_MISSILE) {
+        """                    || (battleCtx->battleMons[target].moveEffectsMask
+                        & MOVE_EFFECT_SEMI_INVULNERABLE)) {
 """,
-        """                    || battleCtx->battleMons[target].ability
-                        == ABILITY_GULP_MISSILE
+        """                    || (battleCtx->battleMons[target].moveEffectsMask
+                        & MOVE_EFFECT_SEMI_INVULNERABLE)
                     || battleCtx->mercuryIllusionActive[target]) {
 """,
         "Illusion Imposter target lock",
