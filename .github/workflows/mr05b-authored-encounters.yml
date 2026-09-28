@@ -1829,7 +1829,7 @@ jobs:
             echo "- MR07D5 replaces the remaining white lower editor sheets with Platinum's native lower-screen cream/tan/blue palette while retaining standard frames"
             echo "- MR08A ports Contrary, Big Pecks, and Full Metal Body battle mechanics and widens remaining 10-bit Ability runtime paths before species import"
             echo "- MR08B fast-ports 12 unchanged canonical Ability mechanics in one shared-hook family; modified Redux versions remain in a separate review lane"
-            echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Perish Body (25 modern mechanics total)"
+            echo "- MR08C adds 10 more unchanged canonical interaction mechanics: Healer, Telepathy, Regenerator, Moxie, Justified, Prankster, Gooey, Berserk, Gorilla Tactics, and Screen Cleaner (25 modern mechanics total)"
             echo "- MR08D fast-ports 10 more shared-hook canonical mechanics: Iron Barbs, Wonder Skin, Analytic, Bulletproof, Queenly Majesty, Battery, Dazzling, Tangling Hair, Shadow Shield, and Prism Armor (35 modern mechanics total)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
