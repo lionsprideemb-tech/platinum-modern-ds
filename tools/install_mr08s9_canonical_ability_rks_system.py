@@ -156,7 +156,7 @@ def patch_memory_items(root: Path) -> None:
             "article": "a",
             "description": [
                 f"A Memory disc holding {name}-type data.\n",
-                "It changes Silvally's type with RKS System.",
+                "It changes Silvally’s type with RKS System.",
             ],
             "icon": {
                 "sprite": "choice_specs_NCGR",
