@@ -34,6 +34,7 @@ on:
       - "tools/install_mr08j_canonical_ability_conversion_item_reaction.py"
       - "tools/install_mr08k_canonical_ability_bulk_pass.py"
       - "tools/install_mr08m_canonical_ability_terrain.py"
+      - "tools/install_mr08n_canonical_ability_veil_gas_type.py"
       - "tools/install_mr08l_canonical_ability_bypass_wind_reaction.py"
       - "tools/install_mr08n_canonical_ability_weather_suppression_shell.py"
       - "tools/install_mr07a_summary_skills_proof.py"
@@ -186,6 +187,7 @@ jobs:
             tools/install_mr08j_canonical_ability_conversion_item_reaction.py \
             tools/install_mr08k_canonical_ability_bulk_pass.py \
             tools/install_mr08m_canonical_ability_terrain.py \
+            tools/install_mr08n_canonical_ability_veil_gas_type.py \
             tools/install_mr08l_canonical_ability_bypass_wind_reaction.py \
             tools/install_mr08n_canonical_ability_weather_suppression_shell.py \
             tools/install_mr07a_summary_skills_proof.py \
@@ -580,6 +582,26 @@ jobs:
           test "$(jq -r '.ui_changed' mr08n-canonical-ability-weather-suppression-shell.json)" = "false"
           for ability in \
             ABILITY_PRIMORDIAL_SEA ABILITY_DESOLATE_LAND ABILITY_DELTA_STREAM \
+            ABILITY_NEUTRALIZING_GAS ABILITY_TERA_SHELL; do
+            grep -qx "$ability" mr04-implemented-abilities.txt
+          done
+
+      - name: Install MR08N canonical Ability veil/gas/type family
+        shell: bash
+        run: |
+          python3 tools/install_mr08n_canonical_ability_veil_gas_type.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08n-canonical-ability-veil-gas-type.json
+
+          test "$(jq -r '.status' mr08n-canonical-ability-veil-gas-type.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08n-canonical-ability-veil-gas-type.json)" = "5"
+          test "$(jq -r '.running_modern_mechanics_total' mr08n-canonical-ability-veil-gas-type.json)" = "153"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08n-canonical-ability-veil-gas-type.json)" = "34"
+          test "$(jq -r '[.checks[]] | all' mr08n-canonical-ability-veil-gas-type.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08n-canonical-ability-veil-gas-type.json)" = "false"
+          for ability in \
+            ABILITY_AROMA_VEIL ABILITY_FLOWER_VEIL ABILITY_MIMICRY \
             ABILITY_NEUTRALIZING_GAS ABILITY_TERA_SHELL; do
             grep -qx "$ability" mr04-implemented-abilities.txt
           done
@@ -1585,6 +1607,7 @@ jobs:
           cp mr08k-canonical-ability-bulk-pass.json mr05b-artifact/ 2>/dev/null || true
           cp mr08l-canonical-ability-bypass-wind-reaction.json mr05b-artifact/ 2>/dev/null || true
           cp mr08m-canonical-ability-terrain.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08n-canonical-ability-veil-gas-type.json mr05b-artifact/ 2>/dev/null || true
           cp mr08n-canonical-ability-weather-suppression-shell.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
@@ -2137,6 +2160,7 @@ jobs:
             echo "- MR08K accelerates the canonical pass with 25 more mechanics across item theft, KO/faint, targeting, switch-in, ability-bypass, and once-per-battle families (135 modern mechanics total; 52 remain)"
             echo "- MR08L adds Infiltrator, Wind Rider, Wind Power, Opportunist, and Poison Puppeteer through shared bypass/wind/stat/status hooks (140 modern mechanics total; 47 remain)"
             echo "- MR08M adds the DS terrain substrate plus Grass Pelt, Surge Surfer, Electric/Psychic/Misty/Grassy Surge, Seed Sower, and Hadron Engine (148 modern mechanics total; 39 remain)"
+            echo "- MR08N adds Aroma Veil, Flower Veil, Mimicry, Neutralizing Gas, and Tera Shell (153 modern mechanics total; 34 remain)"
             echo "- MR08N adds Primordial Sea, Desolate Land, Delta Stream, Neutralizing Gas, and Tera Shell (153 modern mechanics total; 34 remain)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
