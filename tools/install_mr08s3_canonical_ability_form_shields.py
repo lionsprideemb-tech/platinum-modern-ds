@@ -394,7 +394,16 @@ def patch_break_and_restore(root: Path) -> None:
     # on-hit Ability checkpoint.
     insert_after_once(
         path,
-        """    if (Battler_SubstituteWasHit(battleCtx, battleCtx->defender) == TRUE) {
+        """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript)
+{
+    BOOL result = FALSE;
+
+    // These two sentinels must be separate to match
+    if (battleCtx->defender == BATTLER_NONE) {
+        return result;
+    }
+
+    if (Battler_SubstituteWasHit(battleCtx, battleCtx->defender) == TRUE) {
         return result;
     }
 
