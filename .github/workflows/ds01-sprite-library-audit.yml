@@ -9,6 +9,13 @@ on:
       - "tools/audit_ds01_sprite_library.py"
       - ".github/workflows/ds01-sprite-library-audit.yml"
       - "staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip"
+  pull_request:
+    branches:
+      - assets/ds01-community-sprites-20260922
+    paths:
+      - "tools/audit_ds01_sprite_library.py"
+      - ".github/workflows/ds01-sprite-library-audit.yml"
+      - "staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip"
 
 permissions:
   contents: write
@@ -39,7 +46,16 @@ jobs:
             --markdown docs/DS01_SPRITE_LIBRARY_AUDIT.md \
             --near-radius 4
 
-      - name: Commit audit reports
+      - name: Upload audit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: ds01-sprite-library-audit
+          path: |
+            data/ds01_sprite_library_audit.json
+            docs/DS01_SPRITE_LIBRARY_AUDIT.md
+
+      - name: Commit audit reports on push runs
+        if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
