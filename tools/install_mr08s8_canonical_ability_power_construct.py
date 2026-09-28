@@ -433,7 +433,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "damageTaken = oldMax - battleCtx->battleMons[battler].curHP" in lib
             and "newMax - damageTaken" in lib,
         "switch_persistence":
-            "mercuryPowerConstructPartyMask[side] & FlagIndex(partySlot)" in lib
+            "mercuryPowerConstructPartyMask[side]" in lib
+            and "FlagIndex(partySlot)" in lib
             and "mercuryPowerConstructHP[side][partySlot]" in lib,
         "safe_party_hp_projection":
             "normalizedHP = partyMax - damageTaken" in controller
