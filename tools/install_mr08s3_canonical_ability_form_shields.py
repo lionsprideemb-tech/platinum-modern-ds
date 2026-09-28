@@ -464,9 +464,9 @@ def patch_break_and_restore(root: Path) -> None:
 def patch_neutralizing_gas_rules(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
-    # MR08N originally grouped several special form Abilities as immune to
-    # Neutralizing Gas. Disguise and Ice Face are canonically suppressible, so
-    # replace that helper as a unit to avoid matching the similar Receiver list.
+    # Current-mainline Disguise and Ice Face are cantsuppress Abilities:
+    # Neutralizing Gas and Gastro Acid do not disable them. Replace this helper
+    # as a unit to avoid matching the similar Receiver exclusion list.
     replace_function(
         path,
         "static BOOL Mercury_AbilityCannotBeNeutralized(int ability)",
@@ -479,19 +479,15 @@ def patch_neutralizing_gas_rules(root: Path) -> None:
     case ABILITY_SCHOOLING:
     case ABILITY_COMATOSE:
     case ABILITY_SHIELDS_DOWN:
+    case ABILITY_DISGUISE:
     case ABILITY_BATTLE_BOND:
     case ABILITY_POWER_CONSTRUCT:
     case ABILITY_RKS_SYSTEM:
     case ABILITY_GULP_MISSILE:
-    case ABILITY_HUNGER_SWITCH:
+    case ABILITY_ICE_FACE:
     case ABILITY_AS_ONE_GLASTRIER:
     case ABILITY_AS_ONE_SPECTRIER:
     case ABILITY_ZERO_TO_HERO:
-    case ABILITY_COMMANDER:
-    case ABILITY_EMBODY_ASPECT:
-    case ABILITY_EMBODY_ASPECT_2:
-    case ABILITY_EMBODY_ASPECT_3:
-    case ABILITY_EMBODY_ASPECT_4:
     case ABILITY_TERA_SHIFT:
         return TRUE;
     }
@@ -641,9 +637,9 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "Mercury_TryRestoreIceFace" in lib
             and "mercuryIceFaceHailActive" in lib
             and "WEATHER_IS_HAIL" in lib,
-        "neutralizing_gas_can_suppress":
-            "ABILITY_DISGUISE" not in cannot
-            and "ABILITY_ICE_FACE" not in cannot,
+        "neutralizing_gas_cannot_suppress":
+            "ABILITY_DISGUISE" in cannot
+            and "ABILITY_ICE_FACE" in cannot,
         "uncopyable_unswappable":
             all(token in copy and token in swap for token in IMPLEMENTED),
         "move_suppression_blocked":

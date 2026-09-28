@@ -11,8 +11,8 @@ Implements Zygarde's current-mainline Power Construct battle mechanics:
 - switching out and back in preserves the battle-only Complete state and its
   true Complete-form current HP while keeping the backing party struct in a
   safe base-form HP range until the form-asset layer exists;
-- Neutralizing Gas can suppress activation, while Gastro Acid, Worry Seed,
-  Trace, Role Play, Skill Swap, Receiver and Power of Alchemy retain the
+- Neutralizing Gas and Gastro Acid cannot suppress Power Construct, and Trace,
+  Role Play, Skill Swap, Worry Seed, Receiver and Power of Alchemy retain the
   canonical special-Ability restrictions.
 
 Complete-form sprite/model presentation is deferred to Mercury's form-asset
@@ -309,16 +309,9 @@ def patch_end_turn(root: Path) -> None:
 
 
 def patch_neutralizing_gas(root: Path) -> None:
-    path = root / "src/battle/battle_lib.c"
-    replace_in_function(
-        path,
-        "static BOOL Mercury_AbilityCannotBeNeutralized(int ability)",
-        """    case ABILITY_POWER_CONSTRUCT:
-""",
-        "",
-        "Power Construct Neutralizing Gas suppression",
-    )
-
+    # Power Construct is a cantsuppress Ability in current mainline mechanics.
+    # Neutralizing Gas therefore must not prevent Complete Forme activation.
+    return
 
 def patch_special_restrictions(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
@@ -439,8 +432,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "safe_party_hp_projection":
             "normalizedHP = partyMax - damageTaken" in controller
             and "mercuryPowerConstructActive[battler]" in controller,
-        "neutralizing_gas_can_suppress_activation":
-            "ABILITY_POWER_CONSTRUCT" not in cannot,
+        "neutralizing_gas_cannot_suppress_activation":
+            "ABILITY_POWER_CONSTRUCT" in cannot,
         "trace_blocked":
             "ability1 != ABILITY_POWER_CONSTRUCT" in lib
             and "ability2 != ABILITY_POWER_CONSTRUCT" in lib,

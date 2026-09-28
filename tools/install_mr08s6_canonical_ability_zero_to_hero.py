@@ -254,20 +254,9 @@ def patch_switch_out_activation(root: Path) -> None:
 
 
 def patch_neutralizing_gas(root: Path) -> None:
-    path = root / "src/battle/battle_lib.c"
-    replace_in_function(
-        path,
-        "static BOOL Mercury_AbilityCannotBeNeutralized(int ability)",
-        """    case ABILITY_AS_ONE_SPECTRIER:
-    case ABILITY_ZERO_TO_HERO:
-    case ABILITY_COMMANDER:
-""",
-        """    case ABILITY_AS_ONE_SPECTRIER:
-    case ABILITY_COMMANDER:
-""",
-        "Zero to Hero Neutralizing Gas suppression",
-    )
-
+    # Zero to Hero is a cantsuppress Ability in current mainline mechanics.
+    # Neutralizing Gas therefore must not disable its switch-out activation.
+    return
 
 def patch_special_restrictions(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
@@ -386,8 +375,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "switch_in_hero_restore":
             "mercuryZeroToHeroPartyMask[side] & FlagIndex(partySlot)" in lib
             and "Mercury_ApplyZeroToHeroStats" in lib,
-        "neutralizing_gas_can_suppress_activation":
-            "ABILITY_ZERO_TO_HERO" not in cannot,
+        "neutralizing_gas_cannot_suppress_activation":
+            "ABILITY_ZERO_TO_HERO" in cannot,
         "trace_blocked":
             "ability1 != ABILITY_ZERO_TO_HERO" in lib
             and "ability2 != ABILITY_ZERO_TO_HERO" in lib,

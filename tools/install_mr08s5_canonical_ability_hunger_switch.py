@@ -139,9 +139,9 @@ def patch_battle_state(root: Path) -> None:
 def patch_neutralizing_gas(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
-    # Hunger Switch is disabled by Neutralizing Gas. Keep the still-deferred
-    # form families in this temporary exemption table until their own passes
-    # install their canonical suppression behavior.
+    # Hunger Switch is suppressible by Neutralizing Gas, but cantsuppress
+    # form Abilities remain active. Keep this table aligned with current
+    # mainline suppression rules while later form passes add mechanics.
     replace_function(
         path,
         "static BOOL Mercury_AbilityCannotBeNeutralized(int ability)",
@@ -150,21 +150,19 @@ def patch_neutralizing_gas(root: Path) -> None:
     switch (ability) {
     case ABILITY_MULTITYPE:
     case ABILITY_ZEN_MODE:
+    case ABILITY_STANCE_CHANGE:
     case ABILITY_SCHOOLING:
     case ABILITY_COMATOSE:
     case ABILITY_SHIELDS_DOWN:
+    case ABILITY_DISGUISE:
     case ABILITY_BATTLE_BOND:
     case ABILITY_POWER_CONSTRUCT:
     case ABILITY_RKS_SYSTEM:
     case ABILITY_GULP_MISSILE:
+    case ABILITY_ICE_FACE:
     case ABILITY_AS_ONE_GLASTRIER:
     case ABILITY_AS_ONE_SPECTRIER:
     case ABILITY_ZERO_TO_HERO:
-    case ABILITY_COMMANDER:
-    case ABILITY_EMBODY_ASPECT:
-    case ABILITY_EMBODY_ASPECT_2:
-    case ABILITY_EMBODY_ASPECT_3:
-    case ABILITY_EMBODY_ASPECT_4:
     case ABILITY_TERA_SHIFT:
         return TRUE;
     }

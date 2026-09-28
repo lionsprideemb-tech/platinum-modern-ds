@@ -477,22 +477,9 @@ def patch_shields_down_status(root: Path) -> None:
 
 
 def patch_neutralizing_gas(root: Path) -> None:
-    path = root / "src/battle/battle_lib.c"
-    signature = "static BOOL Mercury_AbilityCannotBeNeutralized(int ability)"
-
-    for token in (
-        "ABILITY_ZEN_MODE",
-        "ABILITY_SCHOOLING",
-        "ABILITY_SHIELDS_DOWN",
-    ):
-        replace_in_function(
-            path,
-            signature,
-            f"    case {token}:\n",
-            "",
-            f"{token} Neutralizing Gas suppression",
-        )
-
+    # Zen Mode, Schooling and Shields Down are cantsuppress Abilities in
+    # current mainline mechanics, so Neutralizing Gas must leave them active.
+    return
 
 def patch_special_restrictions(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
@@ -648,8 +635,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "meteor_yawn_immunity":
             "BtlCmd_TryYawn" in script
             and "mercuryMiniorCoreActive[battleCtx->defender] == FALSE" in script,
-        "neutralizing_gas_can_suppress":
-            all(token not in cannot for token in IMPLEMENTED),
+        "neutralizing_gas_cannot_suppress":
+            all(token in cannot for token in IMPLEMENTED),
         "trace_blocked":
             all(f"ability1 != {token}" in lib and f"ability2 != {token}" in lib
                 for token in IMPLEMENTED),
