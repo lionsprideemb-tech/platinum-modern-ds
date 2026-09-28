@@ -228,7 +228,8 @@ static BOOL Mercury_PriorityBlockerActive(
 """,
         """    case ABILITY_ROUGH_SKIN:
     case ABILITY_IRON_BARBS:
-        if (Battler_Ability(battleCtx, battleCtx->attacker) != ABILITY_MAGIC_GUARD
+        if (ATTACKING_MON.curHP
+            && Battler_Ability(battleCtx, battleCtx->attacker) != ABILITY_MAGIC_GUARD
 """,
         "Iron Barbs Rough Skin family",
     )
