@@ -486,8 +486,6 @@ def patch_controller(root: Path) -> None:
 def patch_special_restrictions(root: Path) -> None:
     copy = root / "res/battle/scripts/subscripts/subscript_copy_ability.s"
     swap = root / "res/battle/scripts/subscripts/subscript_exchange_abilities.s"
-    worry = root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s"
-
     insert_after_once(
         copy,
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _091\n",
@@ -511,14 +509,6 @@ def patch_special_restrictions(root: Path) -> None:
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _156\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_COMMANDER, _156\n",
         "Commander Skill Swap user",
-    )
-
-    # Worry Seed is Mercury's existing overwrite/Entrainment-style guard.
-    insert_after_once(
-        worry,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _041\n",
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_COMMANDER, _041\n",
-        "Commander Worry Seed / overwrite lock",
     )
 
 
@@ -601,8 +591,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             and "ability2 != ABILITY_COMMANDER" in lib
             and "ABILITY_COMMANDER" in copy
             and "ABILITY_COMMANDER" in swap,
-        "worry_seed_blocked":
-            "ABILITY_COMMANDER" in worry,
+        "worry_seed_can_overwrite_before_activation":
+            "ABILITY_COMMANDER" not in worry,
         "receiver_blocked":
             "ABILITY_COMMANDER" in receiver,
         "implemented_registry_updated":
