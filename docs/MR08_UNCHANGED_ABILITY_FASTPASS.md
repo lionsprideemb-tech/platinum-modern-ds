@@ -48,11 +48,11 @@ MR08C adds 10 more unchanged canonical mechanics:
 - Gooey
 - Berserk
 - Gorilla Tactics
-- Perish Body
+- Screen Cleaner
 
 This raises the implemented modern-Ability mechanics total to **25**. The batch
 uses Platinum-native switch-out, end-turn, priority, immunity, on-hit, KO,
-choice-lock, and Perish Song state hooks.
+choice-lock, and switch-in screen-clearing hooks.
 
 ## MR08D — shared battle-hook family
 
@@ -98,7 +98,7 @@ entering the implemented registry:
 - Mirror Armor
 - Sand Spit
 - Ripen
-- Screen Cleaner
+- Perish Body
 - Pastel Veil
 
 These are not marked implemented merely because their names/descriptions exist.
