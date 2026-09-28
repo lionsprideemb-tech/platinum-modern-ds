@@ -277,6 +277,33 @@ def patch_wind_family(root: Path) -> None:
         "Tailwind activates Wind Power/Wind Rider",
     )
 
+    insert_before_once(
+        lib,
+        """                    case ABILITY_HOSPITALITY: {
+""",
+        """                    case ABILITY_WIND_RIDER: {
+                        int side = BattleSystem_GetBattlerSide(battleSys, battler);
+
+                        battleCtx->battleMons[battler].weatherAbilityAnnounced = TRUE;
+                        if ((battleCtx->sideConditionsMask[side]
+                                & SIDE_CONDITION_TAILWIND)
+                            && battleCtx->battleMons[battler].statBoosts[
+                                BATTLE_STAT_ATTACK] < MAX_STAT_STAGE) {
+                            battleCtx->sideEffectParam =
+                                MOVE_SUBSCRIPT_PTR_ATTACK_UP_1_STAGE;
+                            battleCtx->sideEffectType = SIDE_EFFECT_TYPE_ABILITY;
+                            battleCtx->sideEffectMon = battler;
+                            subscript = subscript_update_stat_stage;
+                            result = SWITCH_IN_CHECK_RESULT_BREAK;
+                            break;
+                        }
+                        break;
+                    }
+
+""",
+        "Wind Rider switch-in during active Tailwind",
+    )
+
 
 def patch_infiltrator(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
@@ -336,6 +363,34 @@ def patch_infiltrator(root: Path) -> None:
     }
 """,
         "Infiltrator scripted Substitute bypass",
+    )
+
+    replace_once(
+        script,
+        """                if (battleCtx->sideConditions[BattleSystem_GetBattlerSide(battleSys, battleCtx->sideEffectMon)].mistTurns) {
+""",
+        """                if (battleCtx->sideConditions[BattleSystem_GetBattlerSide(battleSys, battleCtx->sideEffectMon)].mistTurns
+                    && Battler_Ability(battleCtx, battleCtx->attacker)
+                        != ABILITY_INFILTRATOR) {
+""",
+        "Infiltrator Mist bypass",
+    )
+
+    insert_before_once(
+        script,
+        """    switch (op) {
+""",
+        """    if (op == OPCODE_FLAG_SET
+        && srcVar == BTLVAR_SIDE_CONDITIONS_EFFECT_MON
+        && compareTo == SIDE_CONDITION_SAFEGUARD
+        && battleCtx->attacker != battleCtx->sideEffectMon
+        && Battler_Ability(battleCtx, battleCtx->attacker)
+            == ABILITY_INFILTRATOR) {
+        return FALSE;
+    }
+
+""",
+        "Infiltrator Safeguard bypass",
     )
 
 
@@ -399,7 +454,11 @@ def patch_poison_puppeteer(root: Path) -> None:
     UpdateVar OPCODE_FLAG_OFF, BTLVAR_BATTLE_CTX_STATUS, SYSCTL_TRY_SYNCHRONIZE_STATUS
 
 _MercuryPoisonPuppeteer:
+    CompareVarToValue OPCODE_EQU, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_ABILITY, _MercuryPoisonPuppeteerEnd
+    CompareVarToValue OPCODE_EQU, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_HELD_ITEM, _MercuryPoisonPuppeteerEnd
+    CompareVarToValue OPCODE_EQU, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_TOXIC_SPIKES, _MercuryPoisonPuppeteerEnd
     CheckAbility CHECK_HAVE, BTLSCR_ATTACKER, ABILITY_POISON_PUPPETEER, _MercuryPoisonPuppeteerApply
+_MercuryPoisonPuppeteerEnd:
     End 
 
 _MercuryPoisonPuppeteerApply:
@@ -433,7 +492,11 @@ _248:
     UpdateVar OPCODE_FLAG_OFF, BTLVAR_BATTLE_CTX_STATUS, SYSCTL_TRY_SYNCHRONIZE_STATUS
 
 _248:
+    CompareVarToValue OPCODE_EQU, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_ABILITY, _MercuryToxicPuppeteerEnd
+    CompareVarToValue OPCODE_EQU, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_HELD_ITEM, _MercuryToxicPuppeteerEnd
+    CompareVarToValue OPCODE_EQU, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_TOXIC_SPIKES, _MercuryToxicPuppeteerEnd
     CheckAbility CHECK_HAVE, BTLSCR_ATTACKER, ABILITY_POISON_PUPPETEER, _MercuryToxicPuppeteerApply
+_MercuryToxicPuppeteerEnd:
     End 
 
 _MercuryToxicPuppeteerApply:
@@ -469,11 +532,12 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "infiltrator_hook":
             lib.count("ABILITY_INFILTRATOR") >= 2
             and "ABILITY_INFILTRATOR" in controller
-            and "ABILITY_INFILTRATOR" in script,
+            and script.count("ABILITY_INFILTRATOR") >= 3,
         "wind_rider_hook":
-            "ABILITY_WIND_RIDER" in lib
+            lib.count("ABILITY_WIND_RIDER") >= 2
             and "Mercury_MoveIsWind" in lib
-            and "ABILITY_WIND_RIDER" in script,
+            and "ABILITY_WIND_RIDER" in script
+            and "SIDE_CONDITION_TAILWIND" in lib,
         "wind_power_hook":
             "case ABILITY_WIND_POWER:" in lib
             and "MOVE_EFFECT_CHARGE" in lib
