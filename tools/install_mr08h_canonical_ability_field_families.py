@@ -357,11 +357,19 @@ static BOOL Mercury_MoveMakesContact(
 def patch_victory_star(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
 
-    insert_before_once(
+    replace_once(
         path,
-        """    if (NO_CLOUD_NINE) {
+        """    if (Battler_Ability(battleCtx, attacker) == ABILITY_COMPOUND_EYES) {
+        hitRate = hitRate * 130 / 100;
+    }
+
+    if (NO_CLOUD_NINE) {
 """,
-        """    {
+        """    if (Battler_Ability(battleCtx, attacker) == ABILITY_COMPOUND_EYES) {
+        hitRate = hitRate * 130 / 100;
+    }
+
+    {
         int victoryStars = BattleSystem_CountAbility(
             battleSys,
             battleCtx,
@@ -374,6 +382,7 @@ def patch_victory_star(root: Path) -> None:
         }
     }
 
+    if (NO_CLOUD_NINE) {
 """,
         "Victory Star accuracy family",
     )
