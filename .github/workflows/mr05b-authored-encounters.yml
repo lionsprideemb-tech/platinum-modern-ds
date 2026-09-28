@@ -46,6 +46,7 @@ on:
       - "tools/install_mr08r3_canonical_ability_parental_bond.py"
       - "tools/install_mr08r4_canonical_ability_embody_aspect.py"
       - "tools/install_mr08r5_canonical_ability_dancer.py"
+      - "tools/install_mr08s1_canonical_ability_cud_chew.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -208,6 +209,7 @@ jobs:
             tools/install_mr08r3_canonical_ability_parental_bond.py \
             tools/install_mr08r4_canonical_ability_embody_aspect.py \
             tools/install_mr08r5_canonical_ability_dancer.py \
+            tools/install_mr08s1_canonical_ability_cud_chew.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -771,6 +773,22 @@ jobs:
           test "$(jq -r '[.checks[]] | all' mr08r5-canonical-ability-dancer.json)" = "true"
           test "$(jq -r '.ui_changed' mr08r5-canonical-ability-dancer.json)" = "false"
           grep -qx 'ABILITY_DANCER' mr04-implemented-abilities.txt
+
+      - name: Install MR08S1 canonical Cud Chew pass
+        shell: bash
+        run: |
+          python3 tools/install_mr08s1_canonical_ability_cud_chew.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08s1-canonical-ability-cud-chew.json
+
+          test "$(jq -r '.status' mr08s1-canonical-ability-cud-chew.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08s1-canonical-ability-cud-chew.json)" = "1"
+          test "$(jq -r '.running_modern_mechanics_total' mr08s1-canonical-ability-cud-chew.json)" = "170"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08s1-canonical-ability-cud-chew.json)" = "17"
+          test "$(jq -r '[.checks[]] | all' mr08s1-canonical-ability-cud-chew.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08s1-canonical-ability-cud-chew.json)" = "false"
+          grep -qx 'ABILITY_CUD_CHEW' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1784,6 +1802,7 @@ jobs:
           cp mr08r3-canonical-ability-parental-bond.json mr05b-artifact/ 2>/dev/null || true
           cp mr08r4-canonical-ability-embody-aspect.json mr05b-artifact/ 2>/dev/null || true
           cp mr08r5-canonical-ability-dancer.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08s1-canonical-ability-cud-chew.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -2346,6 +2365,7 @@ jobs:
             echo "- MR08R3 adds canonical Parental Bond two-strike behavior with a 25% child strike and Platinum-native per-hit processing (164 modern mechanics total; 23 remain)"
             echo "- MR08R4 adds all four Embody Aspect switch-in stat boosts and special-copy restrictions (168 modern mechanics total; 19 remain)"
             echo "- MR08R5 adds canonical Dancer queued extra actions in speed order with DS-native targeting (169 modern mechanics total; 18 remain)"
+            echo "- MR08S1 adds canonical Cud Chew delayed Berry replay, including held Berry, Pluck/Bug Bite, and Fling paths (170 modern mechanics total; 17 remain)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
