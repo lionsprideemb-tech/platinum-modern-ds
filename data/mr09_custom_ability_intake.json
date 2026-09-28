@@ -9574,6 +9574,58 @@
       "implementation_class": "existing_hook",
       "approval_state": "locked",
       "implementation_ready": true
+    },
+    {
+      "name": "Lawnmower",
+      "source": "Pokémon Mercury Redux — locked Stage3 Final Audit (2026-09-04)",
+      "exact_effect": "Removes the active terrain on entry. If the removed terrain was Grassy Terrain or Electric Terrain, raises Defense by 1 stage; otherwise raises Special Defense by 1 stage.",
+      "trigger": "On switch-in while a terrain is active.",
+      "restrictions": "The terrain is removed before the stat response resolves; normal stat-stage caps apply.",
+      "known_users": [],
+      "mechanic_family": "entry_remove_terrain_and_defense_response",
+      "duplicate_status": "Locked Stage3 custom ability; no duplicate canonical identity.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Discipline",
+      "source": "Elite Redux v2.65 beta — exact source comment / runtime-aligned semantics",
+      "exact_effect": "Rampage-style moves such as Outrage no longer trap the user into repeating them. The user is immune to confusion, Intimidate, and Scare.",
+      "trigger": "Continuous during rampage-lock, confusion, Intimidate, and Scare checks.",
+      "restrictions": "Only removes forced repetition/lock from rampage-style moves; other move-lock effects are unaffected.",
+      "known_users": [],
+      "mechanic_family": "rampage_lock_immunity_plus_confusion_intimidate_scare_immunity",
+      "duplicate_status": "Exact ER custom ability; previously held until an authoritative exact source description was recovered.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "3 > 1",
+      "source": "Pokémon Mercury Redux — locked Stage3 Final Audit (2026-09-04)",
+      "exact_effect": "Combines Multi-Headed and Riptide behavior.",
+      "trigger": "Continuous/reactionary using the component hooks.",
+      "restrictions": "Multi-Headed and Riptide each retain their locked Mercury conditions, move eligibility, and low-HP behavior.",
+      "known_users": [],
+      "mechanic_family": "multi_headed_riptide_composite",
+      "duplicate_status": "Locked Stage3 composite ability; component identities are already staged separately.",
+      "implementation_class": "new_engine_system",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Well-Baked Body",
+      "source": "Elite Redux v2.65 beta — exact source comment / runtime-aligned semantics",
+      "exact_effect": "Fire-type attack damage taken by the user is halved, and being hit by a Fire-type move raises Defense by 2 stages.",
+      "trigger": "During incoming Fire-type damage and after a qualifying Fire-type hit.",
+      "restrictions": "Elite Redux differs from modern vanilla here: Fire attacks are reduced by 50% rather than made completely ineffective; normal Defense stage caps apply.",
+      "known_users": [],
+      "mechanic_family": "fire_damage_half_plus_defense2",
+      "duplicate_status": "Gen 9 canonical ability retained by name but staged with Elite Redux's modified Fire-hit semantics.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
     }
   ]
 }
