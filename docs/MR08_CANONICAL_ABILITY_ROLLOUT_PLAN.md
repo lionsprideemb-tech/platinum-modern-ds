@@ -1,8 +1,8 @@
 # MR08 Canonical Ability Rollout Plan
 
-Status: LOCKED PROJECT DIRECTION
+Status: CANONICAL IMPLEMENTATION COMPLETE — FINAL CERTIFICATION GATE WIRED
 Branch: feature/mr08-canonical-abilities
-Date: 2026-09-27
+Date: 2026-09-28
 
 ## Scope
 
@@ -56,6 +56,20 @@ Every batch must preserve:
 - normal save compatibility strategy;
 - current species importer safety;
 - the locked MR07 Summary / EV / Nature / Ability visual design.
+
+## Completion state
+
+The official Gen 5-9 Ability mechanic range is complete: IDs 124 through 310,
+187 mechanics total. MR08S13 closes the implementation set with Tera Shift and
+Teraform Zero.
+
+The final MR08 certification gate verifies the complete modern range against
+Mercury's implemented-Ability registry and MR08 mechanic ownership. Deliberate
+supplemental interaction installers are treated as extensions of one primary
+mechanic owner rather than duplicate implementations.
+
+The custom/non-canon library remains deliberately outside this 187-Ability
+certification and begins only after the canonical gate is green.
 
 ## Custom Ability phase
 
