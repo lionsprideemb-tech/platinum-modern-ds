@@ -130,7 +130,17 @@ def patch_helpers_and_switch_in(root: Path) -> None:
         path,
         """static u16 Mercury_ThresholdFormCalcStat(
 """,
-        """static u16 Mercury_PowerConstructMaxHP(Pokemon *mon)
+        """static void Mercury_SetThresholdFormStats(
+    BattleContext *battleCtx,
+    int battler,
+    Pokemon *mon,
+    int atk,
+    int def,
+    int spa,
+    int spd,
+    int spe);
+
+static u16 Mercury_PowerConstructMaxHP(Pokemon *mon)
 {
     int level = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
     int iv = Pokemon_GetValue(mon, MON_DATA_HP_IV, NULL);
