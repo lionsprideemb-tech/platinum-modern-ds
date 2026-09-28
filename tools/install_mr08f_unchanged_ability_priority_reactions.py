@@ -78,13 +78,12 @@ def insert_before_once(path: Path, anchor: str, insertion: str, label: str) -> N
 
 def replace_function(path: Path, signature: str, replacement: str, label: str) -> None:
     text = path.read_text(encoding="utf-8")
-    start = text.find(signature)
+    definition = signature + "\n{"
+    start = text.find(definition)
     if start < 0:
-        raise SystemExit(f"{label}: function signature not found in {path}")
+        raise SystemExit(f"{label}: function definition not found in {path}")
 
-    open_brace = text.find("{", start)
-    if open_brace < 0:
-        raise SystemExit(f"{label}: opening brace not found in {path}")
+    open_brace = start + len(signature) + 1
 
     depth = 0
     end = -1
