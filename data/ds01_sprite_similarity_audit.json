@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-09-28",
+  "gate": "MERCURY_DS01_FULL_SPRITE_SIMILARITY_AUDIT",
+  "status": "PASS",
+  "meaning": "The staged library was exhaustively scanned and review candidates were quarantined. PASS does not mean every quarantined asset is approved.",
+  "archive": {
+    "path": "staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip",
+    "sha256": "6f676782799cb206d55a00260a693fccc25f5f59c8fc6b2819aeceaf1beb38f0"
+  },
+  "coverage": {
+    "outer_archive_files": 11437,
+    "outer_png_files": 11397,
+    "hg_engine_ready_images": 11365,
+    "hg_engine_ready_male_front_designs": 2455,
+    "nested_source_pack_images": 11341,
+    "total_image_occurrences_scanned_including_nested_sources": 22738,
+    "nested_sprite_like_pokemon_images_palette_checked": 8956,
+    "nested_source_archives": [
+      "gen6_ds_style_dropbox.zip",
+      "tower_of_ashes_graphics_pack.zip",
+      "gen7plus_ds_style_dropbox.zip",
+      "Earthretha Fakemon Pack.zip",
+      "Miror B. Sprites.zip"
+    ]
+  },
+  "ds_ready_exact_render_audit": {
+    "male_front_duplicate_groups": 22,
+    "exact_groups": [
+      [
+        "scatterbug-savanna",
+        "scatterbug-high-plains",
+        "scatterbug-river",
+        "scatterbug-ocean",
+        "scatterbug-jungle",
+        "scatterbug-polar",
+        "scatterbug-tundra",
+        "scatterbug-garden",
+        "scatterbug-fancy",
+        "scatterbug-elegant",
+        "scatterbug-archipelago",
+        "scatterbug-modern",
+        "scatterbug-marine",
+        "scatterbug-continental",
+        "scatterbug-poke-ball",
+        "scatterbug-icy-snow",
+        "scatterbug-sun",
+        "scatterbug-sandstorm",
+        "scatterbug-monsoon",
+        "scatterbug-meadow"
+      ],
+      [
+        "spewpa-marine",
+        "spewpa-archipelago",
+        "spewpa-icy-snow",
+        "spewpa-tundra",
+        "spewpa-garden",
+        "spewpa-fancy",
+        "spewpa-jungle",
+        "spewpa-river",
+        "spewpa-continental",
+        "spewpa-modern",
+        "spewpa-ocean",
+        "spewpa-savanna",
+        "spewpa-polar",
+        "spewpa-poke-ball",
+        "spewpa-sandstorm",
+        "spewpa-high-plains",
+        "spewpa-elegant",
+        "spewpa-meadow",
+        "spewpa-monsoon",
+        "spewpa-sun"
+      ],
+      [
+        "minior-yellow-meteor",
+        "minior-green-meteor",
+        "minior-indigo-meteor",
+        "minior-orange-meteor",
+        "minior-blue-meteor",
+        "minior-red-meteor",
+        "minior-violet-meteor"
+      ],
+      [
+        "zeraora_mega",
+        "slate",
+        "darkrai_mega",
+        "heatran_mega"
+      ],
+      [
+        "mothim-plant",
+        "mothim-trash",
+        "mothim-sandy"
+      ],
+      [
+        "toxtricity_mega",
+        "toxtricity-amped-gmax",
+        "toxtricity-low-key-gmax"
+      ],
+      [
+        "urshifu_mega",
+        "urshifu-single-strike-gmax"
+      ],
+      [
+        "urshifu_rapid_strike_style_mega",
+        "urshifu-rapid-strike-gmax"
+      ],
+      [
+        "cpf_0341_ribombee_bluetowel_alternate_form_form_2",
+        "cpf_0340_ribombee_bluetowel_alternate_form_form_1"
+      ],
+      [
+        "zygarde-50-power-construct",
+        "zygarde-50"
+      ],
+      [
+        "charizard-gmax",
+        "charizard_mega_z"
+      ],
+      [
+        "rockruff",
+        "rockruff-own-tempo"
+      ],
+      [
+        "hatterene-gmax",
+        "hatterene_mega"
+      ],
+      [
+        "zygarde-10-power-construct",
+        "zygarde-10"
+      ],
+      [
+        "inteleon_mega",
+        "inteleon-gmax"
+      ],
+      [
+        "greninja-ash",
+        "greninja-battle-bond"
+      ],
+      [
+        "latios-mega",
+        "latias-mega"
+      ],
+      [
+        "coalossal_mega",
+        "coalossal-gmax"
+      ],
+      [
+        "snorlax_mega",
+        "snorlax-gmax"
+      ],
+      [
+        "darmanitan_redux",
+        "darmanitan_redux_bond"
+      ],
+      [
+        "machamp_mega",
+        "machamp-gmax"
+      ],
+      [
+        "drednaw_mega",
+        "drednaw-gmax"
+      ]
+    ],
+    "unrelated_cross_species_blocker": [
+      "zeraora_mega",
+      "slate",
+      "darkrai_mega",
+      "heatran_mega"
+    ],
+    "canonical_or_state_alias_groups": [
+      "Scatterbug pattern labels",
+      "Spewpa pattern labels",
+      "Minior Meteor shell colors",
+      "Zygarde base labels versus Power Construct state labels",
+      "Rockruff versus Own Tempo storage alias",
+      "Greninja Ash versus Battle Bond storage alias",
+      "Toxtricity G-Max Amped versus Low-Key shared G-Max design"
+    ],
+    "review_only_groups": [
+      [
+        "latios-mega",
+        "latias-mega"
+      ],
+      [
+        "mothim-plant",
+        "mothim-trash",
+        "mothim-sandy"
+      ],
+      [
+        "cpf_0341_ribombee_bluetowel_alternate_form_form_2",
+        "cpf_0340_ribombee_bluetowel_alternate_form_form_1"
+      ],
+      [
+        "darmanitan_redux",
+        "darmanitan_redux_bond"
+      ]
+    ]
+  },
+  "ds_ready_palette_topology_audit": {
+    "recolor_groups": 13,
+    "expected_form_palette_groups": 12,
+    "blocker_groups": 1,
+    "expected_families": [
+      "Silvally RKS type palettes",
+      "Alcremie flavor/cream palette forms"
+    ],
+    "blocker": [
+      "lapras_mega",
+      "lapras-gmax"
+    ]
+  },
+  "cross_species_near_similarity": {
+    "method": "Normalized first-frame pHash plus alpha-mask overlap across all 2,455 DS-ready male/front designs.",
+    "strong_pair_threshold": "pHash <= 6 and alpha-mask overlap >= 0.68",
+    "only_nontrivial_matches": [
+      {
+        "entries": [
+          "darkrai_mega",
+          "heatran_mega",
+          "slate",
+          "zeraora_mega"
+        ],
+        "disposition": "block_placeholder_collision"
+      },
+      {
+        "entries": [
+          "latias-mega",
+          "latios-mega"
+        ],
+        "disposition": "form_fidelity_review"
+      },
+      {
+        "entries": [
+          "finizen",
+          "palafin-zero"
+        ],
+        "disposition": "expected_canonical_similarity"
+      }
+    ],
+    "finding": "No additional unrelated cross-species near-copy cluster crossed the conservative threshold."
+  },
+  "mega_vs_gmax_similarity": {
+    "pair_comparisons": 46,
+    "strong_similarity_target_count": 27,
+    "threshold": "pHash <= 14 with high silhouette overlap; generated contact sheets were also visually reviewed.",
+    "strong_targets": [
+      "blastoise_mega_x",
+      "butterfree_mega",
+      "centiskorch_mega",
+      "charizard_mega_z",
+      "cinderace_mega",
+      "coalossal_mega",
+      "copperajah_mega",
+      "corviknight_mega",
+      "drednaw_mega",
+      "garbodor_mega",
+      "gengar_mega_x",
+      "grimmsnarl_mega",
+      "hatterene_mega",
+      "inteleon_mega",
+      "kingler_mega",
+      "lapras_mega",
+      "machamp_mega",
+      "melmetal_mega",
+      "meowth_partner_mega",
+      "orbeetle_mega",
+      "pikachu_partner_mega",
+      "rillaboom_mega",
+      "sandaconda_mega",
+      "snorlax_mega",
+      "toxtricity_mega",
+      "urshifu_mega",
+      "urshifu_rapid_strike_style_mega"
+    ],
+    "manual_concept_overlap_review": [
+      "eevee_partner_mega",
+      "alcremie_mega",
+      "venusaur_mega_x"
+    ],
+    "distinct_alternative_examples": [
+      "darkrai-mega",
+      "heatran-mega",
+      "zeraora-mega",
+      "lapras_mega_x",
+      "kingler_redux_mega",
+      "machamp_mega_redux",
+      "toxtricity_redux_mega",
+      "toxtricity_redux_fuzz_mega",
+      "snorlax_redux_mega"
+    ]
+  },
+  "nested_source_pack_exact_and_recolor_audit": {
+    "nested_image_count": 11341,
+    "exact_pixel_duplicate_groups": 197,
+    "cross_species_pokemon_exact_match_finding": "The only cross-species Pokémon exact-match family in the reusable raw packs was Appletun/Flapple G-Max, which intentionally share the same canonical Gigantamax design.",
+    "palette_cross_root_groups": 9,
+    "palette_cross_root_explanations": [
+      "Mega Latias / Mega Latios source-family similarity",
+      "Appletun / Flapple shared G-Max form",
+      "Earthretha follower normal/shiny naming pairs"
+    ],
+    "finding": "No additional unrelated raw-source placeholder family was found."
+  },
+  "policy": {
+    "auto_delete": false,
+    "auto_replace": false,
+    "quarantine_strong_custom_duplicates": true,
+    "preserve_expected_form_aliases": true,
+    "require_visual_review_for_ambiguous_concept_overlap": true
+  }
+}

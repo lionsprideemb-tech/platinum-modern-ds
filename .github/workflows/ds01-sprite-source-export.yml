@@ -1,0 +1,26 @@
+name: DS01 Sprite Source Export
+
+on:
+  pull_request:
+    branches:
+      - assets/ds01-community-sprites-20260922
+    paths:
+      - ".github/workflows/ds01-sprite-source-export.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload staged sprite source archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ds01-sprite-source-archive
+          path: staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip
+          compression-level: 0
