@@ -183,17 +183,30 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
     except Exception:
         return None
 
-    colors = rgba.getcolors(maxcolors=1_000_000)
-    color_count = len(colors) if colors is not None else 1_000_001
-    pixel_blob = (
-        f"{rgba.width}x{rgba.height}:RGBA:".encode("ascii")
-        + rgba.tobytes()
-    )
+    # We only need exact color counts for DS-sized, palette-like sprite candidates.
+    # Reference art/screenshots are intentionally kept in the inventory but skipped
+    # for the expensive palette-topology and perceptual-hash passes.
+    color_probe = rgba.getcolors(maxcolors=257)
+    color_count = len(color_probe) if color_probe is not None else 257
     candidate = (
         8 <= rgba.width <= 256
         and 8 <= rgba.height <= 256
         and color_count <= 256
     )
+
+    pixel_blob = (
+        f"{rgba.width}x{rgba.height}:RGBA:".encode("ascii")
+        + rgba.tobytes()
+    )
+    pixel_hash = sha256(pixel_blob)
+
+    if candidate:
+        canonical_hash = canonical_palette_hash(rgba)
+        visual_hash = dhash64(rgba)
+    else:
+        canonical_hash = sha256(("NON_SPRITE:" + pixel_hash).encode("ascii"))
+        visual_hash = 0
+
     return Entry(
         path=logical_path,
         source_archive=archive_name,
@@ -201,9 +214,9 @@ def load_entry(raw: bytes, logical_path: str, archive_name: str) -> Entry | None
         height=rgba.height,
         mode="RGBA",
         byte_sha256=sha256(raw),
-        pixel_sha256=sha256(pixel_blob),
-        canonical_palette_sha256=canonical_palette_hash(rgba),
-        dhash64=dhash64(rgba),
+        pixel_sha256=pixel_hash,
+        canonical_palette_sha256=canonical_hash,
+        dhash64=visual_hash,
         color_count=color_count,
         is_sprite_candidate=candidate,
         concept_key=concept_key(logical_path),
