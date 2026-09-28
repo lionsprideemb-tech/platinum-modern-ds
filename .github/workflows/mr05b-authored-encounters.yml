@@ -62,6 +62,7 @@ on:
       - "tools/install_mr08s13_canonical_ability_terapagos.py"
       - "tools/audit_mr08_final_canonical_abilities.py"
       - "tools/install_mr09a_custom_ability_namespace.py"
+      - "tools/install_mr09b1_custom_ability_super_effective_reactions.py"
       - "data/mercury_custom_ability_namespace.json"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
@@ -240,6 +241,7 @@ jobs:
             tools/install_mr08s13_canonical_ability_terapagos.py \
             tools/audit_mr08_final_canonical_abilities.py \
             tools/install_mr09a_custom_ability_namespace.py \
+            tools/install_mr09b1_custom_ability_super_effective_reactions.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -1132,6 +1134,21 @@ jobs:
           test "$(jq -r '.implemented_in_this_gate' mr09a-custom-ability-namespace.json)" = "0"
           test "$(sed -n '312p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_CONTROLLED_FURY"
           test "$(sed -n '322p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_PROTEAN_MAXIMA"
+
+      - name: Install MR09B1 custom super-effective reactions
+        shell: bash
+        run: |
+          python3 tools/install_mr09b1_custom_ability_super_effective_reactions.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr09b1-custom-ability-super-effective-reactions.json
+
+          test "$(jq -r '.status' mr09b1-custom-ability-super-effective-reactions.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr09b1-custom-ability-super-effective-reactions.json)" = "2"
+          test "$(jq -r '.custom_implemented_total' mr09b1-custom-ability-super-effective-reactions.json)" = "2"
+          test "$(jq -r '[.checks[]] | all' mr09b1-custom-ability-super-effective-reactions.json)" = "true"
+          grep -qx 'ABILITY_PRISMATIC_PELT' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_ADAPTIVE_GENOME' mr04-implemented-abilities.txt
 
       - name: Install production Mercury Move Learner
         shell: bash
@@ -2111,6 +2128,7 @@ jobs:
           cp mr08s13-canonical-ability-terapagos.json mr05b-artifact/ 2>/dev/null || true
           cp mr08-final-canonical-ability-certification.json mr05b-artifact/ 2>/dev/null || true
           cp mr09a-custom-ability-namespace.json mr05b-artifact/ 2>/dev/null || true
+          cp mr09b1-custom-ability-super-effective-reactions.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
