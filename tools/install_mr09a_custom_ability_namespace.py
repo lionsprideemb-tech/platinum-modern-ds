@@ -41,7 +41,7 @@ def description_lines(name: str) -> list[str]:
             "attacker without KOing it."
         ],
         "Mind Games": [
-            "On entry, seals a foe's\n",
+            "On entry, seals the foe’s\n",
             "last-used move briefly."
         ],
         "The Look": [
