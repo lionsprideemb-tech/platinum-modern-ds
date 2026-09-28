@@ -70,10 +70,10 @@ def validate_ids(root: Path) -> dict[str, bool]:
 
 
 def patch_context(root: Path) -> None:
-    path = root / "include/battle/battle_context.h"
+    terrain = root / "include/constants/battle/terrain.h"
     insert_before_once(
-        path,
-        """typedef struct BattleContext BattleContext;
+        terrain,
+        """#endif // POKEPLATINUM_CONSTANTS_BATTLE_TERRAIN_H
 """,
         """#define MERCURY_TERRAIN_NONE     0
 #define MERCURY_TERRAIN_ELECTRIC 1
@@ -84,17 +84,34 @@ def patch_context(root: Path) -> None:
 """,
         "MR08M terrain constants",
     )
+
+    path = root / "include/battle/battle_context.h"
     insert_before_once(
         path,
         """    u32 battleProgressFlag : 1;
 """,
-        """    // Mercury MR08L: current-mainline terrain state.
-    u8 mercuryTerrainType;
-    u8 mercuryTerrainTurns;
+        """    // Mercury MR08M: current-mainline terrain state. Keep these
+    // word-sized so battle-script variables can read them safely.
+    u32 mercuryTerrainType;
+    u32 mercuryTerrainTurns;
 
 """,
         "MR08M terrain state",
     )
+
+    script_vars = root / "generated/battle_script_vars.txt"
+    vars_lines = [
+        line.strip()
+        for line in script_vars.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    for token in (
+        "BTLVAR_MERCURY_TERRAIN_TYPE",
+        "BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED",
+    ):
+        if token not in vars_lines:
+            vars_lines.append(token)
+    script_vars.write_text("\n".join(vars_lines) + "\n", encoding="utf-8")
 
 
 def patch_shared_helpers(root: Path) -> None:
@@ -107,7 +124,12 @@ def patch_shared_helpers(root: Path) -> None:
 """,
         """BOOL Mercury_IsGroundedForTerrain(BattleContext *battleCtx, int battler)
 {
-    if (battleCtx->fieldConditionsMask & FIELD_CONDITION_GRAVITY) {
+    if ((battleCtx->fieldConditionsMask & FIELD_CONDITION_GRAVITY)
+        || (battleCtx->battleMons[battler].moveEffectsMask & MOVE_EFFECT_INGRAIN)
+        || BattleSystem_GetItemData(
+            battleCtx,
+            battleCtx->battleMons[battler].heldItem,
+            ITEM_PARAM_HOLD_EFFECT) == HOLD_EFFECT_SPEED_DOWN_GROUNDED) {
         return TRUE;
     }
 
@@ -298,6 +320,176 @@ def patch_seed_sower(root: Path) -> None:
     )
 
 
+def patch_terrain_core_rules(root: Path) -> None:
+    lib = root / "src/battle/battle_lib.c"
+    script = root / "src/battle/battle_script.c"
+
+    # Psychic Terrain blocks opposing increased-priority moves when the target
+    # is grounded. Reuse the shared MR08D priority-blocker lane.
+    insert_before_once(
+        lib,
+        """    if (Battler_IgnorableAbility(
+            battleCtx, attacker, defender, ABILITY_QUEENLY_MAJESTY)
+""",
+        """    if (battleCtx->mercuryTerrainType == MERCURY_TERRAIN_PSYCHIC
+        && Mercury_IsGroundedForTerrain(battleCtx, defender)) {
+        return TRUE;
+    }
+
+""",
+        "Psychic Terrain priority protection",
+    )
+
+    # MR08L already specializes CompareVarToValue for Infiltrator/Safeguard.
+    # Extend that same command with two read-only Mercury terrain variables so
+    # the existing status scripts can perform grounded terrain checks without
+    # inventing a second battle-script VM.
+    replace_once(
+        script,
+        """    int *data = BattleScript_VarAddress(battleSys, battleCtx, srcVar);
+
+    if (op == OPCODE_FLAG_SET
+        && srcVar == BTLVAR_SIDE_CONDITIONS_EFFECT_MON
+""",
+        """    int mercuryVarTemp = 0;
+    int *data;
+
+    if (srcVar == BTLVAR_MERCURY_TERRAIN_TYPE) {
+        data = (int *)&battleCtx->mercuryTerrainType;
+    } else if (srcVar == BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED) {
+        mercuryVarTemp = Mercury_IsGroundedForTerrain(
+            battleCtx, battleCtx->sideEffectMon);
+        data = &mercuryVarTemp;
+    } else {
+        data = BattleScript_VarAddress(battleSys, battleCtx, srcVar);
+    }
+
+    if (op == OPCODE_FLAG_SET
+        && srcVar == BTLVAR_SIDE_CONDITIONS_EFFECT_MON
+""",
+        "terrain battle-script variables",
+    )
+
+    # Electric Terrain prevents sleep for grounded Pokemon; Misty Terrain
+    # prevents non-volatile status and confusion for grounded Pokemon.
+    status_patches = (
+        (
+            "res/battle/scripts/subscripts/subscript_fall_asleep.s",
+            """_147:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_ASLEEP
+""",
+            """_147:
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED, FALSE, _MercuryTerrainSleepContinue
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_ELECTRIC, _237
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_MISTY, _237
+_MercuryTerrainSleepContinue:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_ASLEEP
+""",
+            "Electric/Misty Terrain sleep protection",
+        ),
+        (
+            "res/battle/scripts/subscripts/subscript_burn.s",
+            """_141:
+    CompareVarToValue OPCODE_NEQ, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_HELD_ITEM, _152
+""",
+            """_141:
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED, FALSE, _MercuryTerrainBurnContinue
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_MISTY, _212
+_MercuryTerrainBurnContinue:
+    CompareVarToValue OPCODE_NEQ, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_HELD_ITEM, _152
+""",
+            "Misty Terrain burn protection",
+        ),
+        (
+            "res/battle/scripts/subscripts/subscript_paralyze.s",
+            """_076:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_PARALYZED
+""",
+            """_076:
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED, FALSE, _MercuryTerrainParalyzeContinue
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_MISTY, _123
+_MercuryTerrainParalyzeContinue:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_PARALYZED
+""",
+            "Misty Terrain paralysis protection",
+        ),
+        (
+            "res/battle/scripts/subscripts/subscript_freeze.s",
+            """_073:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_FROZEN
+""",
+            """_073:
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED, FALSE, _MercuryTerrainFreezeContinue
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_MISTY, _095
+_MercuryTerrainFreezeContinue:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_FROZEN
+""",
+            "Misty Terrain freeze protection",
+        ),
+        (
+            "res/battle/scripts/subscripts/subscript_poison.s",
+            """_130:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_POISONED
+""",
+            """_130:
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED, FALSE, _MercuryTerrainPoisonContinue
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_MISTY, _217
+_MercuryTerrainPoisonContinue:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_POISONED
+""",
+            "Misty Terrain poison protection",
+        ),
+        (
+            "res/battle/scripts/subscripts/subscript_badly_poison.s",
+            """_191:
+    CompareVarToValue OPCODE_NEQ, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_HELD_ITEM, _202
+""",
+            """_191:
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED, FALSE, _MercuryTerrainToxicContinue
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_MISTY, _275
+_MercuryTerrainToxicContinue:
+    CompareVarToValue OPCODE_NEQ, BTLVAR_SIDE_EFFECT_TYPE, SIDE_EFFECT_TYPE_HELD_ITEM, _202
+""",
+            "Misty Terrain toxic protection",
+        ),
+        (
+            "res/battle/scripts/subscripts/subscript_confuse.s",
+            """_076:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_CONFUSED
+""",
+            """_076:
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED, FALSE, _MercuryTerrainConfuseContinue
+    CompareVarToValue OPCODE_EQU, BTLVAR_MERCURY_TERRAIN_TYPE, MERCURY_TERRAIN_MISTY, _101
+_MercuryTerrainConfuseContinue:
+    PlayBattleAnimation BTLSCR_SIDE_EFFECT_MON, BATTLE_ANIMATION_CONFUSED
+""",
+            "Misty Terrain confusion protection",
+        ),
+    )
+
+    for rel, old, new, label in status_patches:
+        replace_once(root / rel, old, new, label)
+
+    # Yawn itself fails on a grounded target while Electric or Misty Terrain is
+    # active, matching current-mainline behavior rather than waiting a turn.
+    replace_once(
+        script,
+        """    if (DEFENDING_MON.moveEffectsMask & MOVE_EFFECT_YAWN) {
+        BattleScript_Iter(battleCtx, jumpOnFail);
+    } else {
+""",
+        """    if (DEFENDING_MON.moveEffectsMask & MOVE_EFFECT_YAWN) {
+        BattleScript_Iter(battleCtx, jumpOnFail);
+    } else if (Mercury_IsGroundedForTerrain(battleCtx, battleCtx->defender)
+        && (battleCtx->mercuryTerrainType == MERCURY_TERRAIN_ELECTRIC
+            || battleCtx->mercuryTerrainType == MERCURY_TERRAIN_MISTY)) {
+        BattleScript_Iter(battleCtx, jumpOnFail);
+    } else {
+""",
+        "Electric/Misty Terrain Yawn protection",
+    )
+
+
 def patch_terrain_turns(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
 
@@ -399,6 +591,20 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             and "spAttackStat = spAttackStat * 4 / 3" in lib,
         "terrain_duration_hook":
             "FIELD_COND_CHECK_STATE_MERCURY_TERRAIN" in controller,
+        "psychic_priority_protection":
+            "MERCURY_TERRAIN_PSYCHIC" in lib
+            and "Mercury_PriorityBlockerActive" in lib,
+        "terrain_status_script_vars":
+            "BTLVAR_MERCURY_TERRAIN_TYPE" in script
+            and "BTLVAR_MERCURY_SIDE_EFFECT_GROUNDED" in script,
+        "electric_sleep_yawn_protection":
+            "MERCURY_TERRAIN_ELECTRIC" in script
+            and "MOVE_EFFECT_YAWN" in script,
+        "misty_status_protection":
+            "MERCURY_TERRAIN_MISTY" in script,
+        "grounding_overrides":
+            "MOVE_EFFECT_INGRAIN" in lib
+            and "HOLD_EFFECT_SPEED_DOWN_GROUNDED" in lib,
         "implemented_registry_updated":
             all(token in registry_lines for token in IMPLEMENTED),
     }
@@ -425,6 +631,7 @@ def main() -> None:
     patch_damage_and_speed(root)
     patch_switch_in_surges(root)
     patch_seed_sower(root)
+    patch_terrain_core_rules(root)
     patch_terrain_turns(root)
     update_registry(registry)
 
