@@ -16,8 +16,8 @@ mechanics reference:
 - Chilling Neigh
 - Grim Neigh
 
-Also closes the remaining Water Bubble burn-immunity piece from MR08B.
-Locked MR07 Summary/Skills visuals are not touched.
+MR08B's already-installed Water Bubble burn immunity is retained and
+re-validated by this gate. Locked MR07 Summary/Skills visuals are not touched.
 """
 
 from __future__ import annotations
@@ -709,26 +709,8 @@ def patch_status_scripts(root: Path) -> None:
         "Pastel Veil toxic message",
     )
 
-    # MR08B already installed Water Bubble's Water/Fire damage mechanics; add
-    # the canonical burn immunity using the exact Water Veil lanes.
-    replace_once(
-        burn,
-        """    CheckAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON, ABILITY_WATER_VEIL, _211
-""",
-        """    CheckAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON, ABILITY_WATER_VEIL, _211
-    CheckAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON, ABILITY_WATER_BUBBLE, _211
-""",
-        "Water Bubble held-item burn immunity",
-    )
-    replace_once(
-        burn,
-        """    CheckIgnorableAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON, ABILITY_WATER_VEIL, _264
-""",
-        """    CheckIgnorableAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON, ABILITY_WATER_VEIL, _264
-    CheckIgnorableAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON, ABILITY_WATER_BUBBLE, _264
-""",
-        "Water Bubble move burn immunity",
-    )
+    # Water Bubble burn immunity is already installed by MR08B; MR08F
+    # deliberately leaves that shared status script untouched here.
 
 
 def update_registry(path: Path) -> None:
@@ -818,7 +800,7 @@ def main() -> None:
         "implemented_abilities": list(IMPLEMENTED),
         "implemented_count": len(IMPLEMENTED),
         "running_modern_mechanics_total": 55,
-        "completeness_fixes": ["Water Bubble burn immunity"],
+        "verified_dependencies": ["MR08B Water Bubble burn immunity"],
         "policy": "Official/current-mainline mechanics; Redux rewrites remain review-only.",
         "primary_ds_reference": "BluRosie/hg-engine pinned by upstream/LOCK.json",
         "elite_redux_reference": "Elite-Redux/eliteredux pinned by upstream/LOCK.json",
