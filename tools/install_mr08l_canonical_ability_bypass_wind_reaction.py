@@ -376,11 +376,15 @@ def patch_infiltrator(root: Path) -> None:
         "Infiltrator Mist bypass",
     )
 
-    insert_before_once(
+    replace_once(
         script,
-        """    switch (op) {
+        """    int *data = BattleScript_VarAddress(battleSys, battleCtx, srcVar);
+
+    switch (op) {
 """,
-        """    if (op == OPCODE_FLAG_SET
+        """    int *data = BattleScript_VarAddress(battleSys, battleCtx, srcVar);
+
+    if (op == OPCODE_FLAG_SET
         && srcVar == BTLVAR_SIDE_CONDITIONS_EFFECT_MON
         && compareTo == SIDE_CONDITION_SAFEGUARD
         && battleCtx->attacker != battleCtx->sideEffectMon
@@ -389,6 +393,7 @@ def patch_infiltrator(root: Path) -> None:
         return FALSE;
     }
 
+    switch (op) {
 """,
         "Infiltrator Safeguard bypass",
     )
