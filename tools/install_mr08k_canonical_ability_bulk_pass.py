@@ -811,8 +811,21 @@ def patch_targeting_and_order(root: Path) -> None:
             && battleCtx->sideConditions[enemySide].followMe
             && battleCtx->battleMons[battleCtx->sideConditions[enemySide].followMeUser].curHP) {
 """,
-        2,
-        "Propeller Tail / Stalwart Follow Me bypass",
+        1,
+        "Propeller Tail / Stalwart normal Follow Me bypass",
+    )
+
+    replace_once(
+        lib,
+        """            if (battleCtx->sideConditions[enemySide].followMe
+                && battleCtx->battleMons[battleCtx->sideConditions[enemySide].followMeUser].curHP) {
+""",
+        """            if (Battler_Ability(battleCtx, attacker) != ABILITY_PROPELLER_TAIL
+                && Battler_Ability(battleCtx, attacker) != ABILITY_STALWART
+                && battleCtx->sideConditions[enemySide].followMe
+                && battleCtx->battleMons[battleCtx->sideConditions[enemySide].followMeUser].curHP) {
+""",
+        "Propeller Tail / Stalwart random Follow Me bypass",
     )
 
     replace_once(
