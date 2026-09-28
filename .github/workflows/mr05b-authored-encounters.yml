@@ -30,6 +30,7 @@ on:
       - "tools/install_mr08f_unchanged_ability_priority_reactions.py"
       - "tools/install_mr08g_canonical_ability_late_shared_hooks.py"
       - "tools/install_mr08h_canonical_ability_field_families.py"
+      - "tools/install_mr08i_canonical_ability_reaction_type.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -442,6 +443,27 @@ jobs:
           grep -qx 'ABILITY_SWORD_OF_RUIN' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_TABLETS_OF_RUIN' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_BEADS_OF_RUIN' mr04-implemented-abilities.txt
+
+      - name: Install MR08I canonical Ability reaction/type family
+        shell: bash
+        run: |
+          python3 tools/install_mr08i_canonical_ability_reaction_type.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08i-canonical-ability-reaction-type.json
+
+          test "$(jq -r '.status' mr08i-canonical-ability-reaction-type.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08i-canonical-ability-reaction-type.json)" = "15"
+          test "$(jq -r '.running_modern_mechanics_total' mr08i-canonical-ability-reaction-type.json)" = "95"
+          test "$(jq -r '[.checks[]] | all' mr08i-canonical-ability-reaction-type.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08i-canonical-ability-reaction-type.json)" = "false"
+          for ability in \
+            ABILITY_DEFIANT ABILITY_CURSED_BODY ABILITY_WEAK_ARMOR ABILITY_OVERCOAT \
+            ABILITY_MUMMY ABILITY_RATTLED ABILITY_COMPETITIVE ABILITY_REFRIGERATE \
+            ABILITY_MEGA_LAUNCHER ABILITY_TRIAGE ABILITY_COTTON_DOWN ABILITY_UNSEEN_FIST \
+            ABILITY_LINGERING_AROMA ABILITY_ANGER_SHELL ABILITY_ELECTROMORPHOSIS; do
+            grep -qx "$ability" mr04-implemented-abilities.txt
+          done
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1439,6 +1461,7 @@ jobs:
           cp mr08f-unchanged-ability-priority-reactions.json mr05b-artifact/ 2>/dev/null || true
           cp mr08g-canonical-ability-late-shared-hooks.json mr05b-artifact/ 2>/dev/null || true
           cp mr08h-canonical-ability-field-families.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08i-canonical-ability-reaction-type.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1985,6 +2008,7 @@ jobs:
             echo "- MR08F fast-ports 10 more canonical priority/reaction mechanics: Strong Jaw, Sweet Veil, Steam Engine, Punk Rock, Sand Spit, Perish Body, Pastel Veil, Quick Draw, Chilling Neigh, and Grim Neigh (55 modern mechanics total); MR08B Water Bubble burn immunity remains verified"
             echo "- MR08G fast-ports 10 more canonical late-generation mechanics: Beast Boost, Thermal Exchange, Purifying Salt, Well-Baked Body, Guard Dog, Rocky Payload, Good as Gold, Sharpness, Armor Tail, and Earth Eater (65 modern mechanics total)"
             echo "- MR08H fast-ports 15 canonical field/shared mechanics: Sap Sipper, Victory Star, Turboblaze, Teravolt, Dark Aura, Fairy Aura, Aura Break, Slush Rush, Long Reach, Transistor, Dragon's Maw, Vessel of Ruin, Sword of Ruin, Tablets of Ruin, and Beads of Ruin (80 modern mechanics total)"
+            echo "- MR08I fast-ports 15 canonical reaction/type mechanics: Defiant, Cursed Body, Weak Armor, Overcoat, Mummy, Rattled, Competitive, Refrigerate, Mega Launcher, Triage, Cotton Down, Unseen Fist, Lingering Aroma, Anger Shell, and Electromorphosis (95 modern mechanics total)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
