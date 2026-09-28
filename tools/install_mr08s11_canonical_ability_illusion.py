@@ -247,7 +247,7 @@ BOOL Mercury_TryBreakIllusionByAbilityLoss(
     replace_in_function(
         path,
         "void BattleSystem_InitBattleMon(BattleSystem *battleSys, BattleContext *battleCtx, int battler, int partySlot)",
-        """    battleCtx->mercuryGulpMissileForm[battler] = 0;
+        """    battleCtx->mercuryGulpMissileState[battler] = 0;
 """,
         """    battleCtx->mercuryIllusionActive[battler] = FALSE;
     battleCtx->mercuryIllusionPartySlot[battler] = MAX_PARTY_SIZE;
@@ -264,7 +264,7 @@ BOOL Mercury_TryBreakIllusionByAbilityLoss(
         }
     }
 
-    battleCtx->mercuryGulpMissileForm[battler] = 0;
+    battleCtx->mercuryGulpMissileState[battler] = 0;
 """,
         "Illusion entry setup",
     )
