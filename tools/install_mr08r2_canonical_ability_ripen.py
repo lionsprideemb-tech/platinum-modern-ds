@@ -99,8 +99,6 @@ def patch_held_item_triggers(root: Path) -> None:
 """
     new = """    int itemEffect = Battler_HeldItemEffect(battleCtx, battler);
     int itemPower = Battler_HeldItemPower(battleCtx, battler, ITEM_POWER_CHECK_ALL);
-    u16 mercuryBerry = battleCtx->battleMons[battler].heldItem;
-    BOOL mercuryRipen = Mercury_RipenApplies(battleCtx, battler, mercuryBerry);
 
     if (battleCtx->battleMons[battler].curHP) {
 """
@@ -114,29 +112,29 @@ def patch_held_item_triggers(root: Path) -> None:
     text = lib.read_text(encoding="utf-8")
     text = text.replace(
         "battleCtx->hpCalcTemp = itemPower;\n                subscript = subscript_held_item_hp_restore;",
-        "battleCtx->hpCalcTemp = itemPower * (mercuryRipen ? 2 : 1);\n                subscript = subscript_held_item_hp_restore;",
+        "battleCtx->hpCalcTemp = itemPower * (Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? 2 : 1);\n                subscript = subscript_held_item_hp_restore;",
         1,
     )
     text = text.replace(
         "battleCtx->hpCalcTemp = itemPower;\n                *subscript = subscript_held_item_hp_restore;",
-        "battleCtx->hpCalcTemp = itemPower * (mercuryRipen ? 2 : 1);\n                *subscript = subscript_held_item_hp_restore;",
+        "battleCtx->hpCalcTemp = itemPower * (Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? 2 : 1);\n                *subscript = subscript_held_item_hp_restore;",
         1,
     )
     text = text.replace(
         "battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * itemPower, 100);\n                subscript = subscript_held_item_hp_restore;",
-        "battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * itemPower, 100);\n                if (mercuryRipen) battleCtx->hpCalcTemp *= 2;\n                subscript = subscript_held_item_hp_restore;",
+        "battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * itemPower, 100);\n                if (Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem)) battleCtx->hpCalcTemp *= 2;\n                subscript = subscript_held_item_hp_restore;",
         1,
     )
     text = text.replace(
         "battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * itemPower, 100);\n                *subscript = subscript_held_item_hp_restore;",
-        "battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * itemPower, 100);\n                if (mercuryRipen) battleCtx->hpCalcTemp *= 2;\n                *subscript = subscript_held_item_hp_restore;",
+        "battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * itemPower, 100);\n                if (Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem)) battleCtx->hpCalcTemp *= 2;\n                *subscript = subscript_held_item_hp_restore;",
         1,
     )
 
     # Leppa Berry PP restoration.
     text = text.replace(
         "BattleMon_AddVal(&battleCtx->battleMons[battler], BATTLEMON_CUR_PP_1 + i, itemPower);",
-        "BattleMon_AddVal(&battleCtx->battleMons[battler], BATTLEMON_CUR_PP_1 + i, itemPower * (mercuryRipen ? 2 : 1));",
+        "BattleMon_AddVal(&battleCtx->battleMons[battler], BATTLEMON_CUR_PP_1 + i, itemPower * (Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? 2 : 1));",
         2,
     )
 
@@ -148,28 +146,28 @@ def patch_held_item_triggers(root: Path) -> None:
         raise SystemExit(f"Ripen flavor heal: expected 10 matches, found {count}")
     text = text.replace(
         flavor_line,
-        flavor_line + "\n                if (mercuryRipen) battleCtx->hpCalcTemp *= 2;",
+        flavor_line + "\n                if (Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem)) battleCtx->hpCalcTemp *= 2;",
     )
 
     # Liechi/Ganlon/Salac/Petaya/Apicot +1 -> +2. Starf +2 -> +4.
     text = text.replace(
         "subscript = subscript_held_item_raise_stat;\n                result = TRUE;",
-        "subscript = mercuryRipen ? subscript_held_item_sharply_raise_stat : subscript_held_item_raise_stat;\n                result = TRUE;",
+        "subscript = Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? subscript_held_item_sharply_raise_stat : subscript_held_item_raise_stat;\n                result = TRUE;",
         5,
     )
     text = text.replace(
         "*subscript = subscript_held_item_raise_stat;\n                result = TRUE;",
-        "*subscript = mercuryRipen ? subscript_held_item_sharply_raise_stat : subscript_held_item_raise_stat;\n                result = TRUE;",
+        "*subscript = Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? subscript_held_item_sharply_raise_stat : subscript_held_item_raise_stat;\n                result = TRUE;",
         5,
     )
     text = text.replace(
         "subscript = subscript_held_item_sharply_raise_stat;\n                    result = TRUE;",
-        "subscript = mercuryRipen ? subscript_mercury_ripen_raise_four_stat : subscript_held_item_sharply_raise_stat;\n                    result = TRUE;",
+        "subscript = Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? subscript_mercury_ripen_raise_four_stat : subscript_held_item_sharply_raise_stat;\n                    result = TRUE;",
         1,
     )
     text = text.replace(
         "*subscript = subscript_held_item_sharply_raise_stat;\n                    result = TRUE;",
-        "*subscript = mercuryRipen ? subscript_mercury_ripen_raise_four_stat : subscript_held_item_sharply_raise_stat;\n                    result = TRUE;",
+        "*subscript = Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? subscript_mercury_ripen_raise_four_stat : subscript_held_item_sharply_raise_stat;\n                    result = TRUE;",
         1,
     )
 
@@ -388,11 +386,11 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "Item_IsBerry(berry) == TRUE" in lib
             and "Battler_Ability(battleCtx, recipient) == ABILITY_RIPEN" in lib,
         "hp_pp_double":
-            "itemPower * (mercuryRipen ? 2 : 1)" in lib
+            "itemPower * (Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? 2 : 1)" in lib
             and "power * (mercuryRipen ? 2 : 1)" in lib
             and "effectPower * (mercuryRipen ? 2 : 1)" in lib,
         "stat_double":
-            "mercuryRipen ? subscript_held_item_sharply_raise_stat" in lib
+            "Mercury_RipenApplies(battleCtx, battler, battleCtx->battleMons[battler].heldItem) ? subscript_held_item_sharply_raise_stat" in lib
             and "subscript_mercury_ripen_raise_four_stat" in lib,
         "resist_quarter":
             "ABILITY_RIPEN, _MercuryRipenResist" in resist
