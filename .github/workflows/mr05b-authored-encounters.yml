@@ -51,6 +51,7 @@ on:
       - "tools/install_mr08s3_canonical_ability_form_shields.py"
       - "tools/install_mr08s4_canonical_ability_stance_change.py"
       - "tools/install_mr08s5_canonical_ability_hunger_switch.py"
+      - "tools/install_mr08s6_canonical_ability_zero_to_hero.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -218,6 +219,7 @@ jobs:
             tools/install_mr08s3_canonical_ability_form_shields.py \
             tools/install_mr08s4_canonical_ability_stance_change.py \
             tools/install_mr08s5_canonical_ability_hunger_switch.py \
+            tools/install_mr08s6_canonical_ability_zero_to_hero.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -864,6 +866,22 @@ jobs:
           test "$(jq -r '[.checks[]] | all' mr08s5-canonical-ability-hunger-switch.json)" = "true"
           test "$(jq -r '.ui_changed' mr08s5-canonical-ability-hunger-switch.json)" = "false"
           grep -qx 'ABILITY_HUNGER_SWITCH' mr04-implemented-abilities.txt
+
+      - name: Install MR08S6 canonical Zero to Hero pass
+        shell: bash
+        run: |
+          python3 tools/install_mr08s6_canonical_ability_zero_to_hero.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08s6-canonical-ability-zero-to-hero.json
+
+          test "$(jq -r '.status' mr08s6-canonical-ability-zero-to-hero.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08s6-canonical-ability-zero-to-hero.json)" = "1"
+          test "$(jq -r '.running_modern_mechanics_total' mr08s6-canonical-ability-zero-to-hero.json)" = "177"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08s6-canonical-ability-zero-to-hero.json)" = "10"
+          test "$(jq -r '[.checks[]] | all' mr08s6-canonical-ability-zero-to-hero.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08s6-canonical-ability-zero-to-hero.json)" = "false"
+          grep -qx 'ABILITY_ZERO_TO_HERO' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1882,6 +1900,7 @@ jobs:
           cp mr08s3-canonical-ability-form-shields.json mr05b-artifact/ 2>/dev/null || true
           cp mr08s4-canonical-ability-stance-change.json mr05b-artifact/ 2>/dev/null || true
           cp mr08s5-canonical-ability-hunger-switch.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08s6-canonical-ability-zero-to-hero.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -2449,6 +2468,7 @@ jobs:
             echo "- MR08S3 adds canonical Disguise + Ice Face shared form shields (174 modern mechanics total; 13 remain)"
             echo "- MR08S4 adds canonical Stance Change Shield/Blade battle-state transitions (175 modern mechanics total; 12 remain)"
             echo "- MR08S5 adds canonical Hunger Switch Full Belly/Hangry turn-end state (176 modern mechanics total; 11 remain)"
+            echo "- MR08S6 adds canonical Zero to Hero switch persistence and exact Hero-form stat recalculation (177 modern mechanics total; 10 remain)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
