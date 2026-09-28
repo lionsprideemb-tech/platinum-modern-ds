@@ -91,6 +91,103 @@
       "implementation_class": "existing_hook",
       "approval_state": "locked",
       "implementation_ready": true
+    },
+    {
+      "name": "Unyielding",
+      "source": "Pokémon Mercury Redux — sealed Ability Audit Final",
+      "exact_effect": "Whenever an opponent causes one or more of the user's stat stages to drop, the user gains +1 Defense and +1 Special Defense.",
+      "trigger": "After an opponent-caused stat-stage reduction is successfully applied to the user.",
+      "restrictions": "Only opponent-caused stat drops qualify. Self-inflicted drops and allied effects do not trigger it.",
+      "known_users": [],
+      "mechanic_family": "reaction_to_opponent_stat_drop_dual_defense_boost",
+      "duplicate_status": "Locked Mercury audit entry; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Pack Tactics",
+      "source": "Pokémon Mercury Redux — sealed Ability Audit Final",
+      "exact_effect": "The user's damaging moves deal 1.2× damage while it has at least one conscious party teammate, or 1.3× damage while it has an active doubles partner.",
+      "trigger": "Continuous damage-calculation modifier while the relevant ally condition is met.",
+      "restrictions": "The 1.2× and 1.3× multipliers do not stack; an active doubles partner uses the 1.3× value.",
+      "known_users": [],
+      "mechanic_family": "ally_presence_damage_multiplier",
+      "duplicate_status": "Locked Mercury audit entry; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "First Strike",
+      "source": "Pokémon Mercury Redux — sealed Ability Audit Final",
+      "exact_effect": "The first damaging move the user uses after each entry to battle gains +1 priority.",
+      "trigger": "On the user's first damaging move after entering battle.",
+      "restrictions": "Status moves do not consume the effect. The effect resets when the user leaves battle and later re-enters.",
+      "known_users": [],
+      "mechanic_family": "entry_armed_first_damage_priority",
+      "duplicate_status": "Locked Mercury audit entry; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Bloodhound",
+      "source": "Pokémon Mercury Redux — sealed Ability Audit Final",
+      "exact_effect": "A foe directly damaged by the user becomes marked. If that marked foe switches out, the replacement Pokémon loses 1/8 of its max HP and the mark is consumed.",
+      "trigger": "Marks a foe after direct damage from the user; retaliation resolves when that marked foe switches out.",
+      "restrictions": "The switch punishment occurs once per mark and is consumed after applying. Indirect damage does not create the mark.",
+      "known_users": [],
+      "mechanic_family": "direct_damage_mark_switch_replacement_chip",
+      "duplicate_status": "Locked Mercury audit entry; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Grand Choreography",
+      "source": "Pokémon Mercury Redux — sealed Ability Audit Final",
+      "exact_effect": "The user retains Dancer behavior. After it successfully uses or copies a Dance move, it immediately follows with one 50-BP Revelation Dance. The follow-up checks the Fire, Electric, Psychic, and Ghost Revelation Dance styles; if any of them would be super-effective against the target, the follow-up's final effectiveness is exactly 2×.",
+      "trigger": "After a successful Dance move resolves through the user's Dancer/Grand Choreography behavior.",
+      "restrictions": "Only one 50-BP Revelation Dance follow-up is created per qualifying Dance resolution. The effectiveness override is capped at exactly 2× rather than stacking higher. Non-Dance moves do not trigger the follow-up.",
+      "known_users": [
+        "Mega Oricorio"
+      ],
+      "mechanic_family": "dancer_followup_generated_attack_style_effectiveness_cap",
+      "duplicate_status": "Locked Mega Oricorio signature Ability; duplicate resolution complete.",
+      "implementation_class": "new_engine_system",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Overexertion",
+      "source": "Pokémon Mercury Redux — sealed Ability Audit Final",
+      "exact_effect": "The user can act every turn. After it uses a damaging move, it loses 10% of its max HP.",
+      "trigger": "Continuous removal of the normal loafing restriction; recoil resolves after each damaging move used.",
+      "restrictions": "Status moves do not cause HP loss. The ability is non-suppressible, non-copyable, and cannot be overwritten.",
+      "known_users": [
+        "Mega Slaking"
+      ],
+      "mechanic_family": "truant_replacement_post_attack_hp_cost_protected_ability",
+      "duplicate_status": "Locked Mega Slaking signature Ability; duplicate resolution complete.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Ancient Script",
+      "source": "Pokémon Mercury Redux — sealed Ability Audit Final",
+      "exact_effect": "Hidden Power receives its ordinary STAB modifier and then an additional 1.3× damage multiplier.",
+      "trigger": "During damage calculation when the user uses Hidden Power.",
+      "restrictions": "Applies only to Hidden Power. The 1.3× multiplier is additional to normal STAB rather than replacing it.",
+      "known_users": [
+        "Unown"
+      ],
+      "mechanic_family": "specific_move_stab_plus_damage_multiplier",
+      "duplicate_status": "Locked replacement for the retired Unown Revelation transformation; duplicate resolution complete.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
     }
   ]
 }
