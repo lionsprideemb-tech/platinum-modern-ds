@@ -316,18 +316,18 @@ BOOL Mercury_TryBreakIllusionByAbilityLoss(
     # Trace cannot select an Illusion user.
     replace_once(
         path,
-        """        && ability1 != ABILITY_POWER_CONSTRUCT;
+        """        && ability1 != ABILITY_RKS_SYSTEM;
 """,
-        """        && ability1 != ABILITY_POWER_CONSTRUCT
+        """        && ability1 != ABILITY_RKS_SYSTEM
         && ability1 != ABILITY_ILLUSION;
 """,
         "Illusion Trace defender1",
     )
     replace_once(
         path,
-        """        && ability2 != ABILITY_POWER_CONSTRUCT;
+        """        && ability2 != ABILITY_RKS_SYSTEM;
 """,
-        """        && ability2 != ABILITY_POWER_CONSTRUCT
+        """        && ability2 != ABILITY_RKS_SYSTEM
         && ability2 != ABILITY_ILLUSION;
 """,
         "Illusion Trace defender2",
@@ -667,25 +667,25 @@ def patch_transform_and_special_rules(root: Path) -> None:
 
     insert_after_once(
         copy,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _091\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _091\n",
         "Illusion Role Play target",
     )
     insert_after_once(
         copy,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _091\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _091\n",
         "Illusion Role Play user",
     )
     insert_after_once(
         swap,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _156\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _156\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _156\n",
         "Illusion Skill Swap target",
     )
     insert_after_once(
         swap,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _156\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _156\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _156\n",
         "Illusion Skill Swap user",
     )
