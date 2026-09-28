@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "STAGING_ONLY",
+  "canonical_dependency": {
+    "branch": "feature/mr08-canonical-abilities",
+    "certified_modern_ability_count": 187,
+    "certification_gate": "MERCURY_MR08_FINAL_CANONICAL_ABILITY_CERTIFICATION"
+  },
+  "policy": {
+    "symbolic_names_only": true,
+    "assign_numeric_ids": false,
+    "install_runtime_mechanics": false,
+    "change_species_assignments": false,
+    "touch_locked_mr07_ui": false,
+    "implementation_ready_requires": "approval_state == locked and all required fields complete"
+  },
+  "allowed_approval_states": [
+    "locked",
+    "provisional",
+    "redesign",
+    "verify",
+    "rejected"
+  ],
+  "allowed_implementation_classes": [
+    "existing_hook",
+    "light_extension",
+    "new_engine_system"
+  ],
+  "abilities": []
+}
