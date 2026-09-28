@@ -7702,6 +7702,45 @@
       "implementation_class": "existing_hook",
       "approval_state": "locked",
       "implementation_ready": true
+    },
+    {
+      "name": "Multi Headed",
+      "source": "Elite Redux v2.65 beta exact source comments, cross-checked against Mercury Stage3",
+      "exact_effect": "Eligible single-target moves strike two or three times according to the user's number of heads, with the multi-hit sequence calibrated to deal 25% or 33% more total damage respectively.",
+      "trigger": "During move resolution for eligible single-target moves.",
+      "restrictions": "Does not apply to moves that are already multi-hit; exact head-count mapping follows the locked ER/Mercury species mapping.",
+      "known_users": [],
+      "mechanic_family": "head_count_multi_hit",
+      "duplicate_status": "Exact ER custom ability; duplicate/alias resolution complete for this staging pass.",
+      "implementation_class": "light_extension",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Gifted Mind",
+      "source": "Elite Redux v2.65 beta exact source comments, cross-checked against Mercury Stage3",
+      "exact_effect": "Status moves used by the user cannot miss, and Psychic-type attacks cannot exploit a type weakness against the user.",
+      "trigger": "During status-move accuracy checks and incoming Psychic-type effectiveness checks.",
+      "restrictions": "The Psychic protection removes super-effective weakness rather than granting blanket immunity; status-move accuracy guarantee applies only to the user's status moves.",
+      "known_users": [],
+      "mechanic_family": "status_always_hit_plus_psychic_weakness_protection",
+      "duplicate_status": "Exact ER custom ability; duplicate/alias resolution complete for this staging pass.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
+    },
+    {
+      "name": "Hydro Circuit",
+      "source": "Elite Redux v2.65 beta exact source comments, cross-checked against Mercury Stage3",
+      "exact_effect": "While rain is active, Electric-type moves used by the user deal 50% more damage and Water-type damaging moves restore HP equal to 25% of damage dealt.",
+      "trigger": "During damage/drain calculation while rain is active.",
+      "restrictions": "Both effects require rain; Water drain healing cannot exceed max HP.",
+      "known_users": [],
+      "mechanic_family": "rain_electric_boost_water_drain",
+      "duplicate_status": "Exact ER custom ability; duplicate/alias resolution complete for this staging pass.",
+      "implementation_class": "existing_hook",
+      "approval_state": "locked",
+      "implementation_ready": true
     }
   ]
 }
