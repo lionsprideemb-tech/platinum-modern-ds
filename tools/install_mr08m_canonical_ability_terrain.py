@@ -145,11 +145,11 @@ void Mercury_SetTerrain(BattleContext *battleCtx, int terrain);
 def patch_damage_and_speed(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
 
-    replace_once(
+    insert_before_once(
         path,
-        """    moveClass = MOVE_DATA(move).class;
-
-    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
+        """    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
+""",
+        """    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
 """,
         """    moveClass = MOVE_DATA(move).class;
 
@@ -189,7 +189,6 @@ def patch_damage_and_speed(root: Path) -> None:
         spAttackStat = spAttackStat * 4 / 3;
     }
 
-    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
 """,
         "terrain damage / Grass Pelt / Hadron Engine",
     )
