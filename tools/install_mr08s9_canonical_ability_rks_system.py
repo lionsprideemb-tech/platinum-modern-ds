@@ -518,18 +518,18 @@ def patch_special_restrictions(root: Path) -> None:
 
     replace_once(
         lib,
-        """        && ability1 != ABILITY_POWER_CONSTRUCT;
+        """        && ability1 != ABILITY_ILLUSION;
 """,
-        """        && ability1 != ABILITY_POWER_CONSTRUCT
+        """        && ability1 != ABILITY_ILLUSION
         && ability1 != ABILITY_RKS_SYSTEM;
 """,
         "RKS Trace defender1",
     )
     replace_once(
         lib,
-        """        && ability2 != ABILITY_POWER_CONSTRUCT;
+        """        && ability2 != ABILITY_ILLUSION;
 """,
-        """        && ability2 != ABILITY_POWER_CONSTRUCT
+        """        && ability2 != ABILITY_ILLUSION
         && ability2 != ABILITY_RKS_SYSTEM;
 """,
         "RKS Trace defender2",
@@ -537,25 +537,25 @@ def patch_special_restrictions(root: Path) -> None:
 
     insert_after_once(
         copy,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _091\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _091\n",
         "RKS Role Play target",
     )
     insert_after_once(
         copy,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _091\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _091\n",
         "RKS Role Play user",
     )
     insert_after_once(
         swap,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _156\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _156\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _156\n",
         "RKS Skill Swap target",
     )
     insert_after_once(
         swap,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _156\n",
+        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_ILLUSION, _156\n",
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_RKS_SYSTEM, _156\n",
         "RKS Skill Swap user",
     )
