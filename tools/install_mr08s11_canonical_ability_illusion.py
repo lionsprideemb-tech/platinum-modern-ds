@@ -612,8 +612,10 @@ def patch_controller_break_check(root: Path) -> None:
         path,
         "static void BattleControllerPlayer_AfterMoveEffects(BattleSystem *battleSys, BattleContext *battleCtx)",
         """    default:
-        Mercury_TryLoadGulpMissile(battleSys, battleCtx);
         break;
+    }
+
+    battleCtx->afterMoveEffectState = AFTER_MOVE_EFFECT_START;
 """,
         """    default: {
         int illusionSeq;
@@ -626,9 +628,11 @@ def patch_controller_break_check(root: Path) -> None:
             return;
         }
 
-        Mercury_TryLoadGulpMissile(battleSys, battleCtx);
         break;
     }
+    }
+
+    battleCtx->afterMoveEffectState = AFTER_MOVE_EFFECT_START;
 """,
         "Illusion suppression/loss break",
     )
