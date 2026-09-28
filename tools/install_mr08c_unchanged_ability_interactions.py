@@ -513,7 +513,7 @@ def patch_gorilla_tactics(root: Path) -> None:
         """            && (itemEffect != HOLD_EFFECT_CHOICE_ATK
                 && itemEffect != HOLD_EFFECT_CHOICE_SPEED
                 && itemEffect != HOLD_EFFECT_CHOICE_SPATK
-                && Battler_Ability(battleCtx, battleCtx->attacker) != ABILITY_GORILLA_TACTICS)) {
+                && Battler_Ability(battleCtx, battleCtx->defender) != ABILITY_GORILLA_TACTICS)) {
 """,
         "Gorilla Tactics choice-lock preservation",
     )
