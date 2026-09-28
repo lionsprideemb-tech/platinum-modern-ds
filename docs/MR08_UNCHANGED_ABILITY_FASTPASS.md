@@ -45,6 +45,16 @@ The implementation source of truth for DS hooks is the pinned hg-engine commit.
 Elite Redux is used as the comparison source to ensure these mechanics are not
 being silently replaced by Redux-specific rebalances.
 
+## MR08C — interaction family
+
+MR08C adds 10 more unchanged canonical mechanics:
+
+
+This raises the implemented modern-Ability mechanics total to **25**. The batch
+uses Platinum-native switch-out, end-turn, priority, immunity, on-hit, KO,
+choice-lock, and Perish Song state hooks. No MR07 Summary/editor visuals are
+changed.
+
 ## Next unchanged candidates
 
 These remain in the fast-pass lane but are intentionally grouped by the battle
@@ -66,7 +76,6 @@ hook they need before entering the implemented registry:
 - Sweet Veil
 - Symbiosis
 - Gooey
-- Stakeout
 - Berserk
 - Cotton Down
 - Mirror Armor
