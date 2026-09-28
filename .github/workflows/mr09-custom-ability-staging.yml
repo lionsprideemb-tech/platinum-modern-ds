@@ -1,0 +1,33 @@
+name: MR09 Custom Ability Staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr09-custom-ability-staging
+    paths:
+      - "data/mr09_custom_ability_intake.json"
+      - "docs/MR09_CUSTOM_ABILITY_STAGING_PLAN.md"
+      - "tools/audit_mr09_custom_ability_intake.py"
+      - ".github/workflows/mr09-custom-ability-staging.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-custom-ability-intake:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Python syntax gate
+        run: python3 -m py_compile tools/audit_mr09_custom_ability_intake.py
+
+      - name: Audit staging-only custom Ability intake
+        run: |
+          python3 tools/audit_mr09_custom_ability_intake.py \
+            data/mr09_custom_ability_intake.json \
+            --report mr09-custom-ability-intake-audit.json
+          test "$(python3 -c 'import json; print(json.load(open("mr09-custom-ability-intake-audit.json"))["status"])')" = "PASS"
+          test "$(python3 -c 'import json; print(json.load(open("mr09-custom-ability-intake-audit.json"))["staging_only"])')" = "True"
