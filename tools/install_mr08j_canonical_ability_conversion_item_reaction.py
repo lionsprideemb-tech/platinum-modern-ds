@@ -413,7 +413,7 @@ def patch_item_family(root: Path) -> None:
         "Unnerve berry suppression",
     )
 
-    replace_once(
+    replace_all_exact(
         path,
         """        if (result == TRUE) {
             battleCtx->msgBattlerTemp = battler;
@@ -441,6 +441,7 @@ def patch_item_family(root: Path) -> None:
 
             LOAD_SUBSEQ(subscript);
 """,
+        3,
         "Cheek Pouch berry heal",
     )
 
