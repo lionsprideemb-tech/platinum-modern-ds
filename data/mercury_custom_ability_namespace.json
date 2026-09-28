@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "phase": "MR09 custom Ability namespace",
+  "canonical_range": [
+    0,
+    310
+  ],
+  "custom_range_reserved": [
+    311,
+    321
+  ],
+  "assignment_policy": "Namespace reservation does not mark an Ability implemented. Species may receive a custom Ability only after its battle hook is installed and added to the implemented registry.",
+  "abilities": [
+    {
+      "id": 311,
+      "token": "ABILITY_CONTROLLED_FURY",
+      "name": "Controlled Fury",
+      "source_name": "Berserk Fury",
+      "status": "mechanic_locked_except_recoil_basis",
+      "effect": "The first time the user falls below half HP, once per battle, it gains +1 Attack and +1 Speed and enters a 3-turn offensive state. During that state damaging moves deal 10% more damage and direct attacks cause 10% recoil. Recoil basis remains to be locked before implementation."
+    },
+    {
+      "id": 312,
+      "token": "ABILITY_ETERNAL_LIFE",
+      "name": "Eternal Life",
+      "source_name": "Eternal Life",
+      "status": "implementation_ready",
+      "effect": "Once per battle, the first time the user reaches 50% HP or less, restore 25% max HP, cure any major status condition, and remove all negative stat stages."
+    },
+    {
+      "id": 313,
+      "token": "ABILITY_HOLLOW_SHELL",
+      "name": "Hollow Shell",
+      "source_name": "Hollow Shell",
+      "status": "implementation_ready",
+      "effect": "If the user is knocked out by a direct damaging move, the attacker loses 25% of its max HP, but this effect cannot reduce the attacker below 1 HP. Indirect, self-KO, and revival cases do not trigger it."
+    },
+    {
+      "id": 314,
+      "token": "ABILITY_MIND_GAMES",
+      "name": "Mind Games",
+      "source_name": "Mind Game",
+      "status": "implementation_ready",
+      "effect": "On entry, seal one opponent's last-used move for 2 turns. If there is no previously used move, nothing is sealed. Switching clears the seal."
+    },
+    {
+      "id": 315,
+      "token": "ABILITY_THE_LOOK",
+      "name": "The Look",
+      "source_name": "The Look",
+      "status": "implementation_ready",
+      "effect": "While the user is active, opposing Pokémon cannot use the same move twice in a row."
+    },
+    {
+      "id": 316,
+      "token": "ABILITY_PRISMATIC_PELT",
+      "name": "Prismatic Pelt",
+      "source_name": "Prismatic Fur",
+      "status": "implementation_ready",
+      "effect": "On entry, gain Prismatic Veil for 3 turns. Super-effective damage is reduced by 25%. The first qualifying hit per switch-in grants +1 Defense if physical or +1 Sp. Def if special. Typing does not change."
+    },
+    {
+      "id": 317,
+      "token": "ABILITY_LOCKDOWN_PROTOCOL",
+      "name": "Lockdown Protocol",
+      "source_name": "Stop \\\\PN",
+      "status": "implementation_ready_needs_target_selector",
+      "effect": "On entry, mark one opposing target for 3 turns. That target's damaging moves deal 10% less damage and it cannot use the same status move twice consecutively. Switching clears the mark. Only one target is marked."
+    },
+    {
+      "id": 318,
+      "token": "ABILITY_ADAPTIVE_GENOME",
+      "name": "Adaptive Genome",
+      "source_name": "Bioengineering",
+      "status": "implementation_ready",
+      "effect": "The first time per switch-in the user is hit super effectively, a physical hit grants +1 Defense and a special hit grants +1 Sp. Def."
+    },
+    {
+      "id": 319,
+      "token": "ABILITY_STORM_SEQUENCE",
+      "name": "Storm Sequence",
+      "source_name": "Storm-9",
+      "status": "implementation_ready_needs_choice_selector",
+      "effect": "On entry choose Rain, Sun, or Sandstorm for 4 turns. Rain heals the user each turn; Sun boosts the user's Fire- and Grass-type moves; Sandstorm gives sand-chip immunity and +1 Defense on entry. No random cycling."
+    },
+    {
+      "id": 320,
+      "token": "ABILITY_FIELD_COMMISSIONER",
+      "name": "Field Commissioner",
+      "source_name": "Commissioner",
+      "status": "implementation_ready_needs_choice_selector",
+      "effect": "On entry, once per switch-in, choose Advance (+1 Speed), Fortify (+1 Defense), or Disrupt (Torment one opposing target for 2 turns). In doubles Disrupt uses the normal opponent-target cursor; AI choice is deterministic."
+    },
+    {
+      "id": 321,
+      "token": "ABILITY_PROTEAN_MAXIMA",
+      "name": "Protean Maxima",
+      "source_name": "Protean Maxima",
+      "status": "form_mapping_pending",
+      "effect": "Mega Eevee only. After a successful damaging move, transform into the Eeveelution matching that move's type, using that form's effective type and stat profile. Status moves do not trigger it. The form persists until another qualifying damaging move. Designated per-form Ability assignments remain to be locked."
+    }
+  ]
+}
