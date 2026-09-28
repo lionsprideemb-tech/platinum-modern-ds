@@ -968,13 +968,13 @@ def patch_state_reset(root: Path) -> None:
 
     replace_once(
         path,
-        """    battleCtx->battleMons[battler].moveEffectsData.truant = (battleCtx->totalTurns + 1) & 1;
-    battleCtx->moveProtect[battler] = MOVE_NONE;
+        """    battleCtx->battleMons[battler].pressureAnnounced = FALSE;
+    battleCtx->battleMons[battler].type1 = Pokemon_GetValue(mon, MON_DATA_TYPE_1, NULL);
 """,
-        """    battleCtx->battleMons[battler].moveEffectsData.truant = (battleCtx->totalTurns + 1) & 1;
+        """    battleCtx->battleMons[battler].pressureAnnounced = FALSE;
     battleCtx->mercuryProteanUsed[battler] = FALSE;
     battleCtx->mercuryFaintHandledMask &= ~FlagIndex(battler);
-    battleCtx->moveProtect[battler] = MOVE_NONE;
+    battleCtx->battleMons[battler].type1 = Pokemon_GetValue(mon, MON_DATA_TYPE_1, NULL);
 """,
         "MR08K switch-in state reset",
     )
