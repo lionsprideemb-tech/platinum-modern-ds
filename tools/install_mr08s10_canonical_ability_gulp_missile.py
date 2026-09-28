@@ -11,8 +11,8 @@ Implements current-mainline Cramorant / Gulp Missile mechanics:
 - Gorging attempts to paralyze the surviving attacker;
 - Cramorant returns to normal after firing and when it switches out;
 - transformed users can possess Gulp Missile but cannot arm its prey state;
-- current Gen IX rules allow Trace, Skill Swap, Wandering Spirit and Receiver
-  to acquire Gulp Missile, while Role Play still fails;
+- current Gen IX rules allow Role Play, Trace, Skill Swap, Wandering Spirit
+  and Receiver to acquire Gulp Missile;
 - Gastro Acid and Worry Seed fail, Mummy/Lingering Aroma cannot overwrite it,
   and Neutralizing Gas cannot suppress it.
 
@@ -346,7 +346,6 @@ def patch_dive_arm_and_substitute_rule(root: Path) -> None:
 
 def patch_gen9_interactions(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
-    copy = root / "res/battle/scripts/subscripts/subscript_copy_ability.s"
     swap = root / "res/battle/scripts/subscripts/subscript_exchange_abilities.s"
     suppress = root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s"
     worry = root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s"
@@ -394,20 +393,6 @@ def patch_gen9_interactions(root: Path) -> None:
         "Gulp Missile Wandering Spirit Gen IX allowance",
     )
 
-    # Role Play still fails if either Pokémon has Gulp Missile in current Gen IX.
-    insert_after_once(
-        copy,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_GULP_MISSILE, _091\n",
-        "Gulp Missile Role Play target lock",
-    )
-    insert_after_once(
-        copy,
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _091\n",
-        "    CompareMonDataToValue OPCODE_EQU, BTLSCR_ATTACKER, BATTLEMON_ABILITY, ABILITY_GULP_MISSILE, _091\n",
-        "Gulp Missile Role Play user lock",
-    )
-
     insert_after_once(
         suppress,
         "    CompareMonDataToValue OPCODE_EQU, BTLSCR_DEFENDER, BATTLEMON_ABILITY, ABILITY_POWER_CONSTRUCT, _034\n",
@@ -443,7 +428,6 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
     script = (root / "src/battle/battle_script.c").read_text(encoding="utf-8")
     sub = (root / "res/battle/scripts/subscripts/subscript_mercury_gulp_missile.s").read_text(encoding="utf-8")
     order = (root / "res/battle/scripts/subscripts/sub_seq.order").read_text(encoding="utf-8")
-    copy = (root / "res/battle/scripts/subscripts/subscript_copy_ability.s").read_text(encoding="utf-8")
     swap = (root / "res/battle/scripts/subscripts/subscript_exchange_abilities.s").read_text(encoding="utf-8")
     suppress = (root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s").read_text(encoding="utf-8")
     worry = (root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s").read_text(encoding="utf-8")
@@ -505,8 +489,9 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "gastro_and_worry_seed_fail":
             "ABILITY_GULP_MISSILE" in suppress
             and "ABILITY_GULP_MISSILE" in worry,
-        "role_play_blocked":
-            copy.count("ABILITY_GULP_MISSILE") >= 2,
+        "role_play_allowed_gen9":
+            "ABILITY_GULP_MISSILE" not in
+                (root / "res/battle/scripts/subscripts/subscript_copy_ability.s").read_text(encoding="utf-8"),
         "trace_allowed_gen9":
             "ability1 != ABILITY_GULP_MISSILE" not in lib
             and "ability2 != ABILITY_GULP_MISSILE" not in lib,
@@ -559,7 +544,7 @@ def main() -> None:
         "running_modern_mechanics_total": 183,
         "remaining_modern_canonical_mechanics": 4,
         "form_visuals_deferred": True,
-        "policy": "Current Gen IX Gulp Missile: successful Surf / first-turn Dive prey state, quarter-max-HP retaliation, Arrokuda Defense drop / Pikachu paralysis, plus post-3.0 copy/swap/Receiver rules.",
+        "policy": "Current Gen IX Gulp Missile: successful Surf / first-turn Dive prey state, quarter-max-HP retaliation, Arrokuda Defense drop / Pikachu paralysis, plus post-3.0 Role Play/Trace/Skill Swap/Receiver rules.",
         "checks": checks,
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
