@@ -371,12 +371,20 @@ def patch_item_family(root: Path) -> None:
 
     replace_once(
         path,
-        """    int itemEffect = Battler_HeldItemEffect(battleCtx, battler);
+        """BOOL BattleSystem_TriggerHeldItem(BattleSystem *battleSys, BattleContext *battleCtx, int battler)
+{
+    BOOL result = FALSE;
+    int subscript;
+    int itemEffect = Battler_HeldItemEffect(battleCtx, battler);
     int itemPower = Battler_HeldItemPower(battleCtx, battler, ITEM_POWER_CHECK_ALL);
 
     if (battleCtx->battleMons[battler].curHP) {
 """,
-        """    int itemEffect = Battler_HeldItemEffect(battleCtx, battler);
+        """BOOL BattleSystem_TriggerHeldItem(BattleSystem *battleSys, BattleContext *battleCtx, int battler)
+{
+    BOOL result = FALSE;
+    int subscript;
+    int itemEffect = Battler_HeldItemEffect(battleCtx, battler);
     int itemPower = Battler_HeldItemPower(battleCtx, battler, ITEM_POWER_CHECK_ALL);
 
     if (Item_IsBerry(Battler_HeldItem(battleCtx, battler))
