@@ -1069,14 +1069,6 @@ def main() -> None:
     patch_state_reset(root)
     update_registry(registry)
 
-    # Temporary compile-diagnostic excerpt: keeps the first failing compiler
-    # location visible in the MR08K step log while this accelerated batch is
-    # being integrated.
-    _battle_lib_lines = (root / "src/battle/battle_lib.c").read_text(encoding="utf-8").splitlines()
-    for _line_no in range(3848, 3879):
-        if _line_no <= len(_battle_lib_lines):
-            print(f"MR08K_DIAG {_line_no}: {_battle_lib_lines[_line_no - 1]}")
-
     checks = validate(root, registry)
     status = "PASS" if all(checks.values()) else "FAIL"
     report = {
