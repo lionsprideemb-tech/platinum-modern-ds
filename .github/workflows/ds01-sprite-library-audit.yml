@@ -2,6 +2,13 @@ name: DS01 Sprite Library Duplicate Audit
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - assets/ds01-community-sprites-20260922
+    paths:
+      - "tools/audit_ds01_sprite_library.py"
+      - ".github/workflows/ds01-sprite-library-audit.yml"
+      - "staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip"
   push:
     branches:
       - audit/ds01-sprite-dedup-20260928
