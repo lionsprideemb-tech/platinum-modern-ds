@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "status": "REVIEW_ONLY",
+  "generated_on": "2026-09-28",
+  "policy": {
+    "install_assets": false,
+    "delete_assets": false,
+    "replace_assets": false,
+    "auto_reject_near_duplicates": false,
+    "exact_unrelated_collision_blocks_integration": true
+  },
+  "confirmed_blockers": [
+    {
+      "collision_type": "exact_bytes_unrelated_concepts",
+      "severity": "block",
+      "entries": [
+        "darkrai_mega",
+        "heatran_mega",
+        "slate",
+        "zeraora_mega"
+      ],
+      "evidence": "Front sheets are byte-identical to one another; back sheets are byte-identical to one another.",
+      "action": "Recover or replace intended artwork before any Mercury integration."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "toxtricity_mega",
+        "toxtricity-amped-gmax",
+        "toxtricity-low-key-gmax"
+      ],
+      "action": "Do not treat toxtricity_mega as distinct approved art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "charizard_mega_z",
+        "charizard-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "coalossal_mega",
+        "coalossal-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "drednaw_mega",
+        "drednaw-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "hatterene_mega",
+        "hatterene-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "inteleon_mega",
+        "inteleon-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "machamp_mega",
+        "machamp-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "snorlax_mega",
+        "snorlax-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "urshifu_mega",
+        "urshifu-single-strike-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    },
+    {
+      "collision_type": "exact_render_custom_mega_vs_gmax",
+      "severity": "block",
+      "entries": [
+        "urshifu_rapid_strike_style_mega",
+        "urshifu-rapid-strike-gmax"
+      ],
+      "action": "Replace/recover distinct custom Mega art."
+    }
+  ],
+  "palette_review": [
+    {
+      "entries": [
+        "lapras_mega",
+        "lapras-gmax"
+      ],
+      "evidence": "Identical normalized color-pattern topology with a different rendered palette.",
+      "action": "Visual review required before approval."
+    }
+  ],
+  "near_duplicate_review": [
+    [
+      "butterfree_mega",
+      "butterfree-gmax"
+    ],
+    [
+      "kingler_mega",
+      "kingler-gmax"
+    ],
+    [
+      "tinkaton_mega",
+      "tinkaton"
+    ],
+    [
+      "arcanine_redux",
+      "mightyena"
+    ],
+    [
+      "beedrill_mega_redux",
+      "reuniclus_redux"
+    ],
+    [
+      "cpf_0106_quagsire_alternate_form_1",
+      "goodra_hisuian_mega"
+    ],
+    [
+      "fearow_redux",
+      "mesprit_redux"
+    ]
+  ],
+  "notes": [
+    "Canonical form/gender storage duplication is not automatically a defect.",
+    "The broad first-pass dHash cluster is treated as noisy and does not block integration.",
+    "No sprite listed here has been installed, removed, renamed, recolored, or replaced."
+  ]
+}
