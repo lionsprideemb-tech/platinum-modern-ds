@@ -7,6 +7,7 @@ on:
       - feature/mr05b-authored-encounters
       - feature/mr06b-research-poke-radar
       - feature/mr07-summary-skills
+      - feature/mr08-canonical-abilities
     paths:
       - ".github/workflows/mr05b-authored-encounters.yml"
       - "tools/install_mercury_move_learner.py"
@@ -21,6 +22,7 @@ on:
       - "tools/install_mr07d3_vanilla_skills_palette.py"
       - "tools/install_mr07d4_summary_typography_polish.py"
       - "tools/install_mr07d5_summary_editor_color_polish.py"
+      - "tools/install_mr08a_canonical_ability_batch.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -159,6 +161,7 @@ jobs:
             tools/install_mr07d3_vanilla_skills_palette.py \
             tools/install_mr07d4_summary_typography_polish.py \
             tools/install_mr07d5_summary_editor_color_polish.py \
+            tools/install_mr08a_canonical_ability_batch.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -201,6 +204,26 @@ jobs:
 
           test "$(jq -r '.canonical_ability_count' mr04-ability-namespace.json)" = "311"
           test "$(jq -r '.save_storage.capacity' mr04-ability-namespace.json)" = "1023"
+
+      - name: Install MR08A canonical ability mechanics batch 1
+        shell: bash
+        run: |
+          python3 tools/install_mr08a_canonical_ability_batch.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08a-canonical-ability-batch.json
+
+          test "$(jq -r '.status' mr08a-canonical-ability-batch.json)" = "PASS"
+          test "$(jq -r '.checks.contrary_hook' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.checks.big_pecks_hook' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.checks.full_metal_body_hook' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.checks.battle_ability_return_u16' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.checks.battlemon_set_u16' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.checks.ai_ability_cache_u16' mr08a-canonical-ability-batch.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08a-canonical-ability-batch.json)" = "false"
+          grep -qx 'ABILITY_CONTRARY' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_BIG_PECKS' mr04-implemented-abilities.txt
+          grep -qx 'ABILITY_FULL_METAL_BODY' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1190,6 +1213,7 @@ jobs:
           cp mr07d3-vanilla-skills-palette.json mr05b-artifact/ 2>/dev/null || true
           cp mr07d4-summary-typography-polish.json mr05b-artifact/ 2>/dev/null || true
           cp mr07d5-summary-editor-color-polish.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08a-canonical-ability-batch.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -1728,6 +1752,7 @@ jobs:
             echo "- MR07D3 replaces the generic white Skills field with Platinum's own Skills-family palette: lavender/purple labels, white/yellow values, blue accents, and pale-yellow description band"
             echo "- MR07D4 keeps purple/lavender only in the background accents; all player-facing detail text and selection arrows use Platinum dark/blue ink"
             echo "- MR07D5 replaces the remaining white lower editor sheets with Platinum's native lower-screen cream/tan/blue palette while retaining standard frames"
+            echo "- MR08A ports Contrary, Big Pecks, and Full Metal Body battle mechanics and widens remaining 10-bit Ability runtime paths before species import"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
