@@ -112,31 +112,40 @@
         "urshifu-rapid-strike-gmax"
       ],
       "action": "Replace/recover distinct custom Mega art."
-    }
-  ],
-  "palette_review": [
+    },
     {
+      "collision_type": "palette_recolor_same_design",
+      "severity": "block",
       "entries": [
         "lapras_mega",
         "lapras-gmax"
       ],
-      "evidence": "Identical normalized color-pattern topology with a different rendered palette.",
-      "action": "Visual review required before approval."
+      "evidence": "Confirmed by generated side-by-side collision proof from staged DS-ready sprites.",
+      "action": "Use lapras_mega_x only after design approval, or recover/create a distinct Mega Lapras."
+    },
+    {
+      "collision_type": "near_duplicate_same_gmax_concept",
+      "severity": "block",
+      "entries": [
+        "butterfree_mega",
+        "butterfree-gmax"
+      ],
+      "evidence": "Confirmed by generated side-by-side collision proof from staged DS-ready sprites.",
+      "action": "Recover/select a clearly distinct Mega Butterfree design."
+    },
+    {
+      "collision_type": "near_duplicate_same_gmax_concept",
+      "severity": "block",
+      "entries": [
+        "kingler_mega",
+        "kingler-gmax"
+      ],
+      "evidence": "Confirmed by generated side-by-side collision proof from staged DS-ready sprites.",
+      "action": "Recover/select a clearly distinct Mega Kingler design."
     }
   ],
+  "palette_review": [],
   "near_duplicate_review": [
-    [
-      "butterfree_mega",
-      "butterfree-gmax"
-    ],
-    [
-      "kingler_mega",
-      "kingler-gmax"
-    ],
-    [
-      "tinkaton_mega",
-      "tinkaton"
-    ],
     [
       "arcanine_redux",
       "mightyena"
@@ -161,7 +170,9 @@
     "Exact duplicates between intentionally identical storage aliases remain informational unless the forms are expected to look different.",
     "Secondary form/icon collisions are held for visual/provenance review rather than auto-rejected.",
     "The first-pass recovery search checked the nested downloaded source packs plus staged manifests; broad species-name hits are evidence leads, not automatic replacement approvals.",
-    "Darkrai Mega, Heatran Mega, and Zeraora Mega each have a distinct same-concept modern-DS-resource candidate already present in the staged library."
+    "Darkrai Mega, Heatran Mega, and Zeraora Mega each have a distinct same-concept modern-DS-resource candidate already present in the staged library.",
+    "Generated visual proof promoted Lapras Mega, Butterfree Mega, and Kingler Mega to blockers because they reuse or too closely mirror their G-Max designs.",
+    "Tinkaton Mega was visually cleared from the near-duplicate concern; its similarity to base Tinkaton is ordinary same-species continuity."
   ],
   "exact_form_review": [
     {
@@ -403,6 +414,48 @@
         "comparison": "tinkaton",
         "status": "keep_for_visual_review_only",
         "reason": "The files have different rendered-pixel and normalized-palette hashes; this is not an exact or recolor duplicate."
+      }
+    ]
+  },
+  "visual_proof_review": {
+    "proof_source": "DS01 Sprite Collision Proof workflow artifact generated from the staged hg_engine_ready male/front assets",
+    "confirmed_after_visual_review": [
+      {
+        "entries": [
+          "lapras_mega",
+          "lapras-gmax"
+        ],
+        "finding": "Same underlying sprite design / silhouette with palette changes rather than a distinct Mega design.",
+        "severity": "block",
+        "action": "Do not approve lapras_mega as distinct art; review lapras_mega_x or recover/new art."
+      },
+      {
+        "entries": [
+          "butterfree_mega",
+          "butterfree-gmax"
+        ],
+        "finding": "Visually too close to the G-Max design to count as a distinct custom Mega despite non-identical hashes.",
+        "severity": "block",
+        "action": "Keep quarantined until a clearly distinct Mega design is selected."
+      },
+      {
+        "entries": [
+          "kingler_mega",
+          "kingler-gmax"
+        ],
+        "finding": "Visually too close to the G-Max design to count as a distinct custom Mega despite non-identical hashes.",
+        "severity": "block",
+        "action": "Keep quarantined until a clearly distinct Mega design is selected."
+      }
+    ],
+    "cleared_from_near_duplicate_blocking": [
+      {
+        "entries": [
+          "tinkaton_mega",
+          "tinkaton"
+        ],
+        "finding": "The Mega and base Tinkaton are visibly distinct enough in silhouette/details/hammer treatment; similarity is normal same-species continuity.",
+        "status": "clear_exact_and_near_duplicate_concern"
       }
     ]
   }
