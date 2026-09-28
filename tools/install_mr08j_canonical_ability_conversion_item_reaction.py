@@ -316,7 +316,10 @@ def patch_type_conversion_family(root: Path) -> None:
 
     replace_once(
         path,
-        """        if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_NORMALIZE) {
+        """    case ABILITY_COLOR_CHANGE:
+        u8 moveType;
+
+        if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_NORMALIZE) {
             moveType = TYPE_NORMAL;
         } else if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_REFRIGERATE
             && battleCtx->moveType == TYPE_NORMAL
@@ -329,7 +332,10 @@ def patch_type_conversion_family(root: Path) -> None:
             moveType = CURRENT_MOVE_DATA.type;
         }
 """,
-        """        if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_NORMALIZE) {
+        """    case ABILITY_COLOR_CHANGE:
+        u8 moveType;
+
+        if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_NORMALIZE) {
             moveType = TYPE_NORMAL;
         } else if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_LIQUID_VOICE
             && Mercury_MoveIsSound(battleCtx->moveCur)) {
