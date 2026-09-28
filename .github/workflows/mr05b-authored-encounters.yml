@@ -53,6 +53,7 @@ on:
       - "tools/install_mr08s5_canonical_ability_hunger_switch.py"
       - "tools/install_mr08s6_canonical_ability_zero_to_hero.py"
       - "tools/install_mr08s7_canonical_ability_threshold_forms.py"
+      - "tools/install_mr08s8_canonical_ability_power_construct.py"
       - "tools/install_mr07a_summary_skills_proof.py"
       - "tools/install_mr07b2_summary_editor_proof.py"
       - "tools/install_mr05a_hm_free_traversal.py"
@@ -222,6 +223,7 @@ jobs:
             tools/install_mr08s5_canonical_ability_hunger_switch.py \
             tools/install_mr08s6_canonical_ability_zero_to_hero.py \
             tools/install_mr08s7_canonical_ability_threshold_forms.py \
+            tools/install_mr08s8_canonical_ability_power_construct.py \
             tools/install_mr07a_summary_skills_proof.py \
             tools/install_mr07b2_summary_editor_proof.py \
             tools/install_mr05a_hm_free_traversal.py \
@@ -902,6 +904,22 @@ jobs:
           grep -qx 'ABILITY_ZEN_MODE' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_SCHOOLING' mr04-implemented-abilities.txt
           grep -qx 'ABILITY_SHIELDS_DOWN' mr04-implemented-abilities.txt
+
+      - name: Install MR08S8 canonical Power Construct pass
+        shell: bash
+        run: |
+          python3 tools/install_mr08s8_canonical_ability_power_construct.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr04-implemented-abilities.txt \
+            --report mr08s8-canonical-ability-power-construct.json
+
+          test "$(jq -r '.status' mr08s8-canonical-ability-power-construct.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr08s8-canonical-ability-power-construct.json)" = "1"
+          test "$(jq -r '.running_modern_mechanics_total' mr08s8-canonical-ability-power-construct.json)" = "181"
+          test "$(jq -r '.remaining_modern_canonical_mechanics' mr08s8-canonical-ability-power-construct.json)" = "6"
+          test "$(jq -r '[.checks[]] | all' mr08s8-canonical-ability-power-construct.json)" = "true"
+          test "$(jq -r '.ui_changed' mr08s8-canonical-ability-power-construct.json)" = "false"
+          grep -qx 'ABILITY_POWER_CONSTRUCT' mr04-implemented-abilities.txt
 
       - name: Build canonical 1025 species registry
         shell: bash
@@ -1922,6 +1940,7 @@ jobs:
           cp mr08s5-canonical-ability-hunger-switch.json mr05b-artifact/ 2>/dev/null || true
           cp mr08s6-canonical-ability-zero-to-hero.json mr05b-artifact/ 2>/dev/null || true
           cp mr08s7-canonical-ability-threshold-forms.json mr05b-artifact/ 2>/dev/null || true
+          cp mr08s8-canonical-ability-power-construct.json mr05b-artifact/ 2>/dev/null || true
           cp mr05a-hm-free-traversal.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-port.json mr05b-artifact/ 2>/dev/null || true
           cp mr05b-authored-runtime.json mr05b-artifact/ 2>/dev/null || true
@@ -2491,6 +2510,7 @@ jobs:
             echo "- MR08S5 adds canonical Hunger Switch Full Belly/Hangry turn-end state (176 modern mechanics total; 11 remain)"
             echo "- MR08S6 adds canonical Zero to Hero switch persistence and exact Hero-form stat recalculation (177 modern mechanics total; 10 remain)"
             echo "- MR08S7 adds canonical Zen Mode + Schooling + Shields Down threshold-form mechanics (180 modern mechanics total; 7 remain)"
+            echo "- MR08S8 adds canonical Power Construct Complete Forme battle state with damage-preserving HP growth (181 modern mechanics total; 6 remain)"
             echo "- MR07B2 proves real DeSmuME Ability 1 -> Ability 2, HP EV 0 -> 252 / total 510, and effective-Nature editing; post-close assertions also verify PID identity is unchanged"
             echo "- TOP remains vanilla Platinum Summary renderer"
             echo "- BOTTOM remains Mercury Move Learner browser"
