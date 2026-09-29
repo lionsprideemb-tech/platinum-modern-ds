@@ -105,7 +105,7 @@ def patch_status_immunity(root: Path) -> None:
         battleCtx->mercuryNullWardUsed[defender] = TRUE;
         battleCtx->msgTemp = defender;
         battleCtx->msgBattlerTemp = defender;
-        return subscript_mold_breaker;
+        return subscript_but_it_failed;
     }
 
 """
@@ -155,6 +155,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "mercuryNullWardUsed[defender] = TRUE;" in lib,
         "mold_breaker_aware":
             "ABILITY_MR_NULL_WARD) == TRUE" in lib,
+        "uses_generic_failure_subscript":
+            "return subscript_but_it_failed;" in lib,
         "implemented_registry_updated": ABILITY_TOKEN in registry_lines,
         "locked_mr07_visuals_untouched": True,
     }
