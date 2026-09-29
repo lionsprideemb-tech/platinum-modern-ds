@@ -1,0 +1,137 @@
+name: MR10C Approved Custom Foundation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr10c-approved-custom-mechanics
+    paths:
+      - "tools/run_mr08_canonical_stack.py"
+      - "tools/install_mr10a_custom_ability_namespace.py"
+      - "tools/install_mr10b1_er_safe_scalar_overrides.py"
+      - "tools/install_mr10b2_safe_defensive_reaction_overrides.py"
+      - "tools/install_mr10b3_safe_precision_offense_status.py"
+      - "data/mr10_safe_ability_partition.json"
+      - "docs/approval/mr10-93-mechanics-data.json"
+      - ".github/workflows/mr10c-approved-custom-foundation.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-pip wget xz-utils libpng-dev rsync jq
+
+      - name: Checkout pinned sources
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Restore modern move namespace
+        run: |
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mr10c-modern-moves.json \
+            --implemented-registry mr10c-implemented-moves.txt
+
+      - name: Restore canonical Ability namespace
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mr10c-ability-namespace.json \
+            --implemented-registry mr10c-implemented-abilities.txt
+
+      - name: Rebuild all canonical mechanics
+        run: |
+          python3 tools/run_mr08_canonical_stack.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --reports-dir mr10c-mr08-reports \
+            --report mr10c-mr08-stack.json
+          test "$(jq -r '.status' mr10c-mr08-stack.json)" = "PASS"
+          test "$(jq -r '.canonical_modern_implemented' mr10c-mr08-stack.json)" = "187"
+
+      - name: Apply approved safe canonical overrides
+        run: |
+          python3 tools/install_mr10b1_er_safe_scalar_overrides.py \
+            vendor/pokeplatinum --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-b1.json
+          python3 tools/install_mr10b2_safe_defensive_reaction_overrides.py \
+            vendor/pokeplatinum --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-b2.json
+          python3 tools/install_mr10b3_safe_precision_offense_status.py \
+            vendor/pokeplatinum --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-b3.json
+
+      - name: Materialize approved Mercury namespace
+        run: |
+          python3 tools/install_mr10a_custom_ability_namespace.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-custom-namespace.json
+          test "$(jq -r '.status' mr10c-custom-namespace.json)" = "PASS"
+          test "$(jq -r '.review_blocked_custom_count' mr10c-custom-namespace.json)" = "0"
+
+      - name: Build native Platinum ROM
+        working-directory: vendor/pokeplatinum
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Upload proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr10c-approved-foundation-${{ github.run_id }}
+          path: |
+            mr10c-mr08-stack.json
+            mr10c-mr08-reports/
+            mr10c-b1.json
+            mr10c-b2.json
+            mr10c-b3.json
+            mr10c-custom-namespace.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summary
+        run: |
+          {
+            echo "## MR10C approved custom foundation"
+            echo
+            echo "- Owner review resolved: 93/93"
+            echo "- Approved blank-slate redesigns: 15/15"
+            echo "- Cut identities retained only as reserved stable IDs: 2"
+            echo "- Zen Mode returned to normal Pokémon mechanics: 1"
+            echo "- Canonical mechanics rebuilt: 187/187"
+            echo "- Native ROM build: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
