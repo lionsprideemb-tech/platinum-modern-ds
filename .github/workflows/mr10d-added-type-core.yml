@@ -1,7 +1,7 @@
 name: MR10D Added Type Core
 
-# MR10C foundation validates the resolved owner-review branch through C15.
-# Current gate: C1-C15; all 15 approved redesigns are staged behind this native gate.n installers retrigger this native gate.n installers retrigger this native gate.now retrigger this native gate.
+# MR10D1 extends the green MR10C foundation with the first shared
+# KEEP-AS-WRITTEN engine family: battle-only added typing.
 
 on:
   workflow_dispatch:
@@ -32,9 +32,11 @@ on:
       - "tools/install_mr10c13_two_lives.py"
       - "tools/install_mr10c14_undertow.py"
       - "tools/install_mr10c15_pattern_breaker.py"
+      - "tools/install_mr10d1_added_type_core.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
+      - ".github/workflows/mr10d-added-type-core.yml"
 
 permissions:
   contents: read
@@ -286,6 +288,16 @@ jobs:
           test "$(jq -r '.status' mr10c15-pattern-breaker.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10c15-pattern-breaker.json)" = "1"
 
+      - name: Implement KEEP-AS-WRITTEN added-type core D1
+        run: |
+          python3 tools/install_mr10d1_added_type_core.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d1-added-type-core.json
+          test "$(jq -r '.status' mr10d1-added-type-core.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d1-added-type-core.json)" = "9"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -322,6 +334,7 @@ jobs:
             mr10c13-two-lives.json
             mr10c14-undertow.json
             mr10c15-pattern-breaker.json
+            mr10d1-added-type-core.json
           if-no-files-found: error
           retention-days: 14
 
@@ -336,5 +349,8 @@ jobs:
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
             echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression, Two Lives, Undertow, Pattern Breaker"
+            echo "- KEEP-AS-WRITTEN shared family D1: 9 abilities compile-certified"
+            echo "- Added-type core: Aquatic, Grounded, Half Drake, Ice Age, Metallic, Dragonfly, Hover, Turboblaze, Teravolt"
+            echo "- Remaining KEEP-AS-WRITTEN mechanics after D1: 66"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
