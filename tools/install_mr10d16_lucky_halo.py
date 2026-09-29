@@ -146,15 +146,29 @@ def patch_self_drop_prevention(root: Path) -> None:
     }
 
 """
-    insert_before_in_function(
-        path,
-        signature,
-        """    if (stageChange > 0) {
-""",
-        insertion,
-        "ABILITY_MR_LUCKY_HALO",
-        "D16 self-inflicted stat-drop prevention",
-    )
+    text = path.read_text(encoding="utf-8")
+    start, end = function_bounds(text, signature)
+    block = text[start:end]
+    if "ABILITY_MR_LUCKY_HALO" not in block:
+        anchor = """        stageChange = 1;
+        battleCtx->scriptTemp = BATTLE_ANIMATION_STAT_BOOST;
+    }
+
+    if (stageChange > 0) {
+"""
+        if block.count(anchor) != 1:
+            raise SystemExit(
+                "D16 self-inflicted stat-drop prevention: "
+                f"expected one post-stage-decode anchor, found {block.count(anchor)}"
+            )
+        replacement = """        stageChange = 1;
+        battleCtx->scriptTemp = BATTLE_ANIMATION_STAT_BOOST;
+    }
+
+""" + insertion + """    if (stageChange > 0) {
+"""
+        block = block.replace(anchor, replacement, 1)
+        path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
 def patch_fatal_hit_survival(root: Path) -> None:
