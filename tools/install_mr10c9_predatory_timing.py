@@ -138,6 +138,8 @@ def patch_damage_boost(root: Path) -> None:
     insert_before_once(
         path,
         """    if (attackerParams.ability == ABILITY_MR_BACKLASH
+        && battleCtx->mercuryBacklashPrimed[attacker]
+        && movePower) {
 """,
         """    if (attackerParams.ability == ABILITY_MR_PREDATORY_TIMING
         && battleCtx->mercuryPredatoryTimingReady[attacker]
