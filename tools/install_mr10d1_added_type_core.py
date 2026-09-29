@@ -191,8 +191,9 @@ def patch_type_helpers(root: Path) -> None:
     insert_before_once(
         lib,
         "static BOOL BasicTypeMulApplies(BattleContext *battleCtx, int attacker, int defender, int chartEntry);\n",
-        "static u8 Mercury_AddedTypeForAbility(int ability);\n",
-        "MR10D added-type helper prototype",
+        "static u8 Mercury_AddedTypeForAbility(int ability);\n"
+        "static BOOL Mercury_IsMoldBreakerLikeAbilityId(int ability);\n",
+        "MR10D added-type helper prototypes",
     )
     helper = """static u8 Mercury_AddedTypeForAbility(int ability)\n{\n    switch (ability) {\n    case ABILITY_MR_AQUATIC:\n        return TYPE_WATER;\n    case ABILITY_MR_GROUNDED:\n        return TYPE_GROUND;\n    case ABILITY_MR_DRAGONFLY:\n    case ABILITY_MR_HALF_DRAKE:\n        return TYPE_DRAGON;\n    case ABILITY_MR_HOVER:\n        return TYPE_PSYCHIC;\n    case ABILITY_MR_ICE_AGE:\n        return TYPE_ICE;\n    case ABILITY_MR_METALLIC:\n        return TYPE_STEEL;\n    case ABILITY_TURBOBLAZE:\n        return TYPE_FIRE;\n    case ABILITY_TERAVOLT:\n        return TYPE_ELECTRIC;\n    default:\n        return 0xFF;\n    }\n}\n\nint Mercury_BattlerAddedType(BattleContext *battleCtx, int battler)\n{\n    return Mercury_AddedTypeForAbility(Battler_Ability(battleCtx, battler));\n}\n\nBOOL Mercury_BattlerHasType(BattleContext *battleCtx, int battler, int type)\n{\n    return BattleMon_Get(battleCtx, battler, BATTLEMON_TYPE_1, NULL) == type\n        || BattleMon_Get(battleCtx, battler, BATTLEMON_TYPE_2, NULL) == type\n        || Mercury_BattlerAddedType(battleCtx, battler) == type;\n}\n\nstatic BOOL Mercury_IsMoldBreakerLikeAbilityId(int ability)\n{\n    return ability == ABILITY_MOLD_BREAKER\n        || ability == ABILITY_TURBOBLAZE\n        || ability == ABILITY_TERAVOLT;\n}\n\n"""
     insert_before_once(
