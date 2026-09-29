@@ -402,9 +402,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "entry_rebuild_after_native_load":
             "Mercury_InitializeAbilityAddedType(battleCtx, battler);" in lib,
         "live_damage_chart_has_extra_layer":
-            "Mercury_BattlerHasExtraType(" in lib
-            and "third-type" not in lib
-            and lib.count("Mercury_BattlerHasExtraType(") >= 2,
+            lib.count("Mercury_BattlerHasExtraType(") >= 2
+            and "sTypeMatchupMultipliers[chartEntry][1]" in lib,
         "flower_veil_respects_extra_grass":
             "MON_IS_NOT_TYPE(defender, TYPE_GRASS)" in lib,
         "aquatic_water":
