@@ -28,6 +28,8 @@ ABILITY_NAME = "Magical Dust"
 ABILITY_TOKEN = "ABILITY_MR_MAGICAL_DUST"
 ABILITY_ID = 906
 
+# Gate revision: trigger native certification after workflow creation.
+
 
 def replace_once(path: Path, old: str, new: str, label: str) -> None:
     text = path.read_text(encoding="utf-8")
