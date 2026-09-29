@@ -113,6 +113,19 @@ def export_existing_move_families(root: Path) -> None:
         "BOOL Mercury_MoveIsBiting(int move)\n",
         "export current Mercury biting move family",
     )
+    # Some earlier canonical installers leave forward declarations static.
+    # Export those declarations too or the linker will keep the definition
+    # internal even after the function definition loses its static keyword.
+    text = lib.read_text(encoding="utf-8")
+    text = text.replace(
+        "static BOOL Mercury_MoveIsPulse(int move);",
+        "BOOL Mercury_MoveIsPulse(int move);",
+    )
+    text = text.replace(
+        "static BOOL Mercury_MoveIsBiting(int move);",
+        "BOOL Mercury_MoveIsBiting(int move);",
+    )
+    lib.write_text(text, encoding="utf-8")
     insert_before_once(
         hdr,
         """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);
