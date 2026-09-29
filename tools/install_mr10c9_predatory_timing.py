@@ -9,7 +9,7 @@ Predatory Timing:
   after its next damaging move resolves, and is cleared on switch-out.
 
 The trigger lives at move-end so failed/missed status moves do not prime the
-Ability and broad status categories such as setup, recovery, hazards, screens,
+Ability; this installer is part of the C9-C12 native push gate and broad status categories such as setup, recovery, hazards, screens,
 weather, terrain, and Trick Room all share one path.
 """
 
