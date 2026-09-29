@@ -54,6 +54,49 @@ def replace_case(path: Path, start_marker: str, end_marker: str, replacement: st
     path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
 
 
+def insert_before_in_function(
+    path: Path,
+    signature: str,
+    anchor: str,
+    insertion: str,
+    label: str,
+) -> None:
+    text = path.read_text(encoding="utf-8")
+    if insertion in text:
+        return
+
+    start = text.find(signature)
+    if start < 0:
+        raise SystemExit(f"{label}: function signature not found in {path}")
+
+    open_brace = text.find("{", start)
+    if open_brace < 0:
+        raise SystemExit(f"{label}: function opening brace not found in {path}")
+
+    depth = 0
+    end = -1
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end < 0:
+        raise SystemExit(f"{label}: function closing brace not found in {path}")
+
+    block = text[start:end]
+    count = block.count(anchor)
+    if count != 1:
+        raise SystemExit(
+            f"{label}: expected exactly one anchor inside {signature}, found {count}"
+        )
+
+    block = block.replace(anchor, insertion + anchor, 1)
+    path.write_text(text[:start] + block + text[end:], encoding="utf-8")
+
+
 def update_descriptions(root: Path, partition: Path) -> None:
     plan = json.loads(partition.read_text(encoding="utf-8"))
     rows = {x["source_name"]: x for x in plan["abilities"]}
@@ -104,8 +147,9 @@ def patch_accuracy_family(root: Path) -> None:
         "Keen Eye positive-evasion bypass",
     )
 
-    insert_before_once(
+    insert_before_in_function(
         path,
+        "static int BattleControllerPlayer_CheckMoveHitAccuracy(",
         """    if (NO_CLOUD_NINE) {
 """,
         """    if (Battler_Ability(battleCtx, attacker) == ABILITY_KEEN_EYE) {
