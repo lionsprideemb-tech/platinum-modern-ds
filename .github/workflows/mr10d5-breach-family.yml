@@ -2,6 +2,7 @@ name: MR10D5 Breach Family
 
 # MR10D5 extends the green reviewed-mechanic stack with protection,
 # Substitute, accuracy and screen-breach behavior.
+# Gate revision: installer helper fixed.
 
 on:
   workflow_dispatch:
