@@ -1,7 +1,7 @@
 name: MR10C Approved Custom Foundation
 
-# MR10C foundation validates the resolved owner-review branch through C12.
-# Current gate: C1-C12; script pushes C9-C12 now retrigger this native gate.
+# MR10C foundation validates the resolved owner-review branch through C13.
+# Current gate: C1-C13; all staged redesign installers retrigger this native gate.now retrigger this native gate.
 
 on:
   workflow_dispatch:
@@ -29,6 +29,7 @@ on:
       - "tools/install_mr10c10_counterstep.py"
       - "tools/install_mr10c11_countercurrent.py"
       - "tools/install_mr10c12_time_compression.py"
+      - "tools/install_mr10c13_two_lives.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
@@ -253,6 +254,16 @@ jobs:
           test "$(jq -r '.status' mr10c12-time-compression.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10c12-time-compression.json)" = "1"
 
+      - name: Implement approved custom mechanics batch C13
+        run: |
+          python3 tools/install_mr10c13_two_lives.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c13-two-lives.json
+          test "$(jq -r '.status' mr10c13-two-lives.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c13-two-lives.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -286,6 +297,7 @@ jobs:
             mr10c10-counterstep.json
             mr10c11-countercurrent.json
             mr10c12-time-compression.json
+            mr10c13-two-lives.json
           if-no-files-found: error
           retention-days: 14
 
@@ -299,6 +311,6 @@ jobs:
             echo "- Cut identities retained only as reserved stable IDs: 2"
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
-            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression"
+            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression, Two Lives"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
