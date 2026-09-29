@@ -209,14 +209,10 @@ def patch_damage(root: Path) -> None:
     replace_once(
         lib,
         """        if ((sideConditions & SIDE_CONDITION_REFLECT) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS) {
 """,
         """        if ((sideConditions & SIDE_CONDITION_REFLECT) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS
             && Mercury_AttackBypassesScreens(
-                battleCtx, attacker, move) == FALSE) {
+                battleCtx, attacker, move) == FALSE
 """,
         "MR10D7 Reflect bypass",
     )
@@ -224,14 +220,10 @@ def patch_damage(root: Path) -> None:
     replace_once(
         lib,
         """        if ((sideConditions & SIDE_CONDITION_LIGHT_SCREEN) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS) {
 """,
         """        if ((sideConditions & SIDE_CONDITION_LIGHT_SCREEN) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS
             && Mercury_AttackBypassesScreens(
-                battleCtx, attacker, move) == FALSE) {
+                battleCtx, attacker, move) == FALSE
 """,
         "MR10D7 Light Screen bypass",
     )
