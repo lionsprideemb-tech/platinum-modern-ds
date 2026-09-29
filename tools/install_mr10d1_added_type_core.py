@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MR10D1 — Mercury battle-only added-type core.
+"""MR10D1 — Mercury battle-only added-type core.\n\nCertification branch trigger: MR10D1.
 
 This pass establishes the shared third-type behavior required by the first
 KEEP-AS-WRITTEN mechanic family and graduates nine approved abilities together:
