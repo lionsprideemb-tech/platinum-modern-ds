@@ -131,24 +131,63 @@ def validate_partition(path: Path) -> None:
             raise SystemExit(f"{name}: reviewed mechanic is runtime-disabled")
 
 
-def export_slicing_helper(root: Path) -> None:
-    lib = root / "src/battle/battle_lib.c"
-    header = root / "include/battle/battle_lib.h"
+def patch_local_slicing_helpers(root: Path) -> None:
+    helper = """static BOOL Mercury_D5MoveIsSlicing(int move)
+{
+    switch (move) {
+    case MOVE_AERIAL_ACE:
+    case MOVE_AIR_CUTTER:
+    case MOVE_AIR_SLASH:
+    case MOVE_AQUA_CUTTER:
+    case MOVE_BEHEMOTH_BLADE:
+    case MOVE_BITTER_BLADE:
+    case MOVE_CEASELESS_EDGE:
+    case MOVE_CROSS_POISON:
+    case MOVE_CRUSH_CLAW:
+    case MOVE_CUT:
+    case MOVE_DIRE_CLAW:
+    case MOVE_DRAGON_CLAW:
+    case MOVE_FURY_CUTTER:
+    case MOVE_KOWTOW_CLEAVE:
+    case MOVE_LEAF_BLADE:
+    case MOVE_METAL_CLAW:
+    case MOVE_MIGHTY_CLEAVE:
+    case MOVE_NIGHT_SLASH:
+    case MOVE_POPULATION_BOMB:
+    case MOVE_PSYBLADE:
+    case MOVE_PSYCHO_CUT:
+    case MOVE_RAZOR_LEAF:
+    case MOVE_RAZOR_SHELL:
+    case MOVE_SACRED_SWORD:
+    case MOVE_SECRET_SWORD:
+    case MOVE_SHADOW_CLAW:
+    case MOVE_SLASH:
+    case MOVE_SOLAR_BLADE:
+    case MOVE_STONE_AXE:
+    case MOVE_TACHYON_CUTTER:
+    case MOVE_X_SCISSOR:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
 
-    replace_once(
-        lib,
-        "static BOOL Mercury_MoveIsSlicing(int move)\n",
-        "BOOL Mercury_MoveIsSlicing(int move)\n",
-        "export Sharpness slicing classifier",
-    )
+"""
+    controller = root / "src/battle/battle_controller_player.c"
+    script = root / "src/battle/battle_script.c"
 
     insert_before_once(
-        header,
-        "#endif // POKEPLATINUM_BATTLE_BATTLE_LIB_H",
-        """\n/* Mercury MR10D5: shared Keen Edge / slicing classification. */\nBOOL Mercury_MoveIsSlicing(int move);\n\n""",
-        "public slicing helper declaration",
+        controller,
+        "static int BattleControllerPlayer_CheckMoveHitAccuracy(BattleSystem *battleSys, BattleContext *battleCtx, int attacker, int defender, int move)\n",
+        helper,
+        "MR10D5 controller-local slicing classifier",
     )
-
+    insert_before_once(
+        script,
+        "static BOOL BtlCmd_CheckSubstitute(BattleSystem *battleSys, BattleContext *battleCtx)\n",
+        helper,
+        "MR10D5 script-local slicing classifier",
+    )
 
 def patch_context_and_entry_state(root: Path) -> None:
     ctx = root / "include/battle/battle_context.h"
@@ -193,7 +232,7 @@ def patch_accuracy_and_protection(root: Path) -> None:
 """,
         """    if (Battler_Ability(battleCtx, attacker)
             == ABILITY_MR_PINNACLE_BLADE
-        && Mercury_MoveIsSlicing(move)) {
+        && Mercury_D5MoveIsSlicing(move)) {
         return 0;
     }
 
@@ -214,7 +253,7 @@ def patch_accuracy_and_protection(root: Path) -> None:
 """,
         """    BOOL mercuryBreachProtection =
         (Battler_Ability(battleCtx, attacker) == ABILITY_MR_PINNACLE_BLADE
-            && Mercury_MoveIsSlicing(move))
+            && Mercury_D5MoveIsSlicing(move))
         || (Battler_Ability(battleCtx, attacker) == ABILITY_MR_DEMOLITIONIST
             && battleCtx->mercuryDemolitionistEntryTurn[attacker]
                 == battleCtx->totalTurns
@@ -252,7 +291,7 @@ def patch_substitute_bypass(root: Path) -> None:
             && Battler_Ability(battleCtx, battleCtx->attacker) != ABILITY_INFILTRATOR
             && !(Battler_Ability(battleCtx, battleCtx->attacker)
                     == ABILITY_MR_PINNACLE_BLADE
-                && Mercury_MoveIsSlicing(battleCtx->moveCur))
+                && Mercury_D5MoveIsSlicing(battleCtx->moveCur))
             && battleCtx->damage < 0) {
 """,
         "Pinnacle Blade damaging Substitute bypass",
@@ -269,7 +308,7 @@ def patch_substitute_bypass(root: Path) -> None:
                     != ABILITY_INFILTRATOR
                 && !(Battler_Ability(battleCtx, battleCtx->attacker)
                         == ABILITY_MR_PINNACLE_BLADE
-                    && Mercury_MoveIsSlicing(battleCtx->moveCur))))) {
+                    && Mercury_D5MoveIsSlicing(battleCtx->moveCur))))) {
 """,
         "Pinnacle Blade scripted Substitute bypass",
     )
@@ -345,7 +384,7 @@ def patch_post_hit_shatter(root: Path) -> None:
             BOOL pinnacleHit =
                 Battler_Ability(battleCtx, battleCtx->attacker)
                     == ABILITY_MR_PINNACLE_BLADE
-                && Mercury_MoveIsSlicing(battleCtx->moveCur);
+                && Mercury_D5MoveIsSlicing(battleCtx->moveCur);
             BOOL demolitionHit =
                 Battler_Ability(battleCtx, battleCtx->attacker)
                     == ABILITY_MR_DEMOLITIONIST
@@ -403,7 +442,6 @@ def update_registry(path: Path) -> None:
 def validate(root: Path, registry: Path) -> dict[str, bool]:
     ctx = (root / "include/battle/battle_context.h").read_text(encoding="utf-8")
     lib = (root / "src/battle/battle_lib.c").read_text(encoding="utf-8")
-    header = (root / "include/battle/battle_lib.h").read_text(encoding="utf-8")
     controller = (root / "src/battle/battle_controller_player.c").read_text(encoding="utf-8")
     script = (root / "src/battle/battle_script.c").read_text(encoding="utf-8")
     abilities = [
@@ -415,17 +453,18 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
 
     checks = {
         "shared_keen_edge_classifier":
-            "BOOL Mercury_MoveIsSlicing(int move)" in lib
-            and "BOOL Mercury_MoveIsSlicing(int move);" in header,
+            "static BOOL Mercury_MoveIsSlicing(int move)" in lib
+            and controller.count("static BOOL Mercury_D5MoveIsSlicing(int move)") == 1
+            and script.count("static BOOL Mercury_D5MoveIsSlicing(int move)") == 1,
         "pinnacle_accuracy_bypass":
             "ABILITY_MR_PINNACLE_BLADE" in controller
-            and "Mercury_MoveIsSlicing(move)" in controller,
+            and "Mercury_D5MoveIsSlicing(move)" in controller,
         "pinnacle_protect_bypass":
             "mercuryBreachProtection == FALSE" in controller
             and "ABILITY_MR_PINNACLE_BLADE" in controller,
         "pinnacle_substitute_bypass":
             "ABILITY_MR_PINNACLE_BLADE" in script
-            and "Mercury_MoveIsSlicing(battleCtx->moveCur)" in script
+            and "Mercury_D5MoveIsSlicing(battleCtx->moveCur)" in script
             and "ABILITY_MR_PINNACLE_BLADE" in controller,
         "pinnacle_screen_bypass":
             "ABILITY_MR_PINNACLE_BLADE" in lib
@@ -476,7 +515,7 @@ def main() -> None:
     registry = args.implemented_registry.resolve()
 
     validate_partition(partition)
-    export_slicing_helper(root)
+    patch_local_slicing_helpers(root)
     patch_context_and_entry_state(root)
     patch_accuracy_and_protection(root)
     patch_substitute_bypass(root)
