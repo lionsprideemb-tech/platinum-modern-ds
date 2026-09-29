@@ -23,10 +23,10 @@ from pathlib import Path
 
 
 IMPLEMENTED = {
-    "Raging Moth": ("ABILITY_MR_RAGING_MOTH", 480),
-    "Ice Cold Hunter": ("ABILITY_MR_ICE_COLD_HUNTER", 884),
-    "Primal Maw": ("ABILITY_MR_PRIMAL_MAW", 893),
-    "Dual Wield": ("ABILITY_MR_DUAL_WIELD", 895),
+    "Raging Moth": ("ABILITY_MR_RAGING_MOTH", 442),
+    "Ice Cold Hunter": ("ABILITY_MR_ICE_COLD_HUNTER", 796),
+    "Primal Maw": ("ABILITY_MR_PRIMAL_MAW", 889),
+    "Dual Wield": ("ABILITY_MR_DUAL_WIELD", 894),
 }
 TOKENS = tuple(v[0] for v in IMPLEMENTED.values())
 
