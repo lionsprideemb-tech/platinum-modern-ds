@@ -416,7 +416,7 @@ jobs:
             --implemented-registry mr10c-implemented-abilities.txt \
             --report mr10d11-multihit-family.json
           test "$(jq -r '.status' mr10d11-multihit-family.json)" = "PASS"
-          test "$(jq -r '.implemented_count' mr10d11-multihit-family.json)" = "5"
+          test "$(jq -r '.implemented_count' mr10d11-multihit-family.json)" = "6"
 
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
@@ -491,7 +491,7 @@ jobs:
             echo "- D8 compile-certified: Deflect, Cold Rebound, Parry"
             echo "- D9 compile-certified: Polarity"
             echo "- D10 compile-certified: Magical Dust"
-            echo "- D11 compile-certified: Raging Moth, Unrelenting, Ice Cold Hunter, Primal Maw, Dual Wield"
-            echo "- Remaining KEEP-AS-WRITTEN mechanics after D11: 33"
+            echo "- D11 compile-certified: Raging Moth, Jackhammer, Unrelenting, Ice Cold Hunter, Primal Maw, Dual Wield"
+            echo "- Remaining KEEP-AS-WRITTEN mechanics after D11: 32"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
