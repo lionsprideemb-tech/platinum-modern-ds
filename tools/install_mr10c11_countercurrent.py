@@ -340,7 +340,7 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "mercuryCountercurrentPriorityReady[battleCtx->attacker] = FALSE;" in ctl,
         "switch_clears_state":
             "mercuryCountercurrentPriorityReady[battler] = FALSE;" in lib
-            and "mercuryCountercurrentGrantedTurn[battler] = 0;" in lib,
+            and "mercuryCountercurrentGrantedTurn[battler] = -1;" in lib,
         "implemented_registry_updated": ABILITY_TOKEN in registry_lines,
         "locked_mr07_visuals_untouched": True,
     }
