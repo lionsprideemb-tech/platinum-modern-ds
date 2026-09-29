@@ -28,21 +28,62 @@ def write_bank(path: Path, data: dict) -> None:
 
 
 DS_TEXT_REPLACEMENTS = str.maketrans({
-    "\u2018": "'",
-    "\u2019": "'",
-    "\u201c": '"',
-    "\u201d": '"',
+    "'": "’",
+    '"': "”",
+    "\u2018": "‘",
+    "\u2019": "’",
+    "\u201c": "“",
+    "\u201d": "”",
     "\u2013": "-",
     "\u2014": "-",
-    "\u2026": "...",
     "\u00a0": " ",
-    "\u00d7": "x",
 })
 
 
 def ds_text(text: str) -> str:
-    """Normalize editorial Unicode punctuation to the DS message charset."""
-    return text.translate(DS_TEXT_REPLACEMENTS)
+    """Normalize prose to characters present in Platinum's message charmap."""
+    text = text.translate(DS_TEXT_REPLACEMENTS)
+    # Platinum has no ASCII/Unicode greater-than glyph in its English charmap.
+    # This only affects the custom Ability name "3 > 1"; preserve the meaning
+    # rather than substituting an unrelated symbol.
+    text = text.replace("3 > 1", "3 Beats 1")
+    return text
+
+
+def sanitize_tree(value):
+    if isinstance(value, str):
+        return ds_text(value)
+    if isinstance(value, list):
+        return [sanitize_tree(x) for x in value]
+    if isinstance(value, dict):
+        return {k: sanitize_tree(v) for k, v in value.items()}
+    return value
+
+
+def load_supported_chars(root: Path) -> set[str]:
+    supported: set[str] = set()
+    path = root / "tools/msgenc/charmap.txt"
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip("\n")
+        if not line or line.lstrip().startswith("//") or "=" not in line:
+            continue
+        value = line.split("=", 1)[1]
+        if len(value) == 1:
+            supported.add(value)
+    return supported
+
+
+def bank_uses_only_supported_chars(bank: dict, supported: set[str]) -> bool:
+    def valid(value) -> bool:
+        if isinstance(value, str):
+            return all(ch in supported or ch in "\n\r\t" for ch in value)
+        if isinstance(value, list):
+            return all(valid(x) for x in value)
+        if isinstance(value, dict):
+            return all(valid(v) for k, v in value.items() if k != "id")
+        return True
+
+    return all(valid(message.get("en_US")) for message in bank["messages"])
 
 
 def short_description(effect: str) -> list[str]:
@@ -123,9 +164,18 @@ def main() -> None:
             short_description(entry["exact_effect"]),
         )
 
+    # Canonical override batches also write descriptions from the partition.
+    # Normalize the complete Ability text banks here so every resulting string,
+    # not only newly appended custom rows, is safe for Platinum's msgenc.
+    names = sanitize_tree(names)
+    uppercase = sanitize_tree(uppercase)
+    descriptions = sanitize_tree(descriptions)
+
     write_bank(root / "res/text/ability_names.json", names)
     write_bank(root / "res/text/ability_names_uppercase.json", uppercase)
     write_bank(root / "res/text/ability_descriptions.json", descriptions)
+
+    supported = load_supported_chars(root)
 
     checks = {
         "custom_ids_contiguous": actual == expected,
@@ -136,10 +186,9 @@ def main() -> None:
         "name_bank_size_matches": len(names["messages"]) == custom[-1]["id"] + 1,
         "uppercase_bank_size_matches": len(uppercase["messages"]) == custom[-1]["id"] + 1,
         "description_bank_size_matches": len(descriptions["messages"]) == custom[-1]["id"] + 1,
-        "custom_smart_punctuation_sanitized": all(
-            ch not in json.dumps(bank["messages"][CUSTOM_FIRST:], ensure_ascii=False)
+        "all_ability_text_uses_ds_charmap": all(
+            bank_uses_only_supported_chars(bank, supported)
             for bank in (names, uppercase, descriptions)
-            for ch in ("\u2018", "\u2019", "\u201c", "\u201d", "\u2013", "\u2014", "\u2026", "\u00d7")
         ),
     }
     status = "PASS" if all(checks.values()) else "FAIL"
