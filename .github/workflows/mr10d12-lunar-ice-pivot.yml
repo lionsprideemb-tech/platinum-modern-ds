@@ -3,6 +3,7 @@ name: MR10D12 Lunar Ice Pivot
 # MR10D12 extends the reviewed-mechanic stack with Lunar Wrath's generated
 # Ghost follow-up and Hollow Ice Zone's retype-then-pivot behavior.
 # Gate revision: corrected D12 context anchor and inherited D11 linkage fix.
+# Gate revision: corrected u16 D11 context anchor.
 
 on:
   workflow_dispatch:
