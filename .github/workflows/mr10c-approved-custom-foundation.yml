@@ -1,5 +1,7 @@
 name: MR10C Approved Custom Foundation
 
+# MR10C foundation validates the resolved owner-review branch.
+
 on:
   workflow_dispatch:
   push:
