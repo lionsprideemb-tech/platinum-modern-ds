@@ -279,15 +279,18 @@ def patch_spore_contact_spread(root: Path) -> None:
     }
 
 """
-    insert_before_in_function(
-        lib,
-        signature,
-        """    return FALSE;
-""",
-        insertion,
-        "mercuryParasiticSpores[battleCtx->defender] = TRUE;",
-        "D14 Parasitic Spores contact spread",
-    )
+    text = lib.read_text(encoding="utf-8")
+    start, end = function_bounds(text, signature)
+    block = text[start:end]
+    marker = "mercuryParasiticSpores[battleCtx->defender] = TRUE;"
+    if marker not in block:
+        anchor = """    return FALSE;
+"""
+        pos = block.rfind(anchor)
+        if pos < 0:
+            raise SystemExit("D14 Parasitic Spores contact spread: final return anchor missing")
+        block = block[:pos] + insertion + block[pos:]
+        lib.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
 def patch_spore_message(root: Path) -> None:
