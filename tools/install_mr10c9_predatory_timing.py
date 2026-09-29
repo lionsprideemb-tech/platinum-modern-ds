@@ -135,8 +135,18 @@ def patch_switch_in_reset(root: Path) -> None:
 
 def patch_damage_boost(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
-    insert_before_once(
+    insert_before_in_function(
         path,
+        """int BattleSystem_CalcMoveDamage(BattleSystem *battleSys,
+    BattleContext *battleCtx,
+    int move,
+    u32 sideConditions,
+    u32 fieldConditions,
+    u16 inPower,
+    u8 inType,
+    u8 attacker,
+    u8 defender,
+    u8 criticalMul)""",
         """    if (attackerParams.ability == ABILITY_MR_BACKLASH
         && battleCtx->mercuryBacklashPrimed[attacker]
         && movePower) {
