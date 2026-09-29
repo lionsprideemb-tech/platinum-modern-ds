@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 
 
@@ -184,17 +185,48 @@ def patch_accuracy_protect_substitute(root: Path) -> None:
         "Pinnacle/Demolitionist Protect bypass",
     )
 
-    replace_once(
-        ctl,
-        """        if ((DEFENDING_MON.statusVolatile & VOLATILE_CONDITION_SUBSTITUTE) && battleCtx->damage < 0) {
-""",
-        """        if ((DEFENDING_MON.statusVolatile & VOLATILE_CONDITION_SUBSTITUTE)
-            && Mercury_AttackBypassesSubstitute(
-                battleCtx, battleCtx->attacker, battleCtx->moveCur) == FALSE
-            && battleCtx->damage < 0) {
-""",
-        "Pinnacle Blade Substitute bypass",
-    )
+    text = ctl.read_text(encoding="utf-8")
+    if "Mercury_AttackBypassesSubstitute(\n                battleCtx, battleCtx->attacker, battleCtx->moveCur) == FALSE" not in text:
+        signature = "static void BattleControllerPlayer_UpdateHP(BattleSystem *battleSys, BattleContext *battleCtx)"
+        start = text.find(signature + "\n{")
+        if start < 0:
+            raise SystemExit("Pinnacle Blade Substitute bypass: UpdateHP function not found")
+        depth = 0
+        open_brace = text.find("{", start)
+        end = -1
+        for i in range(open_brace, len(text)):
+            if text[i] == "{":
+                depth += 1
+            elif text[i] == "}":
+                depth -= 1
+                if depth == 0:
+                    end = i + 1
+                    break
+        if end < 0:
+            raise SystemExit("Pinnacle Blade Substitute bypass: UpdateHP closing brace not found")
+
+        block = text[start:end]
+        pattern = re.compile(
+            r"if \(\(DEFENDING_MON\.statusVolatile\s*&\s*VOLATILE_CONDITION_SUBSTITUTE\)"
+            r"(?P<middle>.*?)"
+            r"&&\s*battleCtx->damage\s*<\s*0\)\s*\{",
+            re.S,
+        )
+        match = pattern.search(block)
+        if match is None:
+            raise SystemExit(
+                "Pinnacle Blade Substitute bypass: Substitute damage condition not found"
+            )
+
+        replacement = (
+            "if ((DEFENDING_MON.statusVolatile & VOLATILE_CONDITION_SUBSTITUTE)"
+            + match.group("middle")
+            + "\n            && Mercury_AttackBypassesSubstitute(\n"
+            + "                battleCtx, battleCtx->attacker, battleCtx->moveCur) == FALSE"
+            + "\n            && battleCtx->damage < 0) {"
+        )
+        block = block[:match.start()] + replacement + block[match.end():]
+        ctl.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
 def patch_damage_rules(root: Path) -> None:
