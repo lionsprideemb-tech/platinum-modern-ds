@@ -18,6 +18,7 @@ on:
       - "tools/install_mr10c0b_post_override_compat.py"
       - "tools/install_mr10c1_spectral_body.py"
       - "tools/install_mr10c2_execution_drive.py"
+      - "tools/install_mr10c3_heartwood.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
@@ -142,6 +143,16 @@ jobs:
           test "$(jq -r '.status' mr10c2-execution-drive.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10c2-execution-drive.json)" = "1"
 
+      - name: Implement approved custom mechanics batch C3
+        run: |
+          python3 tools/install_mr10c3_heartwood.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c3-heartwood.json
+          test "$(jq -r '.status' mr10c3-heartwood.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c3-heartwood.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -165,6 +176,7 @@ jobs:
             mr10c-custom-namespace.json
             mr10c1-spectral-body.json
             mr10c2-execution-drive.json
+            mr10c3-heartwood.json
           if-no-files-found: error
           retention-days: 14
 
@@ -178,6 +190,6 @@ jobs:
             echo "- Cut identities retained only as reserved stable IDs: 2"
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
-            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive"
+            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
