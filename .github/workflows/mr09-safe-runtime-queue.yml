@@ -1,0 +1,29 @@
+name: MR09 Safe Runtime Queue
+
+on:
+  push:
+    branches:
+      - "feature/mr09-safe-runtime"
+    paths:
+      - "data/mr09_custom_ability_intake.json"
+      - "data/mr09_er_vanilla_ability_overrides.json"
+      - "tools/build_mr09_safe_runtime_queue.py"
+      - "data/mr09_safe_runtime_queue.json"
+      - ".github/workflows/mr09-safe-runtime-queue.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild conservative safe queue
+        run: |
+          cp data/mr09_safe_runtime_queue.json "$RUNNER_TEMP/committed.json"
+          python3 tools/build_mr09_safe_runtime_queue.py
+          diff -u "$RUNNER_TEMP/committed.json" data/mr09_safe_runtime_queue.json
+          python3 tools/audit_mr09_custom_ability_intake.py
+          echo "MR09 safe queue: PASS"
