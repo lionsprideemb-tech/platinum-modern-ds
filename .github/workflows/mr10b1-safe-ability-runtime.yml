@@ -12,7 +12,7 @@ on:
       - ".github/workflows/mr10b1-safe-ability-runtime.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   BUILD: /var/tmp/pokeplatinum
@@ -124,3 +124,24 @@ jobs:
             echo "- Held custom-system decisions touched: 0"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit certified checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/checkpoints
+          cat > docs/checkpoints/MR10B1_SAFE_ABILITY_RUNTIME_PASS.md <<'EOF'
+          # MR10B1 Safe Ability Runtime — PASS
+
+          Full native Platinum ROM build completed successfully after:
+          - rebuilding all 187 canonical Gen 5-9 Ability mechanics;
+          - applying the first 15 safe Elite Redux canonical overrides;
+          - materializing the Mercury custom Ability namespace through ID 929;
+          - leaving all 93 held new-engine-system decisions untouched.
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/checkpoints/MR10B1_SAFE_ABILITY_RUNTIME_PASS.md
+          git diff --cached --quiet && exit 0
+          git commit -m "Checkpoint MR10B1 safe ability runtime"
+          git push
