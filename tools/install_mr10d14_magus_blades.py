@@ -223,13 +223,14 @@ def patch_best_offense_component(root: Path) -> None:
     u8 criticalMul)""",
         """    moveClass = MOVE_DATA(move).class;
 """,
-        """    if (attackerParams.ability == ABILITY_MR_MAGUS_BLADES
+        """    // Mercury MR10D14: Mystic Blades component.
+    if (attackerParams.ability == ABILITY_MR_MAGUS_BLADES
         && Mercury_MoveIsSlicing(move)) {
         moveClass = CLASS_SPECIAL;
         movePower = movePower * 13 / 10;
     }
 """,
-        "ABILITY_MR_MAGUS_BLADES",
+        "// Mercury MR10D14: Mystic Blades component.",
         "Magus Blades Mystic Blades conversion",
     )
 
