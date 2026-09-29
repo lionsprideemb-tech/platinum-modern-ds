@@ -201,18 +201,18 @@ def patch_form_ability_restrictions(root: Path) -> None:
 
     replace_once(
         lib,
-        """        && ability1 != ABILITY_HUNGER_SWITCH;
+        """        && ability1 != ABILITY_TERAFORM_ZERO;
 """,
-        """        && ability1 != ABILITY_HUNGER_SWITCH
+        """        && ability1 != ABILITY_TERAFORM_ZERO
         && ability1 != ABILITY_MR_TWO_FACED;
 """,
         "D17 Trace defender1 restriction",
     )
     replace_once(
         lib,
-        """        && ability2 != ABILITY_HUNGER_SWITCH;
+        """        && ability2 != ABILITY_TERAFORM_ZERO;
 """,
-        """        && ability2 != ABILITY_HUNGER_SWITCH
+        """        && ability2 != ABILITY_TERAFORM_ZERO
         && ability2 != ABILITY_MR_TWO_FACED;
 """,
         "D17 Trace defender2 restriction",
