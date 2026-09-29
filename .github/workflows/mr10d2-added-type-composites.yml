@@ -1,7 +1,8 @@
 name: MR10D2 Added Type Composites
 
-# MR10D1 extends the green MR10C foundation with the first shared
-# KEEP-AS-WRITTEN engine family: battle-only added typing.
+# MR10D2 extends the green MR10D1 added-type core with five compound
+# KEEP-AS-WRITTEN abilities that reuse existing battle hooks.
+# Gate revision: D1 helper prototypes synchronized.
 
 on:
   workflow_dispatch:
@@ -33,10 +34,12 @@ on:
       - "tools/install_mr10c14_undertow.py"
       - "tools/install_mr10c15_pattern_breaker.py"
       - "tools/install_mr10d1_added_type_core.py"
+      - "tools/install_mr10d2_added_type_composites.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
       - ".github/workflows/mr10d-added-type-core.yml"
+      - ".github/workflows/mr10d2-added-type-composites.yml"
 
 permissions:
   contents: read
