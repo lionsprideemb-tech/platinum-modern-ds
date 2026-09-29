@@ -149,7 +149,8 @@ def patch_accuracy_family(root: Path) -> None:
     insert_before_in_function(
         path,
         "static int BattleControllerPlayer_CheckMoveHitAccuracy(BattleSystem *battleSys, BattleContext *battleCtx, int attacker, int defender, int move)",
-        """    if (NO_CLOUD_NINE) {
+        """    {
+        int victoryStars = BattleSystem_CountAbility(
 """,
         """    if (Battler_Ability(battleCtx, attacker) == ABILITY_KEEN_EYE) {
         hitRate = hitRate * 120 / 100;
