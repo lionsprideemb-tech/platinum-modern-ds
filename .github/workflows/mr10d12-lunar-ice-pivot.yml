@@ -1,7 +1,8 @@
 name: MR10D12 Lunar Ice Pivot
 
-# MR10D9 extends the reviewed-mechanic stack with Polarity's continuous
-# per-ally highest-stat multiplier across damage and Speed calculations.
+# MR10D12 extends the reviewed-mechanic stack with Lunar Wrath's generated
+# Ghost follow-up and Hollow Ice Zone's retype-then-pivot behavior.
+# Gate revision: corrected D12 context anchor and inherited D11 linkage fix.
 
 on:
   workflow_dispatch:
