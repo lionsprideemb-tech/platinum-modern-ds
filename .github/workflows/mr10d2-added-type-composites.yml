@@ -348,6 +348,7 @@ jobs:
             mr10c14-undertow.json
             mr10c15-pattern-breaker.json
             mr10d1-added-type-core.json
+            mr10d2-added-type-composites.json
           if-no-files-found: error
           retention-days: 14
 
@@ -364,6 +365,8 @@ jobs:
             echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression, Two Lives, Undertow, Pattern Breaker"
             echo "- KEEP-AS-WRITTEN shared family D1: 9 abilities compile-certified"
             echo "- Added-type core: Aquatic, Grounded, Half Drake, Ice Age, Metallic, Dragonfly, Hover, Turboblaze, Teravolt"
-            echo "- Remaining KEEP-AS-WRITTEN mechanics after D1: 66"
+            echo "- Added-type composite D2: 5 abilities compile-certified"
+            echo "- D2 abilities: Draconic Might, Dragonfruit, Rock Armor, Voltron, Komodo"
+            echo "- Remaining KEEP-AS-WRITTEN mechanics after D2: 61"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
