@@ -298,6 +298,16 @@ jobs:
           test "$(jq -r '.status' mr10d1-added-type-core.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10d1-added-type-core.json)" = "9"
 
+      - name: Implement KEEP-AS-WRITTEN added-type composites D2
+        run: |
+          python3 tools/install_mr10d2_added_type_composites.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d2-added-type-composites.json
+          test "$(jq -r '.status' mr10d2-added-type-composites.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d2-added-type-composites.json)" = "5"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
