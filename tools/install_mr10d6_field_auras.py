@@ -37,6 +37,46 @@ def insert_before_once(path: Path, anchor: str, insertion: str, label: str) -> N
     path.write_text(text.replace(anchor, insertion + anchor, 1), encoding="utf-8")
 
 
+def function_bounds(text: str, signature: str) -> tuple[int, int]:
+    definition = signature + "\n{"
+    start = text.find(definition)
+    if start < 0:
+        raise SystemExit(f"function definition not found: {signature}")
+
+    open_brace = start + len(signature) + 1
+    depth = 0
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return start, i + 1
+    raise SystemExit(f"function closing brace not found: {signature}")
+
+
+def insert_before_in_function(
+    path: Path,
+    signature: str,
+    anchor: str,
+    insertion: str,
+    marker: str,
+    label: str,
+) -> None:
+    text = path.read_text(encoding="utf-8")
+    start, end = function_bounds(text, signature)
+    block = text[start:end]
+    if marker in block:
+        return
+    count = block.count(anchor)
+    if count != 1:
+        raise SystemExit(
+            f"{label}: expected one anchor in {signature}, found {count}"
+        )
+    block = block.replace(anchor, insertion + anchor, 1)
+    path.write_text(text[:start] + block + text[end:], encoding="utf-8")
+
+
 def validate_partition(path: Path) -> None:
     plan = json.loads(path.read_text(encoding="utf-8"))
     rows = plan.get("abilities", plan.get("rows", []))
@@ -163,13 +203,15 @@ static void Mercury_ApplyFieldAuraResidual(
         "MR10D6 field-aura helpers",
     )
 
-    insert_before_once(
+    insert_before_in_function(
         path,
+        "BOOL BattleSystem_TriggerTurnEndAbility(BattleSystem *battleSys, BattleContext *battleCtx, int battler)",
         """    switch (Battler_Ability(battleCtx, battler)) {
 """,
         """    Mercury_ApplyFieldAuraResidual(battleSys, battleCtx, battler);
 
 """,
+        "Mercury_ApplyFieldAuraResidual(battleSys, battleCtx, battler);",
         "MR10D6 turn-end aura application",
     )
 
