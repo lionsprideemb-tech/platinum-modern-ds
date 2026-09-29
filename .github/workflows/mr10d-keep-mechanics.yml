@@ -34,6 +34,7 @@ on:
       - "tools/install_mr10c15_pattern_breaker.py"
       - "tools/install_mr10d1_added_type_core.py"
       - "tools/install_mr10d2_added_type_composites.py"
+      - "tools/install_mr10d3_added_type_offense_defense.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10d-keep-mechanics.yml"
@@ -308,6 +309,16 @@ jobs:
           test "$(jq -r '.status' mr10d2-added-type-composites.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10d2-added-type-composites.json)" = "6"
 
+      - name: Implement keep-as-written added-type offense/defense batch D3
+        run: |
+          python3 tools/install_mr10d3_added_type_offense_defense.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d3-added-type-offense-defense.json
+          test "$(jq -r '.status' mr10d3-added-type-offense-defense.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d3-added-type-offense-defense.json)" = "3"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -346,6 +357,7 @@ jobs:
             mr10c15-pattern-breaker.json
             mr10d1-added-type-core.json
             mr10d2-added-type-composites.json
+            mr10d3-added-type-offense-defense.json
           if-no-files-found: error
           retention-days: 14
 
@@ -360,9 +372,10 @@ jobs:
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
             echo "- Approved redesigns implemented: 15/15"
-            echo "- KEEP-AS-WRITTEN mechanics newly implemented: 11/75"
+            echo "- KEEP-AS-WRITTEN mechanics newly implemented: 14/75"
             echo "- D1: Aquatic, Grounded, Half Drake, Ice Age, Metallic"
             echo "- D2: Dragonfruit, Voltron, Dragonfly, Hover, Turboblaze, Teravolt"
+            echo "- D3: Draconic Might, Rock Armor, Komodo"
             echo "- Shared battle-only added-type framework: installed"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
