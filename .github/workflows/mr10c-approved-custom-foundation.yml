@@ -1,6 +1,6 @@
 name: MR10C Approved Custom Foundation
 
-# MR10C foundation validates the resolved owner-review branch.
+# MR10C foundation validates the resolved owner-review branch through C11.
 # Current gate: C1-C11, with C9/C11 anchor fixes applied.
 
 on:
