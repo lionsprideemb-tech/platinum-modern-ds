@@ -29,6 +29,8 @@ IMPLEMENTED = {
 
 TOKENS = tuple(value[0] for value in IMPLEMENTED.values())
 
+# MR10D3 native gate trigger.
+
 
 def replace_once(path: Path, old: str, new: str, label: str) -> None:
     text = path.read_text(encoding="utf-8")
