@@ -175,10 +175,9 @@ def patch_hollow_ice_hit(root: Path) -> None:
         && DEFENDING_MON.curHP
         && (DEFENDER_SELF_TURN_FLAGS.physicalDamageTaken
             || DEFENDER_SELF_TURN_FLAGS.specialDamageTaken)
-        && CalcMoveType(
-            battleCtx,
-            battleCtx->attacker,
-            battleCtx->moveCur) == TYPE_ICE) {
+        && (battleCtx->moveType
+            ? battleCtx->moveType
+            : MOVE_DATA(battleCtx->moveCur).type) == TYPE_ICE) {
         DEFENDING_MON.type1 = TYPE_ICE;
         DEFENDING_MON.type2 = TYPE_ICE;
         battleCtx->mercuryDynamicAddedType[battleCtx->defender] = 0xFF;
