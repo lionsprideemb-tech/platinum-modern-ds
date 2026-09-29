@@ -42,7 +42,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves",
         "Form-state controller",
@@ -85,7 +85,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -126,7 +126,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Damage / effectiveness overrides"
       ],
@@ -168,7 +168,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Persistent counters / survival"
       ],
@@ -210,7 +210,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Damage / effectiveness overrides"
       ],
@@ -249,7 +249,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Multi-hit / move rewriting",
         "Composite Ability"
@@ -290,7 +290,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Damage / effectiveness overrides"
       ],
@@ -333,7 +333,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -373,7 +373,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -419,7 +419,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Generated / reactive moves",
         "Persistent counters / survival",
@@ -467,7 +467,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Persistent counters / survival",
         "Field / side conditions"
@@ -513,7 +513,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Persistent counters / survival",
         "Field / side conditions"
@@ -557,7 +557,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -599,7 +599,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves",
         "Multi-hit / move rewriting"
@@ -641,7 +641,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -683,7 +683,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -726,7 +726,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves",
         "Multi-hit / move rewriting"
@@ -768,7 +768,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Persistent counters / survival"
       ],
@@ -808,7 +808,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -848,7 +848,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -889,7 +889,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -928,7 +928,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -968,7 +968,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -1008,7 +1008,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1048,7 +1048,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1087,7 +1087,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing",
         "Damage / effectiveness overrides"
@@ -1128,7 +1128,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1168,7 +1168,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1209,7 +1209,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1249,7 +1249,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1289,7 +1289,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1328,7 +1328,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing",
         "Composite Ability"
@@ -1369,7 +1369,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1409,7 +1409,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1450,7 +1450,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Generated / reactive moves",
         "Composite Ability"
@@ -1491,7 +1491,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves",
         "Damage / effectiveness overrides"
@@ -1531,7 +1531,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -1575,7 +1575,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -1615,7 +1615,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -1654,7 +1654,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -1696,7 +1696,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Persistent counters / survival"
       ],
@@ -1735,7 +1735,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "CUT",
       "system_tags": [
         "Specialized battle hook"
       ],
@@ -1775,7 +1775,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Specialized battle hook"
       ],
@@ -1814,7 +1814,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -1854,7 +1854,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Specialized battle hook"
       ],
@@ -1893,7 +1893,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Specialized battle hook"
       ],
@@ -1934,7 +1934,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Persistent counters / survival"
       ],
@@ -1974,7 +1974,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -2013,7 +2013,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Specialized battle hook"
       ],
@@ -2052,7 +2052,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Specialized battle hook"
       ],
@@ -2091,7 +2091,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -2130,7 +2130,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -2169,7 +2169,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Multi-hit / move rewriting"
       ],
@@ -2208,7 +2208,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Global stat / event reactions"
       ],
@@ -2248,7 +2248,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Form-state controller",
         "Composite Ability"
@@ -2288,7 +2288,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Form-state controller"
       ],
@@ -2327,7 +2327,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Custom status / virtual status",
         "Composite Ability"
@@ -2367,7 +2367,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Form-state controller"
       ],
@@ -2406,7 +2406,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Form-state controller"
       ],
@@ -2445,7 +2445,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Specialized battle hook"
       ],
@@ -2484,7 +2484,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Multi-hit / move rewriting",
         "Composite Ability"
@@ -2526,7 +2526,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Multi-hit / move rewriting",
         "Composite Ability"
@@ -2566,7 +2566,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -2606,7 +2606,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Persistent counters / survival",
         "Custom status / virtual status",
@@ -2650,7 +2650,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Persistent counters / survival",
         "Field / side conditions"
@@ -2660,7 +2660,8 @@
         "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules.",
         "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
       ],
-      "battle_example": "Battle example: On the first two qualifying direct damaging hits. The engine checks Cheating Death at that exact event, applies “The first two direct damaging hits that would deal HP damage to the user instead deal zero HP damage.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
+      "battle_example": "Battle example: On the first two qualifying direct damaging hits. The engine checks Cheating Death at that exact event, applies “The first two direct damaging hits that would deal HP damage to the user instead deal zero HP damage.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers.",
+      "owner_review_note": "What about a double sturdy or maybe disguise and sturdy"
     },
     {
       "review_id": 66,
@@ -2693,7 +2694,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -2736,7 +2737,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -2775,7 +2776,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -2814,7 +2815,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -2853,7 +2854,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -2892,7 +2893,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -2931,7 +2932,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -2971,7 +2972,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -3010,7 +3011,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -3051,7 +3052,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -3090,7 +3091,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Custom status / virtual status"
       ],
@@ -3129,7 +3130,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Linked damage events"
       ],
@@ -3169,7 +3170,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -3211,7 +3212,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Field / side conditions"
       ],
@@ -3251,7 +3252,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -3294,7 +3295,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves",
         "Multi-hit / move rewriting"
@@ -3335,7 +3336,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Multi-hit / move rewriting"
       ],
@@ -3376,7 +3377,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing",
         "Damage / effectiveness overrides"
@@ -3416,7 +3417,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "CONVERT TO NORMAL POKEMON MECHANICS",
       "system_tags": [
         "Form-state controller"
       ],
@@ -3455,7 +3456,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -3494,7 +3495,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -3534,7 +3535,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -3573,7 +3574,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "CUT",
       "system_tags": [
         "Battle-only typing"
       ],
@@ -3613,7 +3614,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -3653,7 +3654,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "REDESIGN",
       "system_tags": [
         "Generated / reactive moves"
       ],
@@ -3692,7 +3693,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Multi-hit / move rewriting",
         "Composite Ability"
@@ -3735,7 +3736,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Form-state controller"
       ],
@@ -3775,7 +3776,7 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED",
+      "current_review_decision": "KEEP AS WRITTEN",
       "system_tags": [
         "Custom status / virtual status"
       ],
@@ -3843,5 +3844,17 @@
     "interactions_to_define",
     "shared_system_value",
     "approval_questions"
-  ]
+  ],
+  "owner_review": {
+    "imported_from": "mercury-mr10-93-mechanics-decisions.json",
+    "exported_at": "2026-09-29T15:26:14.421Z",
+    "total": 93,
+    "decided": 93,
+    "counts": {
+      "KEEP AS WRITTEN": 75,
+      "REDESIGN": 15,
+      "CUT": 2,
+      "CONVERT TO NORMAL POKEMON MECHANICS": 1
+    }
+  }
 }
