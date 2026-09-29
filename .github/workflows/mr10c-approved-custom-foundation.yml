@@ -9,6 +9,7 @@ on:
       - feature/mr10c-approved-custom-mechanics
     paths:
       - "tools/run_mr08_canonical_stack.py"
+      - "tools/install_mr08*.py"
       - "tools/install_mr10a_custom_ability_namespace.py"
       - "tools/install_mr10b1_er_safe_scalar_overrides.py"
       - "tools/install_mr10b2_safe_defensive_reaction_overrides.py"
