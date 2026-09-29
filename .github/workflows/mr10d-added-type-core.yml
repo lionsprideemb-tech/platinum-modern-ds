@@ -3,13 +3,13 @@ name: MR10D Added Type Core
 # MR10D1 extends the green MR10C foundation with the first shared
 # KEEP-AS-WRITTEN engine family: battle-only added typing.
 # Retry after added-type forward declaration.
-# Gate revision: forward declaration compile fix.
+# Gate revision: forward declarations compile fix; D1 final gate.
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - feature/mr10d-added-type-core
+      - feature/mr10d1-added-type-core
     paths:
       - "tools/run_mr08_canonical_stack.py"
       - "tools/install_mr08*.py"
