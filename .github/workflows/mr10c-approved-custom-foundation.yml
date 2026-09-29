@@ -1,7 +1,7 @@
 name: MR10C Approved Custom Foundation
 
-# MR10C foundation validates the resolved owner-review branch through C11.
-# Current gate: C1-C11, with C9/C11 anchor fixes applied.
+# MR10C foundation validates the resolved owner-review branch through C12.
+# Current gate: C1-C12, with C9/C11 anchor fixes applied.
 
 on:
   workflow_dispatch:
@@ -239,6 +239,16 @@ jobs:
           test "$(jq -r '.status' mr10c11-countercurrent.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10c11-countercurrent.json)" = "1"
 
+      - name: Implement approved custom mechanics batch C12
+        run: |
+          python3 tools/install_mr10c12_time_compression.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c12-time-compression.json
+          test "$(jq -r '.status' mr10c12-time-compression.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c12-time-compression.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -271,6 +281,7 @@ jobs:
             mr10c9-predatory-timing.json
             mr10c10-counterstep.json
             mr10c11-countercurrent.json
+            mr10c12-time-compression.json
           if-no-files-found: error
           retention-days: 14
 
@@ -284,6 +295,6 @@ jobs:
             echo "- Cut identities retained only as reserved stable IDs: 2"
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
-            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent"
+            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
