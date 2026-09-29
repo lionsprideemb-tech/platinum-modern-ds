@@ -161,14 +161,25 @@ def patch_poison_touch(root: Path) -> None:
 
 def patch_bad_dreams(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
-    replace_once(
-        path,
-        """                battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * -1, 8);
-""",
-        """                battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * -1, 4);
-""",
-        "Bad Dreams quarter-HP damage",
-    )
+    old = """        case MON_COND_CHECK_STATE_BAD_DREAMS:
+            battleCtx->scriptTemp = BattleSystem_CountAbility(battleSys, battleCtx, COUNT_ALIVE_BATTLERS_THEIR_SIDE_FLAG, battler, ABILITY_BAD_DREAMS);
+
+            if ((battleCtx->battleMons[battler].status & MON_CONDITION_SLEEP)
+                && Battler_Ability(battleCtx, battler) != ABILITY_MAGIC_GUARD
+                && battleCtx->battleMons[battler].curHP
+                && battleCtx->scriptTemp) {
+                battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * -1, 8);
+"""
+    new = """        case MON_COND_CHECK_STATE_BAD_DREAMS:
+            battleCtx->scriptTemp = BattleSystem_CountAbility(battleSys, battleCtx, COUNT_ALIVE_BATTLERS_THEIR_SIDE_FLAG, battler, ABILITY_BAD_DREAMS);
+
+            if ((battleCtx->battleMons[battler].status & MON_CONDITION_SLEEP)
+                && Battler_Ability(battleCtx, battler) != ABILITY_MAGIC_GUARD
+                && battleCtx->battleMons[battler].curHP
+                && battleCtx->scriptTemp) {
+                battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * -1, 4);
+"""
+    replace_once(path, old, new, "Bad Dreams quarter-HP damage")
 
 
 def patch_anger_point(root: Path) -> None:
