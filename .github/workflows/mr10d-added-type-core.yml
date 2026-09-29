@@ -4,6 +4,7 @@ name: MR10D Added Type Core
 # KEEP-AS-WRITTEN engine family: battle-only added typing.
 # Retry after added-type forward declaration.
 # Gate revision: forward declaration compile fix.
+# Gate revision: helper prototypes declared before first use.
 
 on:
   workflow_dispatch:
