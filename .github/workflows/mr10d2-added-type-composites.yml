@@ -1,13 +1,13 @@
-name: MR10D3 Canonical Reuse
+name: MR10D4 Multi-Hit Family
 
-# MR10D3 certifies two already-implemented canonical-equivalent mechanics
-# and adds Fey Flight by reusing the added-type, Misty Terrain, and Ground-immunity systems.
+# MR10D4 extends the green D1-D3 stack with six KEEP-AS-WRITTEN
+# Ability-driven multi-hit mechanics on the certified Parental Bond loop.
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - feature/mr10d3-canonical-reuse
+      - feature/mr10d4-multihit-family
     paths:
       - "tools/run_mr08_canonical_stack.py"
       - "tools/install_mr08*.py"
@@ -35,13 +35,14 @@ on:
       - "tools/install_mr10d1_added_type_core.py"
       - "tools/install_mr10d2_added_type_composites.py"
       - "tools/install_mr10d3_canonical_reuse.py"
+      - "tools/install_mr10d4_multihit_family.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
       - ".github/workflows/mr10d-added-type-core.yml"
       - ".github/workflows/mr10d2-added-type-composites.yml"
       - ".github/workflows/mr10d3-canonical-reuse.yml"
-      - ".github/workflows/mr10d2-added-type-composites.yml"
+      - ".github/workflows/mr10d4-multihit-family.yml"
 
 permissions:
   contents: read
@@ -323,6 +324,16 @@ jobs:
           test "$(jq -r '.status' mr10d3-canonical-reuse.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10d3-canonical-reuse.json)" = "3"
 
+      - name: Implement KEEP-AS-WRITTEN multi-hit family D4
+        run: |
+          python3 tools/install_mr10d4_multihit_family.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d4-multihit-family.json
+          test "$(jq -r '.status' mr10d4-multihit-family.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d4-multihit-family.json)" = "6"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -334,7 +345,7 @@ jobs:
       - name: Upload proof
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr10d3-canonical-reuse-${{ github.run_id }}
+          name: mercury-mr10d4-multihit-family-${{ github.run_id }}
           path: |
             mr10c-mr08-stack.json
             mr10c-mr08-reports/
@@ -362,13 +373,14 @@ jobs:
             mr10d1-added-type-core.json
             mr10d2-added-type-composites.json
             mr10d3-canonical-reuse.json
+            mr10d4-multihit-family.json
           if-no-files-found: error
           retention-days: 14
 
       - name: Summary
         run: |
           {
-            echo "## MR10D3 canonical reuse"
+            echo "## MR10D4 multi-hit family"
             echo
             echo "- Owner review resolved: 93/93"
             echo "- Approved blank-slate redesigns: 15/15"
@@ -382,6 +394,8 @@ jobs:
             echo "- D2 abilities: Draconic Might, Dragonfruit, Rock Armor, Voltron, Komodo"
             echo "- Canonical-reuse D3: 3 abilities compile-certified"
             echo "- D3 abilities: Fey Flight, Schooling, Comatose"
-            echo "- Remaining KEEP-AS-WRITTEN mechanics after D3: 58"
+            echo "- Multi-hit family D4: 6 abilities compile-certified"
+            echo "- D4 abilities: Raging Moth, Jackhammer, Unrelenting, Ice Cold Hunter, Primal Maw, Dual Wield"
+            echo "- Remaining KEEP-AS-WRITTEN mechanics after D4: 52"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
