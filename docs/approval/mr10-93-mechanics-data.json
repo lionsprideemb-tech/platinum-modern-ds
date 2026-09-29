@@ -2573,7 +2573,19 @@
       "shared_system_value": [
         "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
       ],
-      "battle_example": "Battle example: Tracks each opposing battler while the holder is active; resolves after three consecutive non-damaging turns. The engine checks Strikeout at that exact event, applies “An opposing Pokémon that goes three turns without damaging the holder is forced out.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
+      "battle_example": "Battle example: Tracks each opposing battler while the holder is active; resolves after three consecutive non-damaging turns. The engine checks Strikeout at that exact event, applies “An opposing Pokémon that goes three turns without damaging the holder is forced out.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Strikeout",
+        "new_name": "Pattern Breaker",
+        "exact_effect": "If an opposing Pokémon uses the same move it used on its previous turn, the holder becomes Locked In on that opponent for the rest of the turn. The holder's next damaging move against that Pokémon gains +1 priority and 30% power.",
+        "trigger": "After an opposing active battler successfully uses the same move it used on its previous turn.",
+        "restrictions": "Checks the move actually used. Failed moves still become the prior move for the next-turn comparison, but Ability-generated follow-up moves do not. The bonus does not stack and expires at the end of the turn if unused.",
+        "mechanic_family": "opponent_repeat_move_reactive_priority_power",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Punishes repetitive play without trapping or forced switching."
+      }
     },
     {
       "review_id": 61,
@@ -2655,7 +2667,19 @@
       "shared_system_value": [
         "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
       ],
-      "battle_example": "Battle example: the player chooses one ordinary attack, but Hand Barnacles rewrites its hit sequence. Accuracy and move selection happen once unless specified otherwise, while damage and per-hit interactions must resolve the intended number of times at the specified power scaling."
+      "battle_example": "Battle example: the player chooses one ordinary attack, but Hand Barnacles rewrites its hit sequence. Accuracy and move selection happen once unless specified otherwise, while damage and per-hit interactions must resolve the intended number of times at the specified power scaling.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Hand Barnacles",
+        "new_name": "Undertow",
+        "exact_effect": "Whenever the user successfully deals direct damage, the target becomes Dragged until the end of its next turn. While Dragged, its Speed is reduced by 25% and it cannot switch itself out through pivoting moves such as U-turn, Volt Switch, Flip Turn, or equivalent self-switch effects.",
+        "trigger": "After the user successfully deals direct damage.",
+        "restrictions": "Normal voluntary switching remains legal. Dragged does not hard-trap the target. Reapplying the effect refreshes duration but does not stack the Speed reduction.",
+        "mechanic_family": "damage_applies_temporary_speed_slow_and_pivot_lock",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Anti-pivot control without Shadow Tag-style trapping."
+      }
     },
     {
       "review_id": 63,
@@ -2781,7 +2805,19 @@
         "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
       ],
       "battle_example": "Battle example: On the first two qualifying direct damaging hits. The engine checks Cheating Death at that exact event, applies “The first two direct damaging hits that would deal HP damage to the user instead deal zero HP damage.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers.",
-      "owner_review_note": "What about a double sturdy or maybe disguise and sturdy"
+      "owner_review_note": "What about a double sturdy or maybe disguise and sturdy",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Cheating Death",
+        "new_name": "Two Lives",
+        "exact_effect": "Once per battle, the first direct damaging hit the user would take is completely blocked; afterward, the shield breaks and the user loses 1/8 of its maximum HP. Separately, while the user is at full HP, an attack that would knock it out instead leaves it at 1 HP.",
+        "trigger": "The Disguise-style shield triggers on the first qualifying direct damaging hit in the battle. The Sturdy-style survival check applies whenever the user is at full HP.",
+        "restrictions": "The shield is once per battle and does not refresh on switching. After the shield breaks, its 1/8 max-HP cost can prevent the Sturdy portion from being immediately active. Multi-hit attacks continue normally after the shielded hit. The Sturdy-style survival can function again if the user later returns to full HP.",
+        "mechanic_family": "once_per_battle_disguise_shield_plus_full_hp_sturdy",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign based on owner's double-Sturdy / Disguise-plus-Sturdy idea."
+      }
     },
     {
       "review_id": 66,
@@ -3380,7 +3416,14 @@
       "shared_system_value": [
         "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
       ],
-      "battle_example": "Battle example: After a qualifying super-effective hit is taken. The normal action resolves first; only after that does Atomic Burst create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
+      "battle_example": "Battle example: After a qualifying super-effective hit is taken. The normal action resolves first; only after that does Atomic Burst create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain.",
+      "redesign_resolution": {
+        "status": "REJECTED_REDESIGN_PENDING",
+        "rejected_candidate": "Critical Mass",
+        "rejected_on": "2026-09-29",
+        "original_name": "Atomic Burst",
+        "note": "Owner liked the rest of final batch but rejected candidate #4 Critical Mass. Needs a fresh blank-slate redesign."
+      }
     },
     {
       "review_id": 81,
@@ -3782,7 +3825,19 @@
       "shared_system_value": [
         "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
       ],
-      "battle_example": "Battle example: After a successful qualifying Mega Launcher-class move. The normal action resolves first; only after that does Pyro Shells create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
+      "battle_example": "Battle example: After a successful qualifying Mega Launcher-class move. The normal action resolves first; only after that does Pyro Shells create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Pyro Shells",
+        "new_name": "Rangefinder",
+        "exact_effect": "Consecutive successful Mega Launcher-class damaging moves gain increasing power: +10% on the first qualifying hit, +20% on the second consecutive qualifying move, and +30% on the third and all later consecutive qualifying moves.",
+        "trigger": "When the user successfully resolves a qualifying Mega Launcher-class damaging move.",
+        "restrictions": "The calibration resets when the user switches out or successfully uses a damaging move outside the launcher class. Failed or missed launcher moves do not advance the calibration. Status moves do not reset it.",
+        "mechanic_family": "consecutive_launcher_move_power_ramp",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Sustained-artillery identity using a reusable move-class streak counter."
+      }
     },
     {
       "review_id": 91,
@@ -4027,6 +4082,33 @@
         "review_id": 54,
         "original_name": "Sharing Is Caring",
         "new_name": "Predatory Timing"
+      },
+      {
+        "review_id": 60,
+        "original_name": "Strikeout",
+        "new_name": "Pattern Breaker"
+      },
+      {
+        "review_id": 62,
+        "original_name": "Hand Barnacles",
+        "new_name": "Undertow"
+      },
+      {
+        "review_id": 65,
+        "original_name": "Cheating Death",
+        "new_name": "Two Lives"
+      },
+      {
+        "review_id": 90,
+        "original_name": "Pyro Shells",
+        "new_name": "Rangefinder"
+      }
+    ],
+    "pending_redesigns": [
+      {
+        "review_id": 80,
+        "original_name": "Atomic Burst",
+        "status": "REJECTED_REDESIGN_PENDING"
       }
     ]
   }
