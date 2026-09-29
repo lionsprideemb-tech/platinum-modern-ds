@@ -1,0 +1,37 @@
+name: MR10 93 Mechanics Approval Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - planning/mr10-93-mechanic-approval
+    paths:
+      - "docs/approval/mr10-93-mechanics.html"
+      - "docs/approval/mr10-93-mechanics-data.json"
+      - "docs/approval/README_MR10_93_MECHANICS.md"
+      - "tools/audit_mr10_mechanics_approval_page.py"
+      - ".github/workflows/mr10-93-mechanics-approval-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Audit all 93 review records
+        run: python3 tools/audit_mr10_mechanics_approval_page.py
+
+      - name: Summary
+        run: |
+          {
+            echo "## MR10 93-mechanic approval page"
+            echo
+            echo "- Mechanics present: 93/93"
+            echo "- Deep explanation fields: required for every entry"
+            echo "- Autosave / import / export controls: validated"
+            echo "- Review decisions modify no game code until explicitly imported"
+          } >> "$GITHUB_STEP_SUMMARY"
