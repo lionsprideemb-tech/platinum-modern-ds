@@ -86,7 +86,7 @@ def patch_context(root: Path) -> None:
 
     insert_before_once(
         path,
-        """typedef struct BattleContext {
+        """struct BattleContext {
 """,
         """enum MercuryAbilityMultiHitMode {
     MERCURY_ABILITY_MULTI_HIT_NONE = 0,
