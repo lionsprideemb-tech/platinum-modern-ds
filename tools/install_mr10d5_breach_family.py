@@ -51,6 +51,16 @@ def insert_before_once(path: Path, anchor: str, insertion: str, label: str) -> N
     path.write_text(text.replace(anchor, insertion + anchor, 1), encoding="utf-8")
 
 
+def insert_after_once(path: Path, anchor: str, insertion: str, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    if insertion in text:
+        return
+    count = text.count(anchor)
+    if count != 1:
+        raise SystemExit(f"{label}: expected exactly one anchor in {path}, found {count}")
+    path.write_text(text.replace(anchor, anchor + insertion, 1), encoding="utf-8")
+
+
 def function_bounds(text: str, signature: str) -> tuple[int, int]:
     definition = signature + "\n{"
     start = text.find(definition)
