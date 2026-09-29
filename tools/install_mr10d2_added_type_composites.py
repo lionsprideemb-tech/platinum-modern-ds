@@ -32,6 +32,7 @@ IMPLEMENTED = {
 TOKENS = tuple(value[0] for value in IMPLEMENTED.values())
 
 # MR10D2 gate revision: workflow trigger path is active.
+# Native gate retrigger: signature and Voltron fixes included.
 
 
 def replace_once(path: Path, old: str, new: str, label: str) -> None:
