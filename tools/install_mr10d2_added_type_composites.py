@@ -31,6 +31,8 @@ IMPLEMENTED = {
 
 TOKENS = tuple(value[0] for value in IMPLEMENTED.values())
 
+# MR10D2 gate revision: workflow trigger path is active.
+
 
 def replace_once(path: Path, old: str, new: str, label: str) -> None:
     text = path.read_text(encoding="utf-8")
@@ -262,6 +264,33 @@ def patch_rock_armor(root: Path) -> None:
 
 def patch_voltron(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
+
+    # Mercury's approved Battle Armor override includes both critical-hit
+    # immunity and a 20% incoming attack-damage reduction. Voltron inherits
+    # the complete current Mercury Battle Armor behavior.
+    replace_once(
+        path,
+        """    if ((Battler_IgnorableAbility(
+                battleCtx, attacker, defender, ABILITY_BATTLE_ARMOR) == TRUE
+            || Battler_IgnorableAbility(
+                battleCtx, attacker, defender, ABILITY_SHELL_ARMOR) == TRUE)
+        && movePower) {
+        movePower = movePower * 80 / 100;
+    }
+""",
+        """    if ((Battler_IgnorableAbility(
+                battleCtx, attacker, defender, ABILITY_BATTLE_ARMOR) == TRUE
+            || Battler_IgnorableAbility(
+                battleCtx, attacker, defender, ABILITY_SHELL_ARMOR) == TRUE
+            || Battler_IgnorableAbility(
+                battleCtx, attacker, defender, ABILITY_MR_VOLTRON) == TRUE)
+        && movePower) {
+        movePower = movePower * 80 / 100;
+    }
+""",
+        "Voltron Battle Armor damage reduction",
+    )
+
     replace_once(
         path,
         """        && Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_BATTLE_ARMOR) == FALSE
@@ -271,7 +300,7 @@ def patch_voltron(root: Path) -> None:
         && Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_MR_VOLTRON) == FALSE
         && Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_SHELL_ARMOR) == FALSE
 """,
-        "Voltron Battle Armor behavior",
+        "Voltron Battle Armor critical immunity",
     )
 
 
@@ -329,8 +358,10 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "rock_armor_damage_reduction":
             "ABILITY_MR_ROCK_ARMOR) == TRUE" in lib
             and "damage = damage * 9 / 10;" in lib,
-        "voltron_critical_immunity":
-            "ABILITY_MR_VOLTRON) == FALSE" in lib
+        "voltron_full_battle_armor_behavior":
+            "ABILITY_MR_VOLTRON) == TRUE" in lib
+            and "movePower = movePower * 80 / 100;" in lib
+            and "ABILITY_MR_VOLTRON) == FALSE" in lib
             and "ABILITY_BATTLE_ARMOR" in lib,
         "komodo_badly_poison_proc":
             "ABILITY_MR_KOMODO)" in lib
