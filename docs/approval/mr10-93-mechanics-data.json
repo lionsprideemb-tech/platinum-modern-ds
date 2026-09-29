@@ -134,7 +134,19 @@
       "shared_system_value": [
         "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
       ],
-      "battle_example": "Battle example: the normal type chart and damage formula are still calculated, but Lethargy inserts a controlled override at the specified point. The key implementation rule is that the override replaces the intended stage of calculation rather than multiplying the same modifier twice."
+      "battle_example": "Battle example: the normal type chart and damage formula are still calculated, but Lethargy inserts a controlled override at the specified point. The key implementation rule is that the override replaces the intended stage of calculation rather than multiplying the same modifier twice.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Lethargy",
+        "new_name": "Pressure Valve",
+        "exact_effect": "Once per switch-in, when one or more of the user's stat stages are lowered by an opponent, all of the user's negative stat stages are immediately cleared and its Speed rises by 1 stage.",
+        "trigger": "After an opponent successfully lowers one or more of the user's stat stages.",
+        "restrictions": "Triggers at most once per switch-in. The stat drop must originate from an opponent. Self-inflicted stat drops do not trigger Pressure Valve. If the user has no negative stat stages after the triggering effect resolves, the cleanse portion does nothing but the +1 Speed still applies.",
+        "mechanic_family": "opponent_stat_drop_once_per_entry_cleanse_speed_boost",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Intended as anti-disruption rather than blanket stat-drop immunity."
+      }
     },
     {
       "review_id": 4,
@@ -431,7 +443,19 @@
         "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules.",
         "Medium reuse: a central stat-change event bus prevents each reactive Ability or move from needing bespoke detection code."
       ],
-      "battle_example": "Battle example: After an opposing active battler successfully gains a stat-stage boost. The normal action resolves first; only after that does Retribution Blow create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
+      "battle_example": "Battle example: After an opposing active battler successfully gains a stat-stage boost. The normal action resolves first; only after that does Retribution Blow create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Retribution Blow",
+        "new_name": "Backlash",
+        "exact_effect": "Whenever an opposing Pokémon successfully raises one or more of its stat stages, the user becomes Primed. While Primed, the user's next damaging move deals 50% more damage and ignores the target's positive Defense, Special Defense, and Evasion stages. Primed is consumed after that damaging move resolves.",
+        "trigger": "After an opposing active battler successfully gains one or more stat stages.",
+        "restrictions": "Primed does not stack. Switching out clears Primed. Only the next damaging move receives the 50% boost and ignores positive Defense, Special Defense, and Evasion stages; negative stages and all other modifiers still apply normally.",
+        "mechanic_family": "opponent_setup_reactive_primed_next_attack",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Replaces automatic Hyper Beam retaliation with an interactive anti-setup window."
+      }
     },
     {
       "review_id": 11,
@@ -565,7 +589,19 @@
       "shared_system_value": [
         "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
       ],
-      "battle_example": "Battle example: On switch-in. Foamy Web creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
+      "battle_example": "Battle example: On switch-in. Foamy Web creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Foamy Web",
+        "new_name": "Fresh Start",
+        "exact_effect": "On switch-in, the user removes all normally removable entry hazards from its own side. If at least one hazard is successfully removed, the user restores 1/8 of its maximum HP.",
+        "trigger": "On switch-in after normal entry processing reaches the Ability hazard-cleanup hook.",
+        "restrictions": "Removes hazards only from the user's side. Does not remove screens, terrain, weather, status conditions, or opponent-side hazards. The healing occurs only if at least one removable hazard was actually cleared.",
+        "mechanic_family": "entry_own_side_hazard_clear_conditional_heal",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Ability-based defensive hazard control."
+      }
     },
     {
       "review_id": 14,
@@ -691,7 +727,19 @@
       "shared_system_value": [
         "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
       ],
-      "battle_example": "Battle example: On switch-in. Rejection creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
+      "battle_example": "Battle example: On switch-in. Rejection creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Rejection",
+        "new_name": "Null Ward",
+        "exact_effect": "The first opposing status move that directly targets the user after each switch-in fails. After Null Ward blocks one qualifying move, it is exhausted until the user leaves battle and re-enters.",
+        "trigger": "When an opponent attempts the first qualifying directly targeted status move against the user after entry.",
+        "restrictions": "Triggers once per switch-in. Does not block damaging moves with secondary effects, self-targeting setup moves, field-wide moves, weather, terrain, or entry hazards aimed at a side rather than the holder.",
+        "mechanic_family": "once_per_entry_targeted_status_move_nullification",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Single-use anti-status shield rather than persistent immunity or reflection."
+      }
     },
     {
       "review_id": 17,
@@ -936,7 +984,19 @@
       "shared_system_value": [
         "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
       ],
-      "battle_example": "Battle example: when Ominous Shroud becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
+      "battle_example": "Battle example: when Ominous Shroud becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Ominous Shroud",
+        "new_name": "Spectral Body",
+        "exact_effect": "Damage from contact moves against the user is reduced by 25%, and the user cannot be trapped by moves, Abilities, or trapping effects.",
+        "trigger": "Contact-damage reduction applies during incoming damage calculation. Trap immunity is continuous while the Ability is active.",
+        "restrictions": "Only contact damage receives the 25% reduction. Non-contact attacks are unaffected. The user remains subject to ordinary switching restrictions unrelated to trapping, such as being the last available party Pokémon.",
+        "mechanic_family": "contact_damage_reduction_plus_trap_immunity",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Intangible defensive identity without added Ghost typing or Shadow Shield."
+      }
     },
     {
       "review_id": 23,
@@ -3856,6 +3916,33 @@
       "CUT": 2,
       "CONVERT TO NORMAL POKEMON MECHANICS": 1
     },
-    "redesign_policy": "For any mechanic marked REDESIGN, the redesign is a blank-slate replacement. The original name, theme, spirit, trigger, effect family, and source identity do not need to be preserved. Optimize for a fun, distinctive, balanced Mercury ability that fits likely users and preferably reuses healthy engine systems."
+    "redesign_policy": "For any mechanic marked REDESIGN, the redesign is a blank-slate replacement. The original name, theme, spirit, trigger, effect family, and source identity do not need to be preserved. Optimize for a fun, distinctive, balanced Mercury ability that fits likely users and preferably reuses healthy engine systems.",
+    "approved_redesigns": [
+      {
+        "review_id": 3,
+        "original_name": "Lethargy",
+        "new_name": "Pressure Valve"
+      },
+      {
+        "review_id": 10,
+        "original_name": "Retribution Blow",
+        "new_name": "Backlash"
+      },
+      {
+        "review_id": 13,
+        "original_name": "Foamy Web",
+        "new_name": "Fresh Start"
+      },
+      {
+        "review_id": 16,
+        "original_name": "Rejection",
+        "new_name": "Null Ward"
+      },
+      {
+        "review_id": 22,
+        "original_name": "Ominous Shroud",
+        "new_name": "Spectral Body"
+      }
+    ]
   }
 }
