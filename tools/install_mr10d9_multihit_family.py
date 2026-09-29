@@ -401,18 +401,6 @@ static void Mercury_D9SetupAbilityMultiHit(
 
 def patch_damage_scaling(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
-    signature = (
-        "int BattleSystem_CalcMoveDamage(BattleSystem *battleSys, "
-        "BattleContext *battleCtx,\n"
-        "    int move,\n"
-        "    u32 sideConditions,\n"
-        "    u32 fieldConditions,\n"
-        "    u16 inPower,\n"
-        "    u8 inType,\n"
-        "    u8 attacker,\n"
-        "    u8 defender,\n"
-        "    u8 criticalMul)"
-    )
     insertion = """    if (battleCtx->mercuryAbilityMultiHitActive
         && movePower) {
         int mercuryMultiHitPct =
@@ -424,13 +412,14 @@ def patch_damage_scaling(root: Path) -> None:
     }
 
 """
-    insert_before_in_function(
+    # The accumulated MR10D stack has already expanded CalcMoveDamage's
+    # signature. Anchor to the stable body point immediately after base
+    # movePower/moveType assignment rather than to an exact function header.
+    insert_before_once(
         path,
-        signature,
-        """    if ((battleCtx->battleMons[attacker].moveEffectsMask & MOVE_EFFECT_CHARGE) && moveType == TYPE_ELECTRIC) {
+        """    GF_ASSERT(battleCtx->powerMul >= 10);
 """,
         insertion,
-        "int mercuryMultiHitPct =",
         "MR10D9 per-hit power scaling",
     )
 
