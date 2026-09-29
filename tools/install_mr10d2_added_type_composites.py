@@ -31,6 +31,8 @@ IMPLEMENTED = {
 
 TOKENS = tuple(value[0] for value in IMPLEMENTED.values())
 
+# MR10D2 gate revision: workflow trigger path is active.
+
 
 def replace_once(path: Path, old: str, new: str, label: str) -> None:
     text = path.read_text(encoding="utf-8")
