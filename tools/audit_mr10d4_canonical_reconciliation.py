@@ -17,6 +17,7 @@ import json
 from pathlib import Path
 
 
+# Gate trigger: canonical reconciliation audit.
 ROWS = {
     "Schooling": ("ABILITY_SCHOOLING", 208),
     "Comatose": ("ABILITY_COMATOSE", 213),
