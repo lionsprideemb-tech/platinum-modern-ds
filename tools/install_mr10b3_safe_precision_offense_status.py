@@ -236,7 +236,7 @@ def patch_damage_extensions(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
     insert_before_once(
         path,
-        """    if (Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_THICK_FAT) == TRUE
+        """    if (attackerParams.ability == ABILITY_BIG_PECKS
 """,
         """    if (attackerParams.ability == ABILITY_ILLUSION
         && battleCtx->mercuryIllusionActive[attacker]
