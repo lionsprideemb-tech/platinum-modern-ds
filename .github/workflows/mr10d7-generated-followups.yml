@@ -2,6 +2,7 @@ name: MR10D7 Generated Followups
 
 # MR10D7 extends the MR10D6 stack with a shared generated extra-action lane
 # for ten KEEP-AS-WRITTEN follow-up move abilities.
+# Gate revision: move-end hook made Pattern Breaker safe.
 
 on:
   workflow_dispatch:
