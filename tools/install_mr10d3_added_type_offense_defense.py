@@ -30,10 +30,37 @@ IMPLEMENTED = (
 def find_function_block(text: str, signature: str, label: str) -> tuple[int, int]:
     definition = signature + "\n{"
     start = text.find(definition)
-    if start < 0:
-        raise SystemExit(f"{label}: function definition not found")
+    if start >= 0:
+        open_brace = start + len(signature) + 1
+    else:
+        # Some pokeplatinum definitions wrap their parameter lists across
+        # several lines (notably BattleSystem_CalcMoveDamage). Fall back to
+        # locating the function name, then the definition brace.
+        function_name = signature.split("(", 1)[0].split()[-1]
+        needle = function_name + "("
+        search_from = 0
+        start = -1
+        open_brace = -1
 
-    open_brace = start + len(signature) + 1
+        while True:
+            name_pos = text.find(needle, search_from)
+            if name_pos < 0:
+                break
+
+            candidate_brace = text.find("{", name_pos)
+            candidate_semicolon = text.find(";", name_pos)
+            if candidate_brace >= 0 and (
+                candidate_semicolon < 0 or candidate_brace < candidate_semicolon
+            ):
+                start = text.rfind("\n", 0, name_pos) + 1
+                open_brace = candidate_brace
+                break
+
+            search_from = name_pos + len(needle)
+
+        if start < 0 or open_brace < 0:
+            raise SystemExit(f"{label}: function definition not found")
+
     depth = 0
     end = -1
     for i in range(open_brace, len(text)):
