@@ -13,6 +13,7 @@ on:
       - "tools/install_mr10b1_er_safe_scalar_overrides.py"
       - "tools/install_mr10b2_safe_defensive_reaction_overrides.py"
       - "tools/install_mr10b3_safe_precision_offense_status.py"
+      - "tools/install_mr10c1_spectral_body.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
@@ -103,6 +104,16 @@ jobs:
           test "$(jq -r '.status' mr10c-custom-namespace.json)" = "PASS"
           test "$(jq -r '.review_blocked_custom_count' mr10c-custom-namespace.json)" = "0"
 
+      - name: Implement approved custom mechanics batch C1
+        run: |
+          python3 tools/install_mr10c1_spectral_body.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c1-spectral-body.json
+          test "$(jq -r '.status' mr10c1-spectral-body.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c1-spectral-body.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -122,6 +133,7 @@ jobs:
             mr10c-b2.json
             mr10c-b3.json
             mr10c-custom-namespace.json
+            mr10c1-spectral-body.json
           if-no-files-found: error
           retention-days: 14
 
@@ -135,5 +147,6 @@ jobs:
             echo "- Cut identities retained only as reserved stable IDs: 2"
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
+            echo "- Approved custom mechanics implemented: Spectral Body"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
