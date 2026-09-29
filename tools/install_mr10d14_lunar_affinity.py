@@ -437,7 +437,7 @@ def main() -> None:
     ap.add_argument(
         "--report",
         type=Path,
-        default=Path("mr10d13-lunar_affinity.json"),
+        default=Path("mr10d14-lunar-affinity.json"),
     )
     args = ap.parse_args()
 
@@ -454,7 +454,7 @@ def main() -> None:
     checks = validate(root, registry)
     status = "PASS" if all(checks.values()) else "FAIL"
     report = {
-        "gate": "MERCURY_MR10D14_PARROTING",
+        "gate": "MERCURY_MR10D14_LUNAR_AFFINITY",
         "status": status,
         "implemented_abilities": list(IMPLEMENTED.keys()),
         "implemented_tokens": list(TOKENS),
@@ -462,7 +462,7 @@ def main() -> None:
         "shared_system": "lunar_move_reactive_copy_queue",
         "copied_move_spends_pp": False,
         "recursive_lunar_affinity": False,
-        "remaining_keep_as_written_after_d13": 29,
+        "remaining_keep_as_written_after_d14": 28,
         "persistent_save_data_changed": False,
         "locked_mr07_visuals_touched": False,
         "certification_scope": "compile_and_static_validation",
