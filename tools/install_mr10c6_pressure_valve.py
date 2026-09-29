@@ -115,21 +115,41 @@ def patch_switch_in_reset(root: Path) -> None:
 
 def patch_stat_drop_reaction(root: Path) -> None:
     path = root / "src/battle/battle_script.c"
-    old = """        mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] += stageChange;
+    text = path.read_text(encoding="utf-8")
+    if "BOOL samePressureAction =" in text:
+        return
 
-        if (mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] < MIN_STAT_STAGE) {
+    signature = "static BOOL BtlCmd_ChangeStatStage(BattleSystem *battleSys, BattleContext *battleCtx)"
+    definition = signature + "\n{"
+    start = text.find(definition)
+    if start < 0:
+        raise SystemExit("Pressure Valve: BtlCmd_ChangeStatStage definition not found")
+
+    open_brace = start + len(signature) + 1
+    depth = 0
+    end = -1
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end < 0:
+        raise SystemExit("Pressure Valve: BtlCmd_ChangeStatStage closing brace not found")
+
+    block = text[start:end]
+    clamp_anchor = """        if (mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] < MIN_STAT_STAGE) {
             mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] = MIN_STAT_STAGE;
-        }
-    }
+        }"""
+    pos = block.rfind(clamp_anchor)
+    if pos < 0:
+        raise SystemExit(
+            "Pressure Valve: accepted negative-stage clamp not found in BtlCmd_ChangeStatStage"
+        )
 
-    return FALSE;
-}
-"""
-    new = """        mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] += stageChange;
-
-        if (mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] < MIN_STAT_STAGE) {
-            mon->statBoosts[BATTLE_STAT_ATTACK + statOffset] = MIN_STAT_STAGE;
-        }
+    insertion = """
 
         {
             int pressureBattler = battleCtx->sideEffectMon;
@@ -197,13 +217,11 @@ def patch_stat_drop_reaction(root: Path) -> None:
                     battleCtx->scriptTemp = BATTLE_ANIMATION_STAT_BOOST;
                 }
             }
-        }
-    }
+        }"""
 
-    return FALSE;
-}
-"""
-    replace_once(path, old, new, "Pressure Valve accepted stat-drop reaction")
+    insert_at = pos + len(clamp_anchor)
+    block = block[:insert_at] + insertion + block[insert_at:]
+    path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
 def update_registry(path: Path) -> None:
