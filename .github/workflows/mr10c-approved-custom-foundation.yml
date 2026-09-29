@@ -15,6 +15,7 @@ on:
       - "tools/install_mr10b2_safe_defensive_reaction_overrides.py"
       - "tools/install_mr10b3_safe_precision_offense_status.py"
       - "tools/install_mr10c0_missing_species_compat.py"
+      - "tools/install_mr10c0b_post_override_compat.py"
       - "tools/install_mr10c1_spectral_body.py"
       - "tools/install_mr10c2_execution_drive.py"
       - "data/mr10_safe_ability_partition.json"
@@ -105,6 +106,13 @@ jobs:
             vendor/pokeplatinum --partition data/mr10_safe_ability_partition.json \
             --report mr10c-b3.json
 
+      - name: Normalize post-override symbols
+        run: |
+          python3 tools/install_mr10c0b_post_override_compat.py \
+            vendor/pokeplatinum \
+            --report mr10c0b-post-override-compat.json
+          test "$(jq -r '.status' mr10c0b-post-override-compat.json)" = "PASS"
+
       - name: Materialize approved Mercury namespace
         run: |
           python3 tools/install_mr10a_custom_ability_namespace.py \
@@ -150,6 +158,7 @@ jobs:
             mr10c-mr08-stack.json
             mr10c-mr08-reports/
             mr10c0-species-compat.json
+            mr10c0b-post-override-compat.json
             mr10c-b1.json
             mr10c-b2.json
             mr10c-b3.json
