@@ -164,8 +164,8 @@ def patch_lunar_wrath(root: Path) -> None:
 def patch_hollow_ice_hit(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
     signature = (
-        "BOOL Mercury_TriggerAttackerOnHitAbility("
-        "BattleSystem *battleSys,\n"
+        "BOOL Mercury_TriggerAttackerOnHitAbility(\n"
+        "    BattleSystem *battleSys,\n"
         "    BattleContext *battleCtx,\n"
         "    int *subscript)"
     )
