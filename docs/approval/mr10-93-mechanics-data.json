@@ -42,7 +42,18 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves",
+        "Form-state controller",
+        "Damage / effectiveness overrides"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves.",
+        "Medium-high reuse: a data-driven form controller is useful for future custom forms, Megas, and threshold/move-dependent transformations."
+      ],
+      "battle_example": "Battle example: After a successful Dance move resolves through the user's Dancer/Grand Choreography behavior. The normal action resolves first; only after that does Grand Choreography create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 2,
@@ -74,7 +85,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: During targeting/resolution of the user's Keen Edge moves, with the shatter effect after a successful hit. Pinnacle Blade creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 3,
@@ -107,7 +126,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Damage / effectiveness overrides"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: the normal type chart and damage formula are still calculated, but Lethargy inserts a controlled override at the specified point. The key implementation rule is that the override replaces the intended stage of calculation rather than multiplying the same modifier twice."
     },
     {
       "review_id": 4,
@@ -141,7 +168,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules."
+      ],
+      "battle_example": "Battle example: When the charged user resolves its first damaging Electric-type attack. The engine checks Power Outage at that exact event, applies “The party Pokémon begins with a persistent charge. Its first damaging Electric-type attack while charged deals double damage; the charge is then consumed and the user's Electric typing is removed if present.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 5,
@@ -175,7 +210,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Damage / effectiveness overrides"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: Prismatic Veil begins on switch-in; the defensive stat boost triggers on the first qualifying super-effective hit taken during that entry. The engine checks Prismatic Pelt at that exact event, applies “On switch-in, the user gains Prismatic Veil for 3 turns. While the veil is active, super-effective damage taken is reduced by 25%. The first qualifying super-effective hit taken per switch-in also raises Defense by 1 stage if the hit is physical, or Special Defense by 1 stage if the hit is special. The user's typing does not change.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 6,
@@ -206,7 +249,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Multi-hit / move rewriting",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: Uses the normal triggers and calculations of Dual Wield and Best Offense. The engine checks Magus Blades at that exact event, applies “Combines Dual Wield and Best Offense.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 7,
@@ -238,7 +290,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Damage / effectiveness overrides"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: the normal type chart and damage formula are still calculated, but Soothsayer inserts a controlled override at the specified point. The key implementation rule is that the override replaces the intended stage of calculation rather than multiplying the same modifier twice."
     },
     {
       "review_id": 8,
@@ -273,7 +333,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: At the end of every second eligible active turn. The engine checks Sumo Wrestler at that exact event, applies “At the end of every second eligible turn the user remains active, it automatically uses a 20-BP Circle Throw.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 9,
@@ -305,7 +373,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After another battler successfully uses a sound-based move. The normal action resolves first; only after that does Parroting create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 10,
@@ -343,7 +419,19 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves",
+        "Persistent counters / survival",
+        "Global stat / event reactions"
+      ],
+      "engine_complexity": "Very High",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves.",
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules.",
+        "Medium reuse: a central stat-change event bus prevents each reactive Ability or move from needing bespoke detection code."
+      ],
+      "battle_example": "Battle example: After an opposing active battler successfully gains a stat-stage boost. The normal action resolves first; only after that does Retribution Blow create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 11,
@@ -379,7 +467,17 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival",
+        "Field / side conditions"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules.",
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: the Pokémon faints under the required condition, but the Ability records a revival flag instead of immediately restoring it. Normal faint/send-out sequencing continues; at the specified later checkpoint the flagged party member returns at the stated HP without corrupting battle-end checks or replacement selection."
     },
     {
       "review_id": 12,
@@ -415,7 +513,17 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival",
+        "Field / side conditions"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules.",
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: the Pokémon faints under the required condition, but the Ability records a revival flag instead of immediately restoring it. Normal faint/send-out sequencing continues; at the specified later checkpoint the flagged party member returns at the stated HP without corrupting battle-end checks or replacement selection."
     },
     {
       "review_id": 13,
@@ -449,7 +557,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: On switch-in. Foamy Web creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 14,
@@ -483,7 +599,17 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves",
+        "Multi-hit / move rewriting"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves.",
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: Whenever the user uses a damaging Fire-type move. The engine checks Raging Moth at that exact event, applies “Fire-type moves used by the user strike twice, with each hit dealing 70% of the move's normal power.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 15,
@@ -515,7 +641,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a qualifying special attack resolves successfully. The normal action resolves first; only after that does Thunder Clouds create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 16,
@@ -549,7 +683,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: On switch-in. Rejection creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 17,
@@ -584,7 +726,17 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves",
+        "Multi-hit / move rewriting"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves.",
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: the player chooses one ordinary attack, but Jackhammer rewrites its hit sequence. Accuracy and move selection happen once unless specified otherwise, while damage and per-hit interactions must resolve the intended number of times at the specified power scaling."
     },
     {
       "review_id": 18,
@@ -616,7 +768,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules."
+      ],
+      "battle_example": "Battle example: Self-drop prevention is continuous; survival triggers on the first qualifying fatal hit. The engine checks Lucky Halo at that exact event, applies “Prevents the user's self-inflicted stat drops and lets that party Pokémon survive one otherwise-fatal direct hit at 1 HP once per battle.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 19,
@@ -648,7 +808,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful Dance move. The normal action resolves first; only after that does Blade Dance create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 20,
@@ -680,7 +848,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Draconic Might becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 21,
@@ -713,7 +889,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: Added typing/Levitate are continuous for battle state; Misty Terrain is established through the Ability's field setup. Fey Flight creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 22,
@@ -744,7 +928,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Ominous Shroud becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 23,
@@ -776,7 +968,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Dragonfruit becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 24,
@@ -808,7 +1008,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful damaging move. The normal action resolves first; only after that does Aftershock create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 25,
@@ -840,7 +1048,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful Water-type damaging move. The normal action resolves first; only after that does High Tide create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 26,
@@ -871,7 +1087,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing",
+        "Damage / effectiveness overrides"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Rock Armor becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 27,
@@ -903,7 +1128,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful Ice-type damaging move. The normal action resolves first; only after that does Glacial Rage create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 28,
@@ -935,7 +1168,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful damaging move. The normal action resolves first; only after that does Sludge Spit create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 29,
@@ -968,7 +1209,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful contact hit by the user. The normal action resolves first; only after that does Chilling Pellets create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 30,
@@ -1000,7 +1249,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful Ghost-type damaging move. The normal action resolves first; only after that does Lunar Wrath create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 31,
@@ -1032,7 +1289,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful Ice- or Dragon-type damaging move. The normal action resolves first; only after that does Frost Dragon create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 32,
@@ -1063,7 +1328,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Voltron becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 33,
@@ -1095,7 +1369,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful damaging attack. The normal action resolves first; only after that does Break it Down create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 34,
@@ -1127,7 +1409,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful Dance move. The normal action resolves first; only after that does Backflip create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 35,
@@ -1160,7 +1450,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: Shell Armor is continuous; retaliation occurs after a qualifying contact hit. The normal action resolves first; only after that does Faraday Cage create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 36,
@@ -1192,7 +1491,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves",
+        "Damage / effectiveness overrides"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: Damage reduction is continuous; counterattack resolves after a qualifying damaging hit. The normal action resolves first; only after that does Deflect create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 37,
@@ -1223,7 +1531,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Komodo becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 38,
@@ -1259,7 +1575,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: At end of turn while the holder is active. Winter Throne creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 39,
@@ -1291,7 +1615,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: Amplifier is continuous; the counterattack resolves after a qualifying hit. The normal action resolves first; only after that does Wind Chimes create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 40,
@@ -1322,7 +1654,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Dead Bark becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 41,
@@ -1356,7 +1696,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules."
+      ],
+      "battle_example": "Battle example: After qualifying Water- or Ice-type hits, with the Water Defense component resolving on the following turn. The engine checks Cryo Architect at that exact event, applies “When hit by Water- or Ice-type attacks, raises Attack. An Ice-type hit also raises Defense immediately; a Water-type hit schedules the Defense raise for the next turn.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 42,
@@ -1387,7 +1735,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Specialized battle hook"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: Continuous while the holder is active. The engine checks Rat King at that exact event, applies “Allied Pokémon with base-stat total below 400 have their battle stats increased by 50% while the holder is active.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 43,
@@ -1419,7 +1775,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Specialized battle hook"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: At end of turn for qualifying trapped opposing Pokémon. The engine checks Sap Trap at that exact event, applies “Opposing trapped targets lose 1 Speed stage at end of turn; once a trapped target reaches -3 Speed, it cannot retreat.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 44,
@@ -1450,7 +1814,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: On switch-in. Toxic Surge creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 45,
@@ -1482,7 +1854,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Specialized battle hook"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: Residual damage resolves each turn; spread is checked on qualifying contact. The engine checks Parasitic Spores at that exact event, applies “The afflicted battler loses 1/8 max HP each turn, and the spore condition spreads through qualifying contact.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 46,
@@ -1513,7 +1893,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Specialized battle hook"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: On switch-in. The engine checks Berserk DNA at that exact event, applies “On entry, sharply raises whichever attacking stat is higher and applies the Enraged state.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 47,
@@ -1546,7 +1934,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules."
+      ],
+      "battle_example": "Battle example: When the user uses Roar of Time. The engine checks Temporal Rupture at that exact event, applies “Roar of Time used by the user becomes 100 BP, has no recharge turn, and applies Slow Start to the user.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 48,
@@ -1578,7 +1974,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: When the user's held item is lost. The engine checks Greedy at that exact event, applies “Immediately uses Thief when the user loses its held item.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 49,
@@ -1609,7 +2013,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Specialized battle hook"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: Continuous while the holder is active. The engine checks Polarity at that exact event, applies “Raises each active ally's own highest battle stat by 30%.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 50,
@@ -1640,7 +2052,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Specialized battle hook"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: At end of turn, beginning after the turn on which the user entered. The engine checks Craving at that exact event, applies “After the user's entry turn, it eats a random Berry at the end of each turn.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 51,
@@ -1671,7 +2091,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Aquatic becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 52,
@@ -1702,7 +2130,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Grounded becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 53,
@@ -1733,7 +2169,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Multi-hit / move rewriting"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: the player chooses one ordinary attack, but Unrelenting rewrites its hit sequence. Accuracy and move selection happen once unless specified otherwise, while damage and per-hit interactions must resolve the intended number of times at the specified power scaling."
     },
     {
       "review_id": 54,
@@ -1764,7 +2208,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Global stat / event reactions"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "Medium reuse: a central stat-change event bus prevents each reactive Ability or move from needing bespoke detection code."
+      ],
+      "battle_example": "Battle example: After a successful stat-stage change. The normal action resolves first; only after that does Sharing Is Caring create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 55,
@@ -1796,7 +2248,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Form-state controller",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a data-driven form controller is useful for future custom forms, Megas, and threshold/move-dependent transformations."
+      ],
+      "battle_example": "Battle example: when the trigger condition changes, Two-Faced re-evaluates the holder's battle form, refreshes the form-dependent stats/types/visual state, and later restores or changes that form again when the condition ends."
     },
     {
       "review_id": 56,
@@ -1827,7 +2288,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Form-state controller"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a data-driven form controller is useful for future custom forms, Megas, and threshold/move-dependent transformations."
+      ],
+      "battle_example": "Battle example: when the trigger condition changes, DNA Scramble re-evaluates the holder's battle form, refreshes the form-dependent stats/types/visual state, and later restores or changes that form again when the condition ends."
     },
     {
       "review_id": 57,
@@ -1858,7 +2327,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Custom status / virtual status",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse if Mercury keeps custom statuses; otherwise this is an isolated cost that may be better converted to normal Pokémon mechanics."
+      ],
+      "battle_example": "Battle example: Continuous using the component hooks and during outgoing damage calculation. The engine checks Dreamscape at that exact event, applies “Combines Comatose and Dreamcatcher behavior and also increases damage dealt by 20%.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 58,
@@ -1889,7 +2367,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Form-state controller"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a data-driven form controller is useful for future custom forms, Megas, and threshold/move-dependent transformations."
+      ],
+      "battle_example": "Battle example: when the trigger condition changes, Locust Swarm re-evaluates the holder's battle form, refreshes the form-dependent stats/types/visual state, and later restores or changes that form again when the condition ends."
     },
     {
       "review_id": 59,
@@ -1920,7 +2406,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Form-state controller"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a data-driven form controller is useful for future custom forms, Megas, and threshold/move-dependent transformations."
+      ],
+      "battle_example": "Battle example: when the trigger condition changes, Revelation re-evaluates the holder's battle form, refreshes the form-dependent stats/types/visual state, and later restores or changes that form again when the condition ends."
     },
     {
       "review_id": 60,
@@ -1951,7 +2445,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Specialized battle hook"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "Moderate reuse: this can still be implemented through a shared event hook rather than a one-off species check."
+      ],
+      "battle_example": "Battle example: Tracks each opposing battler while the holder is active; resolves after three consecutive non-damaging turns. The engine checks Strikeout at that exact event, applies “An opposing Pokémon that goes three turns without damaging the holder is forced out.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 61,
@@ -1982,7 +2484,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Multi-hit / move rewriting",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: Continuous/reactionary using the component hooks. The engine checks Hydra at that exact event, applies “Combines Multi-Headed and Hubris behavior.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 62,
@@ -2015,7 +2526,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Multi-hit / move rewriting",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: the player chooses one ordinary attack, but Hand Barnacles rewrites its hit sequence. Accuracy and move selection happen once unless specified otherwise, while damage and per-hit interactions must resolve the intended number of times at the specified power scaling."
     },
     {
       "review_id": 63,
@@ -2046,7 +2566,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: After a successful Ice-type hit. The engine checks Hollow Ice Zone at that exact event, applies “Successful Ice-type hits make the target Ice-type, then switch the user out if switching is legal.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 64,
@@ -2078,7 +2606,18 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival",
+        "Custom status / virtual status",
+        "Composite Ability"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules.",
+        "High reuse if Mercury keeps custom statuses; otherwise this is an isolated cost that may be better converted to normal Pokémon mechanics."
+      ],
+      "battle_example": "Battle example: Persistent battle state plus contact-triggered spread. The engine checks Blood Stain at that exact event, applies “The user remains in the Bleeding state and spreads Bleed through qualifying contact.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 65,
@@ -2111,7 +2650,17 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Persistent counters / survival",
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules.",
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: On the first two qualifying direct damaging hits. The engine checks Cheating Death at that exact event, applies “The first two direct damaging hits that would deal HP damage to the user instead deal zero HP damage.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 66,
@@ -2144,7 +2693,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a qualifying contact hit. The normal action resolves first; only after that does Cold Rebound create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 67,
@@ -2179,7 +2736,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: During the first active turn after entry. Demolitionist creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 68,
@@ -2210,7 +2775,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Dragonfly becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 69,
@@ -2241,7 +2814,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Half Drake becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 70,
@@ -2272,7 +2853,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Hover becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 71,
@@ -2303,7 +2892,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Ice Age becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 72,
@@ -2334,7 +2931,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: During move resolution in the locked Mercury icy-weather state. Ice Cold Hunter creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 73,
@@ -2366,7 +2971,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: When another battler successfully uses a qualifying lunar move. The normal action resolves first; only after that does Lunar Affinity create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 74,
@@ -2397,7 +3010,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Metallic becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 75,
@@ -2430,7 +3051,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a qualifying contact hit; reduction applies during that hit's damage calculation. The normal action resolves first; only after that does Parry create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 76,
@@ -2461,7 +3090,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Custom status / virtual status"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse if Mercury keeps custom statuses; otherwise this is an isolated cost that may be better converted to normal Pokémon mechanics."
+      ],
+      "battle_example": "Battle example: On the first qualifying hit that breaks Disguise. The engine checks Patchwork at that exact event, applies “Uses Disguise behavior; when the disguise breaks, the opposing Pokémon is cursed if legal.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 77,
@@ -2492,7 +3129,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Linked damage events"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Narrower reuse: the linked-damage event is powerful but needs careful recursion/faint guards; likely only a few effects need it."
+      ],
+      "battle_example": "Battle example: After qualifying direct damage. The engine checks Soul Linker at that exact event, applies “Direct damage dealt between the user and an opposing Pokémon is mirrored to the other side, except when either affected Pokémon would faint from the mirrored damage.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 78,
@@ -2524,7 +3169,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a qualifying Electric-type move resolves. The normal action resolves first; only after that does Thundercall create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 79,
@@ -2558,7 +3211,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Field / side conditions"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a timed custom-field/side-condition framework would also help custom moves that create protected hazards, auras, or temporary battlefield rules."
+      ],
+      "battle_example": "Battle example: At end of turn while the holder is active. Toxic Spill creates or modifies a battlefield/side state with its own duration and removal rules. Every normal move or Ability that reads, replaces, suppresses, or clears that kind of field state must see the same result."
     },
     {
       "review_id": 80,
@@ -2590,7 +3251,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a qualifying super-effective hit is taken. The normal action resolves first; only after that does Atomic Burst create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 81,
@@ -2625,7 +3294,17 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves",
+        "Multi-hit / move rewriting"
+      ],
+      "engine_complexity": "High",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves.",
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: During move resolution for qualifying biting moves. The normal action resolves first; only after that does Primal Maw create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 82,
@@ -2656,7 +3335,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Multi-hit / move rewriting"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: During move resolution for qualifying Mega Launcher moves. The engine checks Dual Wield at that exact event, applies “Mega Launcher-class moves strike twice, with each hit dealing 75% of normal power.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 83,
@@ -2689,7 +3376,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing",
+        "Damage / effectiveness overrides"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: Before an incoming attack resolves, once per turn under ER's activation rule. The engine checks Color Change at that exact event, applies “Before a damaging hit lands, the user changes to a type that best counters the incoming move's type.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 84,
@@ -2720,7 +3416,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Form-state controller"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a data-driven form controller is useful for future custom forms, Megas, and threshold/move-dependent transformations."
+      ],
+      "battle_example": "Battle example: when the trigger condition changes, Zen Mode re-evaluates the holder's battle form, refreshes the form-dependent stats/types/visual state, and later restores or changes that form again when the condition ends."
     },
     {
       "review_id": 85,
@@ -2751,7 +3455,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Turboblaze becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 86,
@@ -2782,7 +3494,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Teravolt becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 87,
@@ -2814,7 +3534,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Magical Dust becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 88,
@@ -2845,7 +3573,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Battle-only typing"
+      ],
+      "engine_complexity": "Low",
+      "shared_system_value": [
+        "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
+      ],
+      "battle_example": "Battle example: when Phantom becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
     },
     {
       "review_id": 89,
@@ -2877,7 +3613,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful qualifying Fire-type move. The normal action resolves first; only after that does Volcano Rage create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 90,
@@ -2909,7 +3653,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Generated / reactive moves"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
+      ],
+      "battle_example": "Battle example: After a successful qualifying Mega Launcher-class move. The normal action resolves first; only after that does Pyro Shells create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
     },
     {
       "review_id": 91,
@@ -2940,7 +3692,16 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Multi-hit / move rewriting",
+        "Composite Ability"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse: a shared move-rewrite layer can serve double-hit, partial-power second-hit, and variable-hit effects."
+      ],
+      "battle_example": "Battle example: Continuous/reactionary using the component hooks. The engine checks 3 > 1 at that exact event, applies “Combines Multi-Headed and Riptide behavior.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     },
     {
       "review_id": 92,
@@ -2974,7 +3735,15 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Form-state controller"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "Medium-high reuse: a data-driven form controller is useful for future custom forms, Megas, and threshold/move-dependent transformations."
+      ],
+      "battle_example": "Battle example: when the trigger condition changes, Schooling re-evaluates the holder's battle form, refreshes the form-dependent stats/types/visual state, and later restores or changes that form again when the condition ends."
     },
     {
       "review_id": 93,
@@ -3006,7 +3775,73 @@
         "CONVERT TO NORMAL POKEMON MECHANICS",
         "CUT"
       ],
-      "current_review_decision": "UNDECIDED"
+      "current_review_decision": "UNDECIDED",
+      "system_tags": [
+        "Custom status / virtual status"
+      ],
+      "engine_complexity": "Medium",
+      "shared_system_value": [
+        "High reuse if Mercury keeps custom statuses; otherwise this is an isolated cost that may be better converted to normal Pokémon mechanics."
+      ],
+      "battle_example": "Battle example: Continuous battle-state condition. The engine checks Comatose at that exact event, applies “The user is treated as asleep for relevant move and status interactions while still being able to act normally.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
     }
+  ],
+  "system_summary": [
+    {
+      "tag": "Generated / reactive moves",
+      "count": 29
+    },
+    {
+      "tag": "Battle-only typing",
+      "count": 20
+    },
+    {
+      "tag": "Field / side conditions",
+      "count": 12
+    },
+    {
+      "tag": "Persistent counters / survival",
+      "count": 9
+    },
+    {
+      "tag": "Multi-hit / move rewriting",
+      "count": 9
+    },
+    {
+      "tag": "Composite Ability",
+      "count": 9
+    },
+    {
+      "tag": "Form-state controller",
+      "count": 7
+    },
+    {
+      "tag": "Damage / effectiveness overrides",
+      "count": 7
+    },
+    {
+      "tag": "Specialized battle hook",
+      "count": 7
+    },
+    {
+      "tag": "Custom status / virtual status",
+      "count": 4
+    },
+    {
+      "tag": "Global stat / event reactions",
+      "count": 2
+    },
+    {
+      "tag": "Linked damage events",
+      "count": 1
+    }
+  ],
+  "deep_explanation_fields": [
+    "plain_english",
+    "battle_example",
+    "why_new_system",
+    "interactions_to_define",
+    "shared_system_value",
+    "approval_questions"
   ]
 }
