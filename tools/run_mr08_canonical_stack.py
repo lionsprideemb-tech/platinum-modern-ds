@@ -32,6 +32,19 @@ def main() -> None:
     if not installers:
         raise SystemExit("no MR08 installers found")
 
+    # MR08K's accelerated bulk pass superseded the earlier redirect/copy/control
+    # pass and contains the same nine mechanics plus sixteen more. Replaying both
+    # from a clean upstream tree makes the second script attempt to patch the
+    # already-modernized Moody block and fail. Keep the historical installer in
+    # the repository for provenance, but do not replay it when the bulk pass is
+    # present.
+    superseded = Path("tools/install_mr08k_canonical_ability_redirect_copy_control.py")
+    bulk = Path("tools/install_mr08k_canonical_ability_bulk_pass.py")
+    skipped_superseded = []
+    if bulk in installers and superseded in installers:
+        installers.remove(superseded)
+        skipped_superseded.append(superseded.name)
+
     completed = []
     for installer in installers:
         report = reports / f"{installer.stem}.json"
@@ -69,6 +82,7 @@ def main() -> None:
         "status": cert["status"],
         "installer_count": len(completed),
         "installers": completed,
+        "skipped_superseded_installers": skipped_superseded,
         "certification": str(certification),
         "canonical_modern_implemented": cert["implemented_registry"]["modern_count"],
     }
