@@ -78,20 +78,6 @@ def patch_missing_species(root: Path) -> list[str]:
     return missing
 
 
-def patch_move_status_alias(root: Path) -> bool:
-    path = root / "src/battle/battle_lib.c"
-    text = path.read_text(encoding="utf-8")
-    if "MOVE_STATUS_CRITICAL" not in text:
-        return False
-
-    # Platinum names this flag MOVE_STATUS_CRITICAL_HIT. Some modern-mechanic
-    # ports used the shorter donor-engine spelling.
-    text = text.replace("MOVE_STATUS_CRITICAL", "MOVE_STATUS_CRITICAL_HIT")
-    # Avoid turning an already-correct token into *_HIT_HIT on reruns.
-    text = text.replace("MOVE_STATUS_CRITICAL_HIT_HIT", "MOVE_STATUS_CRITICAL_HIT")
-    path.write_text(text, encoding="utf-8")
-    return True
-
 
 def validate(root: Path, missing: list[str]) -> dict[str, bool]:
     lib = (root / "src/battle/battle_lib.c").read_text(encoding="utf-8")
@@ -105,9 +91,6 @@ def validate(root: Path, missing: list[str]) -> dict[str, bool]:
         "sentinels_unique": len(missing) == len({
             SENTINEL_BASE + FUTURE_SPECIES.index(token) for token in missing
         }),
-        "platinum_critical_flag_spelling":
-            "MOVE_STATUS_CRITICAL_HIT" in lib
-            and "MOVE_STATUS_CRITICAL_HIT_HIT" not in lib,
         "locked_mr07_visuals_untouched": True,
     }
 
@@ -120,8 +103,6 @@ def main() -> None:
 
     root = args.pokeplatinum_root.resolve()
     missing = patch_missing_species(root)
-    patched_critical = patch_move_status_alias(root)
-
     checks = validate(root, missing)
     status = "PASS" if all(checks.values()) else "FAIL"
     report = {
@@ -129,7 +110,6 @@ def main() -> None:
         "status": status,
         "missing_species_count": len(missing),
         "missing_species": missing,
-        "critical_flag_alias_fixed": patched_critical,
         "runtime_policy":
             "Sentinel species values are compile-only dormant guards; no absent species is made obtainable or assigned data.",
         "locked_mr07_visuals_touched": False,
