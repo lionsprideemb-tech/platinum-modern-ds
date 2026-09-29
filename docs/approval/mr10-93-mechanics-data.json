@@ -1477,7 +1477,19 @@
       "shared_system_value": [
         "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
       ],
-      "battle_example": "Battle example: After a successful Dance move. The normal action resolves first; only after that does Backflip create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
+      "battle_example": "Battle example: After a successful Dance move. The normal action resolves first; only after that does Backflip create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Backflip",
+        "new_name": "Counterstep",
+        "exact_effect": "Once per switch-in, the first time the user takes direct damage from a Pokémon that acted before it, the user gains 1 Speed stage and becomes Ready. While Ready, the user's next damaging move deals 20% more damage, then Ready is consumed.",
+        "trigger": "After the first qualifying direct damaging move from a Pokémon that acted before the user during that switch-in.",
+        "restrictions": "Triggers at most once per switch-in. Multi-hit moves count as one triggering move event. The attacker must have acted before the user in that turn. Ready does not stack, is consumed by the next damaging move, and is cleared on switch-out.",
+        "mechanic_family": "once_per_entry_slower_hit_speed_boost_and_next_attack_boost",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Momentum tool for bulky or slower attackers."
+      }
     },
     {
       "review_id": 35,
@@ -1519,7 +1531,19 @@
       "shared_system_value": [
         "High reuse: one shared extra-action queue could power many Ability follow-ups and several custom moves."
       ],
-      "battle_example": "Battle example: Shell Armor is continuous; retaliation occurs after a qualifying contact hit. The normal action resolves first; only after that does Faraday Cage create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
+      "battle_example": "Battle example: Shell Armor is continuous; retaliation occurs after a qualifying contact hit. The normal action resolves first; only after that does Faraday Cage create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Faraday Cage",
+        "new_name": "Countercurrent",
+        "exact_effect": "When the user is hit by a contact move, the attacker's Speed falls by 1 stage. If that Speed drop makes the user faster than the attacker, the user's next move gains +1 priority.",
+        "trigger": "After a qualifying contact hit and its Speed-drop resolution.",
+        "restrictions": "The temporary +1 priority bonus can be earned at most once per turn, does not stack, is consumed by the user's next move, and is cleared on switch-out. If the Speed drop is prevented or does not make the user faster, no priority bonus is granted.",
+        "mechanic_family": "contact_speed_drop_conditional_next_move_priority",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Converts contact punishment into tempo control."
+      }
     },
     {
       "review_id": 36,
@@ -1722,7 +1746,19 @@
       "shared_system_value": [
         "High reuse: a generalized added-type layer would support numerous Abilities and future move effects without species-specific hacks."
       ],
-      "battle_example": "Battle example: when Dead Bark becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point."
+      "battle_example": "Battle example: when Dead Bark becomes active, the Pokémon keeps its species data unchanged but gains the listed extra battle typing. From that point, STAB, weaknesses, resistances and immunities must use the temporary type state until the stated cleanup point.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Dead Bark",
+        "new_name": "Heartwood",
+        "exact_effect": "The user's Defense and Special Defense cannot be lowered by opponents. At the end of a turn in which the user took no direct damage, it restores 1/16 of its maximum HP.",
+        "trigger": "Defensive stat-drop prevention is continuous. Healing checks at end of turn.",
+        "restrictions": "Self-inflicted Defense or Special Defense drops still occur normally. Only direct damage from an opposing attack prevents the end-of-turn heal; indirect damage such as poison, weather, and hazards does not.",
+        "mechanic_family": "opponent_defense_drop_immunity_plus_no_direct_damage_recovery",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Defensive sustain without type-changing or broad damage reduction."
+      }
     },
     {
       "review_id": 41,
@@ -2002,7 +2038,19 @@
       "shared_system_value": [
         "Medium-high reuse: a per-party persistent-state container would support charges, once-per-battle flags, hit counters, and revival/survival rules."
       ],
-      "battle_example": "Battle example: When the user uses Roar of Time. The engine checks Temporal Rupture at that exact event, applies “Roar of Time used by the user becomes 100 BP, has no recharge turn, and applies Slow Start to the user.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers."
+      "battle_example": "Battle example: When the user uses Roar of Time. The engine checks Temporal Rupture at that exact event, applies “Roar of Time used by the user becomes 100 BP, has no recharge turn, and applies Slow Start to the user.”, then continues the ordinary battle sequence while respecting the listed restrictions and preventing duplicate triggers.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Temporal Rupture",
+        "new_name": "Time Compression",
+        "exact_effect": "Once per switch-in, the first move the user uses that would normally require a charging turn or a recharge turn ignores that delay.",
+        "trigger": "When a selected move would actually impose a charge-before-use or recharge-after-use delay.",
+        "restrictions": "Triggers once per switch-in. The charge is consumed only when the Ability actually removes a delay. If another effect already removes the delay, Time Compression remains unused. Switching out refreshes the one-use state.",
+        "mechanic_family": "once_per_entry_charge_or_recharge_delay_skip",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Shared hook can support future charge/recharge mechanics."
+      }
     },
     {
       "review_id": 48,
@@ -2276,7 +2324,19 @@
       "shared_system_value": [
         "Medium reuse: a central stat-change event bus prevents each reactive Ability or move from needing bespoke detection code."
       ],
-      "battle_example": "Battle example: After a successful stat-stage change. The normal action resolves first; only after that does Sharing Is Caring create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain."
+      "battle_example": "Battle example: After a successful stat-stage change. The normal action resolves first; only after that does Sharing Is Caring create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain.",
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Sharing Is Caring",
+        "new_name": "Predatory Timing",
+        "exact_effect": "Whenever an opposing Pokémon successfully uses a status move, the holder becomes Opportunistic. While Opportunistic, the user's next damaging move deals 30% more damage.",
+        "trigger": "After an opposing active battler successfully resolves a status move.",
+        "restrictions": "Opportunistic does not stack, is consumed after the user's next damaging move, and is cleared on switch-out. Failed status moves do not trigger the Ability.",
+        "mechanic_family": "opponent_status_move_reactive_next_attack_boost",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Broad anti-passivity role without global stat-copy chains."
+      }
     },
     {
       "review_id": 55,
@@ -3942,6 +4002,31 @@
         "review_id": 22,
         "original_name": "Ominous Shroud",
         "new_name": "Spectral Body"
+      },
+      {
+        "review_id": 34,
+        "original_name": "Backflip",
+        "new_name": "Counterstep"
+      },
+      {
+        "review_id": 35,
+        "original_name": "Faraday Cage",
+        "new_name": "Countercurrent"
+      },
+      {
+        "review_id": 40,
+        "original_name": "Dead Bark",
+        "new_name": "Heartwood"
+      },
+      {
+        "review_id": 47,
+        "original_name": "Temporal Rupture",
+        "new_name": "Time Compression"
+      },
+      {
+        "review_id": 54,
+        "original_name": "Sharing Is Caring",
+        "new_name": "Predatory Timing"
       }
     ]
   }
