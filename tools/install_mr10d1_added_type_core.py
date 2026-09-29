@@ -98,6 +98,13 @@ def insert_before_needle_in_function(
         raise SystemExit(f"{label}: needle not found in {signature}")
 
     line_start = block.rfind("\n", 0, pos) + 1
+    current_line = block[line_start:pos].lstrip()
+    if current_line.startswith("&&") or current_line.startswith("||"):
+        governing_if = block.rfind("    if (", 0, pos)
+        if governing_if < 0:
+            raise SystemExit(f"{label}: governing if not found in {signature}")
+        line_start = governing_if
+
     block = block[:line_start] + insertion + block[line_start:]
     path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
