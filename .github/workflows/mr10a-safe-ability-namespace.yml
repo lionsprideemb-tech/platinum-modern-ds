@@ -1,0 +1,126 @@
+name: MR10A Safe Ability Namespace
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr10-safe-runtime-integration
+    paths:
+      - "data/mr10_safe_ability_partition.json"
+      - "tools/install_mr10a_custom_ability_namespace.py"
+      - "docs/MR10_SAFE_RUNTIME_INTEGRATION.md"
+      - ".github/workflows/mr10a-safe-ability-namespace.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  namespace:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Validate MR10 partition
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/install_mr10a_custom_ability_namespace.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = json.loads(Path("data/mr10_safe_ability_partition.json").read_text())
+          rows = p["abilities"]
+          custom = sorted((x for x in rows if x["runtime_kind"] == "custom_id"), key=lambda x: x["id"])
+          canonical = [x for x in rows if x["runtime_kind"] == "canonical_alias"]
+          ids = [x["id"] for x in custom]
+          assert ids == list(range(311, ids[-1] + 1))
+          assert ids[-1] <= 1023
+          assert len(custom) == 619
+          assert len(canonical) == 269
+          assert sum(not x["review_blocked"] for x in rows) == 795
+          assert sum(x["review_blocked"] for x in rows) == 93
+          assert sum(not x["review_blocked"] for x in custom) == 532
+          assert sum(x["review_blocked"] for x in custom) == 87
+          print("MR10 partition: PASS")
+          PY
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-pip wget xz-utils libpng-dev
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Install canonical Ability width and namespace
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mr10a-mp05.json \
+            --implemented-registry mr10a-implemented-abilities.txt
+
+      - name: Install Mercury custom Ability namespace
+        shell: bash
+        run: |
+          python3 tools/install_mr10a_custom_ability_namespace.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --report mr10a-custom-namespace.json
+          test "$(jq -r '.status' mr10a-custom-namespace.json)" = "PASS"
+          test "$(jq -r '.custom_range[1]' mr10a-custom-namespace.json)" = "929"
+          test "$(jq -r '.custom_identity_count' mr10a-custom-namespace.json)" = "619"
+
+      - name: Build native Platinum
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Upload namespace proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr10a-safe-ability-namespace-${{ github.run_id }}
+          path: |
+            mr10a-mp05.json
+            mr10a-custom-namespace.json
+            mr10a-implemented-abilities.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## MR10A safe Ability namespace"
+            echo
+            echo "- Canonical IDs: 0..310"
+            echo "- Mercury custom IDs: 311..929"
+            echo "- Custom identities: 619"
+            echo "- Safe decided rows: 795"
+            echo "- Held review rows: 93"
+            echo "- Full native Platinum build: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
