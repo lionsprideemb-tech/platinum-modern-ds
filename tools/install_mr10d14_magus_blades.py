@@ -209,19 +209,9 @@ def patch_best_offense_component(root: Path) -> None:
         "Magus Blades Best Offense SpDef contribution",
     )
 
-    insert_after_in_function(
+    insert_before_once(
         lib,
-        """int BattleSystem_CalcMoveDamage(BattleSystem *battleSys,
-    BattleContext *battleCtx,
-    int move,
-    u32 sideConditions,
-    u32 fieldConditions,
-    u16 inPower,
-    u8 inType,
-    u8 attacker,
-    u8 defender,
-    u8 criticalMul)""",
-        """    moveClass = MOVE_DATA(move).class;
+        """    if (attackerParams.ability == ABILITY_HUGE_POWER || attackerParams.ability == ABILITY_PURE_POWER) {
 """,
         """    // Mercury MR10D14: Mystic Blades component.
     if (attackerParams.ability == ABILITY_MR_MAGUS_BLADES
@@ -229,11 +219,10 @@ def patch_best_offense_component(root: Path) -> None:
         moveClass = CLASS_SPECIAL;
         movePower = movePower * 13 / 10;
     }
+
 """,
-        "// Mercury MR10D14: Mystic Blades component.",
         "Magus Blades Mystic Blades conversion",
     )
-
 
 def update_registry(path: Path) -> None:
     lines = [
