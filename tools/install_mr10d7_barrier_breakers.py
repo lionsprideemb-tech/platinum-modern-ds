@@ -181,7 +181,7 @@ BOOL Mercury_AttackBypassesScreens(
 """
     insert_before_once(
         lib,
-        "int BattleSystem_CalcMoveDamage(BattleSystem *battleSys, BattleContext *battleCtx,",
+        "int BattleSystem_CalcMoveDamage(BattleSystem *battleSys,\n",
         helpers,
         "MR10D7 barrier helpers",
     )
