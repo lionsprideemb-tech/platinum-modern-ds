@@ -3418,11 +3418,16 @@
       ],
       "battle_example": "Battle example: After a qualifying super-effective hit is taken. The normal action resolves first; only after that does Atomic Burst create its extra action. The engine then performs the generated move under the restrictions above, checks for KOs, and must mark that action so it cannot accidentally create an infinite chain.",
       "redesign_resolution": {
-        "status": "REJECTED_REDESIGN_PENDING",
-        "rejected_candidate": "Critical Mass",
-        "rejected_on": "2026-09-29",
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
         "original_name": "Atomic Burst",
-        "note": "Owner liked the rest of final batch but rejected candidate #4 Critical Mass. Needs a fresh blank-slate redesign."
+        "new_name": "Execution Drive",
+        "exact_effect": "The user's damaging moves deal 30% more damage to targets at or below 50% of their maximum HP. If the user knocks out an opposing Pokémon, it restores 1/8 of its maximum HP.",
+        "trigger": "The damage bonus is checked immediately before each damaging hit resolves. The healing triggers after the user directly knocks out an opposing Pokémon.",
+        "restrictions": "The 30% damage bonus applies only while the target is at or below 50% HP at the moment of the hit. On multi-hit moves, later hits can begin receiving the bonus if an earlier hit lowers the target to 50% HP or below. The 1/8 max-HP recovery occurs once per opposing Pokémon knocked out by the user's direct damage and does not trigger from indirect damage.",
+        "mechanic_family": "low_hp_target_execution_boost_plus_ko_recovery",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Replaces rejected Critical Mass concept with a straightforward finisher identity."
       }
     },
     {
@@ -4099,17 +4104,17 @@
         "new_name": "Two Lives"
       },
       {
+        "review_id": 80,
+        "original_name": "Atomic Burst",
+        "new_name": "Execution Drive"
+      },
+      {
         "review_id": 90,
         "original_name": "Pyro Shells",
         "new_name": "Rangefinder"
       }
     ],
-    "pending_redesigns": [
-      {
-        "review_id": 80,
-        "original_name": "Atomic Burst",
-        "status": "REJECTED_REDESIGN_PENDING"
-      }
-    ]
+    "pending_redesigns": [],
+    "redesign_pass_status": "COMPLETE"
   }
 }
