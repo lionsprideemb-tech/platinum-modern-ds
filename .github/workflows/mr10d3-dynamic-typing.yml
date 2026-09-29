@@ -2,6 +2,7 @@ name: MR10D3 Dynamic Typing
 
 # MR10D3 extends the green MR10D2 foundation with dynamic battle-only
 # typing, Fey Flight, Magical Dust, and ER-style pre-hit Color Change.
+# Gate revision: initial dynamic-typing certification.
 # Gate revision: D1 helper prototypes synchronized.
 # Gate revision: D2 proof artifact included.
 
