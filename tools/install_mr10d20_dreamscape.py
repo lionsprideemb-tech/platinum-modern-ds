@@ -408,8 +408,13 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "Mercury_DreamscapeAnyActiveSleeper(battleSys, battleCtx)" in lib
             and "movePower *= 2;" in lib,
         "components_stack":
-            lib.find("movePower = movePower * 12 / 10;")
-            < lib.find("movePower *= 2;", lib.find("ABILITY_MR_DREAMSCAPE")),
+            """    if (attackerParams.ability == ABILITY_MR_DREAMSCAPE && movePower) {
+        movePower = movePower * 12 / 10;
+        if (Mercury_DreamscapeAnyActiveSleeper(battleSys, battleCtx)) {
+            movePower *= 2;
+        }
+    }
+""" in lib,
         "implemented_registry_updated":
             ABILITY_TOKEN in registry_lines,
         "locked_mr07_visuals_untouched": True,
