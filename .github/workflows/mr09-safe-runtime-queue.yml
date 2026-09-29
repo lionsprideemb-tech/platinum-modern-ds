@@ -25,5 +25,5 @@ jobs:
           cp data/mr09_safe_runtime_queue.json "$RUNNER_TEMP/committed.json"
           python3 tools/build_mr09_safe_runtime_queue.py
           diff -u "$RUNNER_TEMP/committed.json" data/mr09_safe_runtime_queue.json
-          python3 tools/audit_mr09_custom_ability_intake.py
+          python3 tools/audit_mr09_custom_ability_intake.py data/mr09_custom_ability_intake.json
           echo "MR09 safe queue: PASS"
