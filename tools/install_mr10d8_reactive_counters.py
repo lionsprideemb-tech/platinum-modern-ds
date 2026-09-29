@@ -140,18 +140,6 @@ def patch_context(root: Path) -> None:
 
 def patch_damage_reduction(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
-    signature = (
-        "int BattleSystem_CalcMoveDamage(BattleSystem *battleSys, "
-        "BattleContext *battleCtx,\n"
-        "    int move,\n"
-        "    u32 sideConditions,\n"
-        "    u32 fieldConditions,\n"
-        "    u16 inPower,\n"
-        "    u8 inType,\n"
-        "    u8 attacker,\n"
-        "    u8 defender,\n"
-        "    u8 criticalMul)"
-    )
     insertion = """    if (Battler_IgnorableAbility(
             battleCtx, attacker, defender, ABILITY_MR_DEFLECT) == TRUE
         && moveClass != CLASS_STATUS
@@ -168,15 +156,17 @@ def patch_damage_reduction(root: Path) -> None:
     }
 
 """
-    insert_before_in_function(
-        path,
-        signature,
-        """    if (Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_PUNK_ROCK) == TRUE
-""",
-        insertion,
-        "ABILITY_MR_DEFLECT) == TRUE",
-        "MR10D8 Deflect/Parry damage reduction",
-    )
+    text = path.read_text(encoding="utf-8")
+    if "ABILITY_MR_DEFLECT) == TRUE" in text:
+        return
+    anchor = """    if (Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_PUNK_ROCK) == TRUE
+"""
+    count = text.count(anchor)
+    if count != 1:
+        raise SystemExit(
+            f"MR10D8 Deflect/Parry damage reduction: expected one damage anchor, found {count}"
+        )
+    path.write_text(text.replace(anchor, insertion + anchor, 1), encoding="utf-8")
 
 
 def patch_hit_scheduler(root: Path) -> None:
