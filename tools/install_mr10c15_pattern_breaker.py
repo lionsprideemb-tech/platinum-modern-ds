@@ -417,7 +417,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "ABILITY_MR_PATTERN_BREAKER" in ctl
             and "((patternHolder & 1) != (patternUser & 1))" in ctl,
         "locked_target_recorded":
-            "mercuryPatternTarget[patternHolder] = patternUser + 1;" in ctl,
+            "mercuryPatternTarget[patternHolder]" in ctl
+            and "= patternUser + 1;" in ctl,
         "power_bonus_30_percent":
             "ABILITY_MR_PATTERN_BREAKER" in lib
             and "movePower = movePower * 13 / 10;" in lib,
