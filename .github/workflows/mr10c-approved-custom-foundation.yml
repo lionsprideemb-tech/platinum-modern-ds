@@ -208,6 +208,36 @@ jobs:
           test "$(jq -r '.status' mr10c8-backlash.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10c8-backlash.json)" = "1"
 
+      - name: Implement approved custom mechanics batch C9
+        run: |
+          python3 tools/install_mr10c9_predatory_timing.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c9-predatory-timing.json
+          test "$(jq -r '.status' mr10c9-predatory-timing.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c9-predatory-timing.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C10
+        run: |
+          python3 tools/install_mr10c10_counterstep.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c10-counterstep.json
+          test "$(jq -r '.status' mr10c10-counterstep.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c10-counterstep.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C11
+        run: |
+          python3 tools/install_mr10c11_countercurrent.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c11-countercurrent.json
+          test "$(jq -r '.status' mr10c11-countercurrent.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c11-countercurrent.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -237,6 +267,9 @@ jobs:
             mr10c6-pressure-valve.json
             mr10c7-rangefinder.json
             mr10c8-backlash.json
+            mr10c9-predatory-timing.json
+            mr10c10-counterstep.json
+            mr10c11-countercurrent.json
           if-no-files-found: error
           retention-days: 14
 
@@ -250,6 +283,6 @@ jobs:
             echo "- Cut identities retained only as reserved stable IDs: 2"
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
-            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash"
+            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
