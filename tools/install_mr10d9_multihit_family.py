@@ -170,35 +170,45 @@ def patch_classifiers(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
     hdr = root / "include/battle/battle_lib.h"
 
-    # Expose the already-pinned Mercury biting classifier.
-    insert_after_function(
-        lib,
-        "static BOOL Mercury_MoveIsBiting(int move)",
-        """BOOL Mercury_D9MoveIsBiting(int move)
+    # Keep D9 self-contained: later canonical installers may relocate or
+    # rewrite the private MR08 move-property helpers, so duplicate the pinned
+    # move tables here instead of depending on their exact static signatures.
+    helpers = """BOOL Mercury_D9MoveIsBiting(int move)
 {
-    return Mercury_MoveIsBiting(move);
+    switch (move) {
+    case MOVE_BITE:
+    case MOVE_CRUNCH:
+    case MOVE_FIRE_FANG:
+    case MOVE_FISHIOUS_REND:
+    case MOVE_HYPER_FANG:
+    case MOVE_ICE_FANG:
+    case MOVE_JAW_LOCK:
+    case MOVE_POISON_FANG:
+    case MOVE_PSYCHIC_FANGS:
+    case MOVE_THUNDER_FANG:
+        return TRUE;
+    default:
+        return FALSE;
+    }
 }
 
-""",
-        "BOOL Mercury_D9MoveIsBiting(int move)",
-        "MR10D9 biting wrapper",
-    )
-
-    # Expose the already-pinned Mercury pulse / Mega Launcher classifier.
-    insert_after_function(
-        lib,
-        "static BOOL Mercury_MoveIsPulse(int move)",
-        """BOOL Mercury_D9MoveIsPulse(int move)
+BOOL Mercury_D9MoveIsPulse(int move)
 {
-    return Mercury_MoveIsPulse(move);
+    switch (move) {
+    case MOVE_AURA_SPHERE:
+    case MOVE_DARK_PULSE:
+    case MOVE_DRAGON_PULSE:
+    case MOVE_HEAL_PULSE:
+    case MOVE_ORIGIN_PULSE:
+    case MOVE_TERRAIN_PULSE:
+    case MOVE_WATER_PULSE:
+        return TRUE;
+    default:
+        return FALSE;
+    }
 }
 
-""",
-        "BOOL Mercury_D9MoveIsPulse(int move)",
-        "MR10D9 pulse wrapper",
-    )
-
-    helpers = """BOOL Mercury_D9MoveIsHammer(int move)
+BOOL Mercury_D9MoveIsHammer(int move)
 {
     switch (move) {
     case MOVE_CRABHAMMER:
