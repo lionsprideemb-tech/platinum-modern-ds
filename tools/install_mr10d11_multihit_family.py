@@ -98,40 +98,10 @@ def validate_partition(path: Path) -> None:
 
 
 def export_existing_move_families(root: Path) -> None:
-    lib = root / "src/battle/battle_lib.c"
-    hdr = root / "include/battle/battle_lib.h"
-
-    # Keep the canonical MR08 classifiers file-local.  Export tiny wrappers
-    # instead; Metrowerks can otherwise discard/retain the original static
-    # symbols in a way that leaves the controller's cross-TU reference
-    # unresolved at link time.
-    insert_before_once(
-        lib,
-        """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript)
-""",
-        """BOOL Mercury_MoveIsPulseForCustomAbility(int move)
-{
-    return Mercury_MoveIsPulse(move);
-}
-
-BOOL Mercury_MoveIsBitingForCustomAbility(int move)
-{
-    return Mercury_MoveIsBiting(move);
-}
-
-""",
-        "D11 exported move-family wrappers",
-    )
-    insert_before_once(
-        hdr,
-        """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);
-""",
-        """BOOL Mercury_MoveIsPulseForCustomAbility(int move);
-BOOL Mercury_MoveIsBitingForCustomAbility(int move);
-""",
-        "D11 move-family wrapper declarations",
-    )
-
+    # D11 keeps its move-family classifiers local to the battle controller.
+    # This avoids cross-translation-unit linkage against MR08's static helpers
+    # while preserving the same locked move-family membership.
+    return
 
 def patch_context(root: Path) -> None:
     path = root / "include/battle/battle_context.h"
@@ -152,7 +122,42 @@ def patch_context(root: Path) -> None:
 def patch_controller(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
 
-    helper = """static BOOL Mercury_D11MoveIsHammer(int move)
+    helper = """static BOOL Mercury_D11MoveIsPulse(int move)
+{
+    switch (move) {
+    case MOVE_AURA_SPHERE:
+    case MOVE_DARK_PULSE:
+    case MOVE_DRAGON_PULSE:
+    case MOVE_HEAL_PULSE:
+    case MOVE_ORIGIN_PULSE:
+    case MOVE_TERRAIN_PULSE:
+    case MOVE_WATER_PULSE:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+static BOOL Mercury_D11MoveIsBiting(int move)
+{
+    switch (move) {
+    case MOVE_BITE:
+    case MOVE_CRUNCH:
+    case MOVE_FIRE_FANG:
+    case MOVE_FISHIOUS_REND:
+    case MOVE_HYPER_FANG:
+    case MOVE_ICE_FANG:
+    case MOVE_JAW_LOCK:
+    case MOVE_POISON_FANG:
+    case MOVE_PSYCHIC_FANGS:
+    case MOVE_THUNDER_FANG:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+static BOOL Mercury_D11MoveIsHammer(int move)
 {
     switch (move) {
     case MOVE_SLAM:
@@ -292,10 +297,10 @@ static int Mercury_CustomMultiHitCount(
             ? 2 : 0;
 
     case ABILITY_MR_PRIMAL_MAW:
-        return Mercury_MoveIsBitingForCustomAbility(move) ? 2 : 0;
+        return Mercury_D11MoveIsBiting(move) ? 2 : 0;
 
     case ABILITY_MR_DUAL_WIELD:
-        return Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0;
+        return Mercury_D11MoveIsPulse(move) ? 2 : 0;
 
     default:
         return 0;
@@ -490,18 +495,18 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             and "NO_CLOUD_NINE && WEATHER_IS_HAIL && moveType == TYPE_ICE" in ctl,
         "primal_maw_biting_two_hit":
             "case ABILITY_MR_PRIMAL_MAW:" in ctl
-            and "Mercury_MoveIsBitingForCustomAbility(move) ? 2 : 0" in ctl
+            and "Mercury_D11MoveIsBiting(move) ? 2 : 0" in ctl
             and "== ABILITY_MR_PRIMAL_MAW" in lib
             and "damage /= 2;" in lib,
         "dual_wield_launcher_two_hit_75":
             "case ABILITY_MR_DUAL_WIELD:" in ctl
-            and "Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0" in ctl
+            and "Mercury_D11MoveIsPulse(move) ? 2 : 0" in ctl
             and "movePower = movePower * 75 / 100;" in lib,
         "current_mercury_move_families_reused":
-            "BOOL Mercury_MoveIsPulseForCustomAbility(int move)" in lib
-            and "BOOL Mercury_MoveIsBitingForCustomAbility(int move)" in lib
-            and "BOOL Mercury_MoveIsPulseForCustomAbility(int move);" in hdr
-            and "BOOL Mercury_MoveIsBitingForCustomAbility(int move);" in hdr,
+            "static BOOL Mercury_D11MoveIsPulse(int move)" in ctl
+            and "static BOOL Mercury_D11MoveIsBiting(int move)" in ctl
+            and "case MOVE_AURA_SPHERE:" in ctl
+            and "case MOVE_PSYCHIC_FANGS:" in ctl,
         "spread_safety":
             "return liveTargets == 1;" in ctl,
         "implemented_registry_updated":
