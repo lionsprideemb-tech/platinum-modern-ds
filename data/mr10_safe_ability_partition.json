@@ -243,9 +243,12 @@
       "token": "ABILITY_COLOR_CHANGE",
       "display_name": "Color Change",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Before a damaging hit lands, the user changes to a type that best counters the incoming move's type.",
-      "mechanic_family": "pre_hit_defensive_type_change"
+      "mechanic_family": "pre_hit_defensive_type_change",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Immunity",
@@ -1837,10 +1840,14 @@
       "id": 161,
       "token": "ABILITY_ZEN_MODE",
       "display_name": "Zen Mode",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Darmanitan changes into its Zen Mode form while active regardless of HP.",
-      "mechanic_family": "always_active_zen_form"
+      "implementation_class": "existing_hook",
+      "review_blocked": false,
+      "exact_effect": "At or below 50% max HP, Darmanitan changes into its Zen Mode form. It returns to its standard form when its HP rises above 50%.",
+      "mechanic_family": "hp_half_zen_form",
+      "owner_review_decision": "CONVERT TO NORMAL POKEMON MECHANICS",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_canonical",
+      "runtime_enabled": true
     },
     {
       "source_name": "Victory Star",
@@ -1860,9 +1867,12 @@
       "token": "ABILITY_TURBOBLAZE",
       "display_name": "Turboblaze",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Retains Mold Breaker-style ability bypass and adds Fire as an additional battle typing.",
-      "mechanic_family": "mold_breaker_plus_add_fire_type"
+      "mechanic_family": "mold_breaker_plus_add_fire_type",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Teravolt",
@@ -1871,9 +1881,12 @@
       "token": "ABILITY_TERAVOLT",
       "display_name": "Teravolt",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Retains Mold Breaker-style ability bypass and adds Electric as an additional battle typing.",
-      "mechanic_family": "mold_breaker_plus_add_electric_type"
+      "mechanic_family": "mold_breaker_plus_add_electric_type",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Aroma Veil",
@@ -2355,9 +2368,12 @@
       "token": "ABILITY_SCHOOLING",
       "display_name": "Schooling",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Wishiwashi changes to School Form at level 20 or higher while above 25% max HP, and returns to Solo Form at or below 25% max HP.",
-      "mechanic_family": "wishiwashi_hp_form_switch"
+      "mechanic_family": "wishiwashi_hp_form_switch",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Disguise",
@@ -2410,9 +2426,12 @@
       "token": "ABILITY_COMATOSE",
       "display_name": "Comatose",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The user is treated as asleep for relevant move and status interactions while still being able to act normally.",
-      "mechanic_family": "permanent_virtual_sleep_state"
+      "mechanic_family": "permanent_virtual_sleep_state",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Queenly Majesty",
@@ -3092,9 +3111,12 @@
       "token": "ABILITY_PRISMATIC_PELT",
       "display_name": "Prismatic Pelt",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "On switch-in, the user gains Prismatic Veil for 3 turns. While the veil is active, super-effective damage taken is reduced by 25%. The first qualifying super-effective hit taken per switch-in also raises Defense by 1 stage if the hit is physical, or Special Defense by 1 stage if the hit is special. The user's typing does not change.",
-      "mechanic_family": "entry_timed_super_effective_reduction_first_hit_defense_adaptation"
+      "mechanic_family": "entry_timed_super_effective_reduction_first_hit_defense_adaptation",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Lockdown Protocol",
@@ -3207,9 +3229,12 @@
       "token": "ABILITY_MR_GRAND_CHOREOGRAPHY",
       "display_name": "Grand Choreography",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The user retains Dancer behavior. After it successfully uses or copies a Dance move, it immediately follows with one 50-BP Revelation Dance. The follow-up checks the Fire, Electric, Psychic, and Ghost Revelation Dance styles; if any of them would be super-effective against the target, the follow-up's final effectiveness is exactly 2×.",
-      "mechanic_family": "dancer_followup_generated_attack_style_effectiveness_cap"
+      "mechanic_family": "dancer_followup_generated_attack_style_effectiveness_cap",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Overexertion",
@@ -3361,9 +3386,12 @@
       "token": "ABILITY_MR_PINNACLE_BLADE",
       "display_name": "Pinnacle Blade",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Keen Edge moves used by the user bypass accuracy checks, protection, substitutes, and screens. After a successful Keen Edge hit, applicable protection and barrier state is destroyed.",
-      "mechanic_family": "flagged_move_accuracy_protection_substitute_screen_bypass_and_shatter"
+      "mechanic_family": "flagged_move_accuracy_protection_substitute_screen_bypass_and_shatter",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Overrule",
@@ -3963,12 +3991,18 @@
       "source_name": "Lethargy",
       "runtime_kind": "custom_id",
       "id": 395,
-      "token": "ABILITY_MR_LETHARGY",
-      "display_name": "Lethargy",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "On entry, the user's stat stages are reset. Its outgoing damage begins at full strength and then decays each turn using the Slow Start timer until it reaches 20%.",
-      "mechanic_family": "entry_stat_reset_progressive_damage_decay"
+      "token": "ABILITY_MR_PRESSURE_VALVE",
+      "display_name": "Pressure Valve",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Once per switch-in, when one or more of the user's stat stages are lowered by an opponent, all of the user's negative stat stages are immediately cleared and its Speed rises by 1 stage.",
+      "mechanic_family": "opponent_stat_drop_once_per_entry_cleanse_speed_boost",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Lethargy",
+      "legacy_token": "ABILITY_MR_LETHARGY",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Lethargy"
     },
     {
       "source_name": "Light Saber",
@@ -4010,9 +4044,12 @@
       "token": "ABILITY_MR_POWER_OUTAGE",
       "display_name": "Power Outage",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The party Pokémon begins with a persistent charge. Its first damaging Electric-type attack while charged deals double damage; the charge is then consumed and the user's Electric typing is removed if present.",
-      "mechanic_family": "persistent_single_use_type_attack_boost_then_type_loss"
+      "mechanic_family": "persistent_single_use_type_attack_boost_then_type_loss",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Sinister Claws",
@@ -4208,9 +4245,12 @@
       "token": "ABILITY_MR_MAGUS_BLADES",
       "display_name": "Magus Blades",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Combines Dual Wield and Best Offense.",
-      "mechanic_family": "compound_dual_wield_best_offense"
+      "mechanic_family": "compound_dual_wield_best_offense",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Victory Bomb",
@@ -4274,9 +4314,12 @@
       "token": "ABILITY_MR_SOOTHSAYER",
       "display_name": "Soothsayer",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "For three turns after the user's first entry, damaging attacks against it are treated as resisted.",
-      "mechanic_family": "first_entry_timed_effectiveness_downgrade"
+      "mechanic_family": "first_entry_timed_effectiveness_downgrade",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Clap Trap",
@@ -4296,9 +4339,12 @@
       "token": "ABILITY_MR_SUMO_WRESTLER",
       "display_name": "Sumo Wrestler",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "At the end of every second eligible turn the user remains active, it automatically uses a 20-BP Circle Throw.",
-      "mechanic_family": "periodic_end_turn_generated_circle_throw"
+      "mechanic_family": "periodic_end_turn_generated_circle_throw",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Parroting",
@@ -4307,20 +4353,29 @@
       "token": "ABILITY_MR_PARROTING",
       "display_name": "Parroting",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "When another battler uses a sound-based move, the user immediately copies that move once for that move event.",
-      "mechanic_family": "sound_move_reactive_copy"
+      "mechanic_family": "sound_move_reactive_copy",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Retribution Blow",
       "runtime_kind": "custom_id",
       "id": 427,
-      "token": "ABILITY_MR_RETRIBUTION_BLOW",
-      "display_name": "Retribution Blow",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "When an opposing Pokémon successfully raises one or more of its stat stages, the user retaliates with a 150-BP Hyper Beam that does not require a recharge turn.",
-      "mechanic_family": "opponent_stat_boost_reactive_generated_hyper_beam"
+      "token": "ABILITY_MR_BACKLASH",
+      "display_name": "Backlash",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Whenever an opposing Pokémon successfully raises one or more of its stat stages, the user becomes Primed. While Primed, the user's next damaging move deals 50% more damage and ignores the target's positive Defense, Special Defense, and Evasion stages. Primed is consumed after that damaging move resolves.",
+      "mechanic_family": "opponent_setup_reactive_primed_next_attack",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Retribution Blow",
+      "legacy_token": "ABILITY_MR_RETRIBUTION_BLOW",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Retribution Blow"
     },
     {
       "source_name": "Shallow Grave",
@@ -4329,9 +4384,12 @@
       "token": "ABILITY_MR_SHALLOW_GRAVE",
       "display_name": "Shallow Grave",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Once per battle, if the user faints while fog is active, it is marked for revival. After the player's next ally is sent out, the fainted user revives at 25% max HP.",
-      "mechanic_family": "weather_conditioned_delayed_once_per_battle_revival"
+      "mechanic_family": "weather_conditioned_delayed_once_per_battle_revival",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Backup Power",
@@ -4340,9 +4398,12 @@
       "token": "ABILITY_MR_BACKUP_POWER",
       "display_name": "Backup Power",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Once per battle, if the user faints while Electric Terrain is active, it is marked for revival. After the player's next ally is sent out, the fainted user revives at 25% max HP.",
-      "mechanic_family": "terrain_conditioned_delayed_once_per_battle_revival"
+      "mechanic_family": "terrain_conditioned_delayed_once_per_battle_revival",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Chuckster",
@@ -4414,12 +4475,18 @@
       "source_name": "Foamy Web",
       "runtime_kind": "custom_id",
       "id": 436,
-      "token": "ABILITY_MR_FOAMY_WEB",
-      "display_name": "Foamy Web",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "On entry, sets Sticky Web on the opposing side if it is absent. The web expires after 5 turns and cannot be removed by ordinary hazard-removal effects while its timer is active.",
-      "mechanic_family": "entry_timed_protected_sticky_web"
+      "token": "ABILITY_MR_FRESH_START",
+      "display_name": "Fresh Start",
+      "implementation_class": "existing_hook",
+      "review_blocked": false,
+      "exact_effect": "On switch-in, the user removes all normally removable entry hazards from its own side. If at least one hazard is successfully removed, the user restores 1/8 of its maximum HP.",
+      "mechanic_family": "entry_own_side_hazard_clear_conditional_heal",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Foamy Web",
+      "legacy_token": "ABILITY_MR_FOAMY_WEB",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Foamy Web"
     },
     {
       "source_name": "Soul Harvest",
@@ -4483,9 +4550,12 @@
       "token": "ABILITY_MR_RAGING_MOTH",
       "display_name": "Raging Moth",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Fire-type moves used by the user strike twice, with each hit dealing 70% of the move's normal power.",
-      "mechanic_family": "type_based_double_hit_scaled_power"
+      "mechanic_family": "type_based_double_hit_scaled_power",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Jungle's Guard",
@@ -4824,9 +4894,12 @@
       "token": "ABILITY_MR_THUNDER_CLOUDS",
       "display_name": "Thunder Clouds",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "After the user successfully uses a special damaging attack, it immediately follows with a 35-BP Thunderbolt.",
-      "mechanic_family": "special_attack_followup_thunderbolt"
+      "mechanic_family": "special_attack_followup_thunderbolt",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Acid Reflux",
@@ -4854,12 +4927,18 @@
       "source_name": "Rejection",
       "runtime_kind": "custom_id",
       "id": 476,
-      "token": "ABILITY_MR_REJECTION",
-      "display_name": "Rejection",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "On entry, applies Mercury's field-wide Quash state for 5 turns.",
-      "mechanic_family": "entry_timed_field_quash"
+      "token": "ABILITY_MR_NULL_WARD",
+      "display_name": "Null Ward",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "The first opposing status move that directly targets the user after each switch-in fails. After Null Ward blocks one qualifying move, it is exhausted until the user leaves battle and re-enters.",
+      "mechanic_family": "once_per_entry_targeted_status_move_nullification",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Rejection",
+      "legacy_token": "ABILITY_MR_REJECTION",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Rejection"
     },
     {
       "source_name": "Chainsaw",
@@ -5011,9 +5090,12 @@
       "token": "ABILITY_MR_JACKHAMMER",
       "display_name": "Jackhammer",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Hammer-class moves used by the user hit twice, with each hit at 70% of normal power.",
-      "mechanic_family": "flagged_move_double_hit_scaled_power"
+      "mechanic_family": "flagged_move_double_hit_scaled_power",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Power Edge",
@@ -5154,9 +5236,12 @@
       "token": "ABILITY_MR_LUCKY_HALO",
       "display_name": "Lucky Halo",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Prevents the user's self-inflicted stat drops and lets that party Pokémon survive one otherwise-fatal direct hit at 1 HP once per battle.",
-      "mechanic_family": "self_drop_block_plus_once_per_battle_survival"
+      "mechanic_family": "self_drop_block_plus_once_per_battle_survival",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Razor Sharp",
@@ -5176,9 +5261,12 @@
       "token": "ABILITY_MR_BLADE_DANCE",
       "display_name": "Blade Dance",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "After the user successfully uses a Dance move, it follows with a 50-BP Leaf Blade.",
-      "mechanic_family": "dance_move_leaf_blade_followup"
+      "mechanic_family": "dance_move_leaf_blade_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Taekkyeon",
@@ -5418,9 +5506,12 @@
       "token": "ABILITY_MR_DRACONIC_MIGHT",
       "display_name": "Draconic Might",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Dragon as a battle typing. Normal-type moves become Dragon-type and gain 20% power.",
-      "mechanic_family": "add_dragon_type_plus_normal_to_dragon_conversion"
+      "mechanic_family": "add_dragon_type_plus_normal_to_dragon_conversion",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Fey Flight",
@@ -5429,9 +5520,12 @@
       "token": "ABILITY_MR_FEY_FLIGHT",
       "display_name": "Fey Flight",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Fairy as a battle typing, sets Misty Terrain, and grants Levitate behavior.",
-      "mechanic_family": "add_fairy_type_misty_terrain_levitate"
+      "mechanic_family": "add_fairy_type_misty_terrain_levitate",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Calculative",
@@ -5657,12 +5751,18 @@
       "source_name": "Ominous Shroud",
       "runtime_kind": "custom_id",
       "id": 549,
-      "token": "ABILITY_MR_OMINOUS_SHROUD",
-      "display_name": "Ominous Shroud",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Adds Ghost as a battle typing and grants Shadow Shield behavior.",
-      "mechanic_family": "add_ghost_type_shadow_shield"
+      "token": "ABILITY_MR_SPECTRAL_BODY",
+      "display_name": "Spectral Body",
+      "implementation_class": "existing_hook",
+      "review_blocked": false,
+      "exact_effect": "Damage from contact moves against the user is reduced by 25%, and the user cannot be trapped by moves, Abilities, or trapping effects.",
+      "mechanic_family": "contact_damage_reduction_plus_trap_immunity",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Ominous Shroud",
+      "legacy_token": "ABILITY_MR_OMINOUS_SHROUD",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Ominous Shroud"
     },
     {
       "source_name": "World Serpent",
@@ -5693,9 +5793,12 @@
       "token": "ABILITY_MR_DRAGONFRUIT",
       "display_name": "Dragonfruit",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Dragon as a battle typing and grants Rough Skin behavior.",
-      "mechanic_family": "add_dragon_type_rough_skin"
+      "mechanic_family": "add_dragon_type_rough_skin",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Sundae",
@@ -5737,9 +5840,12 @@
       "token": "ABILITY_MR_AFTERSHOCK",
       "display_name": "Aftershock",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "After a damaging move resolves, the user follows with a 65-BP Magnitude.",
-      "mechanic_family": "damage_move_magnitude_followup"
+      "mechanic_family": "damage_move_magnitude_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "High Tide",
@@ -5748,9 +5854,12 @@
       "token": "ABILITY_MR_HIGH_TIDE",
       "display_name": "High Tide",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Water-type damaging moves are followed by a 50-BP Surf.",
-      "mechanic_family": "water_move_surf_followup"
+      "mechanic_family": "water_move_surf_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Phantom Thief",
@@ -5803,9 +5912,12 @@
       "token": "ABILITY_MR_ROCK_ARMOR",
       "display_name": "Rock Armor",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Rock as a battle typing and reduces incoming attack damage by 10%.",
-      "mechanic_family": "add_rock_type_ten_percent_damage_reduction"
+      "mechanic_family": "add_rock_type_ten_percent_damage_reduction",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Hypnotic Touch",
@@ -5891,9 +6003,12 @@
       "token": "ABILITY_MR_GLACIAL_RAGE",
       "display_name": "Glacial Rage",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Successful Ice-type damaging moves are followed by a 50-BP Blizzard.",
-      "mechanic_family": "ice_move_blizzard_followup"
+      "mechanic_family": "ice_move_blizzard_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Sludge Spit",
@@ -5902,9 +6017,12 @@
       "token": "ABILITY_MR_SLUDGE_SPIT",
       "display_name": "Sludge Spit",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Successful damaging moves are followed by a 35-BP Venom Bolt.",
-      "mechanic_family": "damage_move_venom_bolt_followup"
+      "mechanic_family": "damage_move_venom_bolt_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Chilling Pellets",
@@ -5913,9 +6031,12 @@
       "token": "ABILITY_MR_CHILLING_PELLETS",
       "display_name": "Chilling Pellets",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Successful contact hits by the user trigger a 13-BP Icicle Spear follow-up.",
-      "mechanic_family": "contact_hit_icicle_spear_followup"
+      "mechanic_family": "contact_hit_icicle_spear_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Lunar Wrath",
@@ -5924,9 +6045,12 @@
       "token": "ABILITY_MR_LUNAR_WRATH",
       "display_name": "Lunar Wrath",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Successful Ghost-type damaging moves are followed by a 50-BP Moongeist Beam.",
-      "mechanic_family": "ghost_move_moongeist_beam_followup"
+      "mechanic_family": "ghost_move_moongeist_beam_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Chandelier",
@@ -5946,9 +6070,12 @@
       "token": "ABILITY_MR_FROST_DRAGON",
       "display_name": "Frost Dragon",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Successful Ice- or Dragon-type damaging moves are followed by a 50-BP Blizzard.",
-      "mechanic_family": "ice_dragon_move_blizzard_followup"
+      "mechanic_family": "ice_dragon_move_blizzard_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Ghost Pepper",
@@ -6067,9 +6194,12 @@
       "token": "ABILITY_MR_VOLTRON",
       "display_name": "Voltron",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Combines Metallic and Battle Armor behavior.",
-      "mechanic_family": "metallic_battle_armor_composite"
+      "mechanic_family": "metallic_battle_armor_composite",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Break it Down",
@@ -6078,20 +6208,29 @@
       "token": "ABILITY_MR_BREAK_IT_DOWN",
       "display_name": "Break it Down",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Successful damaging attacks are followed by a 20-BP Rapid Spin.",
-      "mechanic_family": "damage_move_rapid_spin_followup"
+      "mechanic_family": "damage_move_rapid_spin_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Backflip",
       "runtime_kind": "custom_id",
       "id": 588,
-      "token": "ABILITY_MR_BACKFLIP",
-      "display_name": "Backflip",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Successful Dance moves are followed by a 50-BP Chip Away.",
-      "mechanic_family": "dance_move_chip_away_followup"
+      "token": "ABILITY_MR_COUNTERSTEP",
+      "display_name": "Counterstep",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Once per switch-in, the first time the user takes direct damage from a Pokémon that acted before it, the user gains 1 Speed stage and becomes Ready. While Ready, the user's next damaging move deals 20% more damage, then Ready is consumed.",
+      "mechanic_family": "once_per_entry_slower_hit_speed_boost_and_next_attack_boost",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Backflip",
+      "legacy_token": "ABILITY_MR_BACKFLIP",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Backflip"
     },
     {
       "source_name": "Nihil Blaster",
@@ -6669,12 +6808,18 @@
       "source_name": "Faraday Cage",
       "runtime_kind": "custom_id",
       "id": 641,
-      "token": "ABILITY_MR_FARADAY_CAGE",
-      "display_name": "Faraday Cage",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Combines Shell Armor with a 50-BP Thunder Cage retaliation after the user is hit by contact.",
-      "mechanic_family": "shell_armor_contact_thunder_cage_counter"
+      "token": "ABILITY_MR_COUNTERCURRENT",
+      "display_name": "Countercurrent",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "When the user is hit by a contact move, the attacker's Speed falls by 1 stage. If that Speed drop makes the user faster than the attacker, the user's next move gains +1 priority.",
+      "mechanic_family": "contact_speed_drop_conditional_next_move_priority",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Faraday Cage",
+      "legacy_token": "ABILITY_MR_FARADAY_CAGE",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Faraday Cage"
     },
     {
       "source_name": "Aurora's Gale",
@@ -6694,9 +6839,12 @@
       "token": "ABILITY_MR_DEFLECT",
       "display_name": "Deflect",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The user takes 20% less incoming damage and counters qualifying hits with a 20-BP Vacuum Wave.",
-      "mechanic_family": "damage_reduction_plus_vacuum_wave_counter"
+      "mechanic_family": "damage_reduction_plus_vacuum_wave_counter",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Impaler",
@@ -6991,9 +7139,12 @@
       "token": "ABILITY_MR_KOMODO",
       "display_name": "Komodo",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Dragon as a battle typing, and successful attacks have a 30% chance to badly poison the target.",
-      "mechanic_family": "add_dragon_type_plus_toxic_proc"
+      "mechanic_family": "add_dragon_type_plus_toxic_proc",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Winter Throne",
@@ -7002,9 +7153,12 @@
       "token": "ABILITY_MR_WINTER_THRONE",
       "display_name": "Winter Throne",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "At end of turn while the holder is active, Ice-type Pokémon restore 1/8 max HP and non-Ice Pokémon lose 1/8 max HP.",
-      "mechanic_family": "fieldwide_ice_heal_nonice_chip"
+      "mechanic_family": "fieldwide_ice_heal_nonice_chip",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Turf War",
@@ -7112,9 +7266,12 @@
       "token": "ABILITY_MR_WIND_CHIMES",
       "display_name": "Wind Chimes",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Grants Amplifier behavior and counters qualifying hits with a 30-BP Hyper Voice.",
-      "mechanic_family": "amplifier_plus_hyper_voice_counter"
+      "mechanic_family": "amplifier_plus_hyper_voice_counter",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Blistering Sun",
@@ -7164,12 +7321,18 @@
       "source_name": "Dead Bark",
       "runtime_kind": "custom_id",
       "id": 686,
-      "token": "ABILITY_MR_DEAD_BARK",
-      "display_name": "Dead Bark",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Adds Ghost as a battle typing. Incoming attack damage is reduced by 15%, or by 30% when the attack is super-effective.",
-      "mechanic_family": "add_ghost_type_conditional_damage_reduction"
+      "token": "ABILITY_MR_HEARTWOOD",
+      "display_name": "Heartwood",
+      "implementation_class": "existing_hook",
+      "review_blocked": false,
+      "exact_effect": "The user's Defense and Special Defense cannot be lowered by opponents. At the end of a turn in which the user took no direct damage, it restores 1/16 of its maximum HP.",
+      "mechanic_family": "opponent_defense_drop_immunity_plus_no_direct_damage_recovery",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Dead Bark",
+      "legacy_token": "ABILITY_MR_DEAD_BARK",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Dead Bark"
     },
     {
       "source_name": "Cryo Architect",
@@ -7178,9 +7341,12 @@
       "token": "ABILITY_MR_CRYO_ARCHITECT",
       "display_name": "Cryo Architect",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "When hit by Water- or Ice-type attacks, raises Attack. An Ice-type hit also raises Defense immediately; a Water-type hit schedules the Defense raise for the next turn.",
-      "mechanic_family": "water_ice_hit_attack_boost_delayed_or_immediate_defense"
+      "mechanic_family": "water_ice_hit_attack_boost_delayed_or_immediate_defense",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Tentalock",
@@ -7211,9 +7377,14 @@
       "token": "ABILITY_MR_RAT_KING",
       "display_name": "Rat King",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Allied Pokémon with base-stat total below 400 have their battle stats increased by 50% while the holder is active.",
-      "mechanic_family": "ally_low_bst_stat_aura"
+      "mechanic_family": "ally_low_bst_stat_aura",
+      "owner_review_decision": "CUT",
+      "owner_review_resolved": true,
+      "approval_state": "owner_cut",
+      "runtime_enabled": false,
+      "retired": true
     },
     {
       "source_name": "Sap Trap",
@@ -7222,9 +7393,12 @@
       "token": "ABILITY_MR_SAP_TRAP",
       "display_name": "Sap Trap",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Opposing trapped targets lose 1 Speed stage at end of turn; once a trapped target reaches -3 Speed, it cannot retreat.",
-      "mechanic_family": "trapped_target_speed_decay_then_retreat_lock"
+      "mechanic_family": "trapped_target_speed_decay_then_retreat_lock",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Toxic Surge",
@@ -7233,9 +7407,12 @@
       "token": "ABILITY_MR_TOXIC_SURGE",
       "display_name": "Toxic Surge",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Sets Toxic Terrain on entry.",
-      "mechanic_family": "entry_toxic_terrain"
+      "mechanic_family": "entry_toxic_terrain",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Parasitic Spores",
@@ -7244,9 +7421,12 @@
       "token": "ABILITY_MR_PARASITIC_SPORES",
       "display_name": "Parasitic Spores",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The afflicted battler loses 1/8 max HP each turn, and the spore condition spreads through qualifying contact.",
-      "mechanic_family": "contagious_contact_residual_spores"
+      "mechanic_family": "contagious_contact_residual_spores",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Gleam Eyes",
@@ -7266,20 +7446,29 @@
       "token": "ABILITY_MR_BERSERK_DNA",
       "display_name": "Berserk DNA",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "On entry, sharply raises whichever attacking stat is higher and applies the Enraged state.",
-      "mechanic_family": "entry_sharp_highest_offense_plus_enrage"
+      "mechanic_family": "entry_sharp_highest_offense_plus_enrage",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Temporal Rupture",
       "runtime_kind": "custom_id",
       "id": 696,
-      "token": "ABILITY_MR_TEMPORAL_RUPTURE",
-      "display_name": "Temporal Rupture",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Roar of Time used by the user becomes 100 BP, has no recharge turn, and applies Slow Start to the user.",
-      "mechanic_family": "specific_move_rewrite_no_recharge_apply_slow_start"
+      "token": "ABILITY_MR_TIME_COMPRESSION",
+      "display_name": "Time Compression",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Once per switch-in, the first move the user uses that would normally require a charging turn or a recharge turn ignores that delay.",
+      "mechanic_family": "once_per_entry_charge_or_recharge_delay_skip",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Temporal Rupture",
+      "legacy_token": "ABILITY_MR_TEMPORAL_RUPTURE",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Temporal Rupture"
     },
     {
       "source_name": "Greedy",
@@ -7288,9 +7477,12 @@
       "token": "ABILITY_MR_GREEDY",
       "display_name": "Greedy",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Immediately uses Thief when the user loses its held item.",
-      "mechanic_family": "held_item_loss_auto_thief"
+      "mechanic_family": "held_item_loss_auto_thief",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Polarity",
@@ -7299,9 +7491,12 @@
       "token": "ABILITY_MR_POLARITY",
       "display_name": "Polarity",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Raises each active ally's own highest battle stat by 30%.",
-      "mechanic_family": "ally_highest_stat_multiplier_aura"
+      "mechanic_family": "ally_highest_stat_multiplier_aura",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Craving",
@@ -7310,9 +7505,12 @@
       "token": "ABILITY_MR_CRAVING",
       "display_name": "Craving",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "After the user's entry turn, it eats a random Berry at the end of each turn.",
-      "mechanic_family": "repeating_random_berry_consumption"
+      "mechanic_family": "repeating_random_berry_consumption",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Fire Aspect",
@@ -7343,9 +7541,12 @@
       "token": "ABILITY_MR_AQUATIC",
       "display_name": "Aquatic",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Water as a battle typing.",
-      "mechanic_family": "add_water_type"
+      "mechanic_family": "add_water_type",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Grounded",
@@ -7354,9 +7555,12 @@
       "token": "ABILITY_MR_GROUNDED",
       "display_name": "Grounded",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Ground as a battle typing.",
-      "mechanic_family": "add_ground_type"
+      "mechanic_family": "add_ground_type",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Hypnotist",
@@ -7662,20 +7866,29 @@
       "token": "ABILITY_MR_UNRELENTING",
       "display_name": "Unrelenting",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Eligible single-hit attacking moves used by the user strike 2–5 times.",
-      "mechanic_family": "single_hit_moves_become_2_to_5_hit"
+      "mechanic_family": "single_hit_moves_become_2_to_5_hit",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Sharing Is Caring",
       "runtime_kind": "custom_id",
       "id": 732,
-      "token": "ABILITY_MR_SHARING_IS_CARING",
-      "display_name": "Sharing Is Caring",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Whenever any active battler's stat stage changes, that same stat-stage change is copied to every other active battler.",
-      "mechanic_family": "global_stat_stage_change_copy"
+      "token": "ABILITY_MR_PREDATORY_TIMING",
+      "display_name": "Predatory Timing",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Whenever an opposing Pokémon successfully uses a status move, the holder becomes Opportunistic. While Opportunistic, the user's next damaging move deals 30% more damage.",
+      "mechanic_family": "opponent_status_move_reactive_next_attack_boost",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Sharing Is Caring",
+      "legacy_token": "ABILITY_MR_SHARING_IS_CARING",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Sharing Is Caring"
     },
     {
       "source_name": "Two-Faced",
@@ -7684,9 +7897,12 @@
       "token": "ABILITY_MR_TWO_FACED",
       "display_name": "Two-Faced",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Combines Hunger Switch with a 35% damage boost to Electric- and Dark-type moves, with 10% recoil on those boosted attacks.",
-      "mechanic_family": "hunger_switch_plus_electric_dark_recoil_boost"
+      "mechanic_family": "hunger_switch_plus_electric_dark_recoil_boost",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "DNA Scramble",
@@ -7695,9 +7911,12 @@
       "token": "ABILITY_MR_DNA_SCRAMBLE",
       "display_name": "DNA Scramble",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Deoxys changes form based on the move it is about to use.",
-      "mechanic_family": "pre_move_deoxys_form_change"
+      "mechanic_family": "pre_move_deoxys_form_change",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Dreamscape",
@@ -7706,9 +7925,12 @@
       "token": "ABILITY_MR_DREAMSCAPE",
       "display_name": "Dreamscape",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Combines Comatose and Dreamcatcher behavior and also increases damage dealt by 20%.",
-      "mechanic_family": "comatose_dreamcatcher_plus_damage_boost"
+      "mechanic_family": "comatose_dreamcatcher_plus_damage_boost",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Locust Swarm",
@@ -7717,9 +7939,12 @@
       "token": "ABILITY_MR_LOCUST_SWARM",
       "display_name": "Locust Swarm",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The user changes to Hivemind form while above 1/4 max HP.",
-      "mechanic_family": "hp_threshold_hivemind_form"
+      "mechanic_family": "hp_threshold_hivemind_form",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Revelation",
@@ -7728,20 +7953,29 @@
       "token": "ABILITY_MR_REVELATION",
       "display_name": "Revelation",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The user changes to Revelation form while above 1/4 max HP.",
-      "mechanic_family": "hp_threshold_revelation_form"
+      "mechanic_family": "hp_threshold_revelation_form",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Strikeout",
       "runtime_kind": "custom_id",
       "id": 738,
-      "token": "ABILITY_MR_STRIKEOUT",
-      "display_name": "Strikeout",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "An opposing Pokémon that goes three turns without damaging the holder is forced out.",
-      "mechanic_family": "three_turn_no_damage_forced_switch"
+      "token": "ABILITY_MR_PATTERN_BREAKER",
+      "display_name": "Pattern Breaker",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "If an opposing Pokémon uses the same move it used on its previous turn, the holder becomes Locked In on that opponent for the rest of the turn. The holder's next damaging move against that Pokémon gains +1 priority and 30% power.",
+      "mechanic_family": "opponent_repeat_move_reactive_priority_power",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Strikeout",
+      "legacy_token": "ABILITY_MR_STRIKEOUT",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Strikeout"
     },
     {
       "source_name": "Hydra",
@@ -7750,20 +7984,29 @@
       "token": "ABILITY_MR_HYDRA",
       "display_name": "Hydra",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Combines Multi-Headed and Hubris behavior.",
-      "mechanic_family": "multi_headed_hubris_composite"
+      "mechanic_family": "multi_headed_hubris_composite",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Hand Barnacles",
       "runtime_kind": "custom_id",
       "id": 740,
-      "token": "ABILITY_MR_HAND_BARNACLES",
-      "display_name": "Hand Barnacles",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "Combines Multi-Headed behavior with Water-type STAB.",
-      "mechanic_family": "multi_headed_plus_water_stab"
+      "token": "ABILITY_MR_UNDERTOW",
+      "display_name": "Undertow",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Whenever the user successfully deals direct damage, the target becomes Dragged until the end of its next turn. While Dragged, its Speed is reduced by 25% and it cannot switch itself out through pivoting moves such as U-turn, Volt Switch, Flip Turn, or equivalent self-switch effects.",
+      "mechanic_family": "damage_applies_temporary_speed_slow_and_pivot_lock",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Hand Barnacles",
+      "legacy_token": "ABILITY_MR_HAND_BARNACLES",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Hand Barnacles"
     },
     {
       "source_name": "Hollow Ice Zone",
@@ -7772,9 +8015,12 @@
       "token": "ABILITY_MR_HOLLOW_ICE_ZONE",
       "display_name": "Hollow Ice Zone",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Successful Ice-type hits make the target Ice-type, then switch the user out if switching is legal.",
-      "mechanic_family": "ice_hit_retype_then_self_switch"
+      "mechanic_family": "ice_hit_retype_then_self_switch",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Self Sufficient",
@@ -8025,9 +8271,12 @@
       "token": "ABILITY_MR_BLOOD_STAIN",
       "display_name": "Blood Stain",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The user remains in the Bleeding state and spreads Bleed through qualifying contact.",
-      "mechanic_family": "persistent_bleed_contact_spread"
+      "mechanic_family": "persistent_bleed_contact_spread",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Butter Up",
@@ -8055,12 +8304,18 @@
       "source_name": "Cheating Death",
       "runtime_kind": "custom_id",
       "id": 767,
-      "token": "ABILITY_MR_CHEATING_DEATH",
-      "display_name": "Cheating Death",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "The first two direct damaging hits that would deal HP damage to the user instead deal zero HP damage.",
-      "mechanic_family": "first_two_hits_zero_damage"
+      "token": "ABILITY_MR_TWO_LIVES",
+      "display_name": "Two Lives",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Once per battle, the first direct damaging hit the user would take is completely blocked; afterward, the shield breaks and the user loses 1/8 of its maximum HP. Separately, while the user is at full HP, an attack that would knock it out instead leaves it at 1 HP.",
+      "mechanic_family": "once_per_battle_disguise_shield_plus_full_hp_sturdy",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Cheating Death",
+      "legacy_token": "ABILITY_MR_CHEATING_DEATH",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Cheating Death"
     },
     {
       "source_name": "Chloroplast",
@@ -8102,9 +8357,12 @@
       "token": "ABILITY_MR_COLD_REBOUND",
       "display_name": "Cold Rebound",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Whenever the user is hit by a contact move, it counterattacks with Icy Wind.",
-      "mechanic_family": "contact_icy_wind_counter"
+      "mechanic_family": "contact_icy_wind_counter",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Crystallize",
@@ -8124,9 +8382,12 @@
       "token": "ABILITY_MR_DEMOLITIONIST",
       "display_name": "Demolitionist",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "During the user's first active turn, its Attack is doubled, its attacks pierce Protect-style protection, and successful hits break screens.",
-      "mechanic_family": "first_turn_attack_double_protection_screen_break"
+      "mechanic_family": "first_turn_attack_double_protection_screen_break",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Desert Spirit",
@@ -8146,9 +8407,12 @@
       "token": "ABILITY_MR_DRAGONFLY",
       "display_name": "Dragonfly",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Dragon as a battle typing and grants immunity to Ground-type moves.",
-      "mechanic_family": "add_dragon_type_plus_ground_immunity"
+      "mechanic_family": "add_dragon_type_plus_ground_immunity",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Dragonslayer",
@@ -8322,9 +8586,12 @@
       "token": "ABILITY_MR_HALF_DRAKE",
       "display_name": "Half Drake",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Dragon as a battle typing until the user switches out.",
-      "mechanic_family": "temporary_add_dragon_type"
+      "mechanic_family": "temporary_add_dragon_type",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Hot Coals",
@@ -8344,9 +8611,12 @@
       "token": "ABILITY_MR_HOVER",
       "display_name": "Hover",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Psychic as a battle typing and grants immunity to Ground-type moves.",
-      "mechanic_family": "add_psychic_type_plus_ground_immunity"
+      "mechanic_family": "add_psychic_type_plus_ground_immunity",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Imposing Wings",
@@ -8366,9 +8636,12 @@
       "token": "ABILITY_MR_ICE_AGE",
       "display_name": "Ice Age",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Ice as a battle typing until the user switches out.",
-      "mechanic_family": "temporary_add_ice_type"
+      "mechanic_family": "temporary_add_ice_type",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Ice Cold Hunter",
@@ -8377,9 +8650,12 @@
       "token": "ABILITY_MR_ICE_COLD_HUNTER",
       "display_name": "Ice Cold Hunter",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "While hail/icy weather is active, qualifying Ice-type moves used by the user strike twice.",
-      "mechanic_family": "icy_weather_ice_double_hit"
+      "mechanic_family": "icy_weather_ice_double_hit",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Ill Will",
@@ -8454,9 +8730,12 @@
       "token": "ABILITY_MR_LUNAR_AFFINITY",
       "display_name": "Lunar Affinity",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Immediately copies qualifying lunar-class moves used by other battlers.",
-      "mechanic_family": "copy_lunar_moves"
+      "mechanic_family": "copy_lunar_moves",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Magma Eater",
@@ -8520,9 +8799,12 @@
       "token": "ABILITY_MR_METALLIC",
       "display_name": "Metallic",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Steel as a battle typing until the user switches out.",
-      "mechanic_family": "temporary_add_steel_type"
+      "mechanic_family": "temporary_add_steel_type",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Olé!",
@@ -8542,9 +8824,12 @@
       "token": "ABILITY_MR_PARRY",
       "display_name": "Parry",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "The user takes 20% less damage from contact moves, then counterattacks with Mach Punch.",
-      "mechanic_family": "contact_damage_reduction_plus_mach_punch_counter"
+      "mechanic_family": "contact_damage_reduction_plus_mach_punch_counter",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Patchwork",
@@ -8553,9 +8838,12 @@
       "token": "ABILITY_MR_PATCHWORK",
       "display_name": "Patchwork",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Uses Disguise behavior; when the disguise breaks, the opposing Pokémon is cursed if legal.",
-      "mechanic_family": "disguise_break_applies_curse"
+      "mechanic_family": "disguise_break_applies_curse",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Readied Action",
@@ -8652,9 +8940,12 @@
       "token": "ABILITY_MR_SOUL_LINKER",
       "display_name": "Soul Linker",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Direct damage dealt between the user and an opposing Pokémon is mirrored to the other side, except when either affected Pokémon would faint from the mirrored damage.",
-      "mechanic_family": "bidirectional_damage_mirror_with_faint_guard"
+      "mechanic_family": "bidirectional_damage_mirror_with_faint_guard",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Spider Lair",
@@ -9158,9 +9449,12 @@
       "token": "ABILITY_MR_THUNDERCALL",
       "display_name": "Thundercall",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "After using an Electric-type move, the user follows up with Smite at 20% of its normal power.",
-      "mechanic_family": "electric_move_smite_followup"
+      "mechanic_family": "electric_move_smite_followup",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Mighty Horn",
@@ -9312,9 +9606,12 @@
       "token": "ABILITY_MR_TOXIC_SPILL",
       "display_name": "Toxic Spill",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "While the user is active, each non-Poison active Pokémon loses 1/8 max HP at end of turn.",
-      "mechanic_family": "fieldwide_nonpoison_chip_aura"
+      "mechanic_family": "fieldwide_nonpoison_chip_aura",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Desert Cloak",
@@ -9353,12 +9650,18 @@
       "source_name": "Atomic Burst",
       "runtime_kind": "custom_id",
       "id": 885,
-      "token": "ABILITY_MR_ATOMIC_BURST",
-      "display_name": "Atomic Burst",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "When the user takes super-effective damage, it retaliates with Hyper Beam at 33% power.",
-      "mechanic_family": "super_effective_hit_hyper_beam_counter"
+      "token": "ABILITY_MR_EXECUTION_DRIVE",
+      "display_name": "Execution Drive",
+      "implementation_class": "existing_hook",
+      "review_blocked": false,
+      "exact_effect": "The user's damaging moves deal 30% more damage to targets at or below 50% of their maximum HP. If the user knocks out an opposing Pokémon, it restores 1/8 of its maximum HP.",
+      "mechanic_family": "low_hp_target_execution_boost_plus_ko_recovery",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Atomic Burst",
+      "legacy_token": "ABILITY_MR_ATOMIC_BURST",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Atomic Burst"
     },
     {
       "source_name": "Hellblaze",
@@ -9400,9 +9703,12 @@
       "token": "ABILITY_MR_PRIMAL_MAW",
       "display_name": "Primal Maw",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Eligible biting moves strike twice; the second hit deals half normal damage.",
-      "mechanic_family": "biting_second_hit_half_power"
+      "mechanic_family": "biting_second_hit_half_power",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Sweeping Edge",
@@ -9455,9 +9761,12 @@
       "token": "ABILITY_MR_DUAL_WIELD",
       "display_name": "Dual Wield",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Mega Launcher-class moves strike twice, with each hit dealing 75% of normal power.",
-      "mechanic_family": "launcher_moves_double_hit_75"
+      "mechanic_family": "launcher_moves_double_hit_75",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Elemental Charge",
@@ -9587,9 +9896,12 @@
       "token": "ABILITY_MR_MAGICAL_DUST",
       "display_name": "Magical Dust",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "When the user is hit by a qualifying contact move, the attacker gains Psychic as an additional battle typing.",
-      "mechanic_family": "contact_add_psychic_to_attacker"
+      "mechanic_family": "contact_add_psychic_to_attacker",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Phantom",
@@ -9598,9 +9910,14 @@
       "token": "ABILITY_MR_PHANTOM",
       "display_name": "Phantom",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Adds Ghost as an additional battle typing.",
-      "mechanic_family": "add_ghost_type"
+      "mechanic_family": "add_ghost_type",
+      "owner_review_decision": "CUT",
+      "owner_review_resolved": true,
+      "approval_state": "owner_cut",
+      "runtime_enabled": false,
+      "retired": true
     },
     {
       "source_name": "Volcano Rage",
@@ -9609,9 +9926,12 @@
       "token": "ABILITY_MR_VOLCANO_RAGE",
       "display_name": "Volcano Rage",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "After a successful Fire-type move, the user follows up with a 50-BP Eruption.",
-      "mechanic_family": "fire_move_followup_eruption_50"
+      "mechanic_family": "fire_move_followup_eruption_50",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Low Blow",
@@ -9628,12 +9948,18 @@
       "source_name": "Pyro Shells",
       "runtime_kind": "custom_id",
       "id": 910,
-      "token": "ABILITY_MR_PYRO_SHELLS",
-      "display_name": "Pyro Shells",
-      "implementation_class": "new_engine_system",
-      "review_blocked": true,
-      "exact_effect": "After a successful Mega Launcher-class move, the user follows up with a 50-BP Outburst.",
-      "mechanic_family": "launcher_move_followup_outburst_50"
+      "token": "ABILITY_MR_RANGEFINDER",
+      "display_name": "Rangefinder",
+      "implementation_class": "light_extension",
+      "review_blocked": false,
+      "exact_effect": "Consecutive successful Mega Launcher-class damaging moves gain increasing power: +10% on the first qualifying hit, +20% on the second consecutive qualifying move, and +30% on the third and all later consecutive qualifying moves.",
+      "mechanic_family": "consecutive_launcher_move_power_ramp",
+      "owner_review_decision": "REDESIGN",
+      "owner_review_resolved": true,
+      "legacy_display_name": "Pyro Shells",
+      "legacy_token": "ABILITY_MR_PYRO_SHELLS",
+      "approval_state": "owner_approved_redesign",
+      "approved_redesign_source": "Pyro Shells"
     },
     {
       "source_name": "Cheap Tactics",
@@ -9675,9 +10001,12 @@
       "token": "ABILITY_MR_3_1",
       "display_name": "3 > 1",
       "implementation_class": "new_engine_system",
-      "review_blocked": true,
+      "review_blocked": false,
       "exact_effect": "Combines Multi-Headed and Riptide behavior.",
-      "mechanic_family": "multi_headed_riptide_composite"
+      "mechanic_family": "multi_headed_riptide_composite",
+      "owner_review_decision": "KEEP AS WRITTEN",
+      "owner_review_resolved": true,
+      "approval_state": "owner_approved_keep"
     },
     {
       "source_name": "Accelerate",
@@ -9844,5 +10173,15 @@
       "exact_effect": "While the user has any major status condition, its Special Attack is multiplied by 1.5; frostbite does not apply its Special Attack penalty to the user.",
       "mechanic_family": "status_spa_1_5_frostbite_penalty_immunity"
     }
-  ]
+  ],
+  "owner_review_resolution": {
+    "status": "COMPLETE",
+    "resolved_rows": 93,
+    "keep_as_written": 75,
+    "redesigned": 15,
+    "cut": 2,
+    "converted_to_normal_mechanics": 1,
+    "stable_ids_preserved": true,
+    "note": "Cut custom IDs remain reserved in the namespace so later IDs never shift; runtime_enabled=false prevents assignment/implementation."
+  }
 }
