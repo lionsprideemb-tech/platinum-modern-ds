@@ -332,6 +332,10 @@ def patch_damage_type_chart(root: Path) -> None:
         path,
         signature,
         """            chartEntry++;
+        }
+    }
+
+    if (Battler_IgnorableAbility(
 """,
         insertion,
         "MR10D third-type damage chart layer",
