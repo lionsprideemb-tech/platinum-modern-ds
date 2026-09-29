@@ -3855,6 +3855,7 @@
       "REDESIGN": 15,
       "CUT": 2,
       "CONVERT TO NORMAL POKEMON MECHANICS": 1
-    }
+    },
+    "redesign_policy": "For any mechanic marked REDESIGN, the redesign is a blank-slate replacement. The original name, theme, spirit, trigger, effect family, and source identity do not need to be preserved. Optimize for a fun, distinctive, balanced Mercury ability that fits likely users and preferably reuses healthy engine systems."
   }
 }
