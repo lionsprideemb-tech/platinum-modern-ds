@@ -307,19 +307,23 @@ _000:
 def patch_after_move_recoil(root: Path) -> None:
     ctl = root / "src/battle/battle_controller_player.c"
 
-    replace_once(
-        ctl,
-        """    AFTER_MOVE_HIT_STATE_LIFE_ORB,
-
-    AFTER_MOVE_HIT_STATE_END
-""",
-        """    AFTER_MOVE_HIT_STATE_LIFE_ORB,
-    AFTER_MOVE_HIT_STATE_MERCURY_TWO_FACED,
-
-    AFTER_MOVE_HIT_STATE_END
-""",
-        "D17 after-move-hit enum",
-    )
+    text = ctl.read_text(encoding="utf-8")
+    enum_start = text.find("enum AfterMoveHitState {")
+    enum_end = text.find("};", enum_start)
+    if enum_start < 0 or enum_end < 0:
+        raise SystemExit("D17 after-move-hit enum: enum bounds missing")
+    enum_block = text[enum_start:enum_end]
+    if "AFTER_MOVE_HIT_STATE_MERCURY_TWO_FACED" not in enum_block:
+        anchor = "    AFTER_MOVE_HIT_STATE_END\n"
+        if anchor not in enum_block:
+            raise SystemExit("D17 after-move-hit enum: END member missing")
+        enum_block = enum_block.replace(
+            anchor,
+            "    AFTER_MOVE_HIT_STATE_MERCURY_TWO_FACED,\n\n" + anchor,
+            1,
+        )
+        text = text[:enum_start] + enum_block + text[enum_end:]
+        ctl.write_text(text, encoding="utf-8")
 
     signature = (
         "static BOOL BattleControllerPlayer_TriggerAfterMoveHitEffects("
