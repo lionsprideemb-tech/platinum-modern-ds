@@ -65,13 +65,12 @@ def insert_before_in_function(
     if insertion in text:
         return
 
-    start = text.find(signature)
+    definition = signature + "\n{"
+    start = text.find(definition)
     if start < 0:
-        raise SystemExit(f"{label}: function signature not found in {path}")
+        raise SystemExit(f"{label}: function definition not found in {path}")
 
-    open_brace = text.find("{", start)
-    if open_brace < 0:
-        raise SystemExit(f"{label}: function opening brace not found in {path}")
+    open_brace = start + len(signature) + 1
 
     depth = 0
     end = -1
@@ -149,7 +148,7 @@ def patch_accuracy_family(root: Path) -> None:
 
     insert_before_in_function(
         path,
-        "static int BattleControllerPlayer_CheckMoveHitAccuracy(",
+        "static int BattleControllerPlayer_CheckMoveHitAccuracy(BattleSystem *battleSys, BattleContext *battleCtx, int attacker, int defender, int move)",
         """    if (NO_CLOUD_NINE) {
 """,
         """    if (Battler_Ability(battleCtx, attacker) == ABILITY_KEEN_EYE) {
