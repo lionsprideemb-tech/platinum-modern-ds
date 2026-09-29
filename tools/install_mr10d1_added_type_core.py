@@ -328,18 +328,22 @@ def patch_damage_type_chart(root: Path) -> None:
             }
 
 """
-    insert_before_in_function(
-        path,
-        signature,
-        """            chartEntry++;
-        }
-    }
+    text = path.read_text(encoding="utf-8")
+    if insertion in text:
+        return
 
-    if (Battler_IgnorableAbility(
-""",
-        insertion,
-        "MR10D third-type damage chart layer",
+    start, end = find_function_block(
+        text, signature, "MR10D third-type damage chart layer"
     )
+    block = text[start:end]
+    pos = block.rfind("chartEntry++;")
+    if pos < 0:
+        raise SystemExit(
+            "MR10D third-type damage chart layer: final chartEntry increment not found"
+        )
+    line_start = block.rfind("\n", 0, pos) + 1
+    block = block[:line_start] + insertion + block[line_start:]
+    path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
 def patch_flower_veil_extra_type_awareness(root: Path) -> None:
