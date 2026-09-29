@@ -250,33 +250,37 @@ def patch_damage_rules(root: Path) -> None:
         "Demolitionist first-turn Attack double",
     )
 
-    replace_once(
-        lib,
-        """        if ((sideConditions & SIDE_CONDITION_REFLECT) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS) {
-""",
-        """        if ((sideConditions & SIDE_CONDITION_REFLECT) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS
-            && Mercury_AttackBypassesScreens(battleCtx, attacker, move) == FALSE) {
-""",
-        "protection-breaker Reflect bypass",
-    )
+    text = lib.read_text(encoding="utf-8")
+    for condition in ("SIDE_CONDITION_REFLECT", "SIDE_CONDITION_LIGHT_SCREEN"):
+        marker = f"sideConditions & {condition}"
+        pos = text.find(marker)
+        if pos < 0:
+            raise SystemExit(
+                f"protection-breaker screen bypass: {condition} condition not found"
+            )
 
-    replace_once(
-        lib,
-        """        if ((sideConditions & SIDE_CONDITION_LIGHT_SCREEN) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS) {
-""",
-        """        if ((sideConditions & SIDE_CONDITION_LIGHT_SCREEN) != FALSE
-            && criticalMul == 1
-            && MOVE_DATA(move).effect != BATTLE_EFFECT_REMOVE_SCREENS
-            && Mercury_AttackBypassesScreens(battleCtx, attacker, move) == FALSE) {
-""",
-        "protection-breaker Light Screen bypass",
-    )
+        if_start = text.rfind("        if (", 0, pos)
+        if if_start < 0:
+            raise SystemExit(
+                f"protection-breaker screen bypass: governing if for {condition} not found"
+            )
+
+        brace = text.find(") {", pos)
+        if brace < 0:
+            raise SystemExit(
+                f"protection-breaker screen bypass: closing condition for {condition} not found"
+            )
+
+        block = text[if_start:brace]
+        if "Mercury_AttackBypassesScreens" not in block:
+            text = (
+                text[:brace]
+                + "\n            && Mercury_AttackBypassesScreens("
+                + "battleCtx, attacker, move) == FALSE"
+                + text[brace:]
+            )
+
+    lib.write_text(text, encoding="utf-8")
 
 
 def patch_successful_hit_shatter(root: Path) -> None:
