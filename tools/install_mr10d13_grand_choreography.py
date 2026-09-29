@@ -151,35 +151,39 @@ def patch_dancer_behavior(root: Path) -> None:
 
     # D7 must resolve before advancing the Dancer queue so a Grand
     # Choreography copy gets its immediate Revelation Dance before the next
-    # queued Dancer acts.
-    replace_once(
-        path,
-        """        if (Mercury_TryNextDancer(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-
-        if (Mercury_TryReactiveCounter(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-
-        if (Mercury_TryAbilityFollowup(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-""",
-        """        if (Mercury_TryReactiveCounter(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-
-        if (Mercury_TryAbilityFollowup(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-
-        if (Mercury_TryNextDancer(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-""",
-        "Grand Choreography immediate copied-dance follow-up ordering",
+    # queued Dancer acts. Reorder the two hooks inside MoveEnd without
+    # assuming where D8/D12 inserted their own hooks.
+    signature = (
+        "static void BattleControllerPlayer_MoveEnd("
+        "BattleSystem *battleSys, BattleContext *battleCtx)"
     )
+    text = path.read_text(encoding="utf-8")
+    start, end = function_bounds(text, signature)
+    block = text[start:end]
+    dancer_hook = """        if (Mercury_TryNextDancer(battleSys, battleCtx) == TRUE) {
+            return;
+        }
+
+"""
+    followup_hook = """        if (Mercury_TryAbilityFollowup(battleSys, battleCtx) == TRUE) {
+            return;
+        }
+
+"""
+    if block.count(dancer_hook) != 1 or block.count(followup_hook) != 1:
+        raise SystemExit(
+            "Grand Choreography ordering: expected one Dancer and one D7 hook"
+        )
+
+    if block.find(dancer_hook) < block.find(followup_hook):
+        block = block.replace(dancer_hook, "", 1)
+        followup_end = block.find(followup_hook) + len(followup_hook)
+        block = (
+            block[:followup_end]
+            + dancer_hook
+            + block[followup_end:]
+        )
+        path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
 def patch_generated_followup(root: Path) -> None:
