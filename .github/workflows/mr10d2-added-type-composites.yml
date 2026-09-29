@@ -3,6 +3,7 @@ name: MR10D2 Added Type Composites
 # MR10D2 extends the green MR10D1 added-type core with five compound
 # KEEP-AS-WRITTEN abilities that reuse existing battle hooks.
 # Gate revision: D1 helper prototypes synchronized.
+# Gate revision: D2 proof artifact included.
 
 on:
   workflow_dispatch:
