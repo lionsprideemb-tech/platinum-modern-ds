@@ -5,6 +5,7 @@ Graduates five approved KEEP-AS-WRITTEN mechanics on Platinum's native
 multi-hit loop:
 
 - Raging Moth: eligible Fire damaging moves hit twice; each hit uses 70% power.
+- Jackhammer: Hammer-class moves hit twice; each hit uses 70% power.
 - Unrelenting: eligible single-hit attacks become 2–5 hits.
 - Ice Cold Hunter: in effective hail/icy weather, eligible Ice attacks hit twice.
 - Primal Maw: eligible biting moves hit twice; hit two deals half normal damage.
@@ -29,6 +30,7 @@ from pathlib import Path
 
 IMPLEMENTED = {
     "Raging Moth": ("ABILITY_MR_RAGING_MOTH", 442),
+    "Jackhammer": ("ABILITY_MR_JACKHAMMER", 490),
     "Unrelenting": ("ABILITY_MR_UNRELENTING", 731),
     "Ice Cold Hunter": ("ABILITY_MR_ICE_COLD_HUNTER", 796),
     "Primal Maw": ("ABILITY_MR_PRIMAL_MAW", 889),
@@ -141,7 +143,36 @@ def patch_context(root: Path) -> None:
 def patch_controller(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
 
-    helper = """static BOOL Mercury_CustomMultiHitBaseAllowed(
+    helper = """static BOOL Mercury_D11MoveIsHammer(int move)
+{
+    switch (move) {
+    case MOVE_SLAM:
+    case MOVE_CRABHAMMER:
+    case MOVE_HAMMER_ARM:
+    case MOVE_ICE_HAMMER:
+    case MOVE_DRAGON_HAMMER:
+    case MOVE_GIGATON_HAMMER:
+    case MOVE_IVY_CUDGEL:
+    case MOVE_SUPERCELL_SLAM:
+#ifdef MOVE_SMASHIN_REALITIES
+    case MOVE_SMASHIN_REALITIES:
+#endif
+#ifdef MOVE_FEMUR_BREAKER
+    case MOVE_FEMUR_BREAKER:
+#endif
+#ifdef MOVE_SQUEAKY_HAMMER
+    case MOVE_SQUEAKY_HAMMER:
+#endif
+#ifdef MOVE_MOLTEN_STRIKE
+    case MOVE_MOLTEN_STRIKE:
+#endif
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+static BOOL Mercury_CustomMultiHitBaseAllowed(
     BattleSystem *battleSys,
     BattleContext *battleCtx)
 {
@@ -235,6 +266,9 @@ static int Mercury_CustomMultiHitCount(
     case ABILITY_MR_RAGING_MOTH:
         return moveType == TYPE_FIRE ? 2 : 0;
 
+    case ABILITY_MR_JACKHAMMER:
+        return Mercury_D11MoveIsHammer(move) ? 2 : 0;
+
     case ABILITY_MR_UNRELENTING: {
         int hits = BattleSystem_RandNext(battleSys) & 3;
 
@@ -324,7 +358,9 @@ def patch_damage(root: Path) -> None:
 """,
         """    if (battleCtx->mercuryCustomMultiHitActive) {
         if (battleCtx->mercuryCustomMultiHitTriggerAbility
-            == ABILITY_MR_RAGING_MOTH) {
+                == ABILITY_MR_RAGING_MOTH
+            || battleCtx->mercuryCustomMultiHitTriggerAbility
+                == ABILITY_MR_JACKHAMMER) {
             movePower = movePower * 70 / 100;
         } else if (battleCtx->mercuryCustomMultiHitTriggerAbility
             == ABILITY_MR_DUAL_WIELD) {
@@ -430,6 +466,13 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "case ABILITY_MR_RAGING_MOTH:" in ctl
             and "moveType == TYPE_FIRE ? 2 : 0" in ctl
             and "movePower = movePower * 70 / 100;" in lib,
+        "jackhammer_hammer_class_and_70_power":
+            "case ABILITY_MR_JACKHAMMER:" in ctl
+            and "Mercury_D11MoveIsHammer(move) ? 2 : 0" in ctl
+            and "case MOVE_HAMMER_ARM:" in ctl
+            and "case MOVE_GIGATON_HAMMER:" in ctl
+            and "== ABILITY_MR_JACKHAMMER" in lib
+            and "movePower = movePower * 70 / 100;" in lib,
         "unrelenting_standard_2_to_5":
             "case ABILITY_MR_UNRELENTING:" in ctl
             and "BattleSystem_RandNext(battleSys) & 3" in ctl,
@@ -502,7 +545,7 @@ def main() -> None:
         "shared_system": "Platinum native multi-hit loop",
         "single_accuracy_check": True,
         "ordinary_per_hit_reactions_preserved": True,
-        "remaining_keep_as_written_after_d11": 33,
+        "remaining_keep_as_written_after_d11": 32,
         "persistent_save_data_changed": False,
         "locked_mr07_visuals_touched": False,
         "certification_scope": "compile_and_static_validation",
