@@ -269,12 +269,11 @@ def patch_controller(root: Path) -> None:
 
     replace_once(
         path,
-        """        if ((DEFENDING_MON.statusVolatile & VOLATILE_CONDITION_SUBSTITUTE) && battleCtx->damage < 0) {
+        """        if ((DEFENDING_MON.statusVolatile & VOLATILE_CONDITION_SUBSTITUTE)
 """,
         """        if ((DEFENDING_MON.statusVolatile & VOLATILE_CONDITION_SUBSTITUTE)
             && Mercury_AttackBypassesSubstitute(
                 battleCtx, battleCtx->attacker, battleCtx->moveCur) == FALSE
-            && battleCtx->damage < 0) {
 """,
         "Pinnacle Blade Substitute bypass",
     )
