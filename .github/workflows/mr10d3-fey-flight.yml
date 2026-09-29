@@ -1,9 +1,6 @@
 name: MR10D3 Fey Flight
 
-# MR10D2 extends the green MR10D1 added-type core with five compound
-# KEEP-AS-WRITTEN abilities that reuse existing battle hooks.
-# Gate revision: D1 helper prototypes synchronized.
-
+# MR10D3 adds Fey Flight on top of the certified added-type and terrain foundations.
 on:
   workflow_dispatch:
   push:
@@ -35,11 +32,13 @@ on:
       - "tools/install_mr10c15_pattern_breaker.py"
       - "tools/install_mr10d1_added_type_core.py"
       - "tools/install_mr10d2_added_type_composites.py"
+      - "tools/install_mr10d3_fey_flight.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
       - ".github/workflows/mr10d-added-type-core.yml"
       - ".github/workflows/mr10d2-added-type-composites.yml"
+      - ".github/workflows/mr10d3-fey-flight.yml"
 
 permissions:
   contents: read
@@ -311,6 +310,16 @@ jobs:
           test "$(jq -r '.status' mr10d2-added-type-composites.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10d2-added-type-composites.json)" = "5"
 
+      - name: Implement KEEP-AS-WRITTEN Fey Flight D3
+        run: |
+          python3 tools/install_mr10d3_fey_flight.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d3-fey-flight.json
+          test "$(jq -r '.status' mr10d3-fey-flight.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d3-fey-flight.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -349,6 +358,7 @@ jobs:
             mr10c15-pattern-breaker.json
             mr10d1-added-type-core.json
             mr10d2-added-type-composites.json
+            mr10d3-fey-flight.json
           if-no-files-found: error
           retention-days: 14
 
@@ -367,6 +377,7 @@ jobs:
             echo "- Added-type core: Aquatic, Grounded, Half Drake, Ice Age, Metallic, Dragonfly, Hover, Turboblaze, Teravolt"
             echo "- Added-type composite D2: 5 abilities compile-certified"
             echo "- D2 abilities: Draconic Might, Dragonfruit, Rock Armor, Voltron, Komodo"
-            echo "- Remaining KEEP-AS-WRITTEN mechanics after D2: 61"
+            echo "- MR10D3 Fey Flight: compile-certified added-Fairy/Misty-Terrain/Ground-immunity mechanic"
+            echo "- Remaining KEEP-AS-WRITTEN mechanics after D3: 60"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
