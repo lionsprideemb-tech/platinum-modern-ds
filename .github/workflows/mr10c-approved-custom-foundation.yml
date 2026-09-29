@@ -22,6 +22,7 @@ on:
       - "tools/install_mr10c4_fresh_start.py"
       - "tools/install_mr10c5_null_ward.py"
       - "tools/install_mr10c6_pressure_valve.py"
+      - "tools/install_mr10c7_rangefinder.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
@@ -186,6 +187,16 @@ jobs:
           test "$(jq -r '.status' mr10c6-pressure-valve.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10c6-pressure-valve.json)" = "1"
 
+      - name: Implement approved custom mechanics batch C7
+        run: |
+          python3 tools/install_mr10c7_rangefinder.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c7-rangefinder.json
+          test "$(jq -r '.status' mr10c7-rangefinder.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c7-rangefinder.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -213,6 +224,7 @@ jobs:
             mr10c4-fresh-start.json
             mr10c5-null-ward.json
             mr10c6-pressure-valve.json
+            mr10c7-rangefinder.json
           if-no-files-found: error
           retention-days: 14
 
@@ -226,6 +238,6 @@ jobs:
             echo "- Cut identities retained only as reserved stable IDs: 2"
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
-            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve"
+            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
