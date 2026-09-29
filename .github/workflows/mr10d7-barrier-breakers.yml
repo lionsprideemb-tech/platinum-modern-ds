@@ -2,6 +2,7 @@ name: MR10D7 Barrier Breakers
 
 # MR10D7 extends the MR10D6 stack with shared protection/screen bypass
 # and shatter behavior for Pinnacle Blade and Demolitionist.
+# Gate revision: hardened Substitute bypass anchor.
 
 on:
   workflow_dispatch:
