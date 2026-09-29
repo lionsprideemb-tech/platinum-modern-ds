@@ -58,23 +58,27 @@ def validate_partition(partition: Path) -> None:
 
 def patch_defensive_drop_immunity(root: Path) -> None:
     path = root / "src/battle/battle_script.c"
-    old = """                } else if (AbilityBlocksSpecificStatReduction(battleCtx, statOffset, ABILITY_KEEN_EYE, BATTLE_STAT_ACCURACY)
-                    || AbilityBlocksSpecificStatReduction(battleCtx, statOffset, ABILITY_MINDS_EYE, BATTLE_STAT_ACCURACY)
-                    || AbilityBlocksSpecificStatReduction(battleCtx, statOffset, ABILITY_HYPER_CUTTER, BATTLE_STAT_ATTACK)) {
-"""
-    new = """                } else if (AbilityBlocksSpecificStatReduction(battleCtx, statOffset, ABILITY_KEEN_EYE, BATTLE_STAT_ACCURACY)
-                    || AbilityBlocksSpecificStatReduction(battleCtx, statOffset, ABILITY_MINDS_EYE, BATTLE_STAT_ACCURACY)
-                    || AbilityBlocksSpecificStatReduction(battleCtx, statOffset, ABILITY_HYPER_CUTTER, BATTLE_STAT_ATTACK)
-                    || (((battleCtx->attacker & 1) != (battleCtx->sideEffectMon & 1))
+    text = path.read_text(encoding="utf-8")
+    heartwood_clause = """                    || (((battleCtx->attacker & 1) != (battleCtx->sideEffectMon & 1))
                         && (BATTLE_STAT_ATTACK + statOffset == BATTLE_STAT_DEFENSE
                             || BATTLE_STAT_ATTACK + statOffset == BATTLE_STAT_SP_DEFENSE)
                         && Battler_IgnorableAbility(
                             battleCtx,
                             battleCtx->attacker,
                             battleCtx->sideEffectMon,
-                            ABILITY_MR_HEARTWOOD) == TRUE)) {
-"""
-    replace_once(path, old, new, "Heartwood opponent defensive-drop immunity")
+                            ABILITY_MR_HEARTWOOD) == TRUE)"""
+    if heartwood_clause in text:
+        return
+
+    anchor = "AbilityBlocksSpecificStatReduction(battleCtx, statOffset, ABILITY_HYPER_CUTTER, BATTLE_STAT_ATTACK)"
+    count = text.count(anchor)
+    if count != 1:
+        raise SystemExit(
+            f"Heartwood opponent defensive-drop immunity: expected exactly one Hyper Cutter anchor in {path}, found {count}"
+        )
+
+    text = text.replace(anchor, anchor + "\n" + heartwood_clause, 1)
+    path.write_text(text, encoding="utf-8")
 
 
 def patch_end_turn_heal(root: Path) -> None:
