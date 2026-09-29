@@ -54,6 +54,8 @@ def validate_partition(partition: Path) -> None:
         "display_name": ABILITY_NAME,
         "token": ABILITY_TOKEN,
         "approval_state": "owner_approved_redesign",
+        "owner_review_decision": "REDESIGN",
+        "implementation_class": "existing_hook",
         "review_blocked": False,
     }
     for key, value in expected.items():
@@ -61,6 +63,8 @@ def validate_partition(partition: Path) -> None:
             raise SystemExit(
                 f"{ABILITY_NAME}: partition {key} expected {value!r}, got {row.get(key)!r}"
             )
+    if row.get("runtime_enabled", True) is False:
+        raise SystemExit(f"{ABILITY_NAME}: reviewed mechanic is runtime-disabled")
 
 
 def patch_contact_damage(root: Path) -> None:
