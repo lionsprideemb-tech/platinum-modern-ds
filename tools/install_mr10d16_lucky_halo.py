@@ -146,15 +146,20 @@ def patch_self_drop_prevention(root: Path) -> None:
     }
 
 """
-    insert_before_in_function(
-        path,
-        signature,
-        """    if (stageChange > 0) {
-""",
-        insertion,
-        "ABILITY_MR_LUCKY_HALO",
-        "D16 self-inflicted stat-drop prevention",
-    )
+    text = path.read_text(encoding="utf-8")
+    start, end = function_bounds(text, signature)
+    block = text[start:end]
+    if "ABILITY_MR_LUCKY_HALO" not in block:
+        anchor = """    if (stageChange > 0) {
+"""
+        pos = block.find(anchor)
+        if pos < 0:
+            raise SystemExit(
+                "D16 self-inflicted stat-drop prevention: "
+                "post-stage-decode anchor missing"
+            )
+        block = block[:pos] + insertion + block[pos:]
+        path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 def patch_fatal_hit_survival(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
