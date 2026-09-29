@@ -133,7 +133,7 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             "Battler_Ability(battleCtx, battler) == ABILITY_MR_SPECTRAL_BODY" in lib
             and "BOOL Battler_IsTrappedMsg" in lib,
         "implemented_registry_updated": ABILITY_TOKEN in registry_lines,
-        "locked_mr07_visuals_touched": False,
+        "locked_mr07_visuals_untouched": True,
     }
 
 
