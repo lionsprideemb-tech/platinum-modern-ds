@@ -1,7 +1,9 @@
 name: MR10D Added Type Core
 
 # MR10D1 extends the green MR10C foundation with the first shared
-# KEEP-AS-WRITTEN engine family: battle-only added typing.\n# Retry after added-type forward declaration.
+# KEEP-AS-WRITTEN engine family: battle-only added typing.
+# Retry after added-type forward declaration.
+# Gate revision: forward declaration compile fix.
 
 on:
   workflow_dispatch:
