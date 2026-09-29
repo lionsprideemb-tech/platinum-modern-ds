@@ -42,6 +42,43 @@ def insert_after_once(path: Path, anchor: str, insertion: str, label: str) -> No
     path.write_text(text.replace(anchor, anchor + insertion, 1), encoding="utf-8")
 
 
+def function_bounds(text: str, signature: str) -> tuple[int, int]:
+    definition = signature + "\n{"
+    start = text.find(definition)
+    if start < 0:
+        raise SystemExit(f"function definition not found: {signature}")
+    open_brace = start + len(signature) + 1
+    depth = 0
+    for i in range(open_brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return start, i + 1
+    raise SystemExit(f"function closing brace not found: {signature}")
+
+
+def insert_after_in_function(
+    path: Path,
+    signature: str,
+    anchor: str,
+    insertion: str,
+    marker: str,
+    label: str,
+) -> None:
+    text = path.read_text(encoding="utf-8")
+    start, end = function_bounds(text, signature)
+    block = text[start:end]
+    if marker in block:
+        return
+    count = block.count(anchor)
+    if count != 1:
+        raise SystemExit(f"{label}: expected one anchor in {signature}, found {count}")
+    block = block.replace(anchor, anchor + insertion, 1)
+    path.write_text(text[:start] + block + text[end:], encoding="utf-8")
+
+
 def validate_partition(path: Path) -> None:
     plan = json.loads(path.read_text(encoding="utf-8"))
     rows = plan.get("abilities", plan.get("rows", []))
@@ -153,12 +190,14 @@ def patch_disguise_restrictions(root: Path) -> None:
     suppress = root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s"
     worry = root / "res/battle/scripts/subscripts/subscript_give_target_insomnia.s"
 
-    insert_after_once(
+    insert_after_in_function(
         lib,
+        "static BOOL Mercury_AbilityCannotBeNeutralized(int ability)",
         """    case ABILITY_DISGUISE:
 """,
         """    case ABILITY_MR_PATCHWORK:
 """,
+        "case ABILITY_MR_PATCHWORK:",
         "D15 Patchwork Neutralizing Gas restriction",
     )
 
