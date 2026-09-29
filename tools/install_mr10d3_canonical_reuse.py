@@ -160,6 +160,30 @@ def patch_fey_flight_terrain_grounding(root: Path) -> None:
     )
 
 
+def patch_fey_flight_full_levitate(root: Path) -> None:
+    path = root / "src/battle/battle_lib.c"
+
+    # Mercury's approved Levitate mechanic is not just Ground immunity:
+    # MR10B2 also gives the holder's Flying-type moves a 25% power boost.
+    # "Grants Levitate behavior" therefore inherits the complete current
+    # Mercury Levitate behavior.
+    replace_once(
+        path,
+        """    if (attackerParams.ability == ABILITY_LEVITATE
+        && moveType == TYPE_FLYING) {
+        movePower = movePower * 125 / 100;
+    }
+""",
+        """    if ((attackerParams.ability == ABILITY_LEVITATE
+            || attackerParams.ability == ABILITY_MR_FEY_FLIGHT)
+        && moveType == TYPE_FLYING) {
+        movePower = movePower * 125 / 100;
+    }
+""",
+        "Fey Flight full Mercury Levitate behavior",
+    )
+
+
 def patch_fey_flight_misty_entry(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
     replace_once(
@@ -228,6 +252,9 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             and "Mercury_SetTerrain(battleCtx, MERCURY_TERRAIN_MISTY);" in lib,
         "fey_flight_terrain_grounding":
             "Battler_Ability(battleCtx, battler) == ABILITY_MR_FEY_FLIGHT" in lib,
+        "fey_flight_full_mercury_levitate":
+            "attackerParams.ability == ABILITY_MR_FEY_FLIGHT" in lib
+            and "movePower = movePower * 125 / 100;" in lib,
         "schooling_canonical_state":
             "mercurySchoolingActive[MAX_BATTLERS]" in ctx
             and "case ABILITY_SCHOOLING:" in lib
@@ -274,6 +301,7 @@ def main() -> None:
     extend_added_type_map(root)
     patch_fey_flight_ground_immunity(root)
     patch_fey_flight_terrain_grounding(root)
+    patch_fey_flight_full_levitate(root)
     patch_fey_flight_misty_entry(root)
     update_registry(registry)
 
