@@ -430,23 +430,14 @@ static BOOL Mercury_TryAbilityFollowup(
         "MR10D7 generated follow-up controller helpers",
     )
 
-    replace_once(
+    insert_before_once(
         path,
         """        if (Mercury_TryNextDancer(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-
-        BattleControllerPlayer_ClearFlags(battleSys, battleCtx);
 """,
         """        if (Mercury_TryAbilityFollowup(battleSys, battleCtx) == TRUE) {
             return;
         }
 
-        if (Mercury_TryNextDancer(battleSys, battleCtx) == TRUE) {
-            return;
-        }
-
-        BattleControllerPlayer_ClearFlags(battleSys, battleCtx);
 """,
         "MR10D7 generated follow-up move-end hook",
     )
