@@ -118,12 +118,26 @@ def validate_partition(partition: Path) -> None:
 def expose_pulse_helper(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
     hdr = root / "include/battle/battle_lib.h"
-    replace_once(
-        lib,
-        "static BOOL Mercury_MoveIsPulse(int move)",
-        "BOOL Mercury_MoveIsPulse(int move)",
-        "Rangefinder shared pulse helper visibility",
-    )
+
+    # Do not use replace_once() here: the desired non-static signature is a
+    # substring of the old static signature, so replace_once's idempotence
+    # shortcut would incorrectly decide the change had already been applied.
+    text = lib.read_text(encoding="utf-8")
+    old = "static BOOL Mercury_MoveIsPulse(int move)"
+    new = "BOOL Mercury_MoveIsPulse(int move)"
+    if old in text:
+        if text.count(old) != 1:
+            raise SystemExit(
+                "Rangefinder shared pulse helper visibility: expected exactly "
+                f"one static definition, found {text.count(old)}"
+            )
+        text = text.replace(old, new, 1)
+        lib.write_text(text, encoding="utf-8")
+    elif new not in text:
+        raise SystemExit(
+            "Rangefinder shared pulse helper visibility: pulse helper definition not found"
+        )
+
     insert_before_once(
         hdr,
         """BOOL BattleSystem_TriggerAttackerKOAbility(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);
