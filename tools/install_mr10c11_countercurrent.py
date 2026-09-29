@@ -118,8 +118,9 @@ def patch_context_state(root: Path) -> None:
     // next-move priority reward after Countercurrent flips the Speed matchup.
     u8 mercuryCountercurrentPriorityReady[MAX_BATTLERS];
     u8 mercuryCountercurrentPendingAttacker[MAX_BATTLERS];
-    u8 mercuryCountercurrentPriorSpeedStage[MAX_BATTLERS];
-    u32 mercuryCountercurrentGrantedTurn[MAX_BATTLERS];
+    u32 mercuryCountercurrentPreHolderSpeed[MAX_BATTLERS];
+    u32 mercuryCountercurrentPreTargetSpeed[MAX_BATTLERS];
+    int mercuryCountercurrentGrantedTurn[MAX_BATTLERS];
 """,
         "Countercurrent state",
     )
@@ -133,8 +134,9 @@ def patch_switch_in_reset(root: Path) -> None:
 """,
         """    battleCtx->mercuryCountercurrentPriorityReady[battler] = FALSE;
     battleCtx->mercuryCountercurrentPendingAttacker[battler] = 0;
-    battleCtx->mercuryCountercurrentPriorSpeedStage[battler] = DEFAULT_STAT_STAGE;
-    battleCtx->mercuryCountercurrentGrantedTurn[battler] = 0;
+    battleCtx->mercuryCountercurrentPreHolderSpeed[battler] = 0;
+    battleCtx->mercuryCountercurrentPreTargetSpeed[battler] = 0;
+    battleCtx->mercuryCountercurrentGrantedTurn[battler] = -1;
 """,
         "Countercurrent switch-in reset",
     )
@@ -151,12 +153,27 @@ def patch_contact_speed_drop(root: Path) -> None:
             && (battleCtx->moveStatusFlags & MOVE_STATUS_NO_EFFECTS) == FALSE
             && (DEFENDER_SELF_TURN_FLAGS.physicalDamageTaken
                 || DEFENDER_SELF_TURN_FLAGS.specialDamageTaken)
-            && (CURRENT_MOVE_DATA.flags & MOVE_FLAG_MAKES_CONTACT)
-            && ATTACKING_MON.statBoosts[BATTLE_STAT_SPEED] > MIN_STAT_STAGE) {
+            && Mercury_MoveMakesContact(
+                battleCtx, battleCtx->attacker, battleCtx->moveCur)
+            && ATTACKING_MON.statBoosts[BATTLE_STAT_SPEED] > MIN_STAT_STAGE
+            && Battler_IgnorableAbility(
+                battleCtx,
+                battleCtx->attacker,
+                battleCtx->defender,
+                ABILITY_MR_COUNTERCURRENT) == TRUE) {
+            BattleSystem_CompareBattlerSpeed(
+                battleSys,
+                battleCtx,
+                battleCtx->defender,
+                battleCtx->attacker,
+                TRUE);
+
             battleCtx->mercuryCountercurrentPendingAttacker[battleCtx->defender]
                 = battleCtx->attacker + 1;
-            battleCtx->mercuryCountercurrentPriorSpeedStage[battleCtx->defender]
-                = ATTACKING_MON.statBoosts[BATTLE_STAT_SPEED];
+            battleCtx->mercuryCountercurrentPreHolderSpeed[battleCtx->defender]
+                = battleCtx->monSpeedValues[battleCtx->defender];
+            battleCtx->mercuryCountercurrentPreTargetSpeed[battleCtx->defender]
+                = battleCtx->monSpeedValues[battleCtx->attacker];
 
             battleCtx->sideEffectParam = MOVE_SUBSCRIPT_PTR_SPEED_DOWN_1_STAGE;
             battleCtx->sideEffectType = SIDE_EFFECT_TYPE_ABILITY;
@@ -220,32 +237,43 @@ def patch_move_end_resolution(root: Path) -> None:
                 == battleCtx->attacker + 1) {
             int countercurrentHolder = battleCtx->defender;
             int countercurrentAttacker = battleCtx->attacker;
-            int countercurrentOldStage =
-                battleCtx->mercuryCountercurrentPriorSpeedStage[countercurrentHolder];
+            u32 countercurrentBeforeHolder =
+                battleCtx->mercuryCountercurrentPreHolderSpeed[countercurrentHolder];
+            u32 countercurrentBeforeTarget =
+                battleCtx->mercuryCountercurrentPreTargetSpeed[countercurrentHolder];
 
-            if (battleCtx->battleMons[countercurrentAttacker].statBoosts[BATTLE_STAT_SPEED]
-                    < countercurrentOldStage
-                && battleCtx->mercuryCountercurrentPriorityReady[countercurrentHolder]
-                    == FALSE
+            BattleSystem_CompareBattlerSpeed(
+                battleSys,
+                battleCtx,
+                countercurrentHolder,
+                countercurrentAttacker,
+                TRUE);
+
+            if (countercurrentBeforeHolder <= countercurrentBeforeTarget
+                && battleCtx->monSpeedValues[countercurrentHolder]
+                    > battleCtx->monSpeedValues[countercurrentAttacker]
                 && battleCtx->mercuryCountercurrentGrantedTurn[countercurrentHolder]
-                    != battleCtx->totalTurns + 1) {
-                BattleSystem_CompareBattlerSpeed(
-                    battleSys,
-                    battleCtx,
-                    countercurrentHolder,
-                    countercurrentAttacker,
-                    TRUE);
-
-                if (battleCtx->monSpeedValues[countercurrentHolder]
-                    > battleCtx->monSpeedValues[countercurrentAttacker]) {
-                    battleCtx->mercuryCountercurrentPriorityReady[countercurrentHolder]
-                        = TRUE;
-                    battleCtx->mercuryCountercurrentGrantedTurn[countercurrentHolder]
-                        = battleCtx->totalTurns + 1;
-                }
+                    != battleCtx->totalTurns) {
+                battleCtx->mercuryCountercurrentPriorityReady[countercurrentHolder]
+                    = TRUE;
+                battleCtx->mercuryCountercurrentGrantedTurn[countercurrentHolder]
+                    = battleCtx->totalTurns;
             }
 
             battleCtx->mercuryCountercurrentPendingAttacker[countercurrentHolder] = 0;
+        }
+
+        {
+            int countercurrentCleanup;
+            int countercurrentMaxBattlers =
+                BattleSystem_GetMaxBattlers(battleSys);
+
+            for (countercurrentCleanup = 0;
+                 countercurrentCleanup < countercurrentMaxBattlers;
+                 countercurrentCleanup++) {
+                battleCtx->mercuryCountercurrentPendingAttacker[countercurrentCleanup]
+                    = 0;
+            }
         }
 
         if (battleCtx->attacker != BATTLER_NONE
@@ -288,16 +316,18 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "contact_speed_drop":
             "case ABILITY_MR_COUNTERCURRENT:" in lib
             and "MOVE_SUBSCRIPT_PTR_SPEED_DOWN_1_STAGE" in lib
-            and "MOVE_FLAG_MAKES_CONTACT" in lib,
-        "records_predrop_stage":
-            "mercuryCountercurrentPriorSpeedStage" in ctx
-            and "mercuryCountercurrentPriorSpeedStage[battleCtx->defender]" in lib,
+            and "Mercury_MoveMakesContact(" in lib
+            and "ABILITY_MR_COUNTERCURRENT) == TRUE" in lib,
+        "records_predrop_effective_speeds":
+            "mercuryCountercurrentPreHolderSpeed" in ctx
+            and "mercuryCountercurrentPreTargetSpeed" in ctx
+            and "BattleSystem_CompareBattlerSpeed(" in lib,
         "only_grants_after_real_drop":
-            "statBoosts[BATTLE_STAT_SPEED]" in ctl
-            and "< countercurrentOldStage" in ctl,
-        "effective_speed_cache_comparison":
             "BattleSystem_CompareBattlerSpeed(" in ctl
             and "monSpeedValues[countercurrentHolder]" in ctl,
+        "must_cross_from_not_faster_to_faster":
+            "countercurrentBeforeHolder <= countercurrentBeforeTarget" in ctl
+            and "> battleCtx->monSpeedValues[countercurrentAttacker]" in ctl,
         "priority_ready_state":
             "mercuryCountercurrentPriorityReady[MAX_BATTLERS]" in ctx,
         "priority_plus_one":
@@ -305,7 +335,7 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             and "ABILITY_MR_COUNTERCURRENT" in lib,
         "once_per_turn_grant":
             "mercuryCountercurrentGrantedTurn[countercurrentHolder]" in ctl
-            and "battleCtx->totalTurns + 1" in ctl,
+            and "!= battleCtx->totalTurns" in ctl,
         "next_move_consumes":
             "mercuryCountercurrentPriorityReady[battleCtx->attacker] = FALSE;" in ctl,
         "switch_clears_state":
