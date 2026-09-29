@@ -231,8 +231,8 @@ def patch_dragonfruit(root: Path) -> None:
 def patch_rock_armor(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
     signature = (
-        "int BattleSystem_CalcMoveDamage(BattleSystem *battleSys, "
-        "BattleContext *battleCtx,\n"
+        "int BattleSystem_CalcMoveDamage(BattleSystem *battleSys,\n"
+        "    BattleContext *battleCtx,\n"
         "    int move,\n"
         "    u32 sideConditions,\n"
         "    u32 fieldConditions,\n"
