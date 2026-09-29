@@ -292,10 +292,10 @@ static int Mercury_CustomMultiHitCount(
             ? 2 : 0;
 
     case ABILITY_MR_PRIMAL_MAW:
-        return Mercury_MoveIsBitingForCustomAbility(move) ? 2 : 0;
+        return Mercury_MoveIsBiting(move) ? 2 : 0;
 
     case ABILITY_MR_DUAL_WIELD:
-        return Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0;
+        return Mercury_MoveIsPulse(move) ? 2 : 0;
 
     default:
         return 0;
@@ -490,18 +490,18 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
             and "NO_CLOUD_NINE && WEATHER_IS_HAIL && moveType == TYPE_ICE" in ctl,
         "primal_maw_biting_two_hit":
             "case ABILITY_MR_PRIMAL_MAW:" in ctl
-            and "Mercury_MoveIsBitingForCustomAbility(move) ? 2 : 0" in ctl
+            and "Mercury_MoveIsBiting(move) ? 2 : 0" in ctl
             and "== ABILITY_MR_PRIMAL_MAW" in lib
             and "damage /= 2;" in lib,
         "dual_wield_launcher_two_hit_75":
             "case ABILITY_MR_DUAL_WIELD:" in ctl
-            and "Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0" in ctl
+            and "Mercury_MoveIsPulse(move) ? 2 : 0" in ctl
             and "movePower = movePower * 75 / 100;" in lib,
         "current_mercury_move_families_reused":
-            "BOOL Mercury_MoveIsPulseForCustomAbility(int move)" in lib
-            and "BOOL Mercury_MoveIsBitingForCustomAbility(int move)" in lib
-            and "BOOL Mercury_MoveIsPulseForCustomAbility(int move);" in hdr
-            and "BOOL Mercury_MoveIsBitingForCustomAbility(int move);" in hdr,
+            "BOOL Mercury_MoveIsPulse(int move)\n{" in lib
+            and "BOOL Mercury_MoveIsBiting(int move)\n{" in lib
+            and "BOOL Mercury_MoveIsPulse(int move);" in hdr
+            and "BOOL Mercury_MoveIsBiting(int move);" in hdr,
         "spread_safety":
             "return liveTargets == 1;" in ctl,
         "implemented_registry_updated":
