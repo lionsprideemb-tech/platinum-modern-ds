@@ -1,16 +1,13 @@
-name: MR10D2 Added Type Composites
+name: MR10D3 Canonical Reuse
 
-# MR10D2 extends the green MR10D1 added-type core with five compound
-# KEEP-AS-WRITTEN abilities that reuse existing battle hooks.
-# Gate revision: D1 helper prototypes synchronized.
-# Gate revision: D2 proof artifact included.
-# Gate revision: post-signature native rebuild.
+# MR10D3 certifies two already-implemented canonical-equivalent mechanics
+# and adds Fey Flight by reusing the added-type, Misty Terrain, and Ground-immunity systems.
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - feature/mr10d2-added-type-composites
+      - feature/mr10d3-canonical-reuse
     paths:
       - "tools/run_mr08_canonical_stack.py"
       - "tools/install_mr08*.py"
@@ -37,10 +34,13 @@ on:
       - "tools/install_mr10c15_pattern_breaker.py"
       - "tools/install_mr10d1_added_type_core.py"
       - "tools/install_mr10d2_added_type_composites.py"
+      - "tools/install_mr10d3_canonical_reuse.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
       - ".github/workflows/mr10d-added-type-core.yml"
+      - ".github/workflows/mr10d2-added-type-composites.yml"
+      - ".github/workflows/mr10d3-canonical-reuse.yml"
       - ".github/workflows/mr10d2-added-type-composites.yml"
 
 permissions:
@@ -313,6 +313,16 @@ jobs:
           test "$(jq -r '.status' mr10d2-added-type-composites.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10d2-added-type-composites.json)" = "5"
 
+      - name: Implement KEEP-AS-WRITTEN canonical reuse D3
+        run: |
+          python3 tools/install_mr10d3_canonical_reuse.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d3-canonical-reuse.json
+          test "$(jq -r '.status' mr10d3-canonical-reuse.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d3-canonical-reuse.json)" = "3"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -324,7 +334,7 @@ jobs:
       - name: Upload proof
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr10d2-added-type-composites-${{ github.run_id }}
+          name: mercury-mr10d3-canonical-reuse-${{ github.run_id }}
           path: |
             mr10c-mr08-stack.json
             mr10c-mr08-reports/
@@ -351,13 +361,14 @@ jobs:
             mr10c15-pattern-breaker.json
             mr10d1-added-type-core.json
             mr10d2-added-type-composites.json
+            mr10d3-canonical-reuse.json
           if-no-files-found: error
           retention-days: 14
 
       - name: Summary
         run: |
           {
-            echo "## MR10D2 added-type composites"
+            echo "## MR10D3 canonical reuse"
             echo
             echo "- Owner review resolved: 93/93"
             echo "- Approved blank-slate redesigns: 15/15"
@@ -369,6 +380,8 @@ jobs:
             echo "- Added-type core: Aquatic, Grounded, Half Drake, Ice Age, Metallic, Dragonfly, Hover, Turboblaze, Teravolt"
             echo "- Added-type composite D2: 5 abilities compile-certified"
             echo "- D2 abilities: Draconic Might, Dragonfruit, Rock Armor, Voltron, Komodo"
-            echo "- Remaining KEEP-AS-WRITTEN mechanics after D2: 61"
+            echo "- Canonical-reuse D3: 3 abilities compile-certified"
+            echo "- D3 abilities: Fey Flight, Schooling, Comatose"
+            echo "- Remaining KEEP-AS-WRITTEN mechanics after D3: 58"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
