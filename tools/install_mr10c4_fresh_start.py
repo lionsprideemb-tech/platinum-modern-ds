@@ -87,18 +87,14 @@ def patch_switch_in_cleanup(root: Path) -> None:
                             removedHazard = TRUE;
                         }
 
-                        if (removedHazard) {
+                        if (removedHazard
+                            && battleCtx->battleMons[battler].curHP
+                                < battleCtx->battleMons[battler].maxHP) {
                             battleCtx->msgTemp = battler;
                             battleCtx->msgBattlerTemp = battler;
-
-                            if (battleCtx->battleMons[battler].curHP
-                                < battleCtx->battleMons[battler].maxHP) {
-                                battleCtx->hpCalcTemp = BattleSystem_Divide(
-                                    battleCtx->battleMons[battler].maxHP, 8);
-                                subscript = subscript_ability_hp_restore_gradual;
-                            } else {
-                                subscript = subscript_mold_breaker;
-                            }
+                            battleCtx->hpCalcTemp = BattleSystem_Divide(
+                                battleCtx->battleMons[battler].maxHP, 8);
+                            subscript = subscript_ability_hp_restore_gradual;
                             result = SWITCH_IN_CHECK_RESULT_BREAK;
                         }
                         break;
@@ -149,7 +145,8 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
         "conditional_one_eighth_heal":
             "removedHazard" in lib
             and "maxHP, 8" in lib
-            and "subscript_ability_hp_restore_gradual" in lib,
+            and "subscript_ability_hp_restore_gradual" in lib
+            and "subscript_mold_breaker" not in lib[lib.find("case ABILITY_MR_FRESH_START:"):lib.find("case ABILITY_HOSPITALITY:")],
         "switch_in_processed_once":
             "weatherAbilityAnnounced = TRUE;" in lib,
         "implemented_registry_updated": ABILITY_TOKEN in registry_lines,
