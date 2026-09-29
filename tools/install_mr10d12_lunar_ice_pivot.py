@@ -124,7 +124,7 @@ def patch_context(root: Path) -> None:
     path = root / "include/battle/battle_context.h"
     insert_after_once(
         path,
-        """    u8 mercuryCustomMultiHitTriggerAbility;
+        """    u16 mercuryCustomMultiHitTriggerAbility;
 """,
         """    // Mercury MR10D12: delayed self-pivot after Hollow Ice Zone hits.
     u8 mercuryHollowIcePivotPending[MAX_BATTLERS];
