@@ -101,37 +101,37 @@ def export_existing_move_families(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
     hdr = root / "include/battle/battle_lib.h"
 
-    # Keep the canonical MR08 classifiers file-local.  Export tiny wrappers
-    # instead; Metrowerks can otherwise discard/retain the original static
-    # symbols in a way that leaves the controller's cross-TU reference
-    # unresolved at link time.
-    insert_before_once(
-        lib,
-        """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript)
-""",
-        """BOOL Mercury_MoveIsPulseForCustomAbility(int move)
-{
-    return Mercury_MoveIsPulse(move);
-}
+    # Export the actual definitions. This is intentionally not routed through
+    # replace_once: the non-static spelling is a substring of the static
+    # spelling, so replace_once's idempotence guard can incorrectly skip it.
+    text = lib.read_text(encoding="utf-8")
+    for helper in ("Mercury_MoveIsPulse", "Mercury_MoveIsBiting"):
+        old_def = f"static BOOL {helper}(int move)\\n{{"
+        new_def = f"BOOL {helper}(int move)\\n{{"
+        if old_def in text:
+            text = text.replace(old_def, new_def, 1)
+        elif new_def not in text:
+            raise SystemExit(f"D11 export: definition not found for {helper}")
 
-BOOL Mercury_MoveIsBitingForCustomAbility(int move)
-{
-    return Mercury_MoveIsBiting(move);
-}
-
-""",
-        "D11 exported move-family wrappers",
+    # Earlier canonical installers can also leave forward declarations static.
+    text = text.replace(
+        "static BOOL Mercury_MoveIsPulse(int move);",
+        "BOOL Mercury_MoveIsPulse(int move);",
     )
+    text = text.replace(
+        "static BOOL Mercury_MoveIsBiting(int move);",
+        "BOOL Mercury_MoveIsBiting(int move);",
+    )
+    lib.write_text(text, encoding="utf-8")
     insert_before_once(
         hdr,
         """BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);
 """,
-        """BOOL Mercury_MoveIsPulseForCustomAbility(int move);
-BOOL Mercury_MoveIsBitingForCustomAbility(int move);
+        """BOOL Mercury_MoveIsPulse(int move);
+BOOL Mercury_MoveIsBiting(int move);
 """,
-        "D11 move-family wrapper declarations",
+        "D11 move-family declarations",
     )
-
 
 def patch_context(root: Path) -> None:
     path = root / "include/battle/battle_context.h"
