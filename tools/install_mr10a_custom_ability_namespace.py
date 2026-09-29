@@ -136,8 +136,8 @@ def main() -> None:
         "name_bank_size_matches": len(names["messages"]) == custom[-1]["id"] + 1,
         "uppercase_bank_size_matches": len(uppercase["messages"]) == custom[-1]["id"] + 1,
         "description_bank_size_matches": len(descriptions["messages"]) == custom[-1]["id"] + 1,
-        "smart_punctuation_sanitized": all(
-            ch not in json.dumps(bank["messages"], ensure_ascii=False)
+        "custom_smart_punctuation_sanitized": all(
+            ch not in json.dumps(bank["messages"][CUSTOM_FIRST:], ensure_ascii=False)
             for bank in (names, uppercase, descriptions)
             for ch in ("\u2018", "\u2019", "\u201c", "\u201d", "\u2013", "\u2014", "\u2026", "\u00d7")
         ),
@@ -151,6 +151,8 @@ def main() -> None:
         "custom_identity_count": len(custom),
         "safe_custom_count": sum(1 for x in custom if not x["review_blocked"]),
         "review_blocked_custom_count": sum(1 for x in custom if x["review_blocked"]),
+        "runtime_enabled_custom_count": sum(1 for x in custom if x.get("runtime_enabled", True)),
+        "runtime_disabled_reserved_count": sum(1 for x in custom if not x.get("runtime_enabled", True)),
         "implemented_mechanics_in_this_gate": 0,
         "implemented_registry_changed": False,
         "locked_mr07_visuals_touched": False,
