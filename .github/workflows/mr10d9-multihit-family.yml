@@ -1,0 +1,469 @@
+name: MR10D9 Multi-Hit Family
+
+# MR10D8 extends the green MR10D7 generated-action stack with queued
+# defender counterattacks and their associated damage-reduction rules.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr10d9-multihit-family
+    paths:
+      - "tools/run_mr08_canonical_stack.py"
+      - "tools/install_mr08*.py"
+      - "tools/install_mr10a_custom_ability_namespace.py"
+      - "tools/install_mr10b1_er_safe_scalar_overrides.py"
+      - "tools/install_mr10b2_safe_defensive_reaction_overrides.py"
+      - "tools/install_mr10b3_safe_precision_offense_status.py"
+      - "tools/install_mr10c0_missing_species_compat.py"
+      - "tools/install_mr10c0b_post_override_compat.py"
+      - "tools/install_mr10c1_spectral_body.py"
+      - "tools/install_mr10c2_execution_drive.py"
+      - "tools/install_mr10c3_heartwood.py"
+      - "tools/install_mr10c4_fresh_start.py"
+      - "tools/install_mr10c5_null_ward.py"
+      - "tools/install_mr10c6_pressure_valve.py"
+      - "tools/install_mr10c7_rangefinder.py"
+      - "tools/install_mr10c8_backlash.py"
+      - "tools/install_mr10c9_predatory_timing.py"
+      - "tools/install_mr10c10_counterstep.py"
+      - "tools/install_mr10c11_countercurrent.py"
+      - "tools/install_mr10c12_time_compression.py"
+      - "tools/install_mr10c13_two_lives.py"
+      - "tools/install_mr10c14_undertow.py"
+      - "tools/install_mr10c15_pattern_breaker.py"
+      - "tools/install_mr10d1_added_type_core.py"
+      - "tools/install_mr10d2_added_type_composites.py"
+      - "tools/install_mr10d3_field_defense.py"
+      - "tools/audit_mr10d4_canonical_reconciliation.py"
+      - "tools/install_mr10d5_breach_family.py"
+      - "tools/install_mr10d6_field_auras.py"
+      - "tools/install_mr10d7_generated_followups.py"
+      - "tools/install_mr10d8_reactive_counters.py"
+      - "tools/install_mr10d9_multihit_family.py"
+      - "data/mr10_safe_ability_partition.json"
+      - "docs/approval/mr10-93-mechanics-data.json"
+      - ".github/workflows/mr10c-approved-custom-foundation.yml"
+      - ".github/workflows/mr10d-added-type-core.yml"
+      - ".github/workflows/mr10d2-added-type-composites.yml"
+      - ".github/workflows/mr10d3-field-defense.yml"
+      - ".github/workflows/mr10d4-canonical-reconciliation.yml"
+      - ".github/workflows/mr10d5-breach-family.yml"
+      - ".github/workflows/mr10d6-field-auras.yml"
+      - ".github/workflows/mr10d7-generated-followups.yml"
+      - ".github/workflows/mr10d8-reactive-counters.yml"
+      - ".github/workflows/mr10d9-multihit-family.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-pip wget xz-utils libpng-dev rsync jq
+
+      - name: Checkout pinned sources
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/text/720.txt \
+            /data/text/721.txt \
+            /data/text/722.txt \
+            /data/Moves.c
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Restore modern move namespace
+        run: |
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mr10c-modern-moves.json \
+            --implemented-registry mr10c-implemented-moves.txt
+
+      - name: Restore canonical Ability namespace
+        run: |
+          python3 tools/install_mp05_ability_namespace.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mr10c-ability-namespace.json \
+            --implemented-registry mr10c-implemented-abilities.txt
+
+      - name: Rebuild all canonical mechanics
+        run: |
+          python3 tools/run_mr08_canonical_stack.py \
+            vendor/pokeplatinum \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --reports-dir mr10c-mr08-reports \
+            --report mr10c-mr08-stack.json
+          test "$(jq -r '.status' mr10c-mr08-stack.json)" = "PASS"
+          test "$(jq -r '.canonical_modern_implemented' mr10c-mr08-stack.json)" = "187"
+
+      - name: Apply pending-species compile compatibility
+        run: |
+          python3 tools/install_mr10c0_missing_species_compat.py \
+            vendor/pokeplatinum \
+            --report mr10c0-species-compat.json
+          test "$(jq -r '.status' mr10c0-species-compat.json)" = "PASS"
+
+      - name: Apply approved safe canonical overrides
+        run: |
+          python3 tools/install_mr10b1_er_safe_scalar_overrides.py \
+            vendor/pokeplatinum --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-b1.json
+          python3 tools/install_mr10b2_safe_defensive_reaction_overrides.py \
+            vendor/pokeplatinum --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-b2.json
+          python3 tools/install_mr10b3_safe_precision_offense_status.py \
+            vendor/pokeplatinum --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-b3.json
+
+      - name: Normalize post-override symbols
+        run: |
+          python3 tools/install_mr10c0b_post_override_compat.py \
+            vendor/pokeplatinum \
+            --report mr10c0b-post-override-compat.json
+          test "$(jq -r '.status' mr10c0b-post-override-compat.json)" = "PASS"
+
+      - name: Materialize approved Mercury namespace
+        run: |
+          python3 tools/install_mr10a_custom_ability_namespace.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --report mr10c-custom-namespace.json
+          test "$(jq -r '.status' mr10c-custom-namespace.json)" = "PASS"
+          test "$(jq -r '.review_blocked_custom_count' mr10c-custom-namespace.json)" = "0"
+
+      - name: Implement approved custom mechanics batch C1
+        run: |
+          python3 tools/install_mr10c1_spectral_body.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c1-spectral-body.json
+          test "$(jq -r '.status' mr10c1-spectral-body.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c1-spectral-body.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C2
+        run: |
+          python3 tools/install_mr10c2_execution_drive.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c2-execution-drive.json
+          test "$(jq -r '.status' mr10c2-execution-drive.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c2-execution-drive.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C3
+        run: |
+          python3 tools/install_mr10c3_heartwood.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c3-heartwood.json
+          test "$(jq -r '.status' mr10c3-heartwood.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c3-heartwood.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C4
+        run: |
+          python3 tools/install_mr10c4_fresh_start.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c4-fresh-start.json
+          test "$(jq -r '.status' mr10c4-fresh-start.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c4-fresh-start.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C5
+        run: |
+          python3 tools/install_mr10c5_null_ward.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c5-null-ward.json
+          test "$(jq -r '.status' mr10c5-null-ward.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c5-null-ward.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C6
+        run: |
+          python3 tools/install_mr10c6_pressure_valve.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c6-pressure-valve.json
+          test "$(jq -r '.status' mr10c6-pressure-valve.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c6-pressure-valve.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C7
+        run: |
+          python3 tools/install_mr10c7_rangefinder.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c7-rangefinder.json
+          test "$(jq -r '.status' mr10c7-rangefinder.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c7-rangefinder.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C8
+        run: |
+          python3 tools/install_mr10c8_backlash.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c8-backlash.json
+          test "$(jq -r '.status' mr10c8-backlash.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c8-backlash.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C9
+        run: |
+          python3 tools/install_mr10c9_predatory_timing.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c9-predatory-timing.json
+          test "$(jq -r '.status' mr10c9-predatory-timing.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c9-predatory-timing.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C10
+        run: |
+          python3 tools/install_mr10c10_counterstep.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c10-counterstep.json
+          test "$(jq -r '.status' mr10c10-counterstep.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c10-counterstep.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C11
+        run: |
+          python3 tools/install_mr10c11_countercurrent.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c11-countercurrent.json
+          test "$(jq -r '.status' mr10c11-countercurrent.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c11-countercurrent.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C12
+        run: |
+          python3 tools/install_mr10c12_time_compression.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c12-time-compression.json
+          test "$(jq -r '.status' mr10c12-time-compression.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c12-time-compression.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C13
+        run: |
+          python3 tools/install_mr10c13_two_lives.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c13-two-lives.json
+          test "$(jq -r '.status' mr10c13-two-lives.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c13-two-lives.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C14
+        run: |
+          python3 tools/install_mr10c14_undertow.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c14-undertow.json
+          test "$(jq -r '.status' mr10c14-undertow.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c14-undertow.json)" = "1"
+
+      - name: Implement approved custom mechanics batch C15
+        run: |
+          python3 tools/install_mr10c15_pattern_breaker.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c15-pattern-breaker.json
+          test "$(jq -r '.status' mr10c15-pattern-breaker.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c15-pattern-breaker.json)" = "1"
+
+      - name: Implement KEEP-AS-WRITTEN added-type core D1
+        run: |
+          python3 tools/install_mr10d1_added_type_core.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d1-added-type-core.json
+          test "$(jq -r '.status' mr10d1-added-type-core.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d1-added-type-core.json)" = "9"
+
+      - name: Implement KEEP-AS-WRITTEN added-type composites D2
+        run: |
+          python3 tools/install_mr10d2_added_type_composites.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d2-added-type-composites.json
+          test "$(jq -r '.status' mr10d2-added-type-composites.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d2-added-type-composites.json)" = "5"
+
+      - name: Implement KEEP-AS-WRITTEN field defense D3
+        run: |
+          python3 tools/install_mr10d3_field_defense.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d3-field-defense.json
+          test "$(jq -r '.status' mr10d3-field-defense.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d3-field-defense.json)" = "3"
+
+      - name: Reconcile KEEP-AS-WRITTEN canonical overlaps D4
+        run: |
+          python3 tools/audit_mr10d4_canonical_reconciliation.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d4-canonical-reconciliation.json
+          test "$(jq -r '.status' mr10d4-canonical-reconciliation.json)" = "PASS"
+          test "$(jq -r '.reconciled_count' mr10d4-canonical-reconciliation.json)" = "2"
+
+      - name: Implement KEEP-AS-WRITTEN breach family D5
+        run: |
+          python3 tools/install_mr10d5_breach_family.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d5-breach-family.json
+          test "$(jq -r '.status' mr10d5-breach-family.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d5-breach-family.json)" = "2"
+
+      - name: Implement KEEP-AS-WRITTEN field auras D6
+        run: |
+          python3 tools/install_mr10d6_field_auras.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d6-field-auras.json
+          test "$(jq -r '.status' mr10d6-field-auras.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d6-field-auras.json)" = "2"
+
+      - name: Implement KEEP-AS-WRITTEN generated followups D7
+        run: |
+          python3 tools/install_mr10d7_generated_followups.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d7-generated-followups.json
+          test "$(jq -r '.status' mr10d7-generated-followups.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d7-generated-followups.json)" = "9"
+
+      - name: Implement KEEP-AS-WRITTEN reactive counters D8
+        run: |
+          python3 tools/install_mr10d8_reactive_counters.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d8-reactive-counters.json
+          test "$(jq -r '.status' mr10d8-reactive-counters.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d8-reactive-counters.json)" = "3"
+
+      - name: Implement KEEP-AS-WRITTEN multi-hit family D9
+        run: |
+          python3 tools/install_mr10d9_multihit_family.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10d9-multihit-family.json
+          test "$(jq -r '.status' mr10d9-multihit-family.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10d9-multihit-family.json)" = "6"
+
+      - name: Build native Platinum ROM
+        working-directory: vendor/pokeplatinum
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Upload proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr10d9-multihit-family-${{ github.run_id }}
+          path: |
+            mr10c-mr08-stack.json
+            mr10c-mr08-reports/
+            mr10c0-species-compat.json
+            mr10c0b-post-override-compat.json
+            mr10c-b1.json
+            mr10c-b2.json
+            mr10c-b3.json
+            mr10c-custom-namespace.json
+            mr10c1-spectral-body.json
+            mr10c2-execution-drive.json
+            mr10c3-heartwood.json
+            mr10c4-fresh-start.json
+            mr10c5-null-ward.json
+            mr10c6-pressure-valve.json
+            mr10c7-rangefinder.json
+            mr10c8-backlash.json
+            mr10c9-predatory-timing.json
+            mr10c10-counterstep.json
+            mr10c11-countercurrent.json
+            mr10c12-time-compression.json
+            mr10c13-two-lives.json
+            mr10c14-undertow.json
+            mr10c15-pattern-breaker.json
+            mr10d1-added-type-core.json
+            mr10d2-added-type-composites.json
+            mr10d3-field-defense.json
+            mr10d4-canonical-reconciliation.json
+            mr10d5-breach-family.json
+            mr10d6-field-auras.json
+            mr10d7-generated-followups.json
+            mr10d8-reactive-counters.json
+            mr10d9-multihit-family.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summary
+        run: |
+          {
+            echo "## MR10D9 multi-hit family"
+            echo
+            echo "- Owner review resolved: 93/93"
+            echo "- Approved blank-slate redesigns: 15/15"
+            echo "- Cut identities retained only as reserved stable IDs: 2"
+            echo "- Zen Mode returned to normal Pokémon mechanics: 1"
+            echo "- Canonical mechanics rebuilt: 187/187"
+            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression, Two Lives, Undertow, Pattern Breaker"
+            echo "- KEEP-AS-WRITTEN shared family D1: 9 abilities compile-certified"
+            echo "- Added-type core: Aquatic, Grounded, Half Drake, Ice Age, Metallic, Dragonfly, Hover, Turboblaze, Teravolt"
+            echo "- Added-type composite D2: 5 abilities compile-certified"
+            echo "- D2 abilities: Draconic Might, Dragonfruit, Rock Armor, Voltron, Komodo"
+            echo "- D3 compile-certified: Prismatic Pelt, Soothsayer, Fey Flight"
+            echo "- D4 reconciled without duplicate runtime hooks: Schooling, Comatose"
+            echo "- D5 compile-certified: Pinnacle Blade, Demolitionist"
+            echo "- D6 compile-certified: Winter Throne, Toxic Spill"
+            echo "- D7 compile-certified: Thunder Clouds, Blade Dance, Aftershock, High Tide, Glacial Rage, Chilling Pellets, Frost Dragon, Break it Down, Volcano Rage"
+            echo "- D8 compile-certified: Deflect, Cold Rebound, Parry"
+            echo "- D9 compile-certified: Raging Moth, Jackhammer, Unrelenting, Ice Cold Hunter, Primal Maw, Dual Wield"
+            echo "- Remaining KEEP-AS-WRITTEN mechanics after D9: 34"
+            echo "- Native ROM build: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
