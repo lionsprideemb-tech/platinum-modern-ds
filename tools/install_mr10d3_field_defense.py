@@ -320,10 +320,17 @@ def patch_timed_damage_rules(root: Path) -> None:
         )
         lib.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
-    insert_before_in_function(
+    insert_after_in_function(
         lib,
         signature,
-        """    if (Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_LEVITATE) == TRUE
+        """    if ((battleCtx->battleStatusMask & SYSCTL_IGNORE_TYPE_CHECKS) == FALSE && MON_HAS_TYPE(attacker, moveType)) {
+        if (Battler_Ability(battleCtx, attacker) == ABILITY_ADAPTABILITY) {
+            damage *= 2;
+        } else {
+            damage = damage * 15 / 10;
+        }
+    }
+
 """,
         """    mercuryDamageBeforeEffectiveness = damage;
 
