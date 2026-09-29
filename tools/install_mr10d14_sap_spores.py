@@ -410,7 +410,7 @@ def patch_end_turn_states(root: Path) -> None:
                 battleCtx->mercurySapTrapMarked[battler] = TRUE;
 
                 if (battleCtx->battleMons[battler]
-                        .statBoosts[BATTLE_STAT_SPEED] > MIN_STAT_STAGE) {
+                        .statBoosts[BATTLE_STAT_SPEED] > 0) {
                     battleCtx->sideEffectParam =
                         MOVE_SUBSCRIPT_PTR_SPEED_DOWN_1_STAGE;
                     battleCtx->sideEffectType = SIDE_EFFECT_TYPE_ABILITY;
