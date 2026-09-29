@@ -28,16 +28,22 @@ def write_bank(path: Path, data: dict) -> None:
 
 
 DS_TEXT_REPLACEMENTS = str.maketrans({
-    "'": "’",
-    '"': "”",
-    "\u2018": "‘",
-    "\u2019": "’",
-    "\u201c": "“",
-    "\u201d": "”",
+    # These generated Ability banks are fed through pokeplatinum msgenc.
+    # Keep their punctuation conservative: current native builds reject
+    # apostrophe/quote glyphs in the JSON message payload even when a related
+    # glyph appears in the charmap. Exact source prose stays in the partition.
+    "'": "",
+    '"': "",
+    "\u2018": "",
+    "\u2019": "",
+    "\u201c": "",
+    "\u201d": "",
     "\u2013": "-",
     "\u2014": "-",
+    "\u2026": "...",
     "\u00a0": " ",
-})
+    "\u00d7": "x",
+}
 
 
 def ds_text(text: str) -> str:
@@ -189,6 +195,11 @@ def main() -> None:
         "all_ability_text_uses_ds_charmap": all(
             bank_uses_only_supported_chars(bank, supported)
             for bank in (names, uppercase, descriptions)
+        ),
+        "msgenc_sensitive_quotes_removed": all(
+            ch not in json.dumps(bank["messages"], ensure_ascii=False)
+            for bank in (names, uppercase, descriptions)
+            for ch in ("'", '"', "\u2018", "\u2019", "\u201c", "\u201d")
         ),
     }
     status = "PASS" if all(checks.values()) else "FAIL"
