@@ -219,8 +219,7 @@ def patch_party_and_summary_typing(root: Path) -> None:
     case MON_DATA_TYPE_2:
         if (monDataBlockA->species == SPECIES_ARCEUS && monDataBlockA->ability == ABILITY_MULTITYPE) {
             result = Pokemon_GetArceusTypeOf(Item_LoadParam(monDataBlockA->heldItem, ITEM_PARAM_HOLD_EFFECT, HEAP_ID_SYSTEM));
-        } else if (monDataBlockA->species == SPECIES_SILVALLY
-            && monDataBlockA->ability == ABILITY_RKS_SYSTEM) {
+        } else if (monDataBlockA->ability == ABILITY_RKS_SYSTEM) {
             result = Mercury_MemoryTypeFromItem(monDataBlockA->heldItem);
         } else {
             result = SpeciesData_GetFormValue(monDataBlockA->species, monDataBlockB->form, SPECIES_DATA_TYPE_1 + (param - MON_DATA_TYPE_1));
@@ -252,7 +251,7 @@ static BOOL Mercury_IsSilvallyMemoryLocked(
     BattleContext *battleCtx,
     int battler)
 {{
-    return battleCtx->battleMons[battler].species == SPECIES_SILVALLY
+    return Battler_Ability(battleCtx, battler) == ABILITY_RKS_SYSTEM
         && Mercury_IsMemoryItem(battleCtx->battleMons[battler].heldItem);
 }}
 
@@ -449,7 +448,7 @@ static BOOL Mercury_IsSilvallyMemoryLockedScript(
     BattleContext *battleCtx,
     int battler)
 {{
-    return battleCtx->battleMons[battler].species == SPECIES_SILVALLY
+    return Battler_Ability(battleCtx, battler) == ABILITY_RKS_SYSTEM
         && Mercury_IsMemoryItemScript(
             battleCtx->battleMons[battler].heldItem);
 }}
@@ -628,8 +627,7 @@ def validate(
                 for token, _ in MEMORIES
             ),
         "party_summary_type_change":
-            "SPECIES_SILVALLY" in pokemon
-            and "ABILITY_RKS_SYSTEM" in pokemon
+            "ABILITY_RKS_SYSTEM" in pokemon
             and "Mercury_MemoryTypeFromItem(monDataBlockA->heldItem)" in pokemon,
         "battle_and_ai_multi_attack_type":
             lib.count("case MOVE_MULTI_ATTACK:") >= 2
@@ -712,7 +710,7 @@ def main() -> None:
         "running_modern_mechanics_total": 182,
         "remaining_modern_canonical_mechanics": 5,
         "form_visuals_deferred": True,
-        "policy": "Official RKS System Memory typing and Multi-Attack type conversion, with Silvally Memory removal protection.",
+        "policy": "Official RKS System Memory typing and Multi-Attack type conversion. Runtime behavior is keyed to ABILITY_RKS_SYSTEM so this canonical mechanic compiles before Mercury's later modern-species roster namespace is installed.",
         "checks": checks,
     }
     args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
