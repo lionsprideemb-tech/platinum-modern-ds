@@ -27,8 +27,26 @@ def write_bank(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+DS_TEXT_REPLACEMENTS = str.maketrans({
+    "\u2018": "'",
+    "\u2019": "'",
+    "\u201c": '"',
+    "\u201d": '"',
+    "\u2013": "-",
+    "\u2014": "-",
+    "\u2026": "...",
+    "\u00a0": " ",
+    "\u00d7": "x",
+})
+
+
+def ds_text(text: str) -> str:
+    """Normalize editorial Unicode punctuation to the DS message charset."""
+    return text.translate(DS_TEXT_REPLACEMENTS)
+
+
 def short_description(effect: str) -> list[str]:
-    clean = re.sub(r"\s+", " ", effect.strip())
+    clean = re.sub(r"\s+", " ", ds_text(effect).strip())
     # Prefer the first complete sentence/major clause for the two-line Summary
     # view. The full exact wording remains in mr10_safe_ability_partition.json.
     first = re.split(r"(?<=[.!?])\s+", clean, maxsplit=1)[0]
@@ -95,7 +113,7 @@ def main() -> None:
 
     for entry in custom:
         idx = entry["id"]
-        name = entry["display_name"]
+        name = ds_text(entry["display_name"])
         ensure_message(names, "pl_msg_00000610", idx, name)
         ensure_message(uppercase, "pl_msg_00000611", idx, name.upper())
         ensure_message(
@@ -118,6 +136,11 @@ def main() -> None:
         "name_bank_size_matches": len(names["messages"]) == custom[-1]["id"] + 1,
         "uppercase_bank_size_matches": len(uppercase["messages"]) == custom[-1]["id"] + 1,
         "description_bank_size_matches": len(descriptions["messages"]) == custom[-1]["id"] + 1,
+        "smart_punctuation_sanitized": all(
+            ch not in json.dumps(bank["messages"], ensure_ascii=False)
+            for bank in (names, uppercase, descriptions)
+            for ch in ("\u2018", "\u2019", "\u201c", "\u201d", "\u2013", "\u2014", "\u2026", "\u00d7")
+        ),
     }
     status = "PASS" if all(checks.values()) else "FAIL"
     report = {
