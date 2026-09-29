@@ -166,31 +166,19 @@ _000:
 def patch_controller(root: Path) -> None:
     ctl = root / "src/battle/battle_controller_player.c"
 
-    replace_once(
+    insert_before_once(
         ctl,
-        """    ONE_HIT_RAGE,
-    ONE_HIT_TRIGGER_ABILITY,
-    ONE_HIT_EXTRA_FLINCH,
+        """    ONE_HIT_TRIGGER_ABILITY,
 """,
-        """    ONE_HIT_RAGE,
-    ONE_HIT_SOUL_LINKER,
-    ONE_HIT_TRIGGER_ABILITY,
-    ONE_HIT_EXTRA_FLINCH,
+        """    ONE_HIT_SOUL_LINKER,
 """,
         "D19 one-hit state enum",
     )
-    replace_once(
+    insert_before_once(
         ctl,
-        """    MULTI_HIT_FORM_CHANGE,
-    MULTI_HIT_RAGE,
-    MULTI_HIT_TRIGGER_ABILITY,
-    MULTI_HIT_STATUS,
+        """    MULTI_HIT_TRIGGER_ABILITY,
 """,
-        """    MULTI_HIT_FORM_CHANGE,
-    MULTI_HIT_RAGE,
-    MULTI_HIT_SOUL_LINKER,
-    MULTI_HIT_TRIGGER_ABILITY,
-    MULTI_HIT_STATUS,
+        """    MULTI_HIT_SOUL_LINKER,
 """,
         "D19 multi-hit state enum",
     )
