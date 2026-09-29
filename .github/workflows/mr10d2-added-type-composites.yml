@@ -4,6 +4,7 @@ name: MR10D2 Added Type Composites
 # KEEP-AS-WRITTEN abilities that reuse existing battle hooks.
 # Gate revision: D1 helper prototypes synchronized.
 # Gate revision: D2 proof artifact included.
+# Gate revision: post-signature native rebuild.
 
 on:
   workflow_dispatch:
