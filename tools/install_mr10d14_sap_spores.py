@@ -303,8 +303,8 @@ def patch_spore_message(root: Path) -> None:
         messages.append({
             "id": message_id,
             "en_US": [
-                "Parasitic spores sap\n",
-                "{STRVAR_1 1, 0, 0}'s HP!"
+                "Parasitic spores hurt\n",
+                "{STRVAR_1 1, 0, 0}!"
             ],
         })
         text_path.write_text(
