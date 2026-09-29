@@ -137,8 +137,8 @@ def patch_context(root: Path) -> None:
 def patch_lunar_wrath(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
     signature = (
-        "static BOOL Mercury_D7ChooseFollowup("
-        "BattleContext *battleCtx,\n"
+        "static BOOL Mercury_D7ChooseFollowup(\n"
+        "    BattleContext *battleCtx,\n"
         "    int *move,\n"
         "    int *power)"
     )
