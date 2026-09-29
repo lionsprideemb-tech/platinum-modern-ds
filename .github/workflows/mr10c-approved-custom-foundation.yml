@@ -1,7 +1,7 @@
 name: MR10C Approved Custom Foundation
 
-# MR10C foundation validates the resolved owner-review branch through C14.
-# Current gate: C1-C14; all staged redesign installers retrigger this native gate.n installers retrigger this native gate.now retrigger this native gate.
+# MR10C foundation validates the resolved owner-review branch through C15.
+# Current gate: C1-C15; all 15 approved redesigns are staged behind this native gate.n installers retrigger this native gate.n installers retrigger this native gate.now retrigger this native gate.
 
 on:
   workflow_dispatch:
@@ -31,6 +31,7 @@ on:
       - "tools/install_mr10c12_time_compression.py"
       - "tools/install_mr10c13_two_lives.py"
       - "tools/install_mr10c14_undertow.py"
+      - "tools/install_mr10c15_pattern_breaker.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
@@ -275,6 +276,16 @@ jobs:
           test "$(jq -r '.status' mr10c14-undertow.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10c14-undertow.json)" = "1"
 
+      - name: Implement approved custom mechanics batch C15
+        run: |
+          python3 tools/install_mr10c15_pattern_breaker.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --implemented-registry mr10c-implemented-abilities.txt \
+            --report mr10c15-pattern-breaker.json
+          test "$(jq -r '.status' mr10c15-pattern-breaker.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10c15-pattern-breaker.json)" = "1"
+
       - name: Build native Platinum ROM
         working-directory: vendor/pokeplatinum
         run: |
@@ -310,6 +321,7 @@ jobs:
             mr10c12-time-compression.json
             mr10c13-two-lives.json
             mr10c14-undertow.json
+            mr10c15-pattern-breaker.json
           if-no-files-found: error
           retention-days: 14
 
@@ -323,6 +335,6 @@ jobs:
             echo "- Cut identities retained only as reserved stable IDs: 2"
             echo "- Zen Mode returned to normal Pokémon mechanics: 1"
             echo "- Canonical mechanics rebuilt: 187/187"
-            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression, Two Lives, Undertow"
+            echo "- Approved custom mechanics implemented: Spectral Body, Execution Drive, Heartwood, Fresh Start, Null Ward, Pressure Valve, Rangefinder, Backlash, Predatory Timing, Counterstep, Countercurrent, Time Compression, Two Lives, Undertow, Pattern Breaker"
             echo "- Native ROM build: PASS"
           } >> "$GITHUB_STEP_SUMMARY"
