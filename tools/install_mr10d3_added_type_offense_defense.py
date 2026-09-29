@@ -345,6 +345,10 @@ def validate(root: Path, registry: Path) -> dict[str, bool]:
     registry_lines = set(registry.read_text(encoding="utf-8").splitlines())
 
     checks = {
+        "added_type_core_present":
+            "mercuryExtraTypeMask" in (
+                root / "include/battle/battle_context.h"
+            ).read_text(encoding="utf-8"),
         "draconic_might_added_dragon":
             "case ABILITY_MR_DRACONIC_MIGHT:" in lib,
         "draconic_might_conversion":
