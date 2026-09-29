@@ -1,4 +1,4 @@
-name: MR10B1 Safe Ability Runtime
+name: MR10B Safe Ability Runtime
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
     paths:
       - "tools/run_mr08_canonical_stack.py"
       - "tools/install_mr10b1_er_safe_scalar_overrides.py"
+      - "tools/install_mr10b2_safe_defensive_reaction_overrides.py"
       - "data/mr10_safe_ability_partition.json"
       - ".github/workflows/mr10b1-safe-ability-runtime.yml"
 
@@ -85,6 +86,15 @@ jobs:
           test "$(jq -r '.status' mr10b1-safe-overrides.json)" = "PASS"
           test "$(jq -r '.count' mr10b1-safe-overrides.json)" = "15"
 
+      - name: Apply safe defensive/reaction overrides
+        run: |
+          python3 tools/install_mr10b2_safe_defensive_reaction_overrides.py \
+            vendor/pokeplatinum \
+            --partition data/mr10_safe_ability_partition.json \
+            --report mr10b2-safe-overrides.json
+          test "$(jq -r '.status' mr10b2-safe-overrides.json)" = "PASS"
+          test "$(jq -r '.count' mr10b2-safe-overrides.json)" = "10"
+
       - name: Materialize full Mercury custom namespace
         run: |
           python3 tools/install_mr10a_custom_ability_namespace.py \
@@ -104,11 +114,12 @@ jobs:
       - name: Upload proof
         uses: actions/upload-artifact@v4
         with:
-          name: mercury-mr10b1-safe-ability-runtime-${{ github.run_id }}
+          name: mercury-mr10b-safe-ability-runtime-${{ github.run_id }}
           path: |
             mr10b1-mr08-stack.json
             mr10b1-mr08-reports/
             mr10b1-safe-overrides.json
+            mr10b2-safe-overrides.json
             mr10b1-custom-namespace.json
           if-no-files-found: error
           retention-days: 14
@@ -116,10 +127,10 @@ jobs:
       - name: Summary
         run: |
           {
-            echo "## MR10B1 safe ability runtime"
+            echo "## MR10B safe ability runtime"
             echo
             echo "- Canonical Gen 5-9 mechanics rebuilt: 187/187"
-            echo "- Safe ER canonical overrides in this batch: 15"
+            echo "- Safe ER canonical overrides through B2: 25"
             echo "- Custom namespace materialized through ID 929"
             echo "- Held custom-system decisions touched: 0"
             echo "- Native ROM build: PASS"
@@ -130,18 +141,18 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p docs/checkpoints
-          cat > docs/checkpoints/MR10B1_SAFE_ABILITY_RUNTIME_PASS.md <<'EOF'
-          # MR10B1 Safe Ability Runtime — PASS
+          cat > docs/checkpoints/MR10B2_SAFE_ABILITY_RUNTIME_PASS.md <<'EOF'
+          # MR10B2 Safe Ability Runtime — PASS
 
           Full native Platinum ROM build completed successfully after:
           - rebuilding all 187 canonical Gen 5-9 Ability mechanics;
-          - applying the first 15 safe Elite Redux canonical overrides;
+          - applying 25 safe Elite Redux canonical overrides through MR10B2;
           - materializing the Mercury custom Ability namespace through ID 929;
           - leaving all 93 held new-engine-system decisions untouched.
           EOF
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/checkpoints/MR10B1_SAFE_ABILITY_RUNTIME_PASS.md
+          git add docs/checkpoints/MR10B2_SAFE_ABILITY_RUNTIME_PASS.md
           git diff --cached --quiet && exit 0
-          git commit -m "Checkpoint MR10B1 safe ability runtime"
+          git commit -m "Checkpoint MR10B2 safe ability runtime"
           git push
