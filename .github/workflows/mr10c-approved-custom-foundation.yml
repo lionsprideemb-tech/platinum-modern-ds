@@ -1,7 +1,7 @@
 name: MR10C Approved Custom Foundation
 
 # MR10C foundation validates the resolved owner-review branch through C12.
-# Current gate: C1-C12, with C9/C11 anchor fixes applied.
+# Current gate: C1-C12; script pushes C9-C12 now retrigger this native gate.
 
 on:
   workflow_dispatch:
@@ -25,6 +25,10 @@ on:
       - "tools/install_mr10c6_pressure_valve.py"
       - "tools/install_mr10c7_rangefinder.py"
       - "tools/install_mr10c8_backlash.py"
+      - "tools/install_mr10c9_predatory_timing.py"
+      - "tools/install_mr10c10_counterstep.py"
+      - "tools/install_mr10c11_countercurrent.py"
+      - "tools/install_mr10c12_time_compression.py"
       - "data/mr10_safe_ability_partition.json"
       - "docs/approval/mr10-93-mechanics-data.json"
       - ".github/workflows/mr10c-approved-custom-foundation.yml"
