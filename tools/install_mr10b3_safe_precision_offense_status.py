@@ -107,7 +107,6 @@ def patch_accuracy_family(root: Path) -> None:
     insert_before_once(
         path,
         """    if (NO_CLOUD_NINE) {
-        if (WEATHER_IS_SAND
 """,
         """    if (Battler_Ability(battleCtx, attacker) == ABILITY_KEEN_EYE) {
         hitRate = hitRate * 120 / 100;
