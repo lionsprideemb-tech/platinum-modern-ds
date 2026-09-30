@@ -51,8 +51,10 @@ def rep(p,a,b,l):
  if t.count(a)!=1:raise SystemExit(f"{l}: {t.count(a)} matches")
  p.write_text(t.replace(a,b,1))
 def bounds(t,s):
- a=t.find(s)
- if a<0:raise SystemExit("function missing "+s)
+ a=t.find(s+"\n{")
+ if a<0:
+  a=t.find(s+" {")
+ if a<0:raise SystemExit("function definition missing "+s)
  o=t.find("{",a);d=0
  for i in range(o,len(t)):
   if t[i]=="{":d+=1
