@@ -1211,11 +1211,12 @@ def patch_blood_stigma_status_immunity(root: Path) -> None:
         lines = text.splitlines(True)
         insert_at = None
         for i, line in enumerate(lines):
-            if "CheckAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON" in line:
+            if ("CheckAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON" in line
+                or "CheckIgnorableAbility CHECK_HAVE, BTLSCR_SIDE_EFFECT_MON" in line):
                 insert_at = i + 1
                 break
         if insert_at is None:
-            raise SystemExit(f"Blood Stigma: no CheckAbility anchor in {name}")
+            raise SystemExit(f"Blood Stigma: no side-effect ability anchor in {name}")
         # Reuse that check's destination label so Blood Stigma follows the same failure path.
         parts = lines[insert_at - 1].strip().split(",")
         label = parts[-1].strip()
