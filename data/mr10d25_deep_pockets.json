@@ -1,0 +1,31 @@
+{
+  "gate": "MERCURY_MR10D25_DEEP_POCKETS",
+  "ability_number": 76,
+  "name": "Deep Pockets",
+  "token": "ABILITY_MR_DEEP_POCKETS",
+  "assignment_policy": "PRIMARY_ONLY",
+  "description": "This Pokemon can hold and use two different items at once.",
+  "mechanic": {
+    "real_second_item_slot": true,
+    "same_item_twice": false,
+    "both_passive_effects_active": true,
+    "both_stat_modifiers_active": true,
+    "berries_and_consumables": "Each slot is independent; consuming one does not consume the other.",
+    "knock_off": "Removes one held item per successful item-removal event; slot resolution must be deterministic.",
+    "trick_switcheroo": "Transfers or swaps one item slot per move execution; never duplicates or destroys the untouched slot.",
+    "choice_items": "All applicable bonuses stack. Any active Choice item applies the normal move lock; multiple Choice items do not create multiple locks.",
+    "unburden": "Triggers only when the Pokemon has no remaining held item in either slot.",
+    "poltergeist_and_item_checks": "Pokemon counts as holding an item if either slot is occupied.",
+    "faint_switch_battle_end": "Second slot persists exactly like the primary held item.",
+    "innate_eligibility": false
+  },
+  "compatibility": {
+    "certified_75_checkpoint_preserved": true,
+    "requires_party_pokemon_serialization_audit": true,
+    "requires_battlemon_copy_in_out_audit": true,
+    "requires_item_ui_second_slot": true,
+    "requires_item_effect_dispatch_audit": true,
+    "requires_trick_knockoff_fling_recycle_bestow_audit": true
+  },
+  "status": "SPEC_LOCKED_IMPLEMENTATION_PENDING_NATIVE_ITEM_ARCHITECTURE"
+}
