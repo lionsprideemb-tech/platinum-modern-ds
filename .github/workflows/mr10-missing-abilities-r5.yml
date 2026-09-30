@@ -73,7 +73,7 @@ jobs:
           test "$(jq -r '.status' mr10r3.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10r3.json)" = "6"
           test "$(jq -r '.status' mr10r4.json)" = "PASS"
-          test "$(jq -r '.implemented_count' mr10r4.json)" = "14"
+          test "$(jq -r '.implemented_count' mr10r4.json)" = "20"
           test "$(jq -r '.status' mr10r5.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10r5.json)" = "4"
 
@@ -91,7 +91,7 @@ jobs:
           mkdir -p proof
           cp mr10-storage.json mr10-full-namespace.json mr10r1.json mr10r2.json mr10r3.json mr10r4.json mr10r5.json proof/
           cp "$BUILD/pokeplatinum.us.nds" proof/Pokemon_Mercury_Missing_Abilities_R5.nds
-          sha256sum proof/Pokemon_Mercury_Missing_Abilities_R4.nds > proof/SHA256SUMS.txt
+          sha256sum proof/Pokemon_Mercury_Missing_Abilities_R5.nds > proof/SHA256SUMS.txt
 
       - name: Upload proof
         uses: actions/upload-artifact@v4
