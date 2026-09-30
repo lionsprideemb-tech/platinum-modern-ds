@@ -1,0 +1,14 @@
+name: MR10D24F Generated Final
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/mr10d24f-generated-final]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check
+        run: python3 -m py_compile tools/install_mr10d24f_generated_final.py
