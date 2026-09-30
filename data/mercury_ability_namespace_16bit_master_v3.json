@@ -1,0 +1,292 @@
+{
+  "gate": "MERCURY_16BIT_ABILITY_NAMESPACE_MASTER_AUDIT_V3",
+  "date": "2026-09-30",
+  "status": "NUMBERS_RECONCILED_MISSING_SET_IDENTIFIED",
+  "counts": {
+    "historical_imported_rows": 724,
+    "current_ds_partition_rows": 888,
+    "current_ds_custom_rows": 619,
+    "current_customs_reusing_historical_slots": 597,
+    "current_customs_appended_or_relocated": 22,
+    "historical_identities_represented_after_reconciliation": 600,
+    "historical_identities_absent_from_current_ds": 124,
+    "newly_locked_extra_abilities": 2,
+    "next_free_id": 1067
+  },
+  "official_tail": [
+    {
+      "id": 311,
+      "token": "ABILITY_PIERCING_DRILL",
+      "name": "Piercing Drill"
+    },
+    {
+      "id": 312,
+      "token": "ABILITY_DRAGONIZE",
+      "name": "Dragonize"
+    },
+    {
+      "id": 313,
+      "token": "ABILITY_EELEVATE",
+      "name": "Eelevate"
+    },
+    {
+      "id": 315,
+      "token": "ABILITY_MEGA_SOL",
+      "name": "Mega Sol"
+    },
+    {
+      "id": 316,
+      "token": "ABILITY_FIRE_MANE",
+      "name": "Fire Mane"
+    },
+    {
+      "id": 318,
+      "token": "ABILITY_SPICY_SPRAY",
+      "name": "Spicy Spray"
+    },
+    {
+      "id": 319,
+      "token": "ABILITY_AURA_GUARD",
+      "name": "Aura Guard"
+    }
+  ],
+  "reserved_official_gaps": [
+    314,
+    317
+  ],
+  "appended_or_relocated": [
+    {
+      "old_ds_id": 311,
+      "new_id": 1043,
+      "name": "Controlled Fury",
+      "token": "ABILITY_CONTROLLED_FURY",
+      "source_name": "Controlled Fury",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 312,
+      "new_id": 1044,
+      "name": "Eternal Life",
+      "token": "ABILITY_ETERNAL_LIFE",
+      "source_name": "Eternal Life",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 313,
+      "new_id": 1045,
+      "name": "Hollow Shell",
+      "token": "ABILITY_HOLLOW_SHELL",
+      "source_name": "Hollow Shell",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 314,
+      "new_id": 1046,
+      "name": "Mind Games",
+      "token": "ABILITY_MIND_GAMES",
+      "source_name": "Mind Games",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 315,
+      "new_id": 1047,
+      "name": "The Look",
+      "token": "ABILITY_THE_LOOK",
+      "source_name": "The Look",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 317,
+      "new_id": 1048,
+      "name": "Lockdown Protocol",
+      "token": "ABILITY_LOCKDOWN_PROTOCOL",
+      "source_name": "Lockdown Protocol",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 318,
+      "new_id": 1049,
+      "name": "Adaptive Genome",
+      "token": "ABILITY_ADAPTIVE_GENOME",
+      "source_name": "Adaptive Genome",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 319,
+      "new_id": 1050,
+      "name": "Storm Sequence",
+      "token": "ABILITY_STORM_SEQUENCE",
+      "source_name": "Storm Sequence",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 320,
+      "new_id": 1051,
+      "name": "Field Commissioner",
+      "token": "ABILITY_FIELD_COMMISSIONER",
+      "source_name": "Field Commissioner",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 321,
+      "new_id": 1052,
+      "name": "Protean Maxima",
+      "token": "ABILITY_PROTEAN_MAXIMA",
+      "source_name": "Protean Maxima",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 328,
+      "new_id": 1053,
+      "name": "Ancient Script",
+      "token": "ABILITY_MR_ANCIENT_SCRIPT",
+      "source_name": "Ancient Script",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 329,
+      "new_id": 1054,
+      "name": "Aura Mantle",
+      "token": "ABILITY_MR_AURA_MANTLE",
+      "source_name": "Aura Mantle",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 330,
+      "new_id": 1055,
+      "name": "Sand Skimmer",
+      "token": "ABILITY_MR_SAND_SKIMMER",
+      "source_name": "Sand Skimmer",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 331,
+      "new_id": 1056,
+      "name": "Calamity Edge",
+      "token": "ABILITY_MR_CALAMITY_EDGE",
+      "source_name": "Calamity Edge",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 333,
+      "new_id": 1057,
+      "name": "Dam Builder",
+      "token": "ABILITY_MR_DAM_BUILDER",
+      "source_name": "Dam Builder",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 334,
+      "new_id": 1058,
+      "name": "Nerve Agent",
+      "token": "ABILITY_MR_NERVE_AGENT",
+      "source_name": "Nerve Agent",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 335,
+      "new_id": 1059,
+      "name": "Siege Engine",
+      "token": "ABILITY_MR_SIEGE_ENGINE",
+      "source_name": "Siege Engine",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 346,
+      "new_id": 1060,
+      "name": "Aerial Predator",
+      "token": "ABILITY_MR_AERIAL_PREDATOR",
+      "source_name": "Aerial Predator",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 347,
+      "new_id": 1061,
+      "name": "Dynamo Fist",
+      "token": "ABILITY_MR_DYNAMO_FIST",
+      "source_name": "Dynamo Fist",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 348,
+      "new_id": 1062,
+      "name": "Sovereign Arsenal",
+      "token": "ABILITY_MR_SOVEREIGN_ARSENAL",
+      "source_name": "Sovereign Arsenal",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 350,
+      "new_id": 1063,
+      "name": "Cold Calculation",
+      "token": "ABILITY_MR_COLD_CALCULATION",
+      "source_name": "Cold Calculation",
+      "reason": "new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": null
+    },
+    {
+      "old_ds_id": 742,
+      "new_id": 1064,
+      "name": "Self Sufficient",
+      "token": "ABILITY_MR_SELF_SUFFICIENT",
+      "source_name": "Self Sufficient",
+      "reason": "historical_319_conflicts_with_official_Aura_Guard;new_or_relocated_mercury_identity_appended_after_historical_namespace",
+      "historical_match": {
+        "historical_id": 319,
+        "token": "ABILITY_SELF_SUFFICIENT",
+        "display_name": "Self Sufficient",
+        "description": "Recovers 1/16 max HP each turn.",
+        "ai_rating": 6,
+        "runtime_reference_count": 5,
+        "runtime_files": [
+          "include/constants/abilities.h",
+          "src/battle_end_turn.c",
+          "src/battle_util.c",
+          "src/data/abilities.h",
+          "src/sinnoh_abilities.c"
+        ],
+        "policy": "Available roster-wide when it reinforces a real battle identity."
+      }
+    }
+  ],
+  "new_locked_ids": [
+    {
+      "new_id": 1065,
+      "name": "Deep Pockets",
+      "token": "ABILITY_MR_DEEP_POCKETS",
+      "reason": "new_locked_mercury_identity"
+    },
+    {
+      "new_id": 1066,
+      "name": "Predator's Edge",
+      "token": "ABILITY_MR_PREDATORS_EDGE",
+      "reason": "new_locked_mercury_identity"
+    }
+  ],
+  "files": {
+    "recovered_historical": "data/historical_ability_namespace_319_1042.json",
+    "reconciled_partition": "data/mr10_ability_partition_16bit_reconciled.json",
+    "migration": "data/ability_id_migration_16bit_v3.json",
+    "missing_manifest": "data/missing_historical_abilities_v3.json"
+  }
+}
