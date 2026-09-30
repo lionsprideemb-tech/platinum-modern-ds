@@ -25,6 +25,7 @@ def patch(root):
 """    // MR10D24L: transient ability-created berry; never written to heldItem.
     u16 mercuryCravingBerry[MAX_BATTLERS];
     u8 mercuryCravingEnteredThisTurn[MAX_BATTLERS];
+    u8 mercuryCravingAteThisTurn[MAX_BATTLERS];
 
 """)
  lib=root/"src/battle/battle_lib.c"
