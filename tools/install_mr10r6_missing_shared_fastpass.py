@@ -251,6 +251,7 @@ def patch_type_paths(root: Path) -> None:
         path,
         "void BattleSystem_CalcEffectiveness(",
         """    if (!Mercury_IsMoldBreakerAbility(attackerAbility)
+        && defenderAbility == ABILITY_LEVITATE
 """,
         """    moveType = Mercury_R6ConvertedMoveType(
         attackerAbility, move, moveType);
