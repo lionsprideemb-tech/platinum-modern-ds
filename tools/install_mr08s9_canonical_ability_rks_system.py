@@ -404,6 +404,20 @@ def patch_multi_attack(root: Path, move_registry: Path | None) -> None:
             encoding="utf-8",
         )
 
+        script_path = move_data.parent / "script.s"
+        script_path.write_text(
+            '#include "macros/btlcmd.inc"\n\n\n_000:\n    GoToEffectScript\n',
+            encoding="utf-8",
+        )
+
+        donor_anim = root / "res/moves/judgment/anim.s"
+        if not donor_anim.is_file():
+            raise SystemExit("Multi-Attack: Judgment animation donor missing")
+        (move_data.parent / "anim.s").write_text(
+            donor_anim.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
     data = json.loads(move_data.read_text(encoding="utf-8"))
     data["effect"]["type"] = "BATTLE_EFFECT_JUDGEMENT"
     data["effect"]["chance"] = 0
@@ -638,6 +652,8 @@ def validate(
     move_data = json.loads(
         (root / "res/moves/multi_attack/data.json").read_text(encoding="utf-8")
     )
+    move_script = root / "res/moves/multi_attack/script.s"
+    move_anim = root / "res/moves/multi_attack/anim.s"
     copy = (root / "res/battle/scripts/subscripts/subscript_copy_ability.s").read_text(encoding="utf-8")
     swap = (root / "res/battle/scripts/subscripts/subscript_exchange_abilities.s").read_text(encoding="utf-8")
     suppress = (root / "res/battle/scripts/subscripts/subscript_suppress_target_ability.s").read_text(encoding="utf-8")
