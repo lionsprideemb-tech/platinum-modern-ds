@@ -50,11 +50,38 @@
         "Haunting Frenzy",
         "Puffy"
       ]
+    },
+    {
+      "batch": "R4",
+      "count": 20,
+      "script": "tools/install_mr10r4_missing_scalar_damage.py",
+      "abilities": [
+        "Battle Aura",
+        "Blind Rage",
+        "Contempt",
+        "Elemental Vortex",
+        "Guilt Trip",
+        "Impulse",
+        "Mind Crunch",
+        "Nika",
+        "Noise Cancel",
+        "Pattern Change",
+        "Petrify",
+        "Reservoir",
+        "Sand Guard",
+        "Stun Shock",
+        "Sugar Rush",
+        "Super Hot Goo",
+        "Tipping Point",
+        "VenoblazePincers",
+        "Watch Your Step",
+        "Catastrophe"
+      ]
     }
   ],
-  "explicit_runtime_restored_so_far": 24,
-  "explicit_runtime_remaining": 100,
-  "certification": "R3 native compile/ROM workflow added; shared certification blockers repaired. Do not mark runtime batches certified until Actions reports PASS.",
+  "explicit_runtime_restored_so_far": 44,
+  "explicit_runtime_remaining": 80,
+  "certification": "R4 native compile/ROM workflow added for the 20-ability historical fast pass. Do not mark R4 certified until Actions reports PASS.",
   "namespace": {
     "official_range": [
       0,
