@@ -1,0 +1,15 @@
+name: MR10D24D Generated Sprint
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr10d24d-generated-sprint
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check
+        run: python3 -m py_compile tools/install_mr10d24d_generated_sprint.py
