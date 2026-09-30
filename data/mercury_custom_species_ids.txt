@@ -1,0 +1,6 @@
+# Mercury Redux custom battle species/form ID registry
+# Canonical National Dex species remain stable at native IDs 1..1025.
+# Custom/form battle entries append after the canonical range; graphics are a later phase.
+1026 SPECIES_WISPYWASPY
+1027 SPECIES_WISPYWASPY_HIVEMIND
+1028 SPECIES_UNOWN_REVELATION
