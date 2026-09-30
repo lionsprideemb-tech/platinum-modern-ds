@@ -41,7 +41,13 @@ def patch(root):
 }
 
 """
- ins(ctl,"static BOOL Mercury_CustomMultiHitBaseAllowed",metadata)
+ # D11's helper is emitted with its return type on the previous line; anchor on
+ # the unique function signature rather than assuming "static BOOL" is adjacent.
+ anchor="""static BOOL Mercury_CustomMultiHitBaseAllowed(
+    BattleSystem *battleSys,
+    BattleContext *battleCtx)
+"""
+ ins(ctl,anchor,metadata)
  rep(ctl,
 """    case ABILITY_MR_DUAL_WIELD:
         return Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0;
