@@ -670,9 +670,19 @@ def patch_subdue(root: Path) -> None:
 
 def patch_moonlight(root: Path) -> None:
     path = root / "src/battle/battle_script.c"
-    signature = "static BOOL BtlCmd_WeatherHPRecovery("
+    text = path.read_text(encoding="utf-8")
+    marker = "== ABILITY_MOON_SPIRIT"
+    if marker in text:
+        return
+    signature = "static BOOL BtlCmd_WeatherHPRecovery(BattleSystem *battleSys, BattleContext *battleCtx)\n{"
+    start = text.find(signature)
+    if start < 0:
+        raise SystemExit("Moon Spirit: weather recovery definition missing")
     anchor = """    if (NO_WEATHER) {
 """
+    pos = text.find(anchor, start)
+    if pos < 0:
+        raise SystemExit("Moon Spirit: weather recovery anchor missing")
     insertion = """    if (battleCtx->moveCur == MOVE_MOONLIGHT
         && Battler_Ability(battleCtx, battleCtx->attacker)
             == ABILITY_MOON_SPIRIT) {
@@ -682,14 +692,8 @@ def patch_moonlight(root: Path) -> None:
     }
 
 """
-    insert_before_in_function(
-        path,
-        signature,
-        anchor,
-        insertion,
-        "== ABILITY_MOON_SPIRIT",
-        "Moon Spirit Moonlight recovery",
-    )
+    text = text[:pos] + insertion + text[pos:]
+    path.write_text(text, encoding="utf-8")
 
 
 def patch_corrosion_composites(root: Path) -> None:
