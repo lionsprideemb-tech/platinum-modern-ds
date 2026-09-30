@@ -81,7 +81,7 @@ def patch(root):
                 || battleCtx->mercuryCustomMultiHitTriggerAbility == ABILITY_MR_3_GT_1)
             && battleCtx->multiHitLoop) {
             int heads = battleCtx->mercuryMultiHeadedHeads[attacker];
-            int hit = battleCtx->multiHitNumHits - battleCtx->multiHitCounter + 1;
+            int hit = battleCtx->multiHitNumHits - battleCtx->multiHitCounter + 1; /* counter decrements before replay */
             if (heads == 2) {
                 movePower = movePower * 25 / 100;
             } else if (heads >= 3 && hit == 2) {
@@ -107,31 +107,27 @@ def patch(root):
 
     GF_ASSERT(battleCtx->powerMul >= 10);
 """)
- # Hubris uses the engine's standard stat-stage representation and direct move KO lane.
- # Insert in MoveEnd after damage has resolved but before flags clear.
- sig="static void BattleControllerPlayer_MoveEnd(BattleSystem *battleSys, BattleContext *battleCtx)"
- t=ctl.read_text();start=t.find(sig+"\n{")
- if start<0:raise SystemExit("MoveEnd missing")
- end=t.find("static ",start+len(sig)+2)
- block=t[start:end if end>0 else len(t)]
- marker="ABILITY_MR_HYDRA"
- if "Mercury D24K Hubris" not in block:
-  anchor="        BattleControllerPlayer_ClearFlags(battleSys, battleCtx);\n"
-  code="""        /* Mercury D24K Hubris: direct KO by Hydra holder. */
-        if (battleCtx->attacker != BATTLER_NONE
-            && battleCtx->defender != BATTLER_NONE
-            && Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_MR_HYDRA
-            && battleCtx->battleMons[battleCtx->attacker].curHP
-            && battleCtx->battleMons[battleCtx->defender].curHP == 0
-            && CURRENT_MOVE_DATA.class != CLASS_STATUS
-            && (battleCtx->moveStatusFlags & MOVE_STATUS_NO_EFFECTS) == FALSE
-            && battleCtx->battleMons[battleCtx->attacker].statBoosts[STAT_SPECIAL_ATTACK] < 12) {
-            battleCtx->battleMons[battleCtx->attacker].statBoosts[STAT_SPECIAL_ATTACK]++;
-        }
+ # Hubris is queued at the faint-resolution lane, not MoveEnd: MoveEnd runs after
+ # EXP/switch processing and can observe stale zero-HP defenders.
+ t=ctl.read_text()
+ sig="static void BattleControllerPlayer_LoopWhileFainted(BattleSystem *battleSys, BattleContext *battleCtx)"
+ start=t.find(sig+"\n{")
+ if start<0:raise SystemExit("LoopWhileFainted missing")
+ brace=t.find("{",start);pos=t.find("\n",brace)+1
+ code="""    /* Mercury D24K Hubris: once for a direct damaging-move KO, before faint processing. */
+    if (battleCtx->faintedMon != BATTLER_NONE
+        && battleCtx->attacker != BATTLER_NONE
+        && Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_MR_HYDRA
+        && battleCtx->battleMons[battleCtx->attacker].curHP
+        && CURRENT_MOVE_DATA.class != CLASS_STATUS
+        && (battleCtx->moveStatusFlags & MOVE_STATUS_NO_EFFECTS) == FALSE
+        && battleCtx->battleMons[battleCtx->attacker].statBoosts[BATTLE_STAT_SP_ATTACK] < MAX_STAT_STAGE) {
+        battleCtx->battleMons[battleCtx->attacker].statBoosts[BATTLE_STAT_SP_ATTACK]++;
+    }
 
 """
-  if block.count(anchor)!=1:raise SystemExit("MoveEnd clear anchor mismatch")
-  block=block.replace(anchor,code+anchor,1);ctl.write_text(t[:start]+block+t[start+len(block):] if False else t[:start]+block+t[end if end>0 else len(t):])
+ if "Mercury D24K Hubris: once for a direct damaging-move KO" not in t:
+  ctl.write_text(t[:pos]+code+t[pos:])
 
 def reg(p):
  x=[z.strip() for z in p.read_text().splitlines() if z.strip()]
@@ -152,7 +148,7 @@ def main():
   "two_head_25":"movePower = movePower * 25 / 100;" in lib,
   "three_head_20_15":"movePower = movePower * 20 / 100;" in lib and "movePower = movePower * 15 / 100;" in lib,
   "riptide_130_180":"movePower = movePower * 130 / 100;" in lib and "movePower = movePower * 180 / 100;" in lib,
-  "hubris_spa":"ABILITY_MR_HYDRA" in ctl and "STAT_SPECIAL_ATTACK" in ctl,
+  "hubris_spa":"Mercury D24K Hubris: once for a direct damaging-move KO" in ctl and "BATTLE_STAT_SP_ATTACK" in ctl,
   "registry":all(t in a.implemented_registry.read_text() for t in ABILITIES),
   "sprites_deferred":True,"mr07_untouched":True}
  status="PASS" if all(checks.values()) else "FAIL"
