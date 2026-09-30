@@ -160,11 +160,39 @@
         "Woodland Curse",
         "Cosmic Daze"
       ]
+    },
+    {
+      "batch": "R8",
+      "count": 21,
+      "script": "tools/install_mr10r8_final_historical_runtime.py",
+      "abilities": [
+        "Cryo Proficiency",
+        "Freezing Point",
+        "Neurotoxin",
+        "Piercing Solo",
+        "Purple Haze",
+        "Resonance",
+        "Sand Pit",
+        "Spike Armor",
+        "To The Bone",
+        "Wildfire",
+        "Set Ablaze",
+        "Grass Flute",
+        "Loose Thorns",
+        "Mental Pollution",
+        "Madness Enh.",
+        "Deviate",
+        "Mob Boss",
+        "Cosmic Dust",
+        "Curse of Famine",
+        "Angel's Wrath",
+        "Archmage"
+      ]
     }
   ],
-  "explicit_runtime_restored_so_far": 104,
-  "explicit_runtime_remaining": 21,
-  "certification": "R7 native compile/ROM workflow added. 104 runtime identities are assigned across R1-R7, with Pretty Privilege outside the 124-row historical queue; therefore 103/124 historical-missing identities are assigned and 21 remain. R6/R7 certification still requires Actions PASS.",
+  "explicit_runtime_restored_so_far": 125,
+  "explicit_runtime_remaining": 0,
+  "certification": "All 124 reconciled historical-missing identities are now assigned to explicit runtime passes R1-R8; Pretty Privilege is an additional restored identity outside that 124-row queue, giving 125 explicit runtime identities tracked. Final cumulative R8 native compile/ROM certification is pending Actions PASS.",
   "namespace": {
     "official_range": [
       0,
@@ -177,5 +205,5 @@
     "next_free_id": 1067,
     "persistence_bits": 16
   },
-  "historical_missing_runtime_restored": 103
+  "historical_missing_runtime_restored": 124
 }
