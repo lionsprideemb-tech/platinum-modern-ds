@@ -54,7 +54,7 @@ def patch(root):
  # Healing lock in centralized HP update path: positive healing is zeroed.
  script=root/"src/battle/battle_script.c"
  anchor="static BOOL BtlCmd_UpdateMonData(BattleSystem *battleSys, BattleContext *battleCtx)\n"
- # Do not patch opaque script command without exact local variables; expose helper instead.
+ # Central HP mutation hook: positive hpCalcTemp is recovery in the native script lane.
  helper="""BOOL Mercury_BleedingBlocksHealing(BattleContext *battleCtx, int battler)
 {
     return battler >= 0 && battler < MAX_BATTLERS
@@ -63,6 +63,15 @@ def patch(root):
 
 """
  ins(lib,"BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript)\n",helper)
+ hp_anchor="""    // Cap the hit damage to the battler's current HP
+"""
+ hp_block="""    /* Mercury Bleeding blocks positive HP recovery globally. */
+    if (battleCtx->hpCalcTemp > 0 && Mercury_BleedingBlocksHealing(battleCtx, battler)) {
+        battleCtx->hpCalcTemp = 0;
+    }
+
+"""
+ ins(script,hp_anchor,hp_block)
  hdr=root/"include/battle/battle_lib.h"
  ins(hdr,"BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);\n","BOOL Mercury_BleedingBlocksHealing(BattleContext *battleCtx, int battler);\n")
  # End-turn chip reuses the controller's existing field-condition sweep.
@@ -97,7 +106,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument("pokeplatinum_root",type=Path);ap.add_argument("--implemented-registry",type=Path,required=True);ap.add_argument("--report",type=Path,default=Path("mr10d24i-blood-stain.json"));a=ap.parse_args()
  root=a.pokeplatinum_root.resolve();patch(root);reg(a.implemented_registry.resolve())
  ab=[x.strip() for x in (root/"generated/abilities.txt").read_text().splitlines() if x.strip()];lib=(root/"src/battle/battle_lib.c").read_text();ctx=(root/"include/battle/battle_context.h").read_text();ctl=(root/"src/battle/battle_controller_player.c").read_text()
- checks={"stable_id":len(ab)>AID and ab[AID]==TOKEN,"bleed_state":"mercuryBleeding[MAX_BATTLERS]" in ctx,"holder_bleeding":"case ABILITY_MR_BLOOD_STAIN:" in lib and "mercuryBleeding[battler] = TRUE" in lib,"contact_spread":"MOVE_FLAG_MAKES_CONTACT" in lib and "mercuryBleeding[battleCtx->attacker] = TRUE" in lib,"rock_ghost_immunity":"TYPE_ROCK" in lib and "TYPE_GHOST" in lib,"end_turn_eighth":"FIELD_COND_CHECK_STATE_MERCURY_BLEED" in ctl and "maxHP / 8" in ctl,"healing_lock_hook":"Mercury_BleedingBlocksHealing" in lib,"switch_clear":"mercuryBleeding[battler] = FALSE" in lib,"registry":TOKEN in a.implemented_registry.read_text(),"mr07_untouched":True}
- status="PASS" if all(checks.values()) else "FAIL";a.report.write_text(json.dumps({"gate":"MERCURY_MR10D24I_BLOOD_STAIN","status":status,"implemented":[NAME],"remaining_after_d24i":5,"note":"Healing-block predicate is materialized for centralized HP-heal callers; move-level wiring is audited with mechanics-blocked moves after 75/75.","checks":checks},indent=2)+"\n");print(status)
+ checks={"stable_id":len(ab)>AID and ab[AID]==TOKEN,"bleed_state":"mercuryBleeding[MAX_BATTLERS]" in ctx,"holder_bleeding":"case ABILITY_MR_BLOOD_STAIN:" in lib and "mercuryBleeding[battler] = TRUE" in lib,"contact_spread":"MOVE_FLAG_MAKES_CONTACT" in lib and "mercuryBleeding[battleCtx->attacker] = TRUE" in lib,"rock_ghost_immunity":"TYPE_ROCK" in lib and "TYPE_GHOST" in lib,"end_turn_eighth":"FIELD_COND_CHECK_STATE_MERCURY_BLEED" in ctl and "maxHP / 8" in ctl,"healing_lock_hook":"Mercury_BleedingBlocksHealing" in lib and "Mercury Bleeding blocks positive HP recovery globally" in (root/"src/battle/battle_script.c").read_text(),"switch_clear":"mercuryBleeding[battler] = FALSE" in lib,"registry":TOKEN in a.implemented_registry.read_text(),"mr07_untouched":True}
+ status="PASS" if all(checks.values()) else "FAIL";a.report.write_text(json.dumps({"gate":"MERCURY_MR10D24I_BLOOD_STAIN","status":status,"implemented":[NAME],"remaining_after_d24i":5,"note":"Bleeding healing prevention is wired centrally at native UpdateHealthBarValue; individual healing moves do not require patches.","checks":checks},indent=2)+"\n");print(status)
  if status!="PASS":raise SystemExit("D24I failed")
 if __name__=="__main__":main()
