@@ -118,7 +118,6 @@ def patch_context(root: Path) -> None:
     insert_after_once(
         path,
         """    u8 mercuryDynamicAddedType[MAX_BATTLERS];
-
 """,
         """    // Mercury MR10D24C: the battle turn on which Color Change
     // actually transformed each active battler. -1 means unused.
