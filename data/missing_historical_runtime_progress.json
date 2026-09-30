@@ -8,7 +8,7 @@
   "runtime_batches": [
     {
       "batch": "R1",
-      "count": 10,
+      "count": 11,
       "script": "tools/install_mr10r1_missing_scalar_priority.py",
       "abilities": [
         "Chrome Coat",
@@ -16,6 +16,7 @@
         "Early Grave",
         "Fighter",
         "Fire Scales",
+        "Flame Shield",
         "Gladiator",
         "Higher Rank",
         "Purgatory",
@@ -36,11 +37,24 @@
         "Smokey Maneuvers",
         "Thermal Slide"
       ]
+    },
+    {
+      "batch": "R3",
+      "count": 6,
+      "script": "tools/install_mr10r3_missing_reaction_priority.py",
+      "abilities": [
+        "Pretty Privilege",
+        "Crushing Jaw",
+        "Envenom",
+        "Fragrant Daze",
+        "Haunting Frenzy",
+        "Puffy"
+      ]
     }
   ],
-  "explicit_runtime_restored_so_far": 17,
-  "explicit_runtime_remaining": 107,
-  "certification": "R2 native compile/ROM workflow added; do not mark runtime batches certified until Actions reports PASS.",
+  "explicit_runtime_restored_so_far": 24,
+  "explicit_runtime_remaining": 100,
+  "certification": "R3 native compile/ROM workflow added; shared certification blockers repaired. Do not mark runtime batches certified until Actions reports PASS.",
   "namespace": {
     "official_range": [
       0,
