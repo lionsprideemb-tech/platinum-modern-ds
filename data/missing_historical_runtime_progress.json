@@ -110,7 +110,7 @@
     {
       "batch": "R6",
       "count": 20,
-      "script": "tools/install_mr10r6_historical_fast_pass.py",
+      "script": "tools/install_mr10r6_missing_shared_fastpass.py",
       "abilities": [
         "Emanate",
         "Fertilize",
@@ -132,13 +132,12 @@
         "Venom Crown",
         "Twinkle Toes",
         "Old Mariner"
-      ],
-      "historical_missing_count": 20
+      ]
     }
   ],
   "explicit_runtime_restored_so_far": 84,
   "explicit_runtime_remaining": 41,
-  "certification": "R6 native compile/ROM workflow is active. R3 also restored Pretty Privilege outside the 124-row historical queue, so 84 runtime identities are implemented across R1-R6 while 83 count against the historical-missing queue; 41 historical identities remain.",
+  "certification": "R6 workflow now executes the actual 20-row historical-missing fast pass. 84 runtime identities are implemented across R1-R6, with Pretty Privilege outside the 124-row queue; therefore 83/124 historical-missing identities are restored and 41 remain. Certification remains gated on Actions PASS.",
   "namespace": {
     "official_range": [
       0,
