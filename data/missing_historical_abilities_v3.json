@@ -1,0 +1,1802 @@
+{
+  "gate": "MERCURY_MISSING_HISTORICAL_ABILITIES_V3",
+  "date": "2026-09-30",
+  "status": "RESTORE_AUDIT_REQUIRED",
+  "historical_source_range": [
+    319,
+    1042
+  ],
+  "historical_rows": 724,
+  "represented_historical_rows": 600,
+  "absent_from_current_ds_partition": 124,
+  "policy": "These rows are identities absent from the current DS partition after exact-name/token, approved-redesign, known-rename, spelling-correction, and two known duplicate-name disambiguations. They are restoration candidates, not automatically deleted or automatically implemented.",
+  "exclusions_already_reconciled": [
+    "Ape Shift -> Overexertion",
+    "Color Spectrum -> Grand Choreography",
+    "Inversion -> Unyielding",
+    "Minion Control -> Pack Tactics",
+    "Surprise! -> First Strike",
+    "Tag -> Bloodhound",
+    "Prismatic Fur -> Prismatic Pelt",
+    "Reaper's Embarce -> Reaper's Embrace",
+    "Foamy Web -> Fresh Start (owner-approved redesign)"
+  ],
+  "missing": [
+    {
+      "historical_id": 349,
+      "token": "ABILITY_BALLOON_BLITZ",
+      "display_name": "Balloon Blitz",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 6,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_ai_util.c",
+        "src/battle_move_resolution.c",
+        "src/battle_script_commands.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 353,
+      "token": "ABILITY_BATTLE_AURA",
+      "display_name": "Battle Aura",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 358,
+      "token": "ABILITY_BLIND_RAGE",
+      "display_name": "Blind Rage",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_stat_change.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 362,
+      "token": "ABILITY_BLOOD_PRICE",
+      "display_name": "Blood Price",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 364,
+      "token": "ABILITY_BLOOD_STIGMA",
+      "display_name": "Blood Stigma",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 365,
+      "token": "ABILITY_BRAWLING_WYVERN",
+      "display_name": "Brawling Wyvern",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 371,
+      "token": "ABILITY_CHROME_COAT",
+      "display_name": "Chrome Coat",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 372,
+      "token": "ABILITY_CHUNKY_BASS_LINE",
+      "display_name": "Chunky Bass Line",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 378,
+      "token": "ABILITY_CONTEMPT",
+      "display_name": "Contempt",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 5,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_script_commands.c",
+        "src/battle_stat_change.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 379,
+      "token": "ABILITY_CRUSHING_JAW",
+      "display_name": "Crushing Jaw",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 380,
+      "token": "ABILITY_CRYO_PROFICIENCY",
+      "display_name": "Cryo Proficiency",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_end_turn.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 385,
+      "token": "ABILITY_DEAD_POWER",
+      "display_name": "Dead Power",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 387,
+      "token": "ABILITY_DEPRAVITY",
+      "display_name": "Depravity",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 391,
+      "token": "ABILITY_DOUBLE_IRON_BARBS",
+      "display_name": "Sharp Edges",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 395,
+      "token": "ABILITY_DRAKE_OF_RAGE",
+      "display_name": "Drake Of Rage",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 400,
+      "token": "ABILITY_EARLY_GRAVE",
+      "display_name": "Early Grave",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 402,
+      "token": "ABILITY_ECTOPLASM",
+      "display_name": "Ectoplasm",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 406,
+      "token": "ABILITY_ELEMENTAL_VORTEX",
+      "display_name": "Elemental Vortex",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 407,
+      "token": "ABILITY_EMANATE",
+      "display_name": "Emanate",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 408,
+      "token": "ABILITY_ENERGY_SIPHON",
+      "display_name": "Energy Siphon",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 410,
+      "token": "ABILITY_ENVENOM",
+      "display_name": "Envenom",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 413,
+      "token": "ABILITY_ETHEREAL_RUSH",
+      "display_name": "Ethereal Rush",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 419,
+      "token": "ABILITY_FERTILIZE",
+      "display_name": "Fertilize",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 420,
+      "token": "ABILITY_FIGHTER",
+      "display_name": "Fighter",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 421,
+      "token": "ABILITY_FIRE_SCALES",
+      "display_name": "Fire Scales",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 422,
+      "token": "ABILITY_FLAME_BUBBLE",
+      "display_name": "Flame Bubble",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 423,
+      "token": "ABILITY_FLAME_SHIELD",
+      "display_name": "Flame Shield",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 424,
+      "token": "ABILITY_FLAMING_MAW",
+      "display_name": "Flaming Maw",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 429,
+      "token": "ABILITY_FRAGRANT_DAZE",
+      "display_name": "Fragrant Daze",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 430,
+      "token": "ABILITY_FREEZING_POINT",
+      "display_name": "Freezing Point",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 432,
+      "token": "ABILITY_FROST_BURN",
+      "display_name": "Frost Burn",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 433,
+      "token": "ABILITY_FUNERAL_PYRE",
+      "display_name": "Funeral Pyre",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_end_turn.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 439,
+      "token": "ABILITY_GLADIATOR",
+      "display_name": "Gladiator",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 444,
+      "token": "ABILITY_GUILT_TRIP",
+      "display_name": "Guilt Trip",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 447,
+      "token": "ABILITY_HAUNTING_FRENZY",
+      "display_name": "Haunting Frenzy",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 448,
+      "token": "ABILITY_HEADSTRONG",
+      "display_name": "Headstrong",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 450,
+      "token": "ABILITY_HIGHER_RANK",
+      "display_name": "Higher Rank",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 453,
+      "token": "ABILITY_HUBRIS",
+      "display_name": "Hubris",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 460,
+      "token": "ABILITY_ICE_DOWNFALL",
+      "display_name": "Ice Downfall",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 464,
+      "token": "ABILITY_IMPULSE",
+      "display_name": "Impulse",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 475,
+      "token": "ABILITY_LAST_STAND",
+      "display_name": "Last Stand",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 483,
+      "token": "ABILITY_LOW_VISIBILITY",
+      "display_name": "Low Visibility",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 489,
+      "token": "ABILITY_MALICIOUS",
+      "display_name": "Malicious",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 494,
+      "token": "ABILITY_METALLIC_JAWS",
+      "display_name": "Metallic Jaws",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 6,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_ai_util.c",
+        "src/battle_move_resolution.c",
+        "src/battle_script_commands.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 496,
+      "token": "ABILITY_MIND_CRUSH",
+      "display_name": "Mind Crunch",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 499,
+      "token": "ABILITY_MOLTEN_BLADES",
+      "display_name": "Molten Blades",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 502,
+      "token": "ABILITY_MONSTER_MASH",
+      "display_name": "Monster Mash",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 503,
+      "token": "ABILITY_MOON_SPIRIT",
+      "display_name": "Moon Spirit",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_script_commands.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 504,
+      "token": "ABILITY_MOSH_PIT",
+      "display_name": "Mosh Pit",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 508,
+      "token": "ABILITY_MYTHICAL_ARROWS",
+      "display_name": "Mythical Arrows",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 509,
+      "token": "ABILITY_NEUROTOXIN",
+      "display_name": "Neurotoxin",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_script_commands.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 510,
+      "token": "ABILITY_NIKA",
+      "display_name": "Nika",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 511,
+      "token": "ABILITY_NOISE_CANCEL",
+      "display_name": "Noise Cancel",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 512,
+      "token": "ABILITY_OLD_MARINER",
+      "display_name": "Old Mariner",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 515,
+      "token": "ABILITY_OVERWATCH",
+      "display_name": "Overwatch",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 519,
+      "token": "ABILITY_PATTERN_CHANGE",
+      "display_name": "Pattern Change",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 5,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_end_turn.c",
+        "src/battle_script_commands.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 522,
+      "token": "ABILITY_PERMANENCE",
+      "display_name": "Permanence",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 523,
+      "token": "ABILITY_PETRIFY",
+      "display_name": "Petrify",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 525,
+      "token": "ABILITY_PHANTOM_PAIN",
+      "display_name": "Phantom Pain",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 526,
+      "token": "ABILITY_PIERCING_SOLO",
+      "display_name": "Piercing Solo",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 529,
+      "token": "ABILITY_POWER_METAL",
+      "display_name": "Power Metal",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 530,
+      "token": "ABILITY_PRETENTIOUS",
+      "display_name": "Pretentious",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 535,
+      "token": "ABILITY_PUFFY",
+      "display_name": "Puffy",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 536,
+      "token": "ABILITY_PURGATORY",
+      "display_name": "Purgatory",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 537,
+      "token": "ABILITY_PURPLE_HAZE",
+      "display_name": "Purple Haze",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 538,
+      "token": "ABILITY_PYROCLASTIC_FLOW",
+      "display_name": "Pyroclastic Flow",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 543,
+      "token": "ABILITY_RADIO_JAM",
+      "display_name": "Radio Jam",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 544,
+      "token": "ABILITY_RAGE_POINT",
+      "display_name": "Rage Point",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 546,
+      "token": "ABILITY_RAGING_GODDESS",
+      "display_name": "Raging Goddess",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 6,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_ai_util.c",
+        "src/battle_move_resolution.c",
+        "src/battle_script_commands.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 547,
+      "token": "ABILITY_RAGING_STORM",
+      "display_name": "Raging Storm",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 550,
+      "token": "ABILITY_RESERVOIR",
+      "display_name": "Reservoir",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_move_resolution.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 551,
+      "token": "ABILITY_RESONANCE",
+      "display_name": "Resonance",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 553,
+      "token": "ABILITY_RETRIEVER",
+      "display_name": "Retriever",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_script_commands.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 554,
+      "token": "ABILITY_REVERBATE",
+      "display_name": "Reverberate",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 560,
+      "token": "ABILITY_SAND_GUARD",
+      "display_name": "Sand Guard",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_move_resolution.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 561,
+      "token": "ABILITY_SAND_PIT",
+      "display_name": "Sand Pit",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 565,
+      "token": "ABILITY_SEPIA_LENS",
+      "display_name": "Sepia Lens",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 5,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_end_turn.c",
+        "src/battle_move_resolution.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 566,
+      "token": "ABILITY_SHINY_LIGHTNING",
+      "display_name": "Shiny Lightning",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 569,
+      "token": "ABILITY_SLUDGY_MIX",
+      "display_name": "Sludgy Mix",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 570,
+      "token": "ABILITY_SMOKEY_MANEUVERS",
+      "display_name": "Smokey Maneuvers",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 571,
+      "token": "ABILITY_SMOLDERING_WOOD",
+      "display_name": "Smoldering Wood",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 572,
+      "token": "ABILITY_SNOWY_WRATH",
+      "display_name": "Snowy Wrath",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 573,
+      "token": "ABILITY_SNOW_SONG",
+      "display_name": "Snow Song",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 580,
+      "token": "ABILITY_SPIKE_ARMOR",
+      "display_name": "Spike Armor",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 584,
+      "token": "ABILITY_STEEL_BEETLE",
+      "display_name": "Steel Beetle",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 7,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_ai_util.c",
+        "src/battle_main.c",
+        "src/battle_move_resolution.c",
+        "src/battle_script_commands.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 585,
+      "token": "ABILITY_STRIKER_PIXILATE",
+      "display_name": "Twinkle Toes",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 586,
+      "token": "ABILITY_STUN_SHOCK",
+      "display_name": "Stun Shock",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 587,
+      "token": "ABILITY_SUBDUE",
+      "display_name": "Subdue",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_stat_change.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 588,
+      "token": "ABILITY_SUGAR_RUSH",
+      "display_name": "Sugar Rush",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 5,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_ai_util.c",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 589,
+      "token": "ABILITY_SUPER_HOT_GOO",
+      "display_name": "Super Hot Goo",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 590,
+      "token": "ABILITY_SUPER_SLAMMER",
+      "display_name": "Super Slammer",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 594,
+      "token": "ABILITY_TAR_TOSS",
+      "display_name": "Tar Toss",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 596,
+      "token": "ABILITY_TERMINAL_VELOCITY",
+      "display_name": "TerminalVelocity",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 598,
+      "token": "ABILITY_THERMAL_SLIDE",
+      "display_name": "Thermal Slide",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_end_turn.c",
+        "src/battle_main.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 599,
+      "token": "ABILITY_THERMOMANCY",
+      "display_name": "Thermomancy",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 601,
+      "token": "ABILITY_TIPPING_POINT",
+      "display_name": "Tipping Point",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 603,
+      "token": "ABILITY_TO_THE_BONE",
+      "display_name": "To The Bone",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 604,
+      "token": "ABILITY_TRASH_HEAP",
+      "display_name": "Trash Heap",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 605,
+      "token": "ABILITY_TRICKSTER",
+      "display_name": "Trickster",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 606,
+      "token": "ABILITY_TWO_STEP",
+      "display_name": "Two Step",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 608,
+      "token": "ABILITY_VENGEFUL_SPIRIT",
+      "display_name": "Vengeful Spirit",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 609,
+      "token": "ABILITY_VENOBLAZE_PINCERS",
+      "display_name": "VenoblazePincers",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 610,
+      "token": "ABILITY_VENOM_CROWN",
+      "display_name": "Venom Crown",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 612,
+      "token": "ABILITY_VITALITY_STRIKE",
+      "display_name": "Vitality Strike",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 615,
+      "token": "ABILITY_WATCH_YOUR_STEP",
+      "display_name": "Watch Your Step",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 616,
+      "token": "ABILITY_WATER_GALE_WINGS",
+      "display_name": "Tidal Rush",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 618,
+      "token": "ABILITY_WEATHER_DOUBLE_BOOST",
+      "display_name": "Catastrophe",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 619,
+      "token": "ABILITY_WEB_SPINNER",
+      "display_name": "Web Spinner",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 622,
+      "token": "ABILITY_WHITE_NOISE",
+      "display_name": "White Noise",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 623,
+      "token": "ABILITY_WILDFIRE",
+      "display_name": "Wildfire",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 624,
+      "token": "ABILITY_WIND_RAGE",
+      "display_name": "Wind Rage",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 625,
+      "token": "ABILITY_WOODLAND_CURSE",
+      "display_name": "Woodland Curse",
+      "description": "Elite Redux supporting ability.",
+      "ai_rating": 5,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1007,
+      "token": "ABILITY_SET_ABLAZE",
+      "display_name": "Set Ablaze",
+      "description": "Inflicting burn also inflicts Fear.",
+      "ai_rating": 7,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_script_commands.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1008,
+      "token": "ABILITY_GRASS_FLUTE",
+      "display_name": "Grass Flute",
+      "description": "Sound moves inflict Fear on hit.",
+      "ai_rating": 7,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1010,
+      "token": "ABILITY_LOOSE_THORNS",
+      "display_name": "Loose Thorns",
+      "description": "Sets Creeping Thorns when hit by contact.",
+      "ai_rating": 6,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1013,
+      "token": "ABILITY_MENTAL_POLLUTION",
+      "display_name": "Mental Pollution",
+      "description": "On becoming enraged, suppresses other battlers' abilities.",
+      "ai_rating": 7,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1014,
+      "token": "ABILITY_MADNESS_ENHANCEMENT",
+      "display_name": "Madness Enh.",
+      "description": "Enrages in fog; takes half damage while enraged.",
+      "ai_rating": 8,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1017,
+      "token": "ABILITY_COSMIC_DAZE",
+      "display_name": "Cosmic Daze",
+      "description": "Deals double damage to confused or Enraged foes.",
+      "ai_rating": 8,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_move_resolution.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1018,
+      "token": "ABILITY_DEVIATE",
+      "display_name": "Deviate",
+      "description": "Normal moves become Dark; Dark moves gain STAB or can Enrage.",
+      "ai_rating": 8,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1019,
+      "token": "ABILITY_MOB_BOSS",
+      "display_name": "Mob Boss",
+      "description": "Terrify + Deviate.",
+      "ai_rating": 9,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1020,
+      "token": "ABILITY_COSMIC_DUST",
+      "display_name": "Cosmic Dust",
+      "description": "Magic Guard + Cosmic Daze.",
+      "ai_rating": 9,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1029,
+      "token": "ABILITY_CURSE_OF_FAMINE",
+      "display_name": "Curse of Famine",
+      "description": "Consumes terrain on entry, heals 1/4 HP and raises a defense.",
+      "ai_rating": 8,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1030,
+      "token": "ABILITY_ANGELS_WRATH",
+      "display_name": "Angel's Wrath",
+      "description": "Drastically alters the user's basic moves.",
+      "ai_rating": 10,
+      "runtime_reference_count": 3,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    },
+    {
+      "historical_id": 1031,
+      "token": "ABILITY_ARCHMAGE",
+      "display_name": "Archmage",
+      "description": "Damaging moves have a 30% type-based bonus effect.",
+      "ai_rating": 10,
+      "runtime_reference_count": 4,
+      "runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h",
+        "src/e10_randomizer.c"
+      ],
+      "policy": "Available roster-wide when it reinforces a real battle identity."
+    }
+  ]
+}
