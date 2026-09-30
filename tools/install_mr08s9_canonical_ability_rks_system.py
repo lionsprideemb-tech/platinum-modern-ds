@@ -362,7 +362,47 @@ static BOOL Mercury_IsSilvallyMemoryLocked(
 def patch_multi_attack(root: Path, move_registry: Path | None) -> None:
     move_data = root / "res/moves/multi_attack/data.json"
     if not move_data.is_file():
-        raise SystemExit("RKS System: modern Multi-Attack data is missing")
+        # A clean pokeplatinum checkout has no post-Gen-IV Multi-Attack data.
+        # Seed the modern move in the same JSON schema as the native move
+        # resources so the canonical Ability stack can rebuild from scratch.
+        move_data.parent.mkdir(parents=True, exist_ok=True)
+        move_data.write_text(
+            json.dumps(
+                {
+                    "name": "Multi-Attack",
+                    "description": [
+                        "The user cloaks itself in\\n",
+                        "high energy and attacks.\\n",
+                        "The move's type matches\\n",
+                        "the Memory it is holding.",
+                    ],
+                    "class": "CLASS_PHYSICAL",
+                    "type": "TYPE_NORMAL",
+                    "power": 120,
+                    "accuracy": 100,
+                    "pp": 10,
+                    "effect": {
+                        "type": "BATTLE_EFFECT_JUDGEMENT",
+                        "chance": 0,
+                    },
+                    "range": "RANGE_SINGLE_TARGET",
+                    "priority": 0,
+                    "flags": [
+                        "MOVE_FLAG_CAN_PROTECT",
+                        "MOVE_FLAG_CAN_MIRROR_MOVE",
+                        "MOVE_FLAG_TRIGGERS_KINGS_ROCK",
+                    ],
+                    "contest": {
+                        "effect": "CONTEST_EFFECT_RANDOM_ORDER",
+                        "type": "CONTEST_TYPE_COOL",
+                    },
+                },
+                indent=4,
+                ensure_ascii=False,
+            )
+            + "\\n",
+            encoding="utf-8",
+        )
 
     data = json.loads(move_data.read_text(encoding="utf-8"))
     data["effect"]["type"] = "BATTLE_EFFECT_JUDGEMENT"
