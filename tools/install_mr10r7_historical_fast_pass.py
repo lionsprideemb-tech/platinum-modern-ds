@@ -827,7 +827,7 @@ def patch_damage(root: Path) -> None:
     insert_before_in_function(
         path,
         "int BattleSystem_CalcMoveDamage(",
-        "    if ((battleType & BATTLE_TYPE_DOUBLES)\n",
+        "    return damage;\n",
         insertion,
         "mercuryR7Tarred[defender]",
         "Tar Toss fire weakness",
