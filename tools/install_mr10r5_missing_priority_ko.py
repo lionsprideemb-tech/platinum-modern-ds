@@ -596,9 +596,11 @@ def patch_permanence(root: Path) -> None:
         "Permanence declaration",
     )
 
-    block = """    if (battleCtx->hpCalcTemp > 0
+    block = """    int mercuryPermanenceBattler =
+        BattleScript_Battler(battleSys, battleCtx, inBattler);
+    if (battleCtx->hpCalcTemp > 0
         && Mercury_PermanenceBlocksHealing(
-            battleSys, battleCtx, battler)) {
+            battleSys, battleCtx, mercuryPermanenceBattler)) {
         battleCtx->hpCalcTemp = 0;
     }
 
@@ -620,13 +622,13 @@ def patch_permanence(root: Path) -> None:
                 end = i + 1
                 break
     body = text[start:end]
-    if "Mercury_PermanenceBlocksHealing(" not in body:
-        assign = body.find("BattleScript_Battler(battleSys, battleCtx, inBattler)")
-        if assign < 0:
-            raise SystemExit("Permanence: battler resolution missing")
-        semi = body.find(";", assign)
+    if "mercuryPermanenceBattler" not in body:
+        readpos = body.find("BattleScript_Read(battleCtx)")
+        if readpos < 0:
+            raise SystemExit("Permanence: battler input read missing")
+        semi = body.find(";", readpos)
         if semi < 0:
-            raise SystemExit("Permanence: battler resolution terminator missing")
+            raise SystemExit("Permanence: battler input terminator missing")
         pos = semi + 1
         body = body[:pos] + "\n" + block + body[pos:]
         script.write_text(text[:start] + body + text[end:], encoding="utf-8")
