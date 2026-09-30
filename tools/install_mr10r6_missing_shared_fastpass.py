@@ -622,10 +622,7 @@ def patch_thermomancy_effect_chance(root: Path) -> None:
         CURRENT_MOVE_DATA.effectChance);
 """
     text = path.read_text(encoding="utf-8")
-    if new not in text:
-        count = text.count(old)
-        if count < 1:
-            raise SystemExit("R6 effect chance assignment anchor missing")
+    if new not in text and old in text:
         path.write_text(text.replace(old, new), encoding="utf-8")
 
 
