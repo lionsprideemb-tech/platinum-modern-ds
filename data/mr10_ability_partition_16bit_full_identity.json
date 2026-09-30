@@ -4035,6 +4035,28 @@
       "historical_id": 381
     },
     {
+      "id": 382,
+      "token": "ABILITY_CUTE_ANTECEDENCE",
+      "source_name": "Pretty Privilege",
+      "display_name": "Pretty Privilege",
+      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "source_kind": "historical_mercury_recovery",
+      "runtime_kind": "custom_id",
+      "mechanic_family": "restore_pending_exact_semantics",
+      "review_blocked": true,
+      "runtime_enabled": false,
+      "approval_state": "historical_identity_restored_semantics_pending",
+      "historical_id": 382,
+      "legacy_runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_main.c",
+        "src/data/abilities.h"
+      ],
+      "legacy_runtime_reference_count": 3,
+      "legacy_ai_rating": 5,
+      "id_reconciliation_reason": "distinct historical identity restored; same display name is not treated as alias"
+    },
+    {
       "source_name": "Stygian Rush",
       "runtime_kind": "custom_id",
       "id": 383,
@@ -7052,6 +7074,28 @@
       "legacy_ds_id": 875,
       "id_reconciliation_reason": "historical_identity_preserved",
       "historical_id": 557
+    },
+    {
+      "id": 558,
+      "token": "ABILITY_ROUSED_FANGS",
+      "source_name": "Megabite",
+      "display_name": "Megabite",
+      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "source_kind": "historical_mercury_recovery",
+      "runtime_kind": "custom_id",
+      "mechanic_family": "restore_pending_exact_semantics",
+      "review_blocked": true,
+      "runtime_enabled": false,
+      "approval_state": "historical_identity_restored_semantics_pending",
+      "historical_id": 558,
+      "legacy_runtime_files": [
+        "include/constants/abilities.h",
+        "src/battle_util.c",
+        "src/data/abilities.h"
+      ],
+      "legacy_runtime_reference_count": 3,
+      "legacy_ai_rating": 5,
+      "id_reconciliation_reason": "distinct historical identity restored; same display name is not treated as alias"
     },
     {
       "source_name": "Sand Bender",
@@ -14847,9 +14891,33 @@
   ],
   "next_free_id": 1067,
   "identity_restoration": {
-    "restored_missing_rows": 124,
+    "restored_missing_rows": 126,
     "restored_with_concrete_semantics": 12,
-    "restored_semantics_pending": 112,
-    "historical_missing_identity_count_after_restore": 0
+    "restored_semantics_pending": 114,
+    "historical_missing_identity_count_after_restore": 0,
+    "duplicate_display_names_preserved_as_distinct_identities": [
+      {
+        "ids": [
+          382,
+          893
+        ],
+        "display_name": "Pretty Privilege",
+        "tokens": [
+          "ABILITY_CUTE_ANTECEDENCE",
+          "ABILITY_PRETTY_PRIVILEGE"
+        ]
+      },
+      {
+        "ids": [
+          558,
+          895
+        ],
+        "display_name": "Megabite",
+        "tokens": [
+          "ABILITY_ROUSED_FANGS",
+          "ABILITY_MEGABITE"
+        ]
+      }
+    ]
   }
 }
