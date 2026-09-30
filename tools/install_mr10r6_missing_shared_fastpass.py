@@ -185,13 +185,13 @@ static BOOL Mercury_R6MoveIsHornOrDrill(int move)
     }
 }
 
-static BOOL Mercury_R6MoveIsSoundForAbility(int ability, int move)
+static BOOL Mercury_R6MoveIsSoundForAbility(BattleContext *battleCtx, int ability, int move)
 {
     return Mercury_MoveIsSound(move)
         || (ability == ABILITY_REVERBATE && MOVE_DATA(move).type == TYPE_NORMAL);
 }
 
-static int Mercury_R6ConvertedMoveType(int ability, int move, int baseType)
+static int Mercury_R6ConvertedMoveType(BattleContext *battleCtx, int ability, int move, int baseType)
 {
     if (move == MOVE_STRUGGLE) {
         return baseType;
@@ -211,11 +211,11 @@ static int Mercury_R6ConvertedMoveType(int ability, int move, int baseType)
             return TYPE_POISON;
         }
         if (ability == ABILITY_POWER_METAL
-            && Mercury_R6MoveIsSoundForAbility(ability, move)) {
+            && Mercury_R6MoveIsSoundForAbility(battleCtx, ability, move)) {
             return TYPE_STEEL;
         }
         if (ability == ABILITY_SNOW_SONG
-            && Mercury_R6MoveIsSoundForAbility(ability, move)) {
+            && Mercury_R6MoveIsSoundForAbility(battleCtx, ability, move)) {
             return TYPE_ICE;
         }
     }
@@ -240,7 +240,7 @@ def patch_type_paths(root: Path) -> None:
         """    GF_ASSERT(battleCtx->powerMul >= 10);
 """,
         """    moveType = Mercury_R6ConvertedMoveType(
-        attackerParams.ability, move, moveType);
+        battleCtx, attackerParams.ability, move, moveType);
 
 """,
         "Mercury_R6ConvertedMoveType(attackerParams.ability",
@@ -254,7 +254,7 @@ def patch_type_paths(root: Path) -> None:
         && defenderAbility == ABILITY_LEVITATE
 """,
         """    moveType = Mercury_R6ConvertedMoveType(
-        attackerAbility, move, moveType);
+        battleCtx, attackerAbility, move, moveType);
 
 """,
         "Mercury_R6ConvertedMoveType(attackerAbility",
@@ -267,7 +267,7 @@ def patch_type_paths(root: Path) -> None:
         """    if (Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_VOLT_ABSORB) == TRUE
 """,
         """    moveType = Mercury_R6ConvertedMoveType(
-        Battler_Ability(battleCtx, attacker),
+        battleCtx, Battler_Ability(battleCtx, attacker),
         battleCtx->moveCur,
         moveType);
 
@@ -296,12 +296,12 @@ def patch_damage_and_move_families(root: Path) -> None:
     }
 
     if (attackerParams.ability == ABILITY_POWER_METAL
-        && Mercury_R6MoveIsSoundForAbility(attackerParams.ability, move)) {
+        && Mercury_R6MoveIsSoundForAbility(battleCtx, attackerParams.ability, move)) {
         movePower = movePower * 12 / 10;
     }
 
     if (attackerParams.ability == ABILITY_SNOW_SONG
-        && Mercury_R6MoveIsSoundForAbility(attackerParams.ability, move)) {
+        && Mercury_R6MoveIsSoundForAbility(battleCtx, attackerParams.ability, move)) {
         movePower = movePower * 12 / 10;
     }
 
@@ -333,7 +333,7 @@ def patch_damage_and_move_families(root: Path) -> None:
     }
 
     if (attackerParams.ability == ABILITY_SLUDGY_MIX
-        && Mercury_R6MoveIsSoundForAbility(attackerParams.ability, move)) {
+        && Mercury_R6MoveIsSoundForAbility(battleCtx, attackerParams.ability, move)) {
         movePower = movePower * 13 / 10;
     }
 
@@ -392,7 +392,7 @@ def patch_damage_and_move_families(root: Path) -> None:
         """    if (Battler_IgnorableAbility(
             battleCtx, attacker, defender, ABILITY_SLUDGY_MIX) == TRUE
         && Mercury_R6MoveIsSoundForAbility(
-            Battler_Ability(battleCtx, attacker), move)) {
+            battleCtx, Battler_Ability(battleCtx, attacker), move)) {
         damage /= 2;
     }
 
@@ -470,7 +470,7 @@ def patch_radio_jam_and_venom_crown(root: Path) -> None:
     insertion = """    if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_RADIO_JAM
         && DEFENDING_MON.curHP
         && Mercury_R6MoveIsSoundForAbility(
-            ABILITY_RADIO_JAM, battleCtx->moveCur)
+            battleCtx, ABILITY_RADIO_JAM, battleCtx->moveCur)
         && (DEFENDER_SELF_TURN_FLAGS.physicalDamageTaken
             || DEFENDER_SELF_TURN_FLAGS.specialDamageTaken)
         && DEFENDING_MON.moveEffectsData.disabledMove == MOVE_NONE
@@ -768,7 +768,7 @@ def patch_reverberate_soundproof(root: Path) -> None:
 """
     new = """    if (Battler_IgnorableAbility(battleCtx, attacker, defender, ABILITY_SOUNDPROOF) == TRUE
         && Mercury_R6MoveIsSoundForAbility(
-            Battler_Ability(battleCtx, attacker), battleCtx->moveCur)) {
+            battleCtx, Battler_Ability(battleCtx, attacker), battleCtx->moveCur)) {
         subscript = subscript_blocked_by_soundproof;
     }
 """
