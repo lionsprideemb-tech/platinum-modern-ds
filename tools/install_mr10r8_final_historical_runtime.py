@@ -328,7 +328,7 @@ def defender_reactions(root):
             BattleSystem_GetBattlerSide(battleSys,battleCtx->attacker)]=TRUE;
         break;
 '''
- rb(p,a,s,"case ABILITY_CRYO_PROFICIENCY:","R8 defender reactions")
+ ibf(p,"BOOL BattleSystem_TriggerAbilityOnHit(",a,s,"case ABILITY_CRYO_PROFICIENCY:","R8 defender reactions")
 
 def attacker_reactions(root):
  p=root/"src/battle/battle_lib.c"
