@@ -400,7 +400,7 @@ def patch_multi_attack(root: Path, move_registry: Path | None) -> None:
                 indent=4,
                 ensure_ascii=False,
             )
-            + "\\n",
+            + "\n",
             encoding="utf-8",
         )
 
