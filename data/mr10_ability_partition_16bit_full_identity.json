@@ -15430,6 +15430,57 @@
       "legacy_ds_id": 742,
       "id_reconciliation_reason": "historical_319_conflicts_with_official_Aura_Guard;new_or_relocated_mercury_identity_appended_after_historical_namespace",
       "historical_id": 319
+    },
+    {
+      "id": 1065,
+      "token": "ABILITY_MR_DEEP_POCKETS",
+      "source_name": "Deep Pockets",
+      "display_name": "Deep Pockets",
+      "exact_effect": "This Pokemon can hold and use two different items at once.",
+      "source_kind": "mercury_original",
+      "runtime_kind": "custom_id",
+      "mechanic_family": "dual_held_item_slot",
+      "review_blocked": false,
+      "runtime_enabled": false,
+      "approval_state": "spec_locked_runtime_pending",
+      "assignment_policy": "PRIMARY_ONLY",
+      "deep_pockets_spec": {
+        "real_second_item_slot": true,
+        "same_item_twice": false,
+        "both_passive_effects_active": true,
+        "both_stat_modifiers_active": true,
+        "berries_and_consumables": "Each slot is independent; consuming one does not consume the other.",
+        "knock_off": "Removes one held item per successful item-removal event; slot resolution must be deterministic.",
+        "trick_switcheroo": "Transfers or swaps one item slot per move execution; never duplicates or destroys the untouched slot.",
+        "choice_items": "All applicable bonuses stack. Any active Choice item applies the normal move lock; multiple Choice items do not create multiple locks.",
+        "unburden": "Triggers only when the Pokemon has no remaining held item in either slot.",
+        "poltergeist_and_item_checks": "Pokemon counts as holding an item if either slot is occupied.",
+        "faint_switch_battle_end": "Second slot persists exactly like the primary held item.",
+        "innate_eligibility": false
+      },
+      "id_reconciliation_reason": "new_locked_mercury_identity"
+    },
+    {
+      "id": 1066,
+      "token": "ABILITY_MR_PREDATORS_EDGE",
+      "source_name": "Predator's Edge",
+      "display_name": "Predator's Edge",
+      "exact_effect": "Powers up biting and slicing moves by 30%.",
+      "source_kind": "mercury_original",
+      "runtime_kind": "custom_id",
+      "mechanic_family": "bite_and_slicing_damage_boost",
+      "review_blocked": false,
+      "runtime_enabled": false,
+      "approval_state": "spec_locked_runtime_pending",
+      "predators_edge_spec": {
+        "bite_multiplier": "1.30x",
+        "slicing_multiplier": "1.30x",
+        "both_flags_multiplier": "1.30x",
+        "double_dip": false,
+        "damage_only": true,
+        "classification": "Move flags determine eligibility; type is irrelevant."
+      },
+      "id_reconciliation_reason": "new_locked_mercury_identity"
     }
   ],
   "owner_review_resolution": {
@@ -15490,6 +15541,9 @@
       }
     ],
     "exact_semantics_restored_from_nextdex": 114,
-    "restore_pending_exact_semantics": 0
+    "restore_pending_exact_semantics": 0,
+    "deep_pockets_present": true,
+    "predators_edge_present": true,
+    "custom_range_contiguous_320_1066": true
   }
 }
