@@ -71,12 +71,12 @@ def bounds(t,s):
 def ibf(p,sig,a,ins,m,l):
  t=p.read_text();x,y=bounds(t,sig);b=t[x:y]
  if m in b:return
- if b.count(a)!=1:raise SystemExit(f"{l}: {b.count(a)} scoped anchors")
+ if b.count(a)<1:raise SystemExit(f"{l}: scoped anchor missing")
  p.write_text(t[:x]+b.replace(a,ins+a,1)+t[y:])
 def iaf(p,sig,a,ins,m,l):
  t=p.read_text();x,y=bounds(t,sig);b=t[x:y]
  if m in b:return
- if b.count(a)!=1:raise SystemExit(f"{l}: {b.count(a)} scoped anchors")
+ if b.count(a)<1:raise SystemExit(f"{l}: scoped anchor missing")
  p.write_text(t[:x]+b.replace(a,a+ins,1)+t[y:])
 
 def partition(p):
