@@ -59,10 +59,20 @@ def patch(root):
 
 '''
  ins(lib,"BOOL BattleSystem_TriggerTurnEndAbility(BattleSystem *battleSys, BattleContext *battleCtx, int battler)\n",helper)
- # Run continuously in the existing turn-end ability dispatcher.
- anchor="""    switch (Battler_Ability(battleCtx, battler)) {
-"""
- ins(lib,anchor,"    Mercury_D24JThresholdForms(battleCtx, battler);\n\n")
+ # Run continuously in the turn-end ability dispatcher. Other Mercury
+ # helpers also contain ability switches, so scope the insertion to this function.
+ t=lib.read_text()
+ fn="BOOL BattleSystem_TriggerTurnEndAbility(BattleSystem *battleSys, BattleContext *battleCtx, int battler)"
+ start=t.find(fn)
+ if start < 0: raise SystemExit("turn-end ability dispatcher absent")
+ anchor="    switch (Battler_Ability(battleCtx, battler)) {\n"
+ pos=t.find(anchor,start)
+ if pos < 0: raise SystemExit("turn-end ability switch absent")
+ next_fn=t.find("\nBOOL ",start+len(fn))
+ if next_fn >= 0 and pos >= next_fn: raise SystemExit("turn-end ability switch escaped dispatcher")
+ call="    Mercury_D24JThresholdForms(battleCtx, battler);\n\n"
+ if call not in t[start:pos+len(anchor)]:
+  lib.write_text(t[:pos]+call+t[pos:])
  # Initialize on battle-mon load too.
  init="void BattleSystem_InitBattleMon(BattleSystem *battleSys, BattleContext *battleCtx, int battler, int partySlot)"
  # Call after init via a stable existing marker.
