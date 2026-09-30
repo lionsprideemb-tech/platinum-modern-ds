@@ -373,8 +373,8 @@ def patch_multi_attack(root: Path, move_registry: Path | None) -> None:
                     "description": [
                         "The user cloaks itself in\\n",
                         "high energy and attacks.\\n",
-                        "The move's type matches\\n",
-                        "the Memory it is holding.",
+                        "Its type matches the held\\n",
+                        "Memory.",
                     ],
                     "class": "CLASS_PHYSICAL",
                     "type": "TYPE_NORMAL",
