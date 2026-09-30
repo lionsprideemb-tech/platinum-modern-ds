@@ -1,0 +1,102 @@
+name: Mercury 16-Bit Ability Storage
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr10-16bit-ability-storage
+    paths:
+      - ".github/workflows/mr10-16bit-ability-storage.yml"
+      - "tools/install_mr10_16bit_ability_storage.py"
+      - "tools/install_mp05_ability_id_width.py"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  certify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq fonts-dejavu-core
+
+      - name: Checkout pinned Platinum and HG-Engine
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/ability.h \
+            /data/text/720.txt
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply sealed Mercury overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Recreate MP05 width foundation
+        shell: bash
+        run: |
+          python3 tools/install_mp05_ability_id_width.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report mp05-width.json
+
+      - name: Upgrade persistence to 16-bit
+        shell: bash
+        run: |
+          python3 tools/install_mr10_16bit_ability_storage.py \
+            vendor/pokeplatinum \
+            --report mr10-16bit.json
+
+          test "$(jq -r '.ability_id_bits' mr10-16bit.json)" = "16"
+          test "$(jq -r '.ability_id_max' mr10-16bit.json)" = "65535"
+          test "$(jq -r '.boxpokemon_layout_growth_bytes' mr10-16bit.json)" = "0"
+          test "$(jq -r '.legacy_10bit_reader' mr10-16bit.json)" = "true"
+          grep -q 'u8 abilityHigh;.*high byte of the 16-bit Ability ID' vendor/pokeplatinum/include/struct_defs/pokemon.h
+          grep -q 'monDataBlockB->abilityHigh = (\*u16Value >> 8) & 0xFF;' vendor/pokeplatinum/src/pokemon.c
+
+      - name: Compile source
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make -j2
+
+      - name: Build ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage proof
+        shell: bash
+        run: |
+          mkdir -p proof
+          cp mr10-16bit.json proof/
+          cp "$BUILD/pokeplatinum.us.nds" proof/Pokemon_Mercury_16Bit_Ability_Storage.nds
+          sha256sum proof/Pokemon_Mercury_16Bit_Ability_Storage.nds > proof/SHA256SUMS.txt
+
+      - name: Upload proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr10-16bit-ability-storage
+          path: proof/
+          if-no-files-found: error
+          retention-days: 14
