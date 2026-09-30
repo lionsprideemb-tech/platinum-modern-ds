@@ -3321,8 +3321,27 @@
       "display_name": "Nerve Agent",
       "implementation_class": "light_extension",
       "review_blocked": false,
-      "exact_effect": "When the user hits a target with a damaging Poison-type contact move, make one 30% effect roll for that target and move. On success, choose Poison or Paralysis with equal probability; if the chosen status is invalid, use the other status when legal.",
-      "mechanic_family": "poison_contact_status_roll_with_fallback"
+      "exact_effect": "When the user hits a target with a damaging Poison-type contact move, make one 30% trigger roll. On success, inflict Nerve Agent, a compound major status unique to this Ability. Nerve Agent applies normal poison end-turn damage and normal paralysis Speed/action penalties at the same time. It occupies one major-status slot, is cured by ordinary major-status cures, and counts only once as 'statused' for generic checks such as Hex, Guts, and Quick Feet. It is not separately flagged as standard Poison or standard Paralysis for poison-only or paralysis-only bonus interactions unless explicitly whitelisted.",
+      "mechanic_family": "poison_contact_compound_major_status_nerve_agent",
+      "nerve_agent_status": {
+        "scope": "ABILITY_MR_NERVE_AGENT_ONLY",
+        "trigger_chance_percent": 30,
+        "requires_damaging_poison_contact_move": true,
+        "compound_effects": {
+          "poison_end_turn_damage": "normal poison damage",
+          "paralysis_speed_penalty": "normal paralysis Speed penalty",
+          "full_paralysis_chance": "normal paralysis action-failure chance"
+        },
+        "storage": "single major-status value; never two simultaneous native major statuses",
+        "generic_status_checks": {
+          "hex": "counts as statused once",
+          "guts": "activates once",
+          "quick_feet": "activates once"
+        },
+        "specific_status_checks": "Does not count as native Poison or native Paralysis for status-specific bonuses, immunities, cures, or triggers unless explicitly added to that mechanic.",
+        "cure_behavior": "Ordinary major-status cures remove the entire compound status.",
+        "stacking": "Cannot stack with itself and cannot occupy a second native major-status slot."
+      }
     },
     {
       "source_name": "Siege Engine",
