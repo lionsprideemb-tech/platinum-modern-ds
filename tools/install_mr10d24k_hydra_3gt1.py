@@ -49,27 +49,27 @@ def patch(root):
   pos=t.find("static ")
   if pos < 0: raise SystemExit("controller static-function anchor absent")
   ctl.write_text(t[:pos]+metadata+t[pos:])
+ # Do not extend D11's internal ability switch: later consolidation may inline it.
+ # Extend the stable setup contract instead, after D11 computes its own hit count.
  rep(ctl,
-"""    case ABILITY_MR_DUAL_WIELD:
-        return Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0;
-
-    default:
+"""    hits = Mercury_CustomMultiHitCount(battleSys, battleCtx);
+    if (hits < 2) {
+        return;
+    }
 """,
-"""    case ABILITY_MR_DUAL_WIELD:
-        return Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0;
-
-    case ABILITY_MR_HYDRA:
-    case ABILITY_MR_3_GT_1:
-        if (Mercury_SpeciesHeadCount(battleCtx->battleMons[battleCtx->attacker].species) == 2) {
-            return 2;
-        }
-        if (Mercury_SpeciesHeadCount(battleCtx->battleMons[battleCtx->attacker].species) >= 3) {
-            return 3;
-        }
-        return 0;
-
-    default:
-""","Hydra ability dispatch")
+"""    hits = Mercury_CustomMultiHitCount(battleSys, battleCtx);
+    if (hits < 2
+        && (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_MR_HYDRA
+            || Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_MR_3_GT_1)
+        && Mercury_CustomMultiHitBaseAllowed(battleSys, battleCtx)) {
+        int heads = Mercury_SpeciesHeadCount(
+            battleCtx->battleMons[battleCtx->attacker].species);
+        hits = heads >= 3 ? 3 : (heads == 2 ? 2 : 0);
+    }
+    if (hits < 2) {
+        return;
+    }
+""","Hydra setup extension")
  rep(ctl,
 """    battleCtx->mercuryCustomMultiHitActive = TRUE;
     battleCtx->mercuryCustomMultiHitTriggerAbility =
