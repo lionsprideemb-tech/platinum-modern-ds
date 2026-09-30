@@ -77,11 +77,38 @@
         "Watch Your Step",
         "Catastrophe"
       ]
+    },
+    {
+      "batch": "R5",
+      "count": 20,
+      "script": "tools/install_mr10r5_missing_priority_ko.py",
+      "abilities": [
+        "Blood Price",
+        "Dead Power",
+        "Energy Siphon",
+        "Flame Bubble",
+        "Flaming Maw",
+        "Funeral Pyre",
+        "Last Stand",
+        "Low Visibility",
+        "Molten Blades",
+        "Mosh Pit",
+        "Permanence",
+        "Phantom Pain",
+        "Rage Point",
+        "Sepia Lens",
+        "Smoldering Wood",
+        "TerminalVelocity",
+        "Vengeful Spirit",
+        "Vitality Strike",
+        "White Noise",
+        "Drake Of Rage"
+      ]
     }
   ],
-  "explicit_runtime_restored_so_far": 44,
-  "explicit_runtime_remaining": 80,
-  "certification": "R4 native compile/ROM workflow added for the 20-ability historical fast pass. Do not mark R4 certified until Actions reports PASS.",
+  "explicit_runtime_restored_so_far": 64,
+  "explicit_runtime_remaining": 60,
+  "certification": "R5 native compile/ROM workflow added; R4/R5 certification is still pending. Do not mark a runtime batch certified until Actions reports PASS.",
   "namespace": {
     "official_range": [
       0,
