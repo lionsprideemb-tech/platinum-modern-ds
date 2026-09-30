@@ -41,10 +41,14 @@ def patch(root):
 }
 
 """
- # Insert beside the D11 count dispatcher, which remains the stable extension
- # point even after later controller consolidations rewrite eligibility helpers.
- anchor="static int Mercury_CustomMultiHitCount("
- ins(ctl,anchor,metadata)
+ # Later consolidation stages may inline/rename D11 helpers. The durable D11
+ # runtime contract is the context field used by damage scaling, so place the
+ # metadata helper before the first controller function instead of beside D11.
+ t=ctl.read_text()
+ if "static u8 Mercury_SpeciesHeadCount(u16 species)" not in t:
+  pos=t.find("static ")
+  if pos < 0: raise SystemExit("controller static-function anchor absent")
+  ctl.write_text(t[:pos]+metadata+t[pos:])
  rep(ctl,
 """    case ABILITY_MR_DUAL_WIELD:
         return Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0;
