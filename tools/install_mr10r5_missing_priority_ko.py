@@ -605,7 +605,7 @@ def patch_permanence(root: Path) -> None:
 """
     text = script.read_text(encoding="utf-8")
     sig = "static BOOL BtlCmd_UpdateHealthBarValue(BattleSystem *battleSys, BattleContext *battleCtx)"
-    start = text.find(sig)
+    start = text.find(sig + "\n{")
     if start < 0:
         raise SystemExit("Permanence: UpdateHealthBarValue definition missing")
     brace = text.find("{", start)
