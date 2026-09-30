@@ -51,17 +51,23 @@ def rep(p,a,b,l):
  if t.count(a)!=1:raise SystemExit(f"{l}: {t.count(a)} matches")
  p.write_text(t.replace(a,b,1))
 def bounds(t,s):
- a=t.find(s+"\n{")
- if a<0:
-  a=t.find(s+" {")
+ pos=0;a=-1;o=-1
+ while True:
+  cand=t.find(s,pos)
+  if cand<0:break
+  brace=t.find("{",cand);semi=t.find(";",cand)
+  if brace>=0 and (semi<0 or brace<semi):
+   a=cand;o=brace;break
+  pos=cand+len(s)
  if a<0:raise SystemExit("function definition missing "+s)
- o=t.find("{",a);d=0
+ d=0
  for i in range(o,len(t)):
   if t[i]=="{":d+=1
   elif t[i]=="}":
    d-=1
    if d==0:return a,i+1
  raise SystemExit("unterminated "+s)
+
 def ibf(p,sig,a,ins,m,l):
  t=p.read_text();x,y=bounds(t,sig);b=t[x:y]
  if m in b:return
