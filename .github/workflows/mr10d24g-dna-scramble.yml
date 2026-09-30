@@ -1,0 +1,13 @@
+name: MR10D24G DNA Scramble
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/mr10d24g-dna-scramble]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m py_compile tools/install_mr10d24g_dna_scramble.py
