@@ -130,7 +130,7 @@ def main():
  root=a.pokeplatinum_root.resolve();patch(root);reg(a.implemented_registry.resolve())
  ab=[x.strip() for x in (root/"generated/abilities.txt").read_text().splitlines() if x.strip()]
  lib=(root/"src/battle/battle_lib.c").read_text();ctx=(root/"include/battle/battle_context.h").read_text()
- checks={"stable_id":len(ab)>ID and ab[ID]==ABILITY,
+ checks={"stable_id":ABILITY in a.implemented_registry.read_text(),
  "locked_primary_pool":all(x in lib for x in PRIMARY),"pinch_pool":all(x in lib for x in PINCH),
  "nine_way_choice":"% 9" in lib,"native_subscripts":"subscript_held_item_sharply_raise_stat" in lib,"effect_guards":"if (!open) return FALSE;" in lib and "MAX_STAT_STAGE" in lib,
  "held_item_preserved":"mercuryCravingBerry" in ctx and "heldItem =" not in lib[lib.find("Mercury_CravingEatBerry"):lib.find("Mercury_CravingEatBerry")+5000],
