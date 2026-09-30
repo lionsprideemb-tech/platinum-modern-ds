@@ -1,0 +1,56 @@
+{
+  "gate": "MERCURY_MISSING_HISTORICAL_RUNTIME_RECOVERY",
+  "date": "2026-09-30",
+  "status": "IN_PROGRESS",
+  "historical_missing_identities_original": 124,
+  "identities_restored_to_namespace": 124,
+  "exact_semantics_recovered": 124,
+  "runtime_batches": [
+    {
+      "batch": "R1",
+      "count": 10,
+      "script": "tools/install_mr10r1_missing_scalar_priority.py",
+      "abilities": [
+        "Chrome Coat",
+        "Sharp Edges",
+        "Early Grave",
+        "Fighter",
+        "Fire Scales",
+        "Gladiator",
+        "Higher Rank",
+        "Purgatory",
+        "Shiny Lightning",
+        "Tidal Rush"
+      ]
+    },
+    {
+      "batch": "R2",
+      "count": 7,
+      "script": "tools/install_mr10r2_missing_weather_stat.py",
+      "abilities": [
+        "Ectoplasm",
+        "Ethereal Rush",
+        "Headstrong",
+        "Hubris",
+        "Raging Storm",
+        "Smokey Maneuvers",
+        "Thermal Slide"
+      ]
+    }
+  ],
+  "explicit_runtime_restored_so_far": 17,
+  "explicit_runtime_remaining": 107,
+  "certification": "R2 native compile/ROM workflow added; do not mark runtime batches certified until Actions reports PASS.",
+  "namespace": {
+    "official_range": [
+      0,
+      319
+    ],
+    "custom_range": [
+      320,
+      1066
+    ],
+    "next_free_id": 1067,
+    "persistence_bits": 16
+  }
+}
