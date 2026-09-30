@@ -640,9 +640,8 @@ def patch_subdue(root: Path) -> None:
     }
 
 """
-    insert_before_in_function(
+    insert_before_once(
         path,
-        "static BOOL BtlCmd_ChangeStatStage(",
         anchor,
         insertion,
         "Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_SUBDUE",
