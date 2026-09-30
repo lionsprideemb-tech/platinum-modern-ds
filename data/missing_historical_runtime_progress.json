@@ -108,9 +108,9 @@
       ]
     }
   ],
-  "explicit_runtime_restored_so_far": 63,
-  "explicit_runtime_remaining": 61,
-  "certification": "R5 native compile/ROM workflow added; 63 of the 124 historical-missing rows are now assigned to R1-R5. R4/R5 certification is still pending; do not mark a runtime batch certified until Actions reports PASS.",
+  "explicit_runtime_restored_so_far": 64,
+  "explicit_runtime_remaining": 60,
+  "certification": "R5 native compile/ROM workflow added for the second 20-ability historical fast pass. R4/R5 remain uncertified until Actions reports PASS.",
   "namespace": {
     "official_range": [
       0,
