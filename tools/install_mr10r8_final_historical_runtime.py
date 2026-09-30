@@ -130,7 +130,7 @@ static int Mercury_R8MoveType(BattleContext *battleCtx,int battler,int move,int 
     &&(a==ABILITY_DEVIATE||a==ABILITY_MOB_BOSS))return TYPE_DARK;
  return type;
 }
-static void Mercury_R8Bind(BattleContext *battleCtx,int user,int target,int move)
+void Mercury_R8Bind(BattleContext *battleCtx,int user,int target,int move)
 {
  if((battleCtx->battleMons[target].statusVolatile&VOLATILE_CONDITION_BIND)==0){
   battleCtx->battleMons[target].statusVolatile |= (4<<VOLATILE_CONDITION_BIND_SHIFT);
@@ -168,6 +168,14 @@ static void Mercury_R8EntryStrike(BattleSystem *battleSys,BattleContext *battleC
 }
 '''
  rb(p,"BOOL Battler_IgnorableAbility(BattleContext *battleCtx, int attacker, int defender, int ability)\n",s,"Mercury_R8CanBleed","R8 helpers")
+
+def export_helpers(root):
+ p=root/"include/battle/battle_lib.h"
+ rb(p,
+    "BOOL BattleSystem_TriggerAbilityOnHit(BattleSystem *battleSys, BattleContext *battleCtx, int *subscript);\n",
+    "void Mercury_R8Bind(BattleContext *battleCtx, int user, int target, int move);\n",
+    "Mercury_R8Bind(BattleContext *battleCtx",
+    "R8 bind declaration")
 
 def reset_and_entry(root):
  p=root/"src/battle/battle_lib.c"
@@ -663,7 +671,7 @@ def main():
  ap.add_argument("--implemented-registry",type=Path,required=True)
  ap.add_argument("--report",type=Path,default=Path("mr10r8-final-historical-runtime.json"));a=ap.parse_args()
  root=a.pokeplatinum_root.resolve();reg=a.implemented_registry.resolve();partition(a.partition.resolve())
- context(root);helpers(root);reset_and_entry(root);damage(root);defender_reactions(root);attacker_reactions(root)
+ context(root);helpers(root);export_helpers(root);reset_and_entry(root);damage(root);defender_reactions(root);attacker_reactions(root)
  purple_haze(root);angel(root);turn_end(root);healing_and_stat_boosts(root);fear_trap(root);cosmic_magic_guard(root);registry(reg)
  c=validate(root,reg);status="PASS" if all(c.values()) else "FAIL"
  out={"gate":"MERCURY_MR10R8_FINAL_HISTORICAL_RUNTIME","status":status,"implemented":list(IMPLEMENTED),"implemented_count":21,
