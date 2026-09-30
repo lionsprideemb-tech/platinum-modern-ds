@@ -1,0 +1,86 @@
+name: Mercury 16-Bit Full Ability Namespace
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr10-16bit-ability-storage
+    paths:
+      - "tools/install_mr10a2_16bit_full_namespace.py"
+      - "tools/install_mr10_16bit_ability_storage.py"
+      - "data/mr10_ability_partition_16bit_full_identity.json"
+      - ".github/workflows/mr10-16bit-full-namespace.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  certify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build             pkg-config python3 python3-pip wget xz-utils libpng-dev rsync jq
+
+      - name: Checkout pinned sources
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set             /include/constants/ability.h             /data/text/720.txt             /data/text/721.txt             /data/text/722.txt
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury overlay
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Install canonical 0-310 namespace
+        run: |
+          python3 tools/install_mp05_ability_namespace.py             vendor/pokeplatinum vendor/hg-engine             --report mp05.json             --implemented-registry implemented.txt
+
+      - name: Upgrade persistence to 16-bit
+        run: |
+          python3 tools/install_mr10_16bit_ability_storage.py             vendor/pokeplatinum             --report mr10-storage.json
+          test "$(jq -r '.ability_id_bits' mr10-storage.json)" = "16"
+
+      - name: Install official 311-319 and Mercury 320-1066
+        run: |
+          python3 tools/install_mr10a2_16bit_full_namespace.py             vendor/pokeplatinum vendor/hg-engine             --partition data/mr10_ability_partition_16bit_full_identity.json             --report mr10-full-namespace.json
+          test "$(jq -r '.status' mr10-full-namespace.json)" = "PASS"
+          test "$(jq -r '.custom_range[0]' mr10-full-namespace.json)" = "320"
+          test "$(jq -r '.custom_range[1]' mr10-full-namespace.json)" = "1066"
+          test "$(jq -r '.next_free_id' mr10-full-namespace.json)" = "1067"
+          test "$(sed -n '320p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_AURA_GUARD"
+          test "$(sed -n '1066p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_MR_DEEP_POCKETS"
+          test "$(sed -n '1067p' vendor/pokeplatinum/generated/abilities.txt)" = "ABILITY_MR_PREDATORS_EDGE"
+
+      - name: Compile and build ROM
+        working-directory: vendor/pokeplatinum
+        run: |
+          sudo make skrew
+          make configure
+          make -j2
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage proof
+        run: |
+          mkdir -p proof
+          cp mr10-storage.json mr10-full-namespace.json proof/
+          cp "$BUILD/pokeplatinum.us.nds" proof/Pokemon_Mercury_16Bit_Full_Ability_Namespace.nds
+          sha256sum proof/Pokemon_Mercury_16Bit_Full_Ability_Namespace.nds > proof/SHA256SUMS.txt
+
+      - name: Upload proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-mr10-16bit-full-ability-namespace
+          path: proof/
+          if-no-files-found: error
+          retention-days: 14
