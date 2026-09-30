@@ -614,7 +614,12 @@ def patch_permanence(root: Path) -> None:
 
 def patch_turn_end_family(root: Path) -> None:
     path = root / "src/battle/battle_lib.c"
-    anchor = """    switch (Battler_Ability(battleCtx, battler)) {
+    anchor = """BOOL BattleSystem_TriggerTurnEndAbility(BattleSystem *battleSys, BattleContext *battleCtx, int battler)
+{
+    BOOL result = FALSE;
+    int subscript;
+
+    switch (Battler_Ability(battleCtx, battler)) {
 """
     block = """    if (Battler_Ability(battleCtx, battler) == ABILITY_WHITE_NOISE
         && (battleCtx->fieldConditionsMask & FIELD_CONDITION_DEEP_FOG)
