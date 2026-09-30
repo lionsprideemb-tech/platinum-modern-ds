@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "checkpoint": "MR10D24 final-14 recovery",
+  "base_commit": "9d2b366119c3fb4ce03d44b45e6a185469f6e0ee",
+  "starting_keep_as_written": 61,
+  "target_keep_as_written": 75,
+  "remaining_count": 14,
+  "recovery_policy": {
+    "do_not_redesign": true,
+    "recover_locked_semantics_from": [
+      "docs/approval/mr10-93-mechanics-data.json",
+      "data/mr09_custom_ability_intake.json",
+      "existing certified MR10/MR08 hooks",
+      "authoritative donor source when a referenced locked component is not materialized in Mercury"
+    ],
+    "generated_actions": "Reuse the MR10D7 generated Ability action pipeline. Ability-generated actions spend no PP, do not consume the selected turn, retain normal targeting/redirection/accuracy/type/immunity/Protect/move-script flow, and may not recursively create another Ability-generated action.",
+    "failure_policy": "A blocker in one family must not stop independent families. Record the exact missing dependency and continue."
+  },
+  "batches": [
+    {
+      "name": "D24A generated-action extensions",
+      "abilities": [
+        {"name":"Sumo Wrestler","id":425,"token":"ABILITY_MR_SUMO_WRESTLER","reuse":"MR10D7 generated action","trigger":"end of every second eligible active turn","generated_move":"Circle Throw","forced_power":20},
+        {"name":"Sludge Spit","id":571,"token":"ABILITY_MR_SLUDGE_SPIT","reuse":"MR10D7 generated action","trigger":"after successful damaging move","generated_move":"Venom Bolt","forced_power":35},
+        {"name":"Wind Chimes","id":681,"token":"ABILITY_MR_WIND_CHIMES","reuse":"MR10D8 reactive counter + Amplifier semantics","trigger":"after qualifying hit received","generated_move":"Hyper Voice","forced_power":30},
+        {"name":"Greedy","id":697,"token":"ABILITY_MR_GREEDY","reuse":"MR10D7 generated action","trigger":"when held item is lost","generated_move":"Thief"},
+        {"name":"Thundercall","id":867,"token":"ABILITY_MR_THUNDERCALL","reuse":"MR10D7 generated action","trigger":"after Electric-type move resolves","generated_move":"Smite","power_rule":"20 percent of normal power"}
+      ]
+    },
+    {
+      "name": "D24B composites and defensive typing",
+      "abilities": [
+        {"name":"Hydra","id":739,"token":"ABILITY_MR_HYDRA","reuse":"MR10D11 multi-hit family + Hubris KO stat trigger","effect":"Multi-Headed + Hubris"},
+        {"name":"3 > 1","id":914,"token":"ABILITY_MR_3_1","reuse":"MR10D11 multi-hit family + Riptide type damage boost","effect":"Multi-Headed + Riptide"},
+        {"name":"Color Change","id":16,"token":"ABILITY_COLOR_CHANGE","reuse":"MR10 dynamic battle typing/type-chart hooks","effect":"before a damaging hit, once per turn, choose the best defensive type against the incoming resolved move type"}
+      ]
+    },
+    {
+      "name": "D24C field and item state",
+      "abilities": [
+        {"name":"Toxic Surge","id":692,"token":"ABILITY_MR_TOXIC_SURGE","reuse":"MR08 terrain/field lifecycle hooks","effect":"sets Toxic Terrain on entry"},
+        {"name":"Craving","id":699,"token":"ABILITY_MR_CRAVING","reuse":"item-consumption + end-turn hooks","effect":"after the entry turn, consume a random Berry at each end turn using the locked Craving pool"}
+      ]
+    },
+    {
+      "name": "D24D form-state controller",
+      "abilities": [
+        {"name":"DNA Scramble","id":734,"token":"ABILITY_MR_DNA_SCRAMBLE","reuse":"MR08 canonical form controller patterns","effect":"Deoxys changes form immediately before move execution using the locked move-to-form mapping"},
+        {"name":"Locust Swarm","id":736,"token":"ABILITY_MR_LOCUST_SWARM","reuse":"MR08 threshold-form patterns","effect":"mapped species uses Hivemind form while above one-quarter max HP"},
+        {"name":"Revelation","id":737,"token":"ABILITY_MR_REVELATION","reuse":"MR08 threshold-form patterns","effect":"mapped species uses Revelation form while above one-quarter max HP"}
+      ]
+    },
+    {
+      "name": "D24E custom status composite",
+      "abilities": [
+        {"name":"Blood Stain","id":764,"token":"ABILITY_MR_BLOOD_STAIN","reuse":"existing Mercury custom-status/contact state patterns where present","effect":"holder remains in Bleeding state and spreads Bleed through qualifying contact"}
+      ]
+    }
+  ],
+  "known_donor_recovery": {
+    "Amplifier": "Sound-based moves target all opposing Pokemon and deal 30 percent more damage.",
+    "Riptide": "Water-type moves deal 30 percent more damage normally and 80 percent more damage at or below one-third max HP.",
+    "Hubris": "Raise Special Attack by one stage when the user directly KOs an opponent.",
+    "Multi-Headed": "Extra strikes depend on head count; authoritative ER documentation gives 2-head total 100%+25% and 3-head total 100%+20%+15%, with independent secondary-effect rolls except flinch. Recover the exact species/head mapping from donor data before wiring species-specific behavior."
+  },
+  "completion_gate": {
+    "keep_as_written": "75/75",
+    "canonical_modern_abilities": "187/187",
+    "approved_redesigns": "15/15",
+    "required_checks": [
+      "static validation",
+      "native Platinum compile",
+      "ROM build",
+      "implemented registry audit",
+      "Primary/Innate routing audit",
+      "no regression to locked MR07 visuals"
+    ],
+    "after_abilities": "Implement moves previously deferred only because these mechanics were unavailable, then run the final ability-phase ROM build."
+  }
+}
