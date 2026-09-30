@@ -1,0 +1,22 @@
+{
+  "gate": "MERCURY_MR10D25_PREDATORS_EDGE",
+  "ability_number": 77,
+  "name": "Predator's Edge",
+  "token": "ABILITY_MR_PREDATORS_EDGE",
+  "description": "Powers up biting and slicing moves by 30%.",
+  "mechanic": {
+    "bite_multiplier": "1.30x",
+    "slicing_multiplier": "1.30x",
+    "both_flags_multiplier": "1.30x",
+    "double_dip": false,
+    "damage_only": true,
+    "classification": "Move flags determine eligibility; type is irrelevant."
+  },
+  "compatibility": {
+    "certified_75_checkpoint_preserved": true,
+    "requires_bite_flag_audit": true,
+    "requires_slicing_flag_audit": true,
+    "requires_future_gen_move_flag_coverage": true
+  },
+  "status": "SPEC_LOCKED_IMPLEMENTATION_PENDING"
+}
