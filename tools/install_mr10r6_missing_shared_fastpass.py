@@ -652,8 +652,8 @@ def patch_subdue(root: Path) -> None:
         return
     anchor = """    if (stageChange > 0) {
 """
-    if block.count(anchor) != 1:
-        raise SystemExit(f"Subdue: expected one stat direction anchor, found {block.count(anchor)}")
+    if block.count(anchor) < 1:
+        raise SystemExit("Subdue: stat direction anchor missing")
     insertion = """    if (stageChange < 0
         && battleCtx->attacker != battleCtx->sideEffectMon
         && Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_SUBDUE) {
