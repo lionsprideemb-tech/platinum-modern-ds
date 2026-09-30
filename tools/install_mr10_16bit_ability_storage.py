@@ -16,6 +16,50 @@ def replace_once(path: Path, old: str, new: str) -> None:
     path.write_text(text.replace(old, new, 1))
 
 
+def replace_case_block(
+    path: Path,
+    case_label: str,
+    old: str,
+    new: str,
+    *,
+    contains: str,
+) -> None:
+    """Replace one switch case, tolerating earlier installers reshaping it."""
+    text = path.read_text()
+    if new in text:
+        return
+    if old in text:
+        path.write_text(text.replace(old, new, 1))
+        return
+
+    marker = f"    case {case_label}:"
+    matches: list[tuple[int, int]] = []
+    cursor = 0
+    while True:
+        start = text.find(marker, cursor)
+        if start < 0:
+            break
+        next_case = text.find("\n    case ", start + len(marker))
+        if next_case < 0:
+            next_case = text.find("\n    default:", start + len(marker))
+        if next_case < 0:
+            next_case = len(text)
+        block = text[start:next_case]
+        if contains in block:
+            matches.append((start, next_case))
+        cursor = start + len(marker)
+
+    if len(matches) != 1:
+        raise SystemExit(
+            f"{path}: expected one {case_label} block containing {contains!r}, "
+            f"found {len(matches)}"
+        )
+
+    start, end = matches[0]
+    suffix = "" if end == len(text) or text[end] == "\n" else "\n"
+    path.write_text(text[:start] + new + suffix + text[end:])
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("platinum", type=Path)
@@ -55,8 +99,9 @@ def main() -> None:
     # Transitional reader: old Mercury 10-bit saves encoded bits 8-9 in the
     # otherwise-unused top two markings bits. New saves use Block B's
     # abilityHigh byte. This preserves legacy saves without growing the record.
-    replace_once(
+    replace_case_block(
         pokemon_c,
+        "MON_DATA_ABILITY",
         """    case MON_DATA_ABILITY:
         result = monDataBlockA->ability | (monDataBlockA->abilityHigh << 8);
         break;""",
@@ -70,18 +115,22 @@ def main() -> None:
         result = monDataBlockA->ability | (abilityHigh << 8);
         break;
     }""",
+        contains="result =",
     )
-    replace_once(
+    replace_case_block(
         pokemon_c,
+        "MON_DATA_MARKINGS",
         """    case MON_DATA_MARKINGS:
         result = monDataBlockA->markings;
         break;""",
         """    case MON_DATA_MARKINGS:
         result = monDataBlockA->markings & 0x3F;
         break;""",
+        contains="result =",
     )
-    replace_once(
+    replace_case_block(
         pokemon_c,
+        "MON_DATA_ABILITY",
         """    case MON_DATA_ABILITY:
         monDataBlockA->ability = *u16Value & 0xFF;
         monDataBlockA->abilityHigh = (*u16Value >> 8) & 0x3;
@@ -91,15 +140,18 @@ def main() -> None:
         monDataBlockB->abilityHigh = (*u16Value >> 8) & 0xFF;
         monDataBlockA->markings &= 0x3F;
         break;""",
+        contains="monDataBlockA->ability =",
     )
-    replace_once(
+    replace_case_block(
         pokemon_c,
+        "MON_DATA_MARKINGS",
         """    case MON_DATA_MARKINGS:
         monDataBlockA->markings = *u8Value;
         break;""",
         """    case MON_DATA_MARKINGS:
         monDataBlockA->markings = *u8Value & 0x3F;
         break;""",
+        contains="monDataBlockA->markings =",
     )
 
     # Runtime holders were already widened by MP05; assert they remain wide.
