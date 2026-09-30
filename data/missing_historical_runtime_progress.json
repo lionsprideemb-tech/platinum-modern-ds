@@ -106,11 +106,38 @@
         "White Noise",
         "Drake Of Rage"
       ]
+    },
+    {
+      "batch": "R6",
+      "count": 20,
+      "script": "tools/install_mr10r6_missing_shared_fastpass.py",
+      "abilities": [
+        "Emanate",
+        "Fertilize",
+        "Malicious",
+        "Moon Spirit",
+        "Mythical Arrows",
+        "Depravity",
+        "Power Metal",
+        "Pyroclastic Flow",
+        "Radio Jam",
+        "Reverberate",
+        "Sludgy Mix",
+        "Snowy Wrath",
+        "Snow Song",
+        "Subdue",
+        "Super Slammer",
+        "Thermomancy",
+        "Trash Heap",
+        "Venom Crown",
+        "Twinkle Toes",
+        "Old Mariner"
+      ]
     }
   ],
-  "explicit_runtime_restored_so_far": 64,
-  "explicit_runtime_remaining": 60,
-  "certification": "R5 native compile/ROM workflow added for the second 20-ability historical fast pass. R4/R5 remain uncertified until Actions reports PASS.",
+  "explicit_runtime_restored_so_far": 83,
+  "explicit_runtime_remaining": 41,
+  "certification": "R6 native compile/ROM workflow added; 83 of the 124 historical-missing rows are assigned to R1-R6. R4-R6 certification remains gated on Actions PASS.",
   "namespace": {
     "official_range": [
       0,
