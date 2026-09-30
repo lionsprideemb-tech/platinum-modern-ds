@@ -71,7 +71,7 @@ jobs:
           test "$(jq -r '.status' mr10r3.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10r3.json)" = "6"
           test "$(jq -r '.status' mr10r4.json)" = "PASS"
-          test "$(jq -r '.implemented_count' mr10r4.json)" = "14"
+          test "$(jq -r '.implemented_count' mr10r4.json)" = "20"
 
       - name: Compile and build ROM
         working-directory: vendor/pokeplatinum
