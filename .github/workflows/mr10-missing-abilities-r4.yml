@@ -40,7 +40,7 @@ jobs:
           git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
           git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
           git -C vendor/hg-engine sparse-checkout init --no-cone
-          git -C vendor/hg-engine sparse-checkout set /include/constants/ability.h /data/text/720.txt /data/text/721.txt /data/text/722.txt
+          git -C vendor/hg-engine sparse-checkout set /include/constants/ability.h /include/constants/moves.h /include/constants/move_effects.h /data/text/720.txt /data/text/721.txt /data/text/722.txt /data/Moves.c
           git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
 
       - name: Apply Mercury overlay
