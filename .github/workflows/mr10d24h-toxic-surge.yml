@@ -1,0 +1,13 @@
+name: MR10D24H Toxic Surge
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/mr10d24h-toxic-surge]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m py_compile tools/install_mr10d24h_toxic_surge.py
