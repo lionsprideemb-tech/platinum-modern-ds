@@ -91,6 +91,11 @@ jobs:
           python3 tools/install_mr10c0_missing_species_compat.py vendor/pokeplatinum --report species-compat.json
           test "$(jq -r '.status' species-compat.json)" = "PASS"
 
+      - name: Compile-source diagnostics
+        run: |
+          nl -ba vendor/pokeplatinum/src/battle/battle_lib.c | sed -n '5275,5320p'
+          nl -ba vendor/pokeplatinum/src/battle/battle_script.c | sed -n '1695,1730p'
+
       - name: Compile and build ROM
         working-directory: vendor/pokeplatinum
         run: |
