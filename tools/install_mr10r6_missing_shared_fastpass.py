@@ -243,8 +243,7 @@ def patch_type_paths(root: Path) -> None:
         attackerParams.ability, move, moveType);
 
 """,
-        "Mercury_R6ConvertedMoveType(
-        attackerParams.ability",
+        "Mercury_R6ConvertedMoveType(attackerParams.ability",
         "R6 damage type conversion",
     )
 
@@ -257,8 +256,7 @@ def patch_type_paths(root: Path) -> None:
         attackerAbility, move, moveType);
 
 """,
-        "Mercury_R6ConvertedMoveType(
-        attackerAbility",
+        "Mercury_R6ConvertedMoveType(attackerAbility",
         "R6 effectiveness type conversion",
     )
 
@@ -273,8 +271,7 @@ def patch_type_paths(root: Path) -> None:
         moveType);
 
 """,
-        "battleCtx->moveCur,
-        moveType);",
+        "battleCtx->moveCur",
         "R6 immunity type conversion",
     )
 
