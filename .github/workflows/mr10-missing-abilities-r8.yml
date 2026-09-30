@@ -1,0 +1,125 @@
+name: Mercury Missing Abilities R8
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mr10-16bit-ability-storage
+    paths:
+      - "tools/install_mr08s9_canonical_ability_rks_system.py"
+      - "tools/install_mr10_16bit_ability_storage.py"
+      - "tools/install_mr10a2_16bit_full_namespace.py"
+      - "tools/install_mr10r1_missing_scalar_priority.py"
+      - "tools/install_mr10r2_missing_weather_stat.py"
+      - "tools/install_mr10r3_missing_reaction_priority.py"
+      - "tools/install_mr10r4_missing_scalar_damage.py"
+      - "tools/install_mr10r5_missing_priority_ko.py"
+      - "tools/install_mr10r6_missing_shared_fastpass.py"
+      - "tools/install_mr10r7_historical_fast_pass.py"
+      - "tools/install_mr10r8_final_historical_runtime.py"
+      - "data/mr10_ability_partition_16bit_full_identity.json"
+      - ".github/workflows/mr10-missing-abilities-r8.yml"
+
+permissions:
+  contents: read
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+
+jobs:
+  certify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends bison flex g++ gcc-arm-none-eabi git make ninja-build pkg-config python3 python3-pip wget xz-utils libpng-dev rsync jq
+
+      - name: Checkout pinned sources
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set /include/constants/ability.h /include/constants/moves.h /include/constants/move_effects.h /data/text/720.txt /data/text/721.txt /data/text/722.txt /data/Moves.c
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury overlay
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Restore modern move namespace
+        run: |
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+          python3 tools/install_pt05c1_modern_moves.py vendor/pokeplatinum vendor/hg-engine --report modern-moves.json --implemented-registry implemented-moves.txt
+
+      - name: Install canonical Ability stack
+        run: |
+          python3 tools/install_mp05_ability_namespace.py vendor/pokeplatinum vendor/hg-engine --report mp05.json --implemented-registry implemented.txt
+          python3 tools/run_mr08_canonical_stack.py vendor/pokeplatinum --implemented-registry implemented.txt --reports-dir mr08-reports --report mr08-stack.json
+          test "$(jq -r '.status' mr08-stack.json)" = "PASS"
+
+      - name: Upgrade persistence and install full namespace
+        run: |
+          python3 tools/install_mr10_16bit_ability_storage.py vendor/pokeplatinum --report mr10-storage.json
+          python3 tools/install_mr10a2_16bit_full_namespace.py vendor/pokeplatinum vendor/hg-engine --partition data/mr10_ability_partition_16bit_full_identity.json --report mr10-full-namespace.json
+          test "$(jq -r '.status' mr10-full-namespace.json)" = "PASS"
+
+      - name: Restore missing runtime batches R1 through R8
+        run: |
+          python3 tools/install_mr10r1_missing_scalar_priority.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r1.json
+          python3 tools/install_mr10r2_missing_weather_stat.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r2.json
+          python3 tools/install_mr10r3_missing_reaction_priority.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r3.json
+          python3 tools/install_mr10r4_missing_scalar_damage.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r4.json
+          python3 tools/install_mr10r5_missing_priority_ko.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r5.json
+          python3 tools/install_mr10r6_missing_shared_fastpass.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r6.json
+          python3 tools/install_mr10r7_historical_fast_pass.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r7.json
+          python3 tools/install_mr10r8_final_historical_runtime.py vendor/pokeplatinum --partition data/mr10_ability_partition_16bit_full_identity.json --implemented-registry implemented.txt --report mr10r8.json
+          test "$(jq -r '.status' mr10r1.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r1.json)" = "11"
+          test "$(jq -r '.status' mr10r2.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r2.json)" = "7"
+          test "$(jq -r '.status' mr10r3.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r3.json)" = "6"
+          test "$(jq -r '.status' mr10r4.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r4.json)" = "20"
+          test "$(jq -r '.status' mr10r5.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r5.json)" = "20"
+          test "$(jq -r '.status' mr10r6.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r6.json)" = "20"
+          test "$(jq -r '.status' mr10r7.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r7.json)" = "20"
+          test "$(jq -r '.status' mr10r8.json)" = "PASS"
+          test "$(jq -r '.implemented_count' mr10r8.json)" = "21"
+          test "$(jq -r '.historical_runtime_after' mr10r8.json)" = "0"
+
+      - name: Apply pending-species compile compatibility
+        run: |
+          python3 tools/install_mr10c0_missing_species_compat.py vendor/pokeplatinum --report species-compat.json
+          test "$(jq -r '.status' species-compat.json)" = "PASS"
+
+      - name: Compile and build ROM
+        working-directory: vendor/pokeplatinum
+        run: |
+          sudo make skrew
+          make configure
+          make -j2
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Stage proof
+        run: |
+          mkdir -p proof
+          cp mr10-storage.json mr10-full-namespace.json mr10r1.json mr10r2.json mr10r3.json mr10r4.json mr10r5.json mr10r6.json mr10r7.json mr10r8.json proof/
+          cp "$BUILD/pokeplatinum.us.nds" proof/Pokemon_Mercury_Missing_Abilities_R8.nds
+          sha256sum proof/Pokemon_Mercury_Missing_Abilities_R8.nds > proof/SHA256SUMS.txt
+
+      - name: Upload proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: mercury-missing-abilities-r8
+          path: proof/
+          if-no-files-found: error
+          retention-days: 14
