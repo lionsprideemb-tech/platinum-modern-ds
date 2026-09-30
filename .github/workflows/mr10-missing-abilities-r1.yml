@@ -7,6 +7,8 @@ on:
       - feature/mr10-16bit-ability-storage
     paths:
       - "tools/install_mr10r1_missing_scalar_priority.py"
+      - "tools/install_mr08s9_canonical_ability_rks_system.py"
+      - "tools/install_mr10_16bit_ability_storage.py"
       - "tools/install_mr10a2_16bit_full_namespace.py"
       - "data/mr10_ability_partition_16bit_full_identity.json"
       - ".github/workflows/mr10-missing-abilities-r1.yml"
