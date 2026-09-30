@@ -65,7 +65,7 @@ jobs:
         run: |
           python3 tools/install_mr10r1_missing_scalar_priority.py             vendor/pokeplatinum             --partition data/mr10_ability_partition_16bit_full_identity.json             --implemented-registry implemented.txt             --report mr10r1.json
           test "$(jq -r '.status' mr10r1.json)" = "PASS"
-          test "$(jq -r '.implemented_count' mr10r1.json)" = "10"
+          test "$(jq -r '.implemented_count' mr10r1.json)" = "11"
 
       - name: Compile and build ROM
         working-directory: vendor/pokeplatinum
