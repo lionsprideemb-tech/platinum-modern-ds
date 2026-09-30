@@ -49,7 +49,9 @@
         "Fragrant Daze",
         "Haunting Frenzy",
         "Puffy"
-      ]
+      ],
+      "historical_missing_count": 5,
+      "note": "Pretty Privilege was restored in R3 but is not one of the 124 rows in missing_historical_abilities_v3.json; it is not counted against the historical-missing total."
     },
     {
       "batch": "R4",
@@ -106,9 +108,9 @@
       ]
     }
   ],
-  "explicit_runtime_restored_so_far": 64,
-  "explicit_runtime_remaining": 60,
-  "certification": "R5 native compile/ROM workflow added; R4/R5 certification is still pending. Do not mark a runtime batch certified until Actions reports PASS.",
+  "explicit_runtime_restored_so_far": 63,
+  "explicit_runtime_remaining": 61,
+  "certification": "R5 native compile/ROM workflow added; 63 of the 124 historical-missing rows are now assigned to R1-R5. R4/R5 certification is still pending; do not mark a runtime batch certified until Actions reports PASS.",
   "namespace": {
     "official_range": [
       0,
