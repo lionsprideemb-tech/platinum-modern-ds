@@ -423,7 +423,7 @@ def attacker_reactions(root):
     }
 
 '''
- ibf(p,"BOOL BattleSystem_TriggerAbilityOnHit(",a,s,"a8==ABILITY_ARCHMAGE","R8 offensive status family")
+ ibf(p,"BOOL Mercury_TriggerAttackerOnHitAbility(",a,s,"a8==ABILITY_ARCHMAGE","R8 offensive status family")
 
 def purple_haze(root):
  p=root/"src/battle/battle_controller_player.c"
