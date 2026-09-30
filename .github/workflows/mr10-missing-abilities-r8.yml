@@ -105,7 +105,15 @@ jobs:
         run: |
           sudo make skrew
           make configure
-          make -j2
+          if ! make -j2; then
+            echo "=== battle_lib compile context ==="
+            nl -ba src/battle/battle_lib.c | sed -n '5440,5525p'
+            echo "=== battle_controller_player compile context ==="
+            nl -ba src/battle/battle_controller_player.c | sed -n '4770,4855p'
+            echo "=== battle_script compile context ==="
+            nl -ba src/battle/battle_script.c | sed -n '1680,1750p'
+            exit 1
+          fi
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
