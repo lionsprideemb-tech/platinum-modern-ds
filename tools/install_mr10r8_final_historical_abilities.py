@@ -736,8 +736,9 @@ def patch_on_hit_family(root: Path) -> None:
         break;
 
 """
-    insert_before_once(
+    insert_before_in_function(
         lib,
+        "BOOL BattleSystem_TriggerAbilityOnHit(",
         defender_anchor,
         defender,
         "case ABILITY_LOOSE_THORNS:",
