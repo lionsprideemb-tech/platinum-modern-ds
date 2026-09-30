@@ -2399,11 +2399,11 @@
     },
     {
       "old_ds_id": 605,
-      "new_id": 1064,
+      "new_id": 836,
       "token": "ABILITY_MR_REAPER_S_EMBRACE",
       "name": "Reaper's Embrace",
-      "reason": "new_mercury_identity_appended_after_historical_namespace",
-      "historical_id": null
+      "reason": "historical_identity_preserved_typo_alias",
+      "historical_id": 836
     },
     {
       "old_ds_id": 606,
@@ -3495,7 +3495,7 @@
     },
     {
       "old_ds_id": 742,
-      "new_id": 1065,
+      "new_id": 1064,
       "token": "ABILITY_MR_SELF_SUFFICIENT",
       "name": "Self Sufficient",
       "reason": "historical_319_conflicts_with_official_Aura_Guard;relocated_above_historical_namespace",
@@ -5001,7 +5001,7 @@
   "new_locked_ids": [
     {
       "current_id": null,
-      "new_id": 1066,
+      "new_id": 1065,
       "name": "Deep Pockets",
       "token": "ABILITY_MR_DEEP_POCKETS",
       "source_name": "Deep Pockets",
@@ -5009,18 +5009,18 @@
     },
     {
       "current_id": null,
-      "new_id": 1067,
+      "new_id": 1066,
       "name": "Predator's Edge",
       "token": "ABILITY_MR_PREDATORS_EDGE",
       "source_name": "Predator's Edge",
       "reason": "new_locked_mercury_identity"
     }
   ],
-  "next_free_id": 1068,
+  "next_free_id": 1067,
   "notes": [
     "This replaces the earlier seven-collision-only map. The DS custom namespace had been renumbered sequentially and therefore disagreed with the older 319-1042 Mercury namespace for hundreds of identities.",
     "Matching historical identities and approved redesign successors now recover their historical slots.",
     "Only genuinely new identities plus Self Sufficient's new official-ID collision are appended above 1042.",
-    "The 125 historical identities absent from the current DS partition remain restoration work, not silently deleted abilities."
+    "After typo-alias reconciliation (Reaper's Embarce -> Reaper's Embrace), 124 historical imported identities are genuinely absent from the current DS partition."
   ]
 }
