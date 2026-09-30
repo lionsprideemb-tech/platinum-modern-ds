@@ -197,10 +197,10 @@ def reset_and_entry(root):
                             if(BattleSystem_GetBattlerSide(battleSys,foe)
                                !=BattleSystem_GetBattlerSide(battleSys,battler)
                                &&battleCtx->battleMons[foe].curHP
-                               &&battleCtx->battleMons[foe].statBoosts[BATTLE_STAT_SP_ATTACK]>MIN_STAT_STAGE){
+                               &&battleCtx->battleMons[foe].statBoosts[BATTLE_STAT_SP_ATTACK]>0){
                               battleCtx->battleMons[foe].statBoosts[BATTLE_STAT_SP_ATTACK]-=2;
-                              if(battleCtx->battleMons[foe].statBoosts[BATTLE_STAT_SP_ATTACK]<MIN_STAT_STAGE)
-                                battleCtx->battleMons[foe].statBoosts[BATTLE_STAT_SP_ATTACK]=MIN_STAT_STAGE;
+                              if(battleCtx->battleMons[foe].statBoosts[BATTLE_STAT_SP_ATTACK]<0)
+                                battleCtx->battleMons[foe].statBoosts[BATTLE_STAT_SP_ATTACK]=0;
                             }
                         }
                         battleCtx->msgBattlerTemp=battler;subscript=subscript_mold_breaker;
@@ -223,7 +223,7 @@ def reset_and_entry(root):
                             battleCtx->battleMons[battler].curHP+=heal;
                             if(battleCtx->battleMons[battler].curHP>battleCtx->battleMons[battler].maxHP)
                               battleCtx->battleMons[battler].curHP=battleCtx->battleMons[battler].maxHP;
-                            if(battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_DEFENSE]<MAX_STAT_STAGE)
+                            if(battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_DEFENSE]<12)
                               battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_DEFENSE]++;
                             BattleMon_CopyToParty(battleSys,battleCtx,battler);
                             battleCtx->battleMons[battler].weatherAbilityAnnounced=TRUE;
@@ -359,9 +359,9 @@ def attacker_reactions(root):
          &&(DEFENDING_MON.status&MON_CONDITION_ANY_POISON)
          &&battleCtx->mercuryR8PoisonCascadeDone[battleCtx->defender]==FALSE){
         battleCtx->mercuryR8PoisonCascadeDone[battleCtx->defender]=TRUE;
-        if(DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]>MIN_STAT_STAGE)DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]--;
-        if(DEFENDING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]>MIN_STAT_STAGE)DEFENDING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]--;
-        if(DEFENDING_MON.statBoosts[BATTLE_STAT_SPEED]>MIN_STAT_STAGE)DEFENDING_MON.statBoosts[BATTLE_STAT_SPEED]--;
+        if(DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]>0)DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]--;
+        if(DEFENDING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]>0)DEFENDING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]--;
+        if(DEFENDING_MON.statBoosts[BATTLE_STAT_SPEED]>0)DEFENDING_MON.statBoosts[BATTLE_STAT_SPEED]--;
       }
       if(a8==ABILITY_SET_ABLAZE
          &&(DEFENDING_MON.status&MON_CONDITION_BURN)
@@ -410,14 +410,14 @@ def attacker_reactions(root):
           }break;
         case TYPE_DARK: Mercury_R8Bleed(battleCtx,battleCtx->defender);break;
         case TYPE_FIGHTING:
-          if(ATTACKING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]<MAX_STAT_STAGE)ATTACKING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]++;break;
+          if(ATTACKING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]<12)ATTACKING_MON.statBoosts[BATTLE_STAT_SP_ATTACK]++;break;
         case TYPE_FLYING:
-          if(ATTACKING_MON.statBoosts[BATTLE_STAT_SPEED]<MAX_STAT_STAGE)ATTACKING_MON.statBoosts[BATTLE_STAT_SPEED]++;break;
+          if(ATTACKING_MON.statBoosts[BATTLE_STAT_SPEED]<12)ATTACKING_MON.statBoosts[BATTLE_STAT_SPEED]++;break;
         case TYPE_DRAGON:
-          if(DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]>MIN_STAT_STAGE)DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]--;break;
+          if(DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]>0)DEFENDING_MON.statBoosts[BATTLE_STAT_ATTACK]--;break;
         case TYPE_GROUND: Mercury_R8Bind(battleCtx,battleCtx->attacker,battleCtx->defender,battleCtx->moveCur);break;
         case TYPE_STEEL:
-          if(ATTACKING_MON.statBoosts[BATTLE_STAT_DEFENSE]<MAX_STAT_STAGE)ATTACKING_MON.statBoosts[BATTLE_STAT_DEFENSE]++;break;
+          if(ATTACKING_MON.statBoosts[BATTLE_STAT_DEFENSE]<12)ATTACKING_MON.statBoosts[BATTLE_STAT_DEFENSE]++;break;
         }
       }
     }
@@ -473,7 +473,7 @@ def angel(root):
             case MOVE_HARDEN: {
                 int st;
                 for(st=BATTLE_STAT_ATTACK;st<BATTLE_STAT_MAX;st++)
-                  if(ATTACKING_MON.statBoosts[st]<MAX_STAT_STAGE)ATTACKING_MON.statBoosts[st]++;
+                  if(ATTACKING_MON.statBoosts[st]<12)ATTACKING_MON.statBoosts[st]++;
                 break;
             }
             case MOVE_IRON_DEFENSE:
@@ -481,7 +481,7 @@ def angel(root):
                 break;
             case MOVE_ELECTROWEB:
                 if(battleCtx->defender!=BATTLER_NONE&&t->curHP){
-                    t->statBoosts[BATTLE_STAT_SPEED]=MIN_STAT_STAGE;
+                    t->statBoosts[BATTLE_STAT_SPEED]=0;
                     Mercury_R8Bind(battleCtx,battleCtx->attacker,battleCtx->defender,battleCtx->moveCur);
                 }break;
             case MOVE_BUG_BITE:
