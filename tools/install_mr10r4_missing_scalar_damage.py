@@ -202,7 +202,7 @@ def patch_blind_rage(root: Path) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def patch_cont​empt(root: Path) -> None:
+def patch_contempt(root: Path) -> None:
     lib = root / "src/battle/battle_lib.c"
     script = root / "src/battle/battle_script.c"
 
@@ -802,7 +802,7 @@ def main() -> None:
     validate_partition(args.partition.resolve())
     patch_battle_aura(root)
     patch_blind_rage(root)
-    patch_cont​empt(root)
+    patch_contempt(root)
     patch_elemental_vortex_and_reservoir(root)
     patch_damage_stat_family(root)
     patch_nika_catastrophe_weather(root)
