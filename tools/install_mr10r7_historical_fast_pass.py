@@ -71,9 +71,11 @@ def insert_after_once(path: Path, anchor: str, insertion: str, marker: str, labe
 
 
 def function_bounds(text: str, signature: str) -> tuple[int, int]:
-    start = text.find(signature)
+    start = text.find(signature + "\n{")
     if start < 0:
-        raise SystemExit(f"function not found: {signature}")
+        start = text.find(signature + " {")
+    if start < 0:
+        raise SystemExit(f"function definition not found: {signature}")
     open_brace = text.find("{", start)
     if open_brace < 0:
         raise SystemExit(f"opening brace not found: {signature}")
