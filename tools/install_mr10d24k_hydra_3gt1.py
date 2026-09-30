@@ -15,10 +15,10 @@ import argparse,json
 
 ABILITIES={"ABILITY_MR_HYDRA":739,"ABILITY_MR_3_GT_1":914}
 
-def rep(p,a,b):
+def rep(p,a,b,label="replacement"):
  t=p.read_text()
  if b in t:return
- if t.count(a)!=1:raise SystemExit(f"anchor mismatch {p}: {t.count(a)}")
+ if t.count(a)!=1:raise SystemExit(f"{label}: anchor mismatch {p}: {t.count(a)}")
  p.write_text(t.replace(a,b,1))
 
 def ins(p,a,s):
@@ -69,7 +69,7 @@ def patch(root):
         return 0;
 
     default:
-""")
+""","Hydra ability dispatch")
  rep(ctl,
 """    battleCtx->mercuryCustomMultiHitActive = TRUE;
     battleCtx->mercuryCustomMultiHitTriggerAbility =
@@ -80,7 +80,7 @@ def patch(root):
     battleCtx->mercuryCustomMultiHitTriggerAbility =
         Battler_Ability(battleCtx, battleCtx->attacker);
      battleCtx->multiHitCounter = hits;
-""")
+""","Hydra multi-hit setup")
  lib=root/"src/battle/battle_lib.c"
  rep(lib,
 """        if (movePower == 0 && MOVE_DATA(move).power) {
@@ -119,7 +119,7 @@ def patch(root):
     }
 
     GF_ASSERT(battleCtx->powerMul >= 10);
-""")
+""","Hydra damage/Riptide")
  # Hubris is queued at the faint-resolution lane, not MoveEnd: MoveEnd runs after
  # EXP/switch processing and can observe stale zero-HP defenders.
  t=ctl.read_text()
