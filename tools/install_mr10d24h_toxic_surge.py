@@ -24,6 +24,25 @@ def patch(root):
  terrain=root/"include/constants/battle/terrain.h"
  bef(terrain,"#endif // POKEPLATINUM_CONSTANTS_BATTLE_TERRAIN_H\n","#define MERCURY_TERRAIN_TOXIC    5\n\n","toxic terrain constant")
  lib=root/"src/battle/battle_lib.c"
+ script=root/"src/battle/battle_script.c"
+ # While Toxic Terrain is active, newly placed Spikes become Toxic Spikes.
+ # This is done at the native placement command so layer caps/masks/Defog/AI
+ # continue to use Platinum's ordinary side-condition representation.
+ spike_anchor="""    if (battleCtx->sideConditions[defendingSide].spikesLayers == 3) {
+"""
+ spike_block="""    if (battleCtx->mercuryTerrainType == MERCURY_TERRAIN_TOXIC) {
+        if (battleCtx->sideConditions[defendingSide].toxicSpikesLayers == 2) {
+            battleCtx->selfTurnFlags[battleCtx->attacker].skipPressureCheck = TRUE;
+            BattleScript_Iter(battleCtx, jumpOnFail);
+        } else {
+            battleCtx->sideConditionsMask[defendingSide] |= SIDE_CONDITION_TOXIC_SPIKES;
+            battleCtx->sideConditions[defendingSide].toxicSpikesLayers++;
+        }
+        return FALSE;
+    }
+
+"""
+ bef(script,spike_anchor,spike_block,"Toxic Terrain Spikes conversion")
  # Poison power boost beside existing terrain power handling.
  anchor="""    if (Mercury_IsGroundedForTerrain(battleCtx, attacker)) {
 """
@@ -80,7 +99,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument("pokeplatinum_root",type=Path);ap.add_argument("--implemented-registry",type=Path,required=True);ap.add_argument("--report",type=Path,default=Path("mr10d24h-toxic-surge.json"));a=ap.parse_args()
  root=a.pokeplatinum_root.resolve();patch(root);reg(a.implemented_registry.resolve())
  ab=[x.strip() for x in (root/"generated/abilities.txt").read_text().splitlines() if x.strip()];lib=(root/"src/battle/battle_lib.c").read_text();ctl=(root/"src/battle/battle_controller_player.c").read_text();terrain=(root/"include/constants/battle/terrain.h").read_text()
- checks={"stable_id":len(ab)>AID and ab[AID]==TOKEN,"toxic_terrain_constant":"MERCURY_TERRAIN_TOXIC" in terrain,"sets_on_entry":"case ABILITY_MR_TOXIC_SURGE:" in lib and "Mercury_SetTerrain(battleCtx, MERCURY_TERRAIN_TOXIC)" in lib,"poison_boost_30":"movePower = movePower * 13 / 10;" in lib,"grounded_chip":"Mercury_IsGroundedForTerrain(battleCtx, i)" in ctl and "maxHP / 8" in ctl,"poison_steel_exempt":"TYPE_POISON" in ctl and "TYPE_STEEL" in ctl,"five_turn_lifecycle":"mercuryTerrainTurns = 5" in lib,"registry":TOKEN in a.implemented_registry.read_text(),"mr07_untouched":True}
+ checks={"stable_id":len(ab)>AID and ab[AID]==TOKEN,"toxic_terrain_constant":"MERCURY_TERRAIN_TOXIC" in terrain,"sets_on_entry":"case ABILITY_MR_TOXIC_SURGE:" in lib and "Mercury_SetTerrain(battleCtx, MERCURY_TERRAIN_TOXIC)" in lib,"poison_boost_30":"movePower = movePower * 13 / 10;" in lib,"grounded_chip":"Mercury_IsGroundedForTerrain(battleCtx, i)" in ctl and "maxHP / 8" in ctl,"poison_steel_exempt":"TYPE_POISON" in ctl and "TYPE_STEEL" in ctl,"spikes_to_toxic":"mercuryTerrainType == MERCURY_TERRAIN_TOXIC" in (root/"src/battle/battle_script.c").read_text() and "toxicSpikesLayers++" in (root/"src/battle/battle_script.c").read_text(),"five_turn_lifecycle":"mercuryTerrainTurns = 5" in lib,"registry":TOKEN in a.implemented_registry.read_text(),"mr07_untouched":True}
  status="PASS" if all(checks.values()) else "FAIL";a.report.write_text(json.dumps({"gate":"MERCURY_MR10D24H_TOXIC_SURGE","status":status,"implemented":[NAME],"remaining_after_d24h":6,"checks":checks},indent=2)+"\n");print(status)
  if status!="PASS":raise SystemExit("D24H failed")
 if __name__=="__main__":main()
