@@ -133,11 +133,38 @@
         "Twinkle Toes",
         "Old Mariner"
       ]
+    },
+    {
+      "batch": "R7",
+      "count": 20,
+      "script": "tools/install_mr10r7_historical_fast_pass.py",
+      "abilities": [
+        "Balloon Blitz",
+        "Blood Stigma",
+        "Brawling Wyvern",
+        "Chunky Bass Line",
+        "Frost Burn",
+        "Ice Downfall",
+        "Metallic Jaws",
+        "Monster Mash",
+        "Overwatch",
+        "Pretentious",
+        "Raging Goddess",
+        "Retriever",
+        "Steel Beetle",
+        "Tar Toss",
+        "Trickster",
+        "Two Step",
+        "Web Spinner",
+        "Wind Rage",
+        "Woodland Curse",
+        "Cosmic Daze"
+      ]
     }
   ],
-  "explicit_runtime_restored_so_far": 84,
-  "explicit_runtime_remaining": 41,
-  "certification": "R6 workflow now executes the actual 20-row historical-missing fast pass. 84 runtime identities are implemented across R1-R6, with Pretty Privilege outside the 124-row queue; therefore 83/124 historical-missing identities are restored and 41 remain. Certification remains gated on Actions PASS.",
+  "explicit_runtime_restored_so_far": 104,
+  "explicit_runtime_remaining": 21,
+  "certification": "R7 native compile/ROM workflow added. 104 runtime identities are assigned across R1-R7, with Pretty Privilege outside the 124-row historical queue; therefore 103/124 historical-missing identities are assigned and 21 remain. R6/R7 certification still requires Actions PASS.",
   "namespace": {
     "official_range": [
       0,
@@ -150,5 +177,5 @@
     "next_free_id": 1067,
     "persistence_bits": 16
   },
-  "historical_missing_runtime_restored": 83
+  "historical_missing_runtime_restored": 103
 }
