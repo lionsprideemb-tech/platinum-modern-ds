@@ -490,7 +490,11 @@ def angel(root):
             case MOVE_ELECTROWEB:
                 if(battleCtx->defender!=BATTLER_NONE&&t->curHP){
                     t->statBoosts[BATTLE_STAT_SPEED]=0;
-                    Mercury_R8Bind(battleCtx,battleCtx->attacker,battleCtx->defender,battleCtx->moveCur);
+                    if((t->statusVolatile&VOLATILE_CONDITION_BIND)==0){
+                        t->statusVolatile|=(4<<VOLATILE_CONDITION_BIND_SHIFT);
+                        t->moveEffectsData.bindTarget=battleCtx->attacker;
+                        t->moveEffectsData.bindingMove=battleCtx->moveCur;
+                    }
                 }break;
             case MOVE_BUG_BITE:
                 if(ATTACKER_SELF_TURN_FLAGS.shellBellDamageDealt<0){
