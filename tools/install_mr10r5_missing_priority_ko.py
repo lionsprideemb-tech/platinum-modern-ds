@@ -421,20 +421,18 @@ def patch_contact_reactions(root: Path) -> None:
 def patch_after_move_family(root: Path) -> None:
     path = root / "src/battle/battle_controller_player.c"
 
-    enum_old = """    AFTER_MOVE_HIT_STATE_SHELL_BELL,
-    AFTER_MOVE_HIT_STATE_LIFE_ORB,
-
-    AFTER_MOVE_HIT_STATE_END
-"""
-    enum_new = """    AFTER_MOVE_HIT_STATE_SHELL_BELL,
-    AFTER_MOVE_HIT_STATE_LIFE_ORB,
-    AFTER_MOVE_HIT_STATE_MERCURY_ENERGY_SIPHON,
+    insert_before_once(
+        path,
+        """    AFTER_MOVE_HIT_STATE_END
+""",
+        """    AFTER_MOVE_HIT_STATE_MERCURY_ENERGY_SIPHON,
     AFTER_MOVE_HIT_STATE_MERCURY_VITALITY_STRIKE,
     AFTER_MOVE_HIT_STATE_MERCURY_BLOOD_PRICE,
 
-    AFTER_MOVE_HIT_STATE_END
-"""
-    replace_once(path, enum_old, enum_new, "R5 after-move state enum")
+""",
+        "AFTER_MOVE_HIT_STATE_MERCURY_ENERGY_SIPHON,",
+        "R5 after-move state enum",
+    )
 
     helper_anchor = """static BOOL BattleControllerPlayer_TriggerAfterMoveHitEffects(BattleSystem *battleSys, BattleContext *battleCtx)
 {
