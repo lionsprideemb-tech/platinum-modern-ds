@@ -564,7 +564,7 @@ def patch_attacker_reactions(root: Path) -> None:
         path,
         anchor,
         insertion,
-        "== ABILITY_VENOBLAZE_PINCERS",
+        "== ABILITY_STUN_SHOCK",
         "Venoblaze/Stun Shock attacker reactions",
     )
 
