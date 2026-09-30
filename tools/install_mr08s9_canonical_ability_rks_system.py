@@ -460,15 +460,17 @@ def patch_multi_attack(root: Path, move_registry: Path | None) -> None:
         original = original.replace(marker, multi + marker, 1)
         effect.write_text(original, encoding="utf-8")
 
-    if move_registry is not None:
-        rows = [
-            line.strip()
-            for line in move_registry.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
-        if "MOVE_MULTI_ATTACK" not in rows:
-            rows.append("MOVE_MULTI_ATTACK")
-        move_registry.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    registry_path = move_registry or (root / "generated/moves.txt")
+    rows = [
+        line.strip()
+        for line in registry_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    if "MOVE_MULTI_ATTACK" not in rows:
+        if "MAX_MOVES" not in rows:
+            raise SystemExit("Multi-Attack: move registry missing MAX_MOVES")
+        rows.insert(rows.index("MAX_MOVES"), "MOVE_MULTI_ATTACK")
+    registry_path.write_text("\n".join(rows) + "\n", encoding="utf-8")
 
 
 def patch_script_item_locks(root: Path) -> None:
@@ -653,11 +655,17 @@ def validate(
     item_lines = set((root / "generated/items.txt").read_text(encoding="utf-8").splitlines())
     memory_tokens = {f"ITEM_{token}_MEMORY" for token, _ in MEMORIES}
 
-    move_registry_ok = True
-    if move_registry is not None:
-        move_registry_ok = "MOVE_MULTI_ATTACK" in set(
-            move_registry.read_text(encoding="utf-8").splitlines()
-        )
+    registry_path = move_registry or (root / "generated/moves.txt")
+    registry_rows = [
+        line.strip()
+        for line in registry_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    move_registry_ok = (
+        "MOVE_MULTI_ATTACK" in registry_rows
+        and "MAX_MOVES" in registry_rows
+        and registry_rows.index("MOVE_MULTI_ATTACK") < registry_rows.index("MAX_MOVES")
+    )
 
     checks = {
         "all_17_memories_registered":
