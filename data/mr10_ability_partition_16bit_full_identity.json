@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "branch": "feature/mr10-16bit-ability-storage",
   "policy": "Canonical identities keep official IDs 0..310. Non-canonical identities receive Mercury custom IDs. The 93 staged new_engine_system rows remain mechanically disabled until review. Five previously owner-approved Mercury abilities that lived on the earlier runtime-design branch are carried forward at their reserved IDs 317..321 and are not part of that 93-row ER/system-review hold.",
   "counts": {
@@ -3466,13 +3466,13 @@
       "token": "ABILITY_BALLOON_BLITZ",
       "source_name": "Balloon Blitz",
       "display_name": "Balloon Blitz",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Inflatable + Hyper Aggressive.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 349,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3484,7 +3484,12 @@
       ],
       "legacy_runtime_reference_count": 6,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 755,
+        "name": "Balloon Blitz"
+      }
     },
     {
       "source_name": "Balloon Bomb",
@@ -3533,13 +3538,13 @@
       "token": "ABILITY_BATTLE_AURA",
       "source_name": "Battle Aura",
       "display_name": "Battle Aura",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Boosts each battler's crit rate by +2.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 353,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3548,7 +3553,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 637,
+        "name": "Battle Aura"
+      }
     },
     {
       "source_name": "Beautiful Music",
@@ -3611,13 +3621,13 @@
       "token": "ABILITY_BLIND_RAGE",
       "source_name": "Blind Rage",
       "display_name": "Blind Rage",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Scrappy + Mold Breaker.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 358,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3627,7 +3637,12 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 694,
+        "name": "Blind Rage"
+      }
     },
     {
       "source_name": "Blitz Boxer",
@@ -3676,13 +3691,13 @@
       "token": "ABILITY_BLOOD_PRICE",
       "source_name": "Blood Price",
       "display_name": "Blood Price",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Does 30% more damage but lose 10% HP when attacking.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 362,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3691,7 +3706,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 536,
+        "name": "Blood Price"
+      }
     },
     {
       "source_name": "Blood Stain",
@@ -3715,13 +3735,13 @@
       "token": "ABILITY_BLOOD_STIGMA",
       "source_name": "Blood Stigma",
       "display_name": "Blood Stigma",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Immune to status. Gets a 2x boost vs bleeding foes.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 364,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3730,20 +3750,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 674,
+        "name": "Blood Stigma"
+      }
     },
     {
       "id": 365,
       "token": "ABILITY_BRAWLING_WYVERN",
       "source_name": "Brawling Wyvern",
       "display_name": "Brawling Wyvern",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "No guard + Dragon type moves become punching moves.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 365,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3752,7 +3777,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 600,
+        "name": "Brawling Wyvern"
+      }
     },
     {
       "source_name": "Butter Up",
@@ -3835,13 +3865,13 @@
       "token": "ABILITY_CHROME_COAT",
       "source_name": "Chrome Coat",
       "display_name": "Chrome Coat",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Reduces special damage taken by 40%, but decreases Speed by 10%.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 371,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3851,20 +3881,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 539,
+        "name": "Chrome Coat"
+      }
     },
     {
       "id": 372,
       "token": "ABILITY_CHUNKY_BASS_LINE",
       "source_name": "Chunky Bass Line",
       "display_name": "Chunky Bass Line",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Triggers a 40BP Earthquake after using a sound move.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 372,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3873,7 +3908,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 641,
+        "name": "Chunky Bass Line"
+      }
     },
     {
       "source_name": "Clueless",
@@ -3956,13 +3996,13 @@
       "token": "ABILITY_CONTEMPT",
       "source_name": "Contempt",
       "display_name": "Contempt",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Unaware + Defiant.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 378,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3973,20 +4013,25 @@
       ],
       "legacy_runtime_reference_count": 5,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 605,
+        "name": "Contempt"
+      }
     },
     {
       "id": 379,
       "token": "ABILITY_CRUSHING_JAW",
       "source_name": "Crushing Jaw",
       "display_name": "Crushing Jaw",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Strong Jaw + Biting moves have a 50% chance to lower defense.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 379,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -3995,20 +4040,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 978,
+        "name": "Crushing Jaw"
+      }
     },
     {
       "id": 380,
       "token": "ABILITY_CRYO_PROFICIENCY",
       "source_name": "Cryo Proficiency",
       "display_name": "Cryo Proficiency",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Freezing Point + triggers hail when hit.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 380,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4018,7 +4068,12 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 493,
+        "name": "Cryo Proficiency"
+      }
     },
     {
       "source_name": "Crystallize",
@@ -4039,13 +4094,13 @@
       "token": "ABILITY_CUTE_ANTECEDENCE",
       "source_name": "Pretty Privilege",
       "display_name": "Pretty Privilege",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "At full HP, gives +1 priority to its Fairy-type moves.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 382,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4054,7 +4109,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "distinct historical identity restored; same display name is not treated as alias"
+      "id_reconciliation_reason": "distinct historical identity restored; same display name is not treated as alias",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 628,
+        "name": "Pretty Privilege"
+      }
     },
     {
       "source_name": "Stygian Rush",
@@ -4089,13 +4149,13 @@
       "token": "ABILITY_DEAD_POWER",
       "source_name": "Dead Power",
       "display_name": "Dead Power",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "1.5x Attack boost. 20% chance to curse on contact moves.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 385,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4104,7 +4164,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 599,
+        "name": "Dead Power"
+      }
     },
     {
       "source_name": "Demolitionist",
@@ -4128,13 +4193,13 @@
       "token": "ABILITY_DEPRAVITY",
       "source_name": "Depravity",
       "display_name": "Depravity",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Merciless + Overcharge.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 387,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4143,7 +4208,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 716,
+        "name": "Depravity"
+      }
     },
     {
       "source_name": "Desert Cloak",
@@ -4192,13 +4262,13 @@
       "token": "ABILITY_DOUBLE_IRON_BARBS",
       "source_name": "Sharp Edges",
       "display_name": "Sharp Edges",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "1/6 HP damage when touched.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 391,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4207,7 +4277,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 574,
+        "name": "Sharp Edges"
+      }
     },
     {
       "source_name": "Draconize",
@@ -4259,13 +4334,13 @@
       "token": "ABILITY_DRAKE_OF_RAGE",
       "source_name": "Drake Of Rage",
       "display_name": "Drake Of Rage",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Tinted Lens + Rampage",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 395,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4274,7 +4349,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 811,
+        "name": "Drake Of Rage"
+      }
     },
     {
       "source_name": "Dream State",
@@ -4340,13 +4420,13 @@
       "token": "ABILITY_EARLY_GRAVE",
       "source_name": "Early Grave",
       "display_name": "Early Grave",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Ghost-type moves get +1 priority at max HP.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 400,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4355,7 +4435,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 522,
+        "name": "Early Grave"
+      }
     },
     {
       "source_name": "Earthbound",
@@ -4376,13 +4461,13 @@
       "token": "ABILITY_ECTOPLASM",
       "source_name": "Ectoplasm",
       "display_name": "Ectoplasm",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Ups highest attacking stat by 1.5x in fog.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 402,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4391,7 +4476,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 621,
+        "name": "Ectoplasm"
+      }
     },
     {
       "source_name": "Egoist",
@@ -4440,13 +4530,13 @@
       "token": "ABILITY_ELEMENTAL_VORTEX",
       "source_name": "Elemental Vortex",
       "display_name": "Elemental Vortex",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Flash Fire + Water Absorb.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 406,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4455,20 +4545,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 665,
+        "name": "Elemental Vortex"
+      }
     },
     {
       "id": 407,
       "token": "ABILITY_EMANATE",
       "source_name": "Emanate",
       "display_name": "Emanate",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Normal moves become Psychic. Psychic moves are empowered.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 407,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4478,20 +4573,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 459,
+        "name": "Emanate"
+      }
     },
     {
       "id": 408,
       "token": "ABILITY_ENERGY_SIPHON",
       "source_name": "Energy Siphon",
       "display_name": "Energy Siphon",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Heals the user for 1/4 of the damage they deal.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 408,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4500,7 +4600,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 748,
+        "name": "Energy Siphon"
+      }
     },
     {
       "source_name": "Entrance",
@@ -4521,13 +4626,13 @@
       "token": "ABILITY_ENVENOM",
       "source_name": "Envenom",
       "display_name": "Envenom",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Moves have a 30% chance to poison the target.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 410,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4536,7 +4641,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 852,
+        "name": "Envenom"
+      }
     },
     {
       "source_name": "Equinox",
@@ -4571,13 +4681,13 @@
       "token": "ABILITY_ETHEREAL_RUSH",
       "source_name": "Ethereal Rush",
       "display_name": "Ethereal Rush",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "This Pokémon's Speed gets a 1.5x boost in fog.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 413,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4586,7 +4696,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 627,
+        "name": "Ethereal Rush"
+      }
     },
     {
       "source_name": "Evaporate",
@@ -4663,13 +4778,13 @@
       "token": "ABILITY_FERTILIZE",
       "source_name": "Fertilize",
       "display_name": "Fertilize",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Normal moves become Grass. Grass moves are empowered.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 419,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4679,20 +4794,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 507,
+        "name": "Fertilize"
+      }
     },
     {
       "id": 420,
       "token": "ABILITY_FIGHTER",
       "source_name": "Fighter",
       "display_name": "Fighter",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Boosts Fight.-type moves by 1.2x, or 1.5x when below 1/3 HP.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 420,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4701,20 +4821,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 509,
+        "name": "Fighter"
+      }
     },
     {
       "id": 421,
       "token": "ABILITY_FIRE_SCALES",
       "source_name": "Fire Scales",
       "display_name": "Fire Scales",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Halves damage taken by Special moves. Does NOT double SpDef.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 421,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4723,20 +4848,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 571,
+        "name": "Fire Scales"
+      }
     },
     {
       "id": 422,
       "token": "ABILITY_FLAME_BUBBLE",
       "source_name": "Flame Bubble",
       "display_name": "Flame Bubble",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Water Bubble + Flaming Soul.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 422,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4746,20 +4876,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 664,
+        "name": "Flame Bubble"
+      }
     },
     {
       "id": 423,
       "token": "ABILITY_FLAME_SHIELD",
       "source_name": "Flame Shield",
       "display_name": "Flame Shield",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Takes 35% less damage from Super-effective moves.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 423,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4768,20 +4903,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 712,
+        "name": "Flame Shield"
+      }
     },
     {
       "id": 424,
       "token": "ABILITY_FLAMING_MAW",
       "source_name": "Flaming Maw",
       "display_name": "Flaming Maw",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Strong Jaw + Flaming Jaws",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 424,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4790,7 +4930,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 615,
+        "name": "Flaming Maw"
+      }
     },
     {
       "source_name": "Flaming Soul",
@@ -4853,13 +4998,13 @@
       "token": "ABILITY_FRAGRANT_DAZE",
       "source_name": "Fragrant Daze",
       "display_name": "Fragrant Daze",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "30% chance to confuse on contact.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 429,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4868,20 +5013,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 618,
+        "name": "Fragrant Daze"
+      }
     },
     {
       "id": 430,
       "token": "ABILITY_FREEZING_POINT",
       "source_name": "Freezing Point",
       "display_name": "Freezing Point",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "20% chance to get frostbitten on contact and 30% non-contact.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 430,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4890,7 +5040,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 492,
+        "name": "Freezing Point"
+      }
     },
     {
       "source_name": "From the Shadows",
@@ -4911,13 +5066,13 @@
       "token": "ABILITY_FROST_BURN",
       "source_name": "Frost Burn",
       "display_name": "Frost Burn",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Triggers 40BP Ice Beam after using a Fire-type move.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 432,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4926,20 +5081,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 475,
+        "name": "Frost Burn"
+      }
     },
     {
       "id": 433,
       "token": "ABILITY_FUNERAL_PYRE",
       "source_name": "Funeral Pyre",
       "display_name": "Funeral Pyre",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Non-Ghost and Dark-types take 1/4 damage every turn.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 433,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -4948,7 +5108,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 663,
+        "name": "Funeral Pyre"
+      }
     },
     {
       "source_name": "Fungal Infection",
@@ -5025,13 +5190,13 @@
       "token": "ABILITY_GLADIATOR",
       "source_name": "Gladiator",
       "display_name": "Gladiator",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Boosts Fighting-type moves by 1.3x, or 1.8x when below 1/3 HP.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 439,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5040,7 +5205,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 770,
+        "name": "Gladiator"
+      }
     },
     {
       "source_name": "Greater Spirit",
@@ -5103,13 +5273,13 @@
       "token": "ABILITY_GUILT_TRIP",
       "source_name": "Guilt Trip",
       "display_name": "Guilt Trip",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Sharply lowers attacker's Attack and SpAtk when fainting.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 444,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5118,7 +5288,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 559,
+        "name": "Guilt Trip"
+      }
     },
     {
       "source_name": "Half Drake",
@@ -5156,13 +5331,13 @@
       "token": "ABILITY_HAUNTING_FRENZY",
       "source_name": "Haunting Frenzy",
       "display_name": "Haunting Frenzy",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "20% chance to flinch the opponent. +1 speed on kill.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 447,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5171,20 +5346,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 594,
+        "name": "Haunting Frenzy"
+      }
     },
     {
       "id": 448,
       "token": "ABILITY_HEADSTRONG",
       "source_name": "Headstrong",
       "display_name": "Headstrong",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "+1 Spdef on entry.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 448,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5193,7 +5373,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 803,
+        "name": "Headstrong"
+      }
     },
     {
       "source_name": "Hellblaze",
@@ -5214,13 +5399,13 @@
       "token": "ABILITY_HIGHER_RANK",
       "source_name": "Higher Rank",
       "display_name": "Higher Rank",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Priority moves get a 1.2x boost.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 450,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5229,7 +5414,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 662,
+        "name": "Higher Rank"
+      }
     },
     {
       "source_name": "Hot Coals",
@@ -5267,13 +5457,13 @@
       "token": "ABILITY_HUBRIS",
       "source_name": "Hubris",
       "display_name": "Hubris",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "KOs raise SpAtk by one stage.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 453,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5282,7 +5472,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 533,
+        "name": "Hubris"
+      }
     },
     {
       "source_name": "Imposing Wings",
@@ -5379,13 +5574,13 @@
       "token": "ABILITY_ICE_DOWNFALL",
       "source_name": "Ice Downfall",
       "display_name": "Ice Downfall",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Counters contact with 60BP Icicle Crash.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 460,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5394,7 +5589,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 633,
+        "name": "Ice Downfall"
+      }
     },
     {
       "source_name": "Ill Will",
@@ -5443,13 +5643,13 @@
       "token": "ABILITY_IMPULSE",
       "source_name": "Impulse",
       "display_name": "Impulse",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Non-contact moves use the Speed stat for damage.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 464,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5458,7 +5658,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 551,
+        "name": "Impulse"
+      }
     },
     {
       "source_name": "Infernal Rage",
@@ -5605,13 +5810,13 @@
       "token": "ABILITY_LAST_STAND",
       "source_name": "Last Stand",
       "display_name": "Last Stand",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Def and SpDef increase as HP drops. Max 1.6x.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 475,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5620,7 +5825,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 634,
+        "name": "Last Stand"
+      }
     },
     {
       "source_name": "Let's Roll",
@@ -5725,13 +5935,13 @@
       "token": "ABILITY_LOW_VISIBILITY",
       "source_name": "Low Visibility",
       "display_name": "Low Visibility",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Summons Eerie Fog on entry.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 483,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5740,7 +5950,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 619,
+        "name": "Low Visibility"
+      }
     },
     {
       "source_name": "Lumberjack",
@@ -5823,13 +6038,13 @@
       "token": "ABILITY_MALICIOUS",
       "source_name": "Malicious",
       "display_name": "Malicious",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Lowers the foe's highest Attack and Defense stat.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 489,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5838,7 +6053,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 598,
+        "name": "Malicious"
+      }
     },
     {
       "source_name": "Malodor",
@@ -5904,13 +6124,13 @@
       "token": "ABILITY_METALLIC_JAWS",
       "source_name": "Metallic Jaws",
       "display_name": "Metallic Jaws",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Metallic + Primal Maw.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 494,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5922,7 +6142,12 @@
       ],
       "legacy_runtime_reference_count": 6,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 792,
+        "name": "Metallic Jaws"
+      }
     },
     {
       "source_name": "Mighty Horn",
@@ -5943,13 +6168,13 @@
       "token": "ABILITY_MIND_CRUSH",
       "source_name": "Mind Crunch",
       "display_name": "Mind Crunch",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Biting moves use SpAtk and deal 30% more damage.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 496,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -5958,7 +6183,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 568,
+        "name": "Mind Crunch"
+      }
     },
     {
       "source_name": "Mineralize",
@@ -5993,13 +6223,13 @@
       "token": "ABILITY_MOLTEN_BLADES",
       "source_name": "Molten Blades",
       "display_name": "Molten Blades",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Keen Edge + Keen Edge moves have a 20% chance to burn.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 499,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6008,7 +6238,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 593,
+        "name": "Molten Blades"
+      }
     },
     {
       "source_name": "Molten Down",
@@ -6043,13 +6278,13 @@
       "token": "ABILITY_MONSTER_MASH",
       "source_name": "Monster Mash",
       "display_name": "Monster Mash",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Casts Trick-or-Treat on entry.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 502,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6058,20 +6293,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 516,
+        "name": "Monster Mash"
+      }
     },
     {
       "id": 503,
       "token": "ABILITY_MOON_SPIRIT",
       "source_name": "Moon Spirit",
       "display_name": "Moon Spirit",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Fairy & Dark gains STAB. Moonlight recovers 75% HP.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 503,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6081,20 +6321,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 478,
+        "name": "Moon Spirit"
+      }
     },
     {
       "id": 504,
       "token": "ABILITY_MOSH_PIT",
       "source_name": "Mosh Pit",
       "display_name": "Mosh Pit",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Ally's attacks get a 1.25x boost. 1.5x if attack causes recoil.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 504,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6103,7 +6348,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 672,
+        "name": "Mosh Pit"
+      }
     },
     {
       "source_name": "Mountaineer",
@@ -6152,13 +6402,13 @@
       "token": "ABILITY_MYTHICAL_ARROWS",
       "source_name": "Mythical Arrows",
       "display_name": "Mythical Arrows",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Arrow moves become special and deal 30% more damage.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 508,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6167,20 +6417,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 601,
+        "name": "Mythical Arrows"
+      }
     },
     {
       "id": 509,
       "token": "ABILITY_NEUROTOXIN",
       "source_name": "Neurotoxin",
       "display_name": "Neurotoxin",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Inflicting poison also lowers Attack, SpAtk, and Speed.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 509,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6189,20 +6444,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 750,
+        "name": "Neurotoxin"
+      }
     },
     {
       "id": 510,
       "token": "ABILITY_NIKA",
       "source_name": "Nika",
       "display_name": "Nika",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Iron fist + Water moves function normally under sun.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 510,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6211,20 +6471,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 469,
+        "name": "Nika"
+      }
     },
     {
       "id": 511,
       "token": "ABILITY_NOISE_CANCEL",
       "source_name": "Noise Cancel",
       "display_name": "Noise Cancel",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Protects the party from sound-based moves.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 511,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6233,20 +6498,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 595,
+        "name": "Noise Cancel"
+      }
     },
     {
       "id": 512,
       "token": "ABILITY_OLD_MARINER",
       "source_name": "Old Mariner",
       "display_name": "Old Mariner",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Seaweed + Water STAB.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 512,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6255,7 +6525,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 620,
+        "name": "Old Mariner"
+      }
     },
     {
       "source_name": "Olé!",
@@ -6290,13 +6565,13 @@
       "token": "ABILITY_OVERWATCH",
       "source_name": "Overwatch",
       "display_name": "Overwatch",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "On the Prowl + Stakeout.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 515,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6306,7 +6581,12 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 727,
+        "name": "Overwatch"
+      }
     },
     {
       "source_name": "Overwhelm",
@@ -6361,13 +6641,13 @@
       "token": "ABILITY_PATTERN_CHANGE",
       "source_name": "Pattern Change",
       "display_name": "Pattern Change",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Protean + Shed Skin",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 519,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6378,7 +6658,12 @@
       ],
       "legacy_runtime_reference_count": 5,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 667,
+        "name": "Pattern Change"
+      }
     },
     {
       "source_name": "Perfectionist",
@@ -6413,13 +6698,13 @@
       "token": "ABILITY_PERMANENCE",
       "source_name": "Permanence",
       "display_name": "Permanence",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Foes can't heal in any way.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 522,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6428,20 +6713,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 532,
+        "name": "Permanence"
+      }
     },
     {
       "id": 523,
       "token": "ABILITY_PETRIFY",
       "source_name": "Petrify",
       "display_name": "Petrify",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Clears stat buffs then lowers speed by one stage on entry.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 523,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6450,7 +6740,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 677,
+        "name": "Petrify"
+      }
     },
     {
       "source_name": "Phantom",
@@ -6476,13 +6771,13 @@
       "token": "ABILITY_PHANTOM_PAIN",
       "source_name": "Phantom Pain",
       "display_name": "Phantom Pain",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Ghost-type moves deal normal damage to Normal.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 525,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6491,20 +6786,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 457,
+        "name": "Phantom Pain"
+      }
     },
     {
       "id": 526,
       "token": "ABILITY_PIERCING_SOLO",
       "source_name": "Piercing Solo",
       "display_name": "Piercing Solo",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Sound moves cause bleeding.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 526,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6513,7 +6813,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 639,
+        "name": "Piercing Solo"
+      }
     },
     {
       "source_name": "Power Core",
@@ -6548,13 +6853,13 @@
       "token": "ABILITY_POWER_METAL",
       "source_name": "Power Metal",
       "display_name": "Power Metal",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Sound moves get a 1.2x boost and become Steel if Normal.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 529,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6564,20 +6869,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 657,
+        "name": "Power Metal"
+      }
     },
     {
       "id": 530,
       "token": "ABILITY_PRETENTIOUS",
       "source_name": "Pretentious",
       "display_name": "Pretentious",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Dealing a KO raises Crit by one stage.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 530,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6586,7 +6896,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 649,
+        "name": "Pretentious"
+      }
     },
     {
       "source_name": "Pretty Princess",
@@ -6652,13 +6967,13 @@
       "token": "ABILITY_PUFFY",
       "source_name": "Puffy",
       "display_name": "Puffy",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Takes 1/2 dmg from contact moves but Fire moves hurt it 2x more.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 535,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6667,20 +6982,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 754,
+        "name": "Puffy"
+      }
     },
     {
       "id": 536,
       "token": "ABILITY_PURGATORY",
       "source_name": "Purgatory",
       "display_name": "Purgatory",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Boosts Ghost-type moves by 1.3x, or 1.8x when below 1/3 HP.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 536,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6689,20 +7009,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 458,
+        "name": "Purgatory"
+      }
     },
     {
       "id": 537,
       "token": "ABILITY_PURPLE_HAZE",
       "source_name": "Purple Haze",
       "display_name": "Purple Haze",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Triggers a 20BP Poison Gas after using a move.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 537,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6711,20 +7036,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 853,
+        "name": "Purple Haze"
+      }
     },
     {
       "id": 538,
       "token": "ABILITY_PYROCLASTIC_FLOW",
       "source_name": "Pyroclastic Flow",
       "display_name": "Pyroclastic Flow",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Molten Down + Corrosion.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 538,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6733,7 +7063,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 635,
+        "name": "Pyroclastic Flow"
+      }
     },
     {
       "source_name": "Pyromancy",
@@ -6802,13 +7137,13 @@
       "token": "ABILITY_RADIO_JAM",
       "source_name": "Radio Jam",
       "display_name": "Radio Jam",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Sound-based moves have a 20% chance to inflict disable.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 543,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6817,20 +7152,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 596,
+        "name": "Radio Jam"
+      }
     },
     {
       "id": 544,
       "token": "ABILITY_RAGE_POINT",
       "source_name": "Rage Point",
       "display_name": "Rage Point",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Gets a 1.5x boost while statused. Raises offenses when crit.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 544,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6839,7 +7179,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 703,
+        "name": "Rage Point"
+      }
     },
     {
       "source_name": "Raging Boxer",
@@ -6860,13 +7205,13 @@
       "token": "ABILITY_RAGING_GODDESS",
       "source_name": "Raging Goddess",
       "display_name": "Raging Goddess",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Rampage + Hyper Aggressive.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 546,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6878,20 +7223,25 @@
       ],
       "legacy_runtime_reference_count": 6,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 721,
+        "name": "Raging Goddess"
+      }
     },
     {
       "id": 547,
       "token": "ABILITY_RAGING_STORM",
       "source_name": "Raging Storm",
       "display_name": "Raging Storm",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Ups highest attacking stat by 1.5x in rain.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 547,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6900,7 +7250,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 935,
+        "name": "Raging Storm"
+      }
     },
     {
       "source_name": "Raw Wood",
@@ -6935,13 +7290,13 @@
       "token": "ABILITY_RESERVOIR",
       "source_name": "Reservoir",
       "display_name": "Reservoir",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Water Absorb + Storm Drain.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 550,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6951,20 +7306,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 749,
+        "name": "Reservoir"
+      }
     },
     {
       "id": 551,
       "token": "ABILITY_RESONANCE",
       "source_name": "Resonance",
       "display_name": "Resonance",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Sound moves have a 30% chance to cause bleeding.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 551,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -6973,7 +7333,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 626,
+        "name": "Resonance"
+      }
     },
     {
       "source_name": "Restraining Order",
@@ -6994,13 +7359,13 @@
       "token": "ABILITY_RETRIEVER",
       "source_name": "Retriever",
       "display_name": "Retriever",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Retrieves item on switch-out.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 553,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7009,20 +7374,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 515,
+        "name": "Retriever"
+      }
     },
     {
       "id": 554,
       "token": "ABILITY_REVERBATE",
       "source_name": "Reverberate",
       "display_name": "Reverberate",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Normal moves are Sound moves.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 554,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7031,7 +7401,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 812,
+        "name": "Reverberate"
+      }
     },
     {
       "source_name": "Rhythmic",
@@ -7080,13 +7455,13 @@
       "token": "ABILITY_ROUSED_FANGS",
       "source_name": "Megabite",
       "display_name": "Megabite",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Biting moves use SpAtk and deal 30% more damage.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 558,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7095,7 +7470,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "distinct historical identity restored; same display name is not treated as alias"
+      "id_reconciliation_reason": "distinct historical identity restored; same display name is not treated as alias",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 708,
+        "name": "Megabite"
+      }
     },
     {
       "source_name": "Sand Bender",
@@ -7116,13 +7496,13 @@
       "token": "ABILITY_SAND_GUARD",
       "source_name": "Sand Guard",
       "display_name": "Sand Guard",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Blocks priority and reduces special damage by 1/2 in sand.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 560,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7132,20 +7512,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 482,
+        "name": "Sand Guard"
+      }
     },
     {
       "id": 561,
       "token": "ABILITY_SAND_PIT",
       "source_name": "Sand Pit",
       "display_name": "Sand Pit",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Attacks with 20BP Sand Tomb on switch-in.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 561,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7154,7 +7539,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 745,
+        "name": "Sand Pit"
+      }
     },
     {
       "source_name": "Sand Song",
@@ -7203,13 +7593,13 @@
       "token": "ABILITY_SEPIA_LENS",
       "source_name": "Sepia Lens",
       "display_name": "Sepia Lens",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Tinted Lens + Sand Guard.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 565,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7220,20 +7610,25 @@
       ],
       "legacy_runtime_reference_count": 5,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 805,
+        "name": "Sepia Lens"
+      }
     },
     {
       "id": 566,
       "token": "ABILITY_SHINY_LIGHTNING",
       "source_name": "Shiny Lightning",
       "display_name": "Shiny Lightning",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Grants a 1.2x accuracy boost. Thunder never misses.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 566,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7242,7 +7637,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 631,
+        "name": "Shiny Lightning"
+      }
     },
     {
       "source_name": "Short Circuit",
@@ -7277,13 +7677,13 @@
       "token": "ABILITY_SLUDGY_MIX",
       "source_name": "Sludgy Mix",
       "display_name": "Sludgy Mix",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Intoxicate + Punk Rock.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 569,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7293,20 +7693,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 726,
+        "name": "Sludgy Mix"
+      }
     },
     {
       "id": 570,
       "token": "ABILITY_SMOKEY_MANEUVERS",
       "source_name": "Smokey Maneuvers",
       "display_name": "Smokey Maneuvers",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Evasion is boosted by 1.25x in fog.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 570,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7315,20 +7720,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 655,
+        "name": "Smokey Maneuvers"
+      }
     },
     {
       "id": 571,
       "token": "ABILITY_SMOLDERING_WOOD",
       "source_name": "Smoldering Wood",
       "display_name": "Smoldering Wood",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Raw Wood + Flame Body.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 571,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7337,20 +7747,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 1032,
+        "name": "Smoldering Wood"
+      }
     },
     {
       "id": 572,
       "token": "ABILITY_SNOWY_WRATH",
       "source_name": "Snowy Wrath",
       "display_name": "Snowy Wrath",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Snow Warning + Cryomancy.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 572,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7359,20 +7774,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 666,
+        "name": "Snowy Wrath"
+      }
     },
     {
       "id": 573,
       "token": "ABILITY_SNOW_SONG",
       "source_name": "Snow Song",
       "display_name": "Snow Song",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Sound moves get a 1.2x boost and become Ice if Normal.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 573,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7382,7 +7802,12 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 624,
+        "name": "Snow Song"
+      }
     },
     {
       "source_name": "Solenoglyphs",
@@ -7476,13 +7901,13 @@
       "token": "ABILITY_SPIKE_ARMOR",
       "source_name": "Spike Armor",
       "display_name": "Spike Armor",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "30% chance to bleed on contact or offense.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 580,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7491,7 +7916,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 537,
+        "name": "Spike Armor"
+      }
     },
     {
       "source_name": "Spinning Top",
@@ -7540,13 +7970,13 @@
       "token": "ABILITY_STEEL_BEETLE",
       "source_name": "Steel Beetle",
       "display_name": "Steel Beetle",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Raging Boxer + Pollinate.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 584,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7559,20 +7989,25 @@
       ],
       "legacy_runtime_reference_count": 7,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 701,
+        "name": "Steel Beetle"
+      }
     },
     {
       "id": 585,
       "token": "ABILITY_STRIKER_PIXILATE",
       "source_name": "Twinkle Toes",
       "display_name": "Twinkle Toes",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Boosts the power of kicking moves by 1.3x + Pixilate.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 585,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7582,20 +8017,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 756,
+        "name": "Twinkle Toes"
+      }
     },
     {
       "id": 586,
       "token": "ABILITY_STUN_SHOCK",
       "source_name": "Stun Shock",
       "display_name": "Stun Shock",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Attacks have a 60% chance to Paralyze or Poison.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 586,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7604,20 +8044,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 720,
+        "name": "Stun Shock"
+      }
     },
     {
       "id": 587,
       "token": "ABILITY_SUBDUE",
       "source_name": "Subdue",
       "display_name": "Subdue",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Doubles stat drop effects used by this pokemon.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 587,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7626,20 +8071,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 556,
+        "name": "Subdue"
+      }
     },
     {
       "id": 588,
       "token": "ABILITY_SUGAR_RUSH",
       "source_name": "Sugar Rush",
       "display_name": "Sugar Rush",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Unburden + Ripen",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 588,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7650,20 +8100,25 @@
       ],
       "legacy_runtime_reference_count": 5,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 652,
+        "name": "Sugar Rush"
+      }
     },
     {
       "id": 589,
       "token": "ABILITY_SUPER_HOT_GOO",
       "source_name": "Super Hot Goo",
       "display_name": "Super Hot Goo",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Inflicts burn and lowers Speed on contact.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 589,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7672,20 +8127,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 468,
+        "name": "Super Hot Goo"
+      }
     },
     {
       "id": 590,
       "token": "ABILITY_SUPER_SLAMMER",
       "source_name": "Super Slammer",
       "display_name": "Super Slammer",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Boosts the power of hammer and slamming moves by 1.3x.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 590,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7694,7 +8154,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 472,
+        "name": "Super Slammer"
+      }
     },
     {
       "source_name": "First Strike",
@@ -7743,13 +8208,13 @@
       "token": "ABILITY_TAR_TOSS",
       "source_name": "Tar Toss",
       "display_name": "Tar Toss",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Uses Tar Shot on switch-in.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 594,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7758,7 +8223,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 719,
+        "name": "Tar Toss"
+      }
     },
     {
       "source_name": "Telekinetic",
@@ -7779,13 +8249,13 @@
       "token": "ABILITY_TERMINAL_VELOCITY",
       "source_name": "TerminalVelocity",
       "display_name": "TerminalVelocity",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Special moves use 20% of its Speed stat additionally.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 596,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7794,7 +8264,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 552,
+        "name": "Terminal Velocity"
+      }
     },
     {
       "source_name": "Terrify",
@@ -7815,13 +8290,13 @@
       "token": "ABILITY_THERMAL_SLIDE",
       "source_name": "Thermal Slide",
       "display_name": "Thermal Slide",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Ups speed by 50% in sun or hail.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 598,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7831,20 +8306,25 @@
       ],
       "legacy_runtime_reference_count": 4,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 862,
+        "name": "Thermal Slide"
+      }
     },
     {
       "id": 599,
       "token": "ABILITY_THERMOMANCY",
       "source_name": "Thermomancy",
       "display_name": "Thermomancy",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Pyromancy + Cryomancy.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 599,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7853,7 +8333,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 863,
+        "name": "Thermomancy"
+      }
     },
     {
       "source_name": "Thundercall",
@@ -7877,13 +8362,13 @@
       "token": "ABILITY_TIPPING_POINT",
       "source_name": "Tipping Point",
       "display_name": "Tipping Point",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Getting hit raises SpAtk. Critical hits maximize SpAtk.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 601,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7892,7 +8377,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 488,
+        "name": "Tipping Point"
+      }
     },
     {
       "source_name": "Toxic Spill",
@@ -7916,13 +8406,13 @@
       "token": "ABILITY_TO_THE_BONE",
       "source_name": "To The Bone",
       "display_name": "To The Bone",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Critical hits get a 1.5x boost and inflict bleeding.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 603,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7931,20 +8421,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 731,
+        "name": "To The Bone"
+      }
     },
     {
       "id": 604,
       "token": "ABILITY_TRASH_HEAP",
       "source_name": "Trash Heap",
       "display_name": "Trash Heap",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Corrosion + Toxic Spill.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 604,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7953,20 +8448,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 725,
+        "name": "Trash Heap"
+      }
     },
     {
       "id": 605,
       "token": "ABILITY_TRICKSTER",
       "source_name": "Trickster",
       "display_name": "Trickster",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Uses Disable on switch-in.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 605,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7975,20 +8475,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 481,
+        "name": "Trickster"
+      }
     },
     {
       "id": 606,
       "token": "ABILITY_TWO_STEP",
       "source_name": "Two Step",
       "display_name": "Two Step",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Triggers 50BP Revelation Dance after using a Dance move.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 606,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -7997,7 +8502,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 517,
+        "name": "Two Step"
+      }
     },
     {
       "source_name": "Vengeance",
@@ -8018,13 +8528,13 @@
       "token": "ABILITY_VENGEFUL_SPIRIT",
       "source_name": "Vengeful Spirit",
       "display_name": "Vengeful Spirit",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Haunted Spirit + Vengeance.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 608,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8033,20 +8543,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 565,
+        "name": "Vengeful Spirit"
+      }
     },
     {
       "id": 609,
       "token": "ABILITY_VENOBLAZE_PINCERS",
       "source_name": "VenoblazePincers",
       "display_name": "VenoblazePincers",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "1.2x boost to physical moves and 20% chance to Burn or Poison.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 609,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8055,20 +8570,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 650,
+        "name": "Venoblaze Pincers"
+      }
     },
     {
       "id": 610,
       "token": "ABILITY_VENOM_CROWN",
       "source_name": "Venom Crown",
       "display_name": "Venom Crown",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Poison Point + Mighty Horn.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 610,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8077,7 +8597,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 778,
+        "name": "Venom Crown"
+      }
     },
     {
       "source_name": "Violent Rush",
@@ -8098,13 +8623,13 @@
       "token": "ABILITY_VITALITY_STRIKE",
       "source_name": "Vitality Strike",
       "display_name": "Vitality Strike",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Heals for 10% of the damage dealt by punching moves.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 612,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8113,7 +8638,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 687,
+        "name": "Vitality Strike"
+      }
     },
     {
       "source_name": "Volcano Rage",
@@ -8151,13 +8681,13 @@
       "token": "ABILITY_WATCH_YOUR_STEP",
       "source_name": "Watch Your Step",
       "display_name": "Watch Your Step",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Spreads two layers of Spikes on switch-in.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 615,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8166,20 +8696,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 572,
+        "name": "Watch Your Step"
+      }
     },
     {
       "id": 616,
       "token": "ABILITY_WATER_GALE_WINGS",
       "source_name": "Tidal Rush",
       "display_name": "Tidal Rush",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Water-type moves get +1 priority at max HP.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 616,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8188,7 +8723,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 560,
+        "name": "Tidal Rush"
+      }
     },
     {
       "source_name": "Weather Control",
@@ -8209,13 +8749,13 @@
       "token": "ABILITY_WEATHER_DOUBLE_BOOST",
       "source_name": "Catastrophe",
       "display_name": "Catastrophe",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Sun boosts Water. Rain boosts Fire.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 618,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8224,20 +8764,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 589,
+        "name": "Catastrophe"
+      }
     },
     {
       "id": 619,
       "token": "ABILITY_WEB_SPINNER",
       "source_name": "Web Spinner",
       "display_name": "Web Spinner",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Uses String Shot on switch-in.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 619,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8246,7 +8791,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 541,
+        "name": "Web Spinner"
+      }
     },
     {
       "source_name": "Whiplash",
@@ -8281,13 +8831,13 @@
       "token": "ABILITY_WHITE_NOISE",
       "source_name": "White Noise",
       "display_name": "White Noise",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Static + Rest in Peace.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 622,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8296,20 +8846,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 654,
+        "name": "White Noise"
+      }
     },
     {
       "id": 623,
       "token": "ABILITY_WILDFIRE",
       "source_name": "Wildfire",
       "display_name": "Wildfire",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Attacks with Fire Spin on entry.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 623,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8318,20 +8873,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 717,
+        "name": "Wildfire"
+      }
     },
     {
       "id": 624,
       "token": "ABILITY_WIND_RAGE",
       "source_name": "Wind Rage",
       "display_name": "Wind Rage",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Uses Defog on switch-in. Air-based moves get a 1.3x boost.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 624,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8340,20 +8900,25 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 728,
+        "name": "Wind Rage"
+      }
     },
     {
       "id": 625,
       "token": "ABILITY_WOODLAND_CURSE",
       "source_name": "Woodland Curse",
       "display_name": "Woodland Curse",
-      "exact_effect": "RESTORE_PENDING_EXACT_SEMANTICS",
+      "exact_effect": "Uses Forest's Curse on Entry. Adds Grass type on contact.",
       "source_kind": "historical_mercury_recovery",
       "runtime_kind": "custom_id",
-      "mechanic_family": "restore_pending_exact_semantics",
-      "review_blocked": true,
-      "runtime_enabled": false,
-      "approval_state": "historical_identity_restored_semantics_pending",
+      "mechanic_family": "nextdex_v2_65beta_recovered",
+      "review_blocked": false,
+      "runtime_enabled": true,
+      "approval_state": "historical_identity_semantics_recovered_exact_nextdex_v2_65beta",
       "historical_id": 625,
       "legacy_runtime_files": [
         "include/constants/abilities.h",
@@ -8362,7 +8927,12 @@
       ],
       "legacy_runtime_reference_count": 3,
       "legacy_ai_rating": 5,
-      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot"
+      "id_reconciliation_reason": "historical_missing_identity_restored_to_original_slot",
+      "nextdex_reference": {
+        "version": "2.65beta",
+        "id": 807,
+        "name": "Woodland Curse"
+      }
     },
     {
       "source_name": "Rampage",
@@ -14918,6 +15488,8 @@
           "ABILITY_MEGABITE"
         ]
       }
-    ]
+    ],
+    "exact_semantics_restored_from_nextdex": 114,
+    "restore_pending_exact_semantics": 0
   }
 }
