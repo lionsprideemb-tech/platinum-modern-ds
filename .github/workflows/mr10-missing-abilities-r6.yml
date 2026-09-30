@@ -48,6 +48,11 @@ jobs:
       - name: Apply Mercury overlay
         run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
 
+      - name: Restore modern move namespace
+        run: |
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+          python3 tools/install_pt05c1_modern_moves.py vendor/pokeplatinum vendor/hg-engine --report modern-moves.json --implemented-registry implemented-moves.txt
+
       - name: Install canonical Ability stack
         run: |
           python3 tools/install_mp05_ability_namespace.py vendor/pokeplatinum vendor/hg-engine --report mp05.json --implemented-registry implemented.txt
@@ -80,6 +85,11 @@ jobs:
           test "$(jq -r '.implemented_count' mr10r5.json)" = "20"
           test "$(jq -r '.status' mr10r6.json)" = "PASS"
           test "$(jq -r '.implemented_count' mr10r6.json)" = "20"
+
+      - name: Apply pending-species compile compatibility
+        run: |
+          python3 tools/install_mr10c0_missing_species_compat.py vendor/pokeplatinum --report species-compat.json
+          test "$(jq -r '.status' species-compat.json)" = "PASS"
 
       - name: Compile and build ROM
         working-directory: vendor/pokeplatinum
