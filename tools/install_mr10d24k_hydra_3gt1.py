@@ -6,8 +6,9 @@ Extends Mercury's native D11 multi-hit lane with ER Multi-Headed semantics:
 Hydra adds Hubris (+1 SpA after a direct KO).
 3 > 1 adds Riptide (Water x1.3, x1.8 at <= 1/3 HP).
 
-Head count is battle/species metadata, not hard-coded to particular holders.
-Sprites/content assignments remain a later phase.
+Head count is resolved through one species-metadata hook with a safe one-head
+default. The custom-roster phase extends that hook for new species/forms without
+changing the ability engine.
 """
 from pathlib import Path
 import argparse,json
@@ -28,13 +29,19 @@ def ins(p,a,s):
 
 def patch(root):
  ctx=root/"include/battle/battle_context.h"
- ins(ctx,"    u16 mercuryCustomMultiHitTriggerAbility;\n",
-"""    // MR10D24K: ER Multi-Headed metadata for the current generated sequence.
-    u8 mercuryMultiHeadedHeads[MAX_BATTLERS];
-    u8 mercuryMultiHeadedHitIndex;
-
-""")
  ctl=root/"src/battle/battle_controller_player.c"
+ # Central species metadata hook. Roster installers append cases here.
+ metadata="""static u8 Mercury_SpeciesHeadCount(u16 species)
+{
+    switch (species) {
+    /* MERCURY_HEAD_COUNT_CASES */
+    default:
+        return 1;
+    }
+}
+
+"""
+ ins(ctl,"static BOOL Mercury_CustomMultiHitBaseAllowed",metadata)
  rep(ctl,
 """    case ABILITY_MR_DUAL_WIELD:
         return Mercury_MoveIsPulseForCustomAbility(move) ? 2 : 0;
@@ -46,10 +53,10 @@ def patch(root):
 
     case ABILITY_MR_HYDRA:
     case ABILITY_MR_3_GT_1:
-        if (battleCtx->mercuryMultiHeadedHeads[battleCtx->attacker] == 2) {
+        if (Mercury_SpeciesHeadCount(battleCtx->battleMons[battleCtx->attacker].species) == 2) {
             return 2;
         }
-        if (battleCtx->mercuryMultiHeadedHeads[battleCtx->attacker] >= 3) {
+        if (Mercury_SpeciesHeadCount(battleCtx->battleMons[battleCtx->attacker].species) >= 3) {
             return 3;
         }
         return 0;
@@ -65,8 +72,7 @@ def patch(root):
 """    battleCtx->mercuryCustomMultiHitActive = TRUE;
     battleCtx->mercuryCustomMultiHitTriggerAbility =
         Battler_Ability(battleCtx, battleCtx->attacker);
-    battleCtx->mercuryMultiHeadedHitIndex = 0;
-    battleCtx->multiHitCounter = hits;
+     battleCtx->multiHitCounter = hits;
 """)
  lib=root/"src/battle/battle_lib.c"
  rep(lib,
@@ -80,7 +86,7 @@ def patch(root):
 """        if ((battleCtx->mercuryCustomMultiHitTriggerAbility == ABILITY_MR_HYDRA
                 || battleCtx->mercuryCustomMultiHitTriggerAbility == ABILITY_MR_3_GT_1)
             && battleCtx->multiHitLoop) {
-            int heads = battleCtx->mercuryMultiHeadedHeads[attacker];
+            int heads = Mercury_SpeciesHeadCount(battleCtx->battleMons[attacker].species);
             int hit = battleCtx->multiHitNumHits - battleCtx->multiHitCounter + 1; /* counter decrements before replay */
             if (heads == 2) {
                 movePower = movePower * 25 / 100;
@@ -142,7 +148,7 @@ def main():
  ctl=(root/"src/battle/battle_controller_player.c").read_text();lib=(root/"src/battle/battle_lib.c").read_text();ctx=(root/"include/battle/battle_context.h").read_text()
  checks={
   "stable_ids":all(len(ab)>i and ab[i]==t for t,i in ABILITIES.items()),
-  "generic_head_metadata":"mercuryMultiHeadedHeads[MAX_BATTLERS]" in ctx,
+  "generic_head_metadata":"static u8 Mercury_SpeciesHeadCount(u16 species)" in ctl and "MERCURY_HEAD_COUNT_CASES" in ctl and "return 1;" in ctl,
   "two_head_count":"== 2" in ctl and "return 2;" in ctl,
   "three_head_count":">= 3" in ctl and "return 3;" in ctl,
   "two_head_25":"movePower = movePower * 25 / 100;" in lib,
