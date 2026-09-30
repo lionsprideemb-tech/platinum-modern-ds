@@ -13,7 +13,7 @@ controllers reuse Mercury's MR08 threshold-form lifecycle.
 from pathlib import Path
 import argparse,json
 ABILITIES={"ABILITY_MR_LOCUST_SWARM":736,"ABILITY_MR_REVELATION":737}
-REQ=("SPECIES_WISPYWASPY","SPECIES_WISPYWASPY_HIVEMIND","SPECIES_UNOWN_REVELATION")
+REQ={"SPECIES_WISPYWASPY":1026,"SPECIES_WISPYWASPY_HIVEMIND":1027,"SPECIES_UNOWN_REVELATION":1028}
 
 def ins(p,a,s):
  t=p.read_text()
@@ -22,9 +22,24 @@ def ins(p,a,s):
  p.write_text(t.replace(a,s+a,1))
 
 def require_species(root):
- text=(root/"generated/species.txt").read_text()
- missing=[x for x in REQ if x not in text]
- if missing:raise SystemExit("D24J content dependency not materialized: "+", ".join(missing))
+ # Custom battle-form IDs are intentionally outside generated/species.txt until
+ # the post-ability sprite/resource phase. Validate the locked Mercury registry
+ # and materialize local compile constants without shifting canonical 1..1025.
+ registry=Path("data/mercury_custom_species_ids.txt")
+ got={}
+ for raw in registry.read_text().splitlines():
+  s=raw.strip()
+  if not s or s.startswith("#"):continue
+  n,t=s.split();got[t]=int(n)
+ bad=[t for t,n in REQ.items() if got.get(t)!=n]
+ if bad:raise SystemExit("D24J custom species ID mismatch: "+", ".join(bad))
+ block="\\n/* Mercury D24J battle-only custom form IDs; graphical resources deferred. */\\n"+"" .join(f"#ifndef {t}\\n#define {t} {n}\\n#endif\\n" for t,n in REQ.items())
+ for rel in ("src/battle/battle_lib.c",):
+  p=root/rel;text=p.read_text()
+  anchor='#include "res/battle/scripts/sub_seq.naix"\\n'
+  if "Mercury D24J battle-only custom form IDs" not in text:
+   if text.count(anchor)!=1:raise SystemExit("D24J include anchor mismatch")
+   p.write_text(text.replace(anchor,anchor+block,1))
 
 def patch(root):
  require_species(root)
