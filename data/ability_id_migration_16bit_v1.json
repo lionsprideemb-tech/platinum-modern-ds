@@ -1,0 +1,126 @@
+{
+  "gate": "MERCURY_ABILITY_ID_MIGRATION_V1",
+  "date": "2026-09-30",
+  "status": "LOCKED_FOR_IMPLEMENTATION",
+  "principles": [
+    "Preserve historical Mercury IDs 0-1042 wherever they do not collide with current official canon.",
+    "Current official canonical IDs own their official numeric slots.",
+    "Relocate only colliding Mercury customs into the first free post-historical IDs.",
+    "Keep non-colliding Mercury customs stable.",
+    "Reserve a deterministic post-historical continuation for newly approved Mercury originals."
+  ],
+  "official_claims": [
+    {
+      "id": 311,
+      "token": "ABILITY_PIERCING_DRILL"
+    },
+    {
+      "id": 312,
+      "token": "ABILITY_DRAGONIZE"
+    },
+    {
+      "id": 313,
+      "token": "ABILITY_EELEVATE"
+    },
+    {
+      "id": 315,
+      "token": "ABILITY_MEGA_SOL"
+    },
+    {
+      "id": 316,
+      "token": "ABILITY_FIRE_MANE"
+    },
+    {
+      "id": 318,
+      "token": "ABILITY_SPICY_SPRAY"
+    },
+    {
+      "id": 319,
+      "token": "ABILITY_AURA_GUARD"
+    }
+  ],
+  "remaps": [
+    {
+      "legacy_id": 311,
+      "new_id": 1043,
+      "token": "ABILITY_CONTROLLED_FURY",
+      "name": "Controlled Fury"
+    },
+    {
+      "legacy_id": 312,
+      "new_id": 1044,
+      "token": "ABILITY_ETERNAL_LIFE",
+      "name": "Eternal Life"
+    },
+    {
+      "legacy_id": 313,
+      "new_id": 1045,
+      "token": "ABILITY_HOLLOW_SHELL",
+      "name": "Hollow Shell"
+    },
+    {
+      "legacy_id": 315,
+      "new_id": 1046,
+      "token": "ABILITY_THE_LOOK",
+      "name": "The Look"
+    },
+    {
+      "legacy_id": 316,
+      "new_id": 1047,
+      "token": "ABILITY_PRISMATIC_PELT",
+      "name": "Prismatic Pelt"
+    },
+    {
+      "legacy_id": 318,
+      "new_id": 1048,
+      "token": "ABILITY_ADAPTIVE_GENOME",
+      "name": "Adaptive Genome"
+    },
+    {
+      "legacy_id": 319,
+      "new_id": 1049,
+      "token": "ABILITY_STORM_SEQUENCE",
+      "name": "Storm Sequence"
+    }
+  ],
+  "stable_current_customs": [
+    {
+      "id": 314,
+      "token": "ABILITY_MIND_GAMES",
+      "name": "Mind Games"
+    },
+    {
+      "id": 317,
+      "token": "ABILITY_LOCKDOWN_PROTOCOL",
+      "name": "Lockdown Protocol"
+    },
+    {
+      "id": 320,
+      "token": "ABILITY_FIELD_COMMISSIONER",
+      "name": "Field Commissioner"
+    },
+    {
+      "id": 321,
+      "token": "ABILITY_PROTEAN_MAXIMA",
+      "name": "Protean Maxima"
+    }
+  ],
+  "newly_reserved": [
+    {
+      "id": 1050,
+      "token": "ABILITY_MR_DEEP_POCKETS",
+      "name": "Deep Pockets"
+    },
+    {
+      "id": 1051,
+      "token": "ABILITY_MR_PREDATORS_EDGE",
+      "name": "Predator's Edge"
+    }
+  ],
+  "legacy_save_translation": {
+    "policy": "When reading a legacy Mercury save using the old custom namespace, translate only the listed colliding custom IDs to their new 16-bit IDs before battle/UI use and before re-save.",
+    "idempotent": true,
+    "preserve_unknown_ids": true
+  },
+  "next_free_id": 1052
+}
