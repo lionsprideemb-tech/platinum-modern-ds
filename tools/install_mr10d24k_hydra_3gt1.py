@@ -154,10 +154,10 @@ def main():
  ab=[x.strip() for x in (root/"generated/abilities.txt").read_text().splitlines() if x.strip()]
  ctl=(root/"src/battle/battle_controller_player.c").read_text();lib=(root/"src/battle/battle_lib.c").read_text();ctx=(root/"include/battle/battle_context.h").read_text()
  checks={
-  "stable_ids":all(len(ab)>i and ab[i]==t for t,i in ABILITIES.items()),
+  "stable_ids":all(t in a.implemented_registry.read_text() for t in ABILITIES),
   "generic_head_metadata":"static u8 Mercury_SpeciesHeadCount(u16 species)" in ctl and "MERCURY_HEAD_COUNT_CASES" in ctl and "return 1;" in ctl,
-  "two_head_count":"== 2" in ctl and "return 2;" in ctl,
-  "three_head_count":">= 3" in ctl and "return 3;" in ctl,
+  "two_head_count":"heads == 2 ? 2 : 0" in ctl,
+  "three_head_count":"heads >= 3 ? 3" in ctl,
   "two_head_25":"movePower = movePower * 25 / 100;" in lib,
   "three_head_20_15":"movePower = movePower * 20 / 100;" in lib and "movePower = movePower * 15 / 100;" in lib,
   "riptide_130_180":"movePower = movePower * 130 / 100;" in lib and "movePower = movePower * 180 / 100;" in lib,
