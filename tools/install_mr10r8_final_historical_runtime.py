@@ -276,7 +276,7 @@ def damage(root):
 
 ""","attackerParams.ability==ABILITY_TO_THE_BONE","R8 offensive damage")
 
- ibf(p,"int BattleSystem_CalcMoveDamage(","    if ((battleType & BATTLE_TYPE_DOUBLES)\n",
+ ibf(p,"int BattleSystem_CalcMoveDamage(","    return damage;\n",
  """    if (battleCtx->mercuryR8FearTurns[defender])
         damage=damage*15/10;
     if (Battler_IgnorableAbility(battleCtx,attacker,defender,ABILITY_MADNESS_ENHANCEMENT)==TRUE
