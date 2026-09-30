@@ -1,0 +1,45 @@
+{
+  "gate": "MERCURY_NERVE_AGENT_COMPOUND_STATUS",
+  "date": "2026-09-30",
+  "status": "DESIGN_LOCKED_RUNTIME_IMPLEMENTATION_REQUIRED",
+  "ability": {
+    "name": "Nerve Agent",
+    "token": "ABILITY_MR_NERVE_AGENT",
+    "reconciled_id": 1058
+  },
+  "trigger": {
+    "move_must_be_damaging": true,
+    "move_type": "Poison",
+    "move_must_make_contact": true,
+    "chance_percent": 30
+  },
+  "compound_status": {
+    "name": "Nerve Agent",
+    "scope": "Only ABILITY_MR_NERVE_AGENT can inflict this status unless explicitly expanded later.",
+    "representation": "One dedicated major-status value; do not set native Poison and native Paralysis simultaneously.",
+    "effects": [
+      "Use normal poison end-turn damage.",
+      "Use normal paralysis Speed penalty.",
+      "Use normal paralysis action-failure chance."
+    ],
+    "generic_status_interactions": {
+      "Hex": "Target is statused; apply the normal Hex boost once.",
+      "Guts": "Counts as having a major status; activate once.",
+      "Quick_Feet": "Counts as having a major status; activate once."
+    },
+    "native_specific_interactions": {
+      "policy": "Do not pretend this is native Poison or native Paralysis for status-specific bonuses/triggers unless explicitly whitelisted.",
+      "examples_not_automatic": [
+        "Poison Heal",
+        "Toxic Boost",
+        "Merciless poison-only checks",
+        "Limber-specific paralysis checks",
+        "Immunity-specific poison checks",
+        "Synchronize copying as ordinary poison/paralysis"
+      ]
+    },
+    "cures": "Full Heal/Lum Berry/Heal Bell/Aromatherapy and equivalent generic major-status cures remove the whole compound status.",
+    "stacking": "Cannot stack with itself or consume two native major-status slots."
+  },
+  "rationale": "Preserves the intended simultaneous poison + paralysis gameplay without corrupting the one-major-status engine model or double-counting generic status interactions."
+}
