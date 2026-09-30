@@ -13,7 +13,7 @@ changing the ability engine.
 from pathlib import Path
 import argparse,json
 
-ABILITIES={"ABILITY_MR_HYDRA":739,"ABILITY_MR_3_GT_1":914}
+ABILITIES={"ABILITY_MR_HYDRA":739,"ABILITY_MR_3_1":914}
 
 def rep(p,a,b,label="replacement"):
  t=p.read_text()
@@ -60,7 +60,7 @@ def patch(root):
 """    hits = Mercury_CustomMultiHitCount(battleSys, battleCtx);
     if (hits < 2
         && (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_MR_HYDRA
-            || Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_MR_3_GT_1)
+            || Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_MR_3_1)
         && Mercury_CustomMultiHitBaseAllowed(battleSys, battleCtx)) {
         int heads = Mercury_SpeciesHeadCount(
             battleCtx->battleMons[battleCtx->attacker].species);
@@ -91,7 +91,7 @@ def patch(root):
     GF_ASSERT(battleCtx->powerMul >= 10);
 """,
 """        if ((battleCtx->mercuryCustomMultiHitTriggerAbility == ABILITY_MR_HYDRA
-                || battleCtx->mercuryCustomMultiHitTriggerAbility == ABILITY_MR_3_GT_1)
+                || battleCtx->mercuryCustomMultiHitTriggerAbility == ABILITY_MR_3_1)
             && battleCtx->multiHitLoop) {
             int heads = Mercury_SpeciesHeadCount(battleCtx->battleMons[attacker].species);
             int hit = battleCtx->multiHitNumHits - battleCtx->multiHitCounter + 1; /* counter decrements before replay */
@@ -109,7 +109,7 @@ def patch(root):
         }
     }
 
-    if (attackerParams.ability == ABILITY_MR_3_GT_1 && moveType == TYPE_WATER) {
+    if (attackerParams.ability == ABILITY_MR_3_1 && moveType == TYPE_WATER) {
         if (battleCtx->battleMons[attacker].curHP * 3
             <= battleCtx->battleMons[attacker].maxHP) {
             movePower = movePower * 180 / 100;
