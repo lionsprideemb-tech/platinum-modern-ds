@@ -50,12 +50,15 @@ def insert_before_once(path: Path, anchor: str, ins: str, marker: str, label: st
 def validate_partition(path: Path) -> None:
     rows = json.loads(path.read_text(encoding="utf-8"))["abilities"]
     for name, (token, aid) in IMPLEMENTED.items():
-        matches = [r for r in rows if r.get("display_name") == name]
+        matches = [
+            r for r in rows
+            if r.get("id") == aid and r.get("token") == token
+        ]
         if len(matches) != 1:
-            raise SystemExit(f"{name}: expected one partition row, got {len(matches)}")
+            raise SystemExit(
+                f"{name}: expected one reconciled ID/token row at {aid}, got {len(matches)}"
+            )
         row = matches[0]
-        if row.get("id") != aid or row.get("token") != token:
-            raise SystemExit(f"{name}: ID/token mismatch")
         if row.get("exact_effect") in (None, "RESTORE_PENDING_EXACT_SEMANTICS"):
             raise SystemExit(f"{name}: exact semantics not recovered")
         if row.get("runtime_enabled") is False:
