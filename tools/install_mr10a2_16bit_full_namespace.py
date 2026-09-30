@@ -19,6 +19,21 @@ CANONICAL_BASE_MAX = 310
 CANONICAL_TAIL_MAX = 319
 CUSTOM_FIRST = 320
 
+# The pinned hg-engine commit already defines IDs 311..319 in ability.h, but
+# its three ability text banks predate those extension strings. These values
+# are the donor's later published text for the same stable numeric tail.
+HG_EXTENSION_TEXT = {
+    311: ("Piercing Drill", "The Pokémon’s contact\\nmoves ignore protections."),
+    312: ("Dragonize", "Normal-type moves become\\nDragon-type and powered up."),
+    313: ("Eelevate", "Levitate and Beast Boost."),
+    314: ("Placeholder", "Placeholder"),
+    315: ("Mega Sol", "All moves act as if\\nHarsh Sunlight is active."),
+    316: ("Fire Mane", "Powers up fire moves."),
+    317: ("Placeholder", "Placeholder"),
+    318: ("Spicy Spray", "Burns the attacker upon\\ntaking damage."),
+    319: ("Aura Guard", "Halves the damage from\\ncontact moves."),
+}
+
 DEFINE_RE = re.compile(r"^#define\s+(ABILITY_[A-Z0-9_]+)\s+(\d+)\s*$", re.M)
 
 DS_TEXT_REPLACEMENTS = str.maketrans({
@@ -132,8 +147,6 @@ def main():
     names_hg=(hg/"data/text/720.txt").read_text(encoding="utf-8").splitlines()
     upper_hg=(hg/"data/text/721.txt").read_text(encoding="utf-8").splitlines()
     desc_hg=(hg/"data/text/722.txt").read_text(encoding="utf-8").splitlines()
-    if min(len(names_hg),len(upper_hg),len(desc_hg)) <= CANONICAL_TAIL_MAX:
-        raise SystemExit("hg-engine ability text banks do not reach 319")
 
     names=load_bank(root/"res/text/ability_names.json")
     upper=load_bank(root/"res/text/ability_names_uppercase.json")
@@ -141,10 +154,19 @@ def main():
     for bank in (names,upper,desc):
         bank["messages"]=bank["messages"][:CANONICAL_BASE_MAX+1]
 
+    donor_text_fallback_ids=[]
     for i in range(CANONICAL_BASE_MAX+1,CANONICAL_TAIL_MAX+1):
-        ensure_message(names,"pl_msg_00000610",i,ds_text(names_hg[i]))
-        ensure_message(upper,"pl_msg_00000611",i,ds_text(upper_hg[i]))
-        ensure_message(desc,"pl_msg_00000612",i,description_value(ds_text(desc_hg[i])))
+        if i < len(names_hg) and i < len(upper_hg) and i < len(desc_hg):
+            donor_name=names_hg[i]
+            donor_upper=upper_hg[i]
+            donor_desc=desc_hg[i]
+        else:
+            donor_text_fallback_ids.append(i)
+            donor_name, donor_desc = HG_EXTENSION_TEXT[i]
+            donor_upper = donor_name.upper()
+        ensure_message(names,"pl_msg_00000610",i,ds_text(donor_name))
+        ensure_message(upper,"pl_msg_00000611",i,ds_text(donor_upper))
+        ensure_message(desc,"pl_msg_00000612",i,description_value(ds_text(donor_desc)))
 
     for row in custom:
         idx=row["id"]; name=ds_text(row["display_name"])
@@ -183,6 +205,7 @@ def main():
         "registry_count":len(abilities),
         "next_free_id":custom[-1]["id"]+1,
         "storage_capacity":65535,
+        "donor_text_fallback_ids":donor_text_fallback_ids,
         "checks":checks,
     }
     args.report.write_text(json.dumps(report,indent=2)+"\n")
