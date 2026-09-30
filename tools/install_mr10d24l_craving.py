@@ -28,6 +28,13 @@ def patch(root):
 
 """)
  lib=root/"src/battle/battle_lib.c"
+ # Initialize transient state with the other per-battler Mercury battle state.
+ init_anchor="""        battleCtx->mercuryEnraged[i] = FALSE;
+"""
+ init_code="""        battleCtx->mercuryCravingBerry[i] = 0;
+        battleCtx->mercuryCravingEnteredThisTurn[i] = FALSE;
+"""
+ ins(lib,init_anchor,init_code)
  # Add selector/effect dispatcher beside turn-end ability machinery.
  marker="BOOL BattleSystem_TriggerTurnEndAbility(BattleSystem *battleSys, BattleContext *battleCtx, int battler)\n"
  helper=r'''/* Mercury D24L Craving: generated berries bypass held-item thresholds because
