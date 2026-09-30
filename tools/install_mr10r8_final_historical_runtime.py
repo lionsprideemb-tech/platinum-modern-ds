@@ -514,19 +514,22 @@ def turn_end(root):
  p=root/"src/battle/battle_lib.c"
  ins=r'''    {
         int ability=Battler_Ability(battleCtx,battler);
-        int chip;
+        int bleedChip;
+        int frostChip;
         if(battleCtx->battleMons[battler].curHP){
             if((battleCtx->mercuryR7Bleeding[battler]||battleCtx->mercuryR8Frostbite[battler])
                && ability!=ABILITY_MAGIC_GUARD && ability!=ABILITY_COSMIC_DUST){
-                chip=BattleSystem_Divide(battleCtx->battleMons[battler].maxHP,16);
-                if(chip<1)chip=1;
+                bleedChip=BattleSystem_Divide(battleCtx->battleMons[battler].maxHP,16);
+                frostChip=BattleSystem_Divide(battleCtx->battleMons[battler].maxHP,8);
+                if(bleedChip<1)bleedChip=1;
+                if(frostChip<1)frostChip=1;
                 if(battleCtx->mercuryR7Bleeding[battler]) {
                     battleCtx->battleMons[battler].curHP=
-                      battleCtx->battleMons[battler].curHP>chip?battleCtx->battleMons[battler].curHP-chip:0;
+                      battleCtx->battleMons[battler].curHP>bleedChip?battleCtx->battleMons[battler].curHP-bleedChip:0;
                 }
                 if(battleCtx->mercuryR8Frostbite[battler]&&battleCtx->battleMons[battler].curHP){
                     battleCtx->battleMons[battler].curHP=
-                      battleCtx->battleMons[battler].curHP>chip?battleCtx->battleMons[battler].curHP-chip:0;
+                      battleCtx->battleMons[battler].curHP>frostChip?battleCtx->battleMons[battler].curHP-frostChip:0;
                 }
                 BattleMon_CopyToParty(battleSys,battleCtx,battler);
             }
