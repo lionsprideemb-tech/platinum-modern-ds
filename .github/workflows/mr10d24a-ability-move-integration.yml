@@ -82,6 +82,11 @@ on:
       - ".github/workflows/mr10d19-soul-linker.yml"
       - ".github/workflows/mr10d21-consolidated-wave3.yml"
       - ".github/workflows/mr10d23-consolidated-berserk.yml"
+      - ".github/workflows/mr10d24a-ability-move-integration.yml"
+      - "data/community_moves_cm*.json"
+      - "tools/install_cm01_community_moves.py"
+      - "tools/build_cm06_native_community_bulk.py"
+      - "tools/install_cm08_simple_effects.py"
 
 permissions:
   contents: read
