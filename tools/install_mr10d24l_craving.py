@@ -33,6 +33,7 @@ def patch(root):
 """
  init_code="""        battleCtx->mercuryCravingBerry[i] = 0;
         battleCtx->mercuryCravingEnteredThisTurn[i] = FALSE;
+        battleCtx->mercuryCravingAteThisTurn[i] = FALSE;
 """
  ins(lib,init_anchor,init_code)
  # Add selector/effect dispatcher beside turn-end ability machinery.
@@ -94,26 +95,30 @@ static BOOL Mercury_CravingEatBerry(BattleSystem *battleSys, BattleContext *batt
  hook='''    /* Mercury D24L Craving — not on the entry turn. */
     if (Battler_Ability(battleCtx, battler) == ABILITY_MR_CRAVING
         && battleCtx->battleMons[battler].curHP
-        && battleCtx->mercuryCravingEnteredThisTurn[battler] == FALSE) {
-        if (Mercury_CravingEatBerry(battleSys, battleCtx, battler)) return TRUE;
+        && battleCtx->mercuryCravingEnteredThisTurn[battler] == FALSE
+        && battleCtx->mercuryCravingAteThisTurn[battler] == FALSE) {
+        if (Mercury_CravingEatBerry(battleSys, battleCtx, battler)) {
+            battleCtx->mercuryCravingAteThisTurn[battler] = TRUE;
+            return TRUE;
+        }
     }
     battleCtx->mercuryCravingEnteredThisTurn[battler] = FALSE;
+    battleCtx->mercuryCravingAteThisTurn[battler] = FALSE;
 
 '''
  if "Mercury D24L Craving — not on the entry turn." not in t:
   lib.write_text(t[:pos]+hook+t[pos:])
- # Mark entry turn in switch-in path where D24 controllers already initialize.
- ctl=root/"src/battle/battle_controller_player.c"
- t=ctl.read_text()
- anchors=["BattleSystem_TriggerSwitchInAbility(battleSys, battleCtx, battler)","BattleSystem_TriggerSwitchInAbility(battleSys, battleCtx, battleCtx->battlerIdSwitch)"]
- found=next((a for a in anchors if a in t),None)
- if not found:raise SystemExit("switch-in ability anchor missing")
- line=t.find(found);line=t.rfind("\n",0,line)+1
- indent=t[line:len(t)-len(t.lstrip())] if False else "            "
- code=indent+"battleCtx->mercuryCravingEnteredThisTurn[battler] = TRUE; /* MR10D24L */\n"
- # Avoid brittle battler variable mismatch: insert only when local 'battler' anchor used.
- if "battleCtx->mercuryCravingEnteredThisTurn[battler] = TRUE;" not in t and anchors[0] in t:
-  line=t.rfind("\n",0,t.find(anchors[0]))+1;t=t[:line]+code+t[line:];ctl.write_text(t)
+ # Mark a newly switched-in battler through the stable post-switch lifecycle.
+ t=lib.read_text()
+ fn="void BattleSystem_UpdateAfterSwitch(BattleSystem *battleSys, BattleContext *battleCtx, int battler)"
+ start=t.find(fn)
+ if start<0:raise SystemExit("post-switch lifecycle missing")
+ brace=t.find("{",start);pos=t.find("\n",brace)+1
+ code='''    battleCtx->mercuryCravingEnteredThisTurn[battler] = TRUE; /* MR10D24L */
+    battleCtx->mercuryCravingAteThisTurn[battler] = FALSE;
+'''
+ if "mercuryCravingEnteredThisTurn[battler] = TRUE; /* MR10D24L */" not in t[start:start+5000]:
+  lib.write_text(t[:pos]+code+t[pos:])
 
 def reg(p):
  x=[z.strip() for z in p.read_text().splitlines() if z.strip()]
@@ -129,7 +134,8 @@ def main():
  "locked_primary_pool":all(x in lib for x in PRIMARY),"pinch_pool":all(x in lib for x in PINCH),
  "nine_way_choice":"% 9" in lib,"native_subscripts":"subscript_held_item_sharply_raise_stat" in lib,"effect_guards":"if (!open) return FALSE;" in lib and "MAX_STAT_STAGE" in lib,
  "held_item_preserved":"mercuryCravingBerry" in ctx and "heldItem =" not in lib[lib.find("Mercury_CravingEatBerry"):lib.find("Mercury_CravingEatBerry")+5000],
- "entry_turn_blocked":"mercuryCravingEnteredThisTurn" in lib,
+ "entry_turn_blocked":"mercuryCravingEnteredThisTurn[battler] = TRUE; /* MR10D24L */" in lib,
+ "once_per_turn":"mercuryCravingAteThisTurn" in ctx and "mercuryCravingAteThisTurn[battler] = TRUE;" in lib,
  "registry":ABILITY in a.implemented_registry.read_text(),"mr07_untouched":True}
  status="PASS" if all(checks.values()) else "FAIL";a.report.write_text(json.dumps({"gate":"MERCURY_MR10D24L_CRAVING","status":status,"checks":checks},indent=2)+"\n");print(status)
  if status!="PASS":raise SystemExit("D24L failed")
