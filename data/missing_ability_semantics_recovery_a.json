@@ -1,0 +1,281 @@
+{
+  "gate": "MERCURY_MISSING_ABILITY_SEMANTICS_RECOVERY_A",
+  "date": "2026-09-30",
+  "slice": [
+    0,
+    49
+  ],
+  "queried": 50,
+  "recovered": 1,
+  "not_found": 49,
+  "rows": [
+    {
+      "id": 353,
+      "token": "ABILITY_BATTLE_AURA",
+      "name": "Battle Aura",
+      "master_row": 450,
+      "source": "Pokémon Exceeded",
+      "source_id": "ABILITY_BATTLE_AURA",
+      "effect": "Boosts Atk, Def & Speed.",
+      "confidence": "Source in-game summary (mechanics may be tersely described)",
+      "trigger": "Passive / continuous",
+      "restrictions": "",
+      "known_users": "",
+      "mechanic_family": "Stat / power modifier",
+      "duplicate_flag": "",
+      "duplicate_group": "",
+      "port_class": "A — Existing Mercury-style hooks",
+      "port_notes": "Likely maps to existing vanilla-style ability hooks (damage/stat/status/priority/weather/hazard/type-conversion).",
+      "source_url": "https://github.com/benicioneto/Exceeded-Pokedex/blob/main/abilities.h",
+      "lineage": "Exceeded-style ability system; duplicate analysis identifies inherited/shared mechanics where possible.",
+      "match_count": 1
+    }
+  ],
+  "not_found_rows": [
+    {
+      "id": 349,
+      "token": "ABILITY_BALLOON_BLITZ",
+      "name": "Balloon Blitz"
+    },
+    {
+      "id": 358,
+      "token": "ABILITY_BLIND_RAGE",
+      "name": "Blind Rage"
+    },
+    {
+      "id": 362,
+      "token": "ABILITY_BLOOD_PRICE",
+      "name": "Blood Price"
+    },
+    {
+      "id": 364,
+      "token": "ABILITY_BLOOD_STIGMA",
+      "name": "Blood Stigma"
+    },
+    {
+      "id": 365,
+      "token": "ABILITY_BRAWLING_WYVERN",
+      "name": "Brawling Wyvern"
+    },
+    {
+      "id": 371,
+      "token": "ABILITY_CHROME_COAT",
+      "name": "Chrome Coat"
+    },
+    {
+      "id": 372,
+      "token": "ABILITY_CHUNKY_BASS_LINE",
+      "name": "Chunky Bass Line"
+    },
+    {
+      "id": 378,
+      "token": "ABILITY_CONTEMPT",
+      "name": "Contempt"
+    },
+    {
+      "id": 379,
+      "token": "ABILITY_CRUSHING_JAW",
+      "name": "Crushing Jaw"
+    },
+    {
+      "id": 380,
+      "token": "ABILITY_CRYO_PROFICIENCY",
+      "name": "Cryo Proficiency"
+    },
+    {
+      "id": 385,
+      "token": "ABILITY_DEAD_POWER",
+      "name": "Dead Power"
+    },
+    {
+      "id": 387,
+      "token": "ABILITY_DEPRAVITY",
+      "name": "Depravity"
+    },
+    {
+      "id": 391,
+      "token": "ABILITY_DOUBLE_IRON_BARBS",
+      "name": "Sharp Edges"
+    },
+    {
+      "id": 395,
+      "token": "ABILITY_DRAKE_OF_RAGE",
+      "name": "Drake Of Rage"
+    },
+    {
+      "id": 400,
+      "token": "ABILITY_EARLY_GRAVE",
+      "name": "Early Grave"
+    },
+    {
+      "id": 402,
+      "token": "ABILITY_ECTOPLASM",
+      "name": "Ectoplasm"
+    },
+    {
+      "id": 406,
+      "token": "ABILITY_ELEMENTAL_VORTEX",
+      "name": "Elemental Vortex"
+    },
+    {
+      "id": 407,
+      "token": "ABILITY_EMANATE",
+      "name": "Emanate"
+    },
+    {
+      "id": 408,
+      "token": "ABILITY_ENERGY_SIPHON",
+      "name": "Energy Siphon"
+    },
+    {
+      "id": 410,
+      "token": "ABILITY_ENVENOM",
+      "name": "Envenom"
+    },
+    {
+      "id": 413,
+      "token": "ABILITY_ETHEREAL_RUSH",
+      "name": "Ethereal Rush"
+    },
+    {
+      "id": 419,
+      "token": "ABILITY_FERTILIZE",
+      "name": "Fertilize"
+    },
+    {
+      "id": 420,
+      "token": "ABILITY_FIGHTER",
+      "name": "Fighter"
+    },
+    {
+      "id": 421,
+      "token": "ABILITY_FIRE_SCALES",
+      "name": "Fire Scales"
+    },
+    {
+      "id": 422,
+      "token": "ABILITY_FLAME_BUBBLE",
+      "name": "Flame Bubble"
+    },
+    {
+      "id": 423,
+      "token": "ABILITY_FLAME_SHIELD",
+      "name": "Flame Shield"
+    },
+    {
+      "id": 424,
+      "token": "ABILITY_FLAMING_MAW",
+      "name": "Flaming Maw"
+    },
+    {
+      "id": 429,
+      "token": "ABILITY_FRAGRANT_DAZE",
+      "name": "Fragrant Daze"
+    },
+    {
+      "id": 430,
+      "token": "ABILITY_FREEZING_POINT",
+      "name": "Freezing Point"
+    },
+    {
+      "id": 432,
+      "token": "ABILITY_FROST_BURN",
+      "name": "Frost Burn"
+    },
+    {
+      "id": 433,
+      "token": "ABILITY_FUNERAL_PYRE",
+      "name": "Funeral Pyre"
+    },
+    {
+      "id": 439,
+      "token": "ABILITY_GLADIATOR",
+      "name": "Gladiator"
+    },
+    {
+      "id": 444,
+      "token": "ABILITY_GUILT_TRIP",
+      "name": "Guilt Trip"
+    },
+    {
+      "id": 447,
+      "token": "ABILITY_HAUNTING_FRENZY",
+      "name": "Haunting Frenzy"
+    },
+    {
+      "id": 448,
+      "token": "ABILITY_HEADSTRONG",
+      "name": "Headstrong"
+    },
+    {
+      "id": 450,
+      "token": "ABILITY_HIGHER_RANK",
+      "name": "Higher Rank"
+    },
+    {
+      "id": 453,
+      "token": "ABILITY_HUBRIS",
+      "name": "Hubris"
+    },
+    {
+      "id": 460,
+      "token": "ABILITY_ICE_DOWNFALL",
+      "name": "Ice Downfall"
+    },
+    {
+      "id": 464,
+      "token": "ABILITY_IMPULSE",
+      "name": "Impulse"
+    },
+    {
+      "id": 475,
+      "token": "ABILITY_LAST_STAND",
+      "name": "Last Stand"
+    },
+    {
+      "id": 483,
+      "token": "ABILITY_LOW_VISIBILITY",
+      "name": "Low Visibility"
+    },
+    {
+      "id": 489,
+      "token": "ABILITY_MALICIOUS",
+      "name": "Malicious"
+    },
+    {
+      "id": 494,
+      "token": "ABILITY_METALLIC_JAWS",
+      "name": "Metallic Jaws"
+    },
+    {
+      "id": 496,
+      "token": "ABILITY_MIND_CRUSH",
+      "name": "Mind Crunch"
+    },
+    {
+      "id": 499,
+      "token": "ABILITY_MOLTEN_BLADES",
+      "name": "Molten Blades"
+    },
+    {
+      "id": 502,
+      "token": "ABILITY_MONSTER_MASH",
+      "name": "Monster Mash"
+    },
+    {
+      "id": 503,
+      "token": "ABILITY_MOON_SPIRIT",
+      "name": "Moon Spirit"
+    },
+    {
+      "id": 504,
+      "token": "ABILITY_MOSH_PIT",
+      "name": "Mosh Pit"
+    },
+    {
+      "id": 508,
+      "token": "ABILITY_MYTHICAL_ARROWS",
+      "name": "Mythical Arrows"
+    }
+  ]
+}
