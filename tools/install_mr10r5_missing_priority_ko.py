@@ -596,16 +596,16 @@ def patch_permanence(root: Path) -> None:
         "Permanence declaration",
     )
 
-    anchor = """    // Cap the hit damage to the battler's current HP
+    anchor = """    int battler = BattleScript_Battler(battleSys, battleCtx, inBattler);
 """
-    block = """    if (battleCtx->hpCalcTemp < 0
+    block = """    if (battleCtx->hpCalcTemp > 0
         && Mercury_PermanenceBlocksHealing(
             battleSys, battleCtx, battler)) {
         battleCtx->hpCalcTemp = 0;
     }
 
 """
-    insert_before_once(
+    insert_after_once(
         script, anchor, block,
         "Mercury_PermanenceBlocksHealing(",
         "Permanence global heal lock",
