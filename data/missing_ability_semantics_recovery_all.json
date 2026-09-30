@@ -1,0 +1,651 @@
+{
+  "gate": "MERCURY_MISSING_ABILITY_SEMANTICS_RECOVERY_ALL",
+  "date": "2026-09-30",
+  "queried": 112,
+  "recovered": 5,
+  "not_found": 107,
+  "rows": [
+    {
+      "id": 353,
+      "token": "ABILITY_BATTLE_AURA",
+      "name": "Battle Aura",
+      "idx": 450,
+      "source": "Pokémon Exceeded",
+      "source_id": "ABILITY_BATTLE_AURA",
+      "effect": "Boosts Atk, Def & Speed.",
+      "confidence": "Source in-game summary (mechanics may be tersely described)",
+      "trigger": "Passive / continuous",
+      "restrictions": "",
+      "known_users": "",
+      "mechanic_family": "Stat / power modifier",
+      "duplicate_flag": "",
+      "duplicate_group": "",
+      "port_class": "A — Existing Mercury-style hooks",
+      "port_notes": "Likely maps to existing vanilla-style ability hooks (damage/stat/status/priority/weather/hazard/type-conversion).",
+      "source_url": "https://github.com/benicioneto/Exceeded-Pokedex/blob/main/abilities.h",
+      "lineage": "Exceeded-style ability system; duplicate analysis identifies inherited/shared mechanics where possible.",
+      "match_count": 1
+    },
+    {
+      "id": 547,
+      "token": "ABILITY_RAGING_STORM",
+      "name": "Raging Storm",
+      "idx": 54,
+      "source": "Pokémon Exceeded",
+      "source_id": "ABILITY_RAGING_STORM",
+      "effect": "Doubles weather damage.",
+      "confidence": "Source in-game summary (mechanics may be tersely described)",
+      "trigger": "Field/weather conditional",
+      "restrictions": "",
+      "known_users": "",
+      "mechanic_family": "Weather / terrain / field",
+      "duplicate_flag": "",
+      "duplicate_group": "",
+      "port_class": "A — Existing Mercury-style hooks",
+      "port_notes": "Likely maps to existing vanilla-style ability hooks (damage/stat/status/priority/weather/hazard/type-conversion).",
+      "source_url": "https://github.com/benicioneto/Exceeded-Pokedex/blob/main/abilities.h",
+      "lineage": "Exceeded-style ability system; duplicate analysis identifies inherited/shared mechanics where possible.",
+      "match_count": 1
+    },
+    {
+      "id": 588,
+      "token": "ABILITY_SUGAR_RUSH",
+      "name": "Sugar Rush",
+      "idx": 175,
+      "source": "Pokémon Exceeded",
+      "source_id": "ABILITY_SUGAR_RUSH",
+      "effect": "Eating Berries ups Speed.",
+      "confidence": "Source in-game summary (mechanics may be tersely described)",
+      "trigger": "Passive / continuous",
+      "restrictions": "",
+      "known_users": "",
+      "mechanic_family": "Stat / power modifier",
+      "duplicate_flag": "",
+      "duplicate_group": "",
+      "port_class": "A — Existing Mercury-style hooks",
+      "port_notes": "Likely maps to existing vanilla-style ability hooks (damage/stat/status/priority/weather/hazard/type-conversion).",
+      "source_url": "https://github.com/benicioneto/Exceeded-Pokedex/blob/main/abilities.h",
+      "lineage": "Exceeded-style ability system; duplicate analysis identifies inherited/shared mechanics where possible.",
+      "match_count": 1
+    },
+    {
+      "id": 608,
+      "token": "ABILITY_VENGEFUL_SPIRIT",
+      "name": "Vengeful Spirit",
+      "idx": 469,
+      "source": "Pokémon Exceeded",
+      "source_id": "ABILITY_VENGEFUL_SPIRIT",
+      "effect": ".",
+      "confidence": "Source in-game summary (mechanics may be tersely described)",
+      "trigger": "Passive / continuous",
+      "restrictions": "",
+      "known_users": "",
+      "mechanic_family": "Other / composite",
+      "duplicate_flag": "",
+      "duplicate_group": "",
+      "port_class": "A — Existing Mercury-style hooks",
+      "port_notes": "Likely maps to existing vanilla-style ability hooks (damage/stat/status/priority/weather/hazard/type-conversion).",
+      "source_url": "https://github.com/benicioneto/Exceeded-Pokedex/blob/main/abilities.h",
+      "lineage": "Exceeded-style ability system; duplicate analysis identifies inherited/shared mechanics where possible.",
+      "match_count": 1
+    },
+    {
+      "id": 623,
+      "token": "ABILITY_WILDFIRE",
+      "name": "Wildfire",
+      "idx": 243,
+      "source": "Pokémon Exceeded",
+      "source_id": "ABILITY_WILDFIRE",
+      "effect": "Boosts power on cursed terrain.",
+      "confidence": "Source in-game summary (mechanics may be tersely described)",
+      "trigger": "Field/weather conditional",
+      "restrictions": "Rain",
+      "known_users": "",
+      "mechanic_family": "Weather / terrain / field",
+      "duplicate_flag": "Yes — exact name across sources",
+      "duplicate_group": "Exact-name: Wildfire",
+      "port_class": "A — Existing Mercury-style hooks",
+      "port_notes": "Likely maps to existing vanilla-style ability hooks (damage/stat/status/priority/weather/hazard/type-conversion).",
+      "source_url": "https://github.com/benicioneto/Exceeded-Pokedex/blob/main/abilities.h",
+      "lineage": "Exceeded-style ability system; duplicate analysis identifies inherited/shared mechanics where possible.",
+      "match_count": 1
+    }
+  ],
+  "not_found_rows": [
+    {
+      "id": 349,
+      "token": "ABILITY_BALLOON_BLITZ",
+      "name": "Balloon Blitz"
+    },
+    {
+      "id": 358,
+      "token": "ABILITY_BLIND_RAGE",
+      "name": "Blind Rage"
+    },
+    {
+      "id": 362,
+      "token": "ABILITY_BLOOD_PRICE",
+      "name": "Blood Price"
+    },
+    {
+      "id": 364,
+      "token": "ABILITY_BLOOD_STIGMA",
+      "name": "Blood Stigma"
+    },
+    {
+      "id": 365,
+      "token": "ABILITY_BRAWLING_WYVERN",
+      "name": "Brawling Wyvern"
+    },
+    {
+      "id": 371,
+      "token": "ABILITY_CHROME_COAT",
+      "name": "Chrome Coat"
+    },
+    {
+      "id": 372,
+      "token": "ABILITY_CHUNKY_BASS_LINE",
+      "name": "Chunky Bass Line"
+    },
+    {
+      "id": 378,
+      "token": "ABILITY_CONTEMPT",
+      "name": "Contempt"
+    },
+    {
+      "id": 379,
+      "token": "ABILITY_CRUSHING_JAW",
+      "name": "Crushing Jaw"
+    },
+    {
+      "id": 380,
+      "token": "ABILITY_CRYO_PROFICIENCY",
+      "name": "Cryo Proficiency"
+    },
+    {
+      "id": 385,
+      "token": "ABILITY_DEAD_POWER",
+      "name": "Dead Power"
+    },
+    {
+      "id": 387,
+      "token": "ABILITY_DEPRAVITY",
+      "name": "Depravity"
+    },
+    {
+      "id": 391,
+      "token": "ABILITY_DOUBLE_IRON_BARBS",
+      "name": "Sharp Edges"
+    },
+    {
+      "id": 395,
+      "token": "ABILITY_DRAKE_OF_RAGE",
+      "name": "Drake Of Rage"
+    },
+    {
+      "id": 400,
+      "token": "ABILITY_EARLY_GRAVE",
+      "name": "Early Grave"
+    },
+    {
+      "id": 402,
+      "token": "ABILITY_ECTOPLASM",
+      "name": "Ectoplasm"
+    },
+    {
+      "id": 406,
+      "token": "ABILITY_ELEMENTAL_VORTEX",
+      "name": "Elemental Vortex"
+    },
+    {
+      "id": 407,
+      "token": "ABILITY_EMANATE",
+      "name": "Emanate"
+    },
+    {
+      "id": 408,
+      "token": "ABILITY_ENERGY_SIPHON",
+      "name": "Energy Siphon"
+    },
+    {
+      "id": 410,
+      "token": "ABILITY_ENVENOM",
+      "name": "Envenom"
+    },
+    {
+      "id": 413,
+      "token": "ABILITY_ETHEREAL_RUSH",
+      "name": "Ethereal Rush"
+    },
+    {
+      "id": 419,
+      "token": "ABILITY_FERTILIZE",
+      "name": "Fertilize"
+    },
+    {
+      "id": 420,
+      "token": "ABILITY_FIGHTER",
+      "name": "Fighter"
+    },
+    {
+      "id": 421,
+      "token": "ABILITY_FIRE_SCALES",
+      "name": "Fire Scales"
+    },
+    {
+      "id": 422,
+      "token": "ABILITY_FLAME_BUBBLE",
+      "name": "Flame Bubble"
+    },
+    {
+      "id": 423,
+      "token": "ABILITY_FLAME_SHIELD",
+      "name": "Flame Shield"
+    },
+    {
+      "id": 424,
+      "token": "ABILITY_FLAMING_MAW",
+      "name": "Flaming Maw"
+    },
+    {
+      "id": 429,
+      "token": "ABILITY_FRAGRANT_DAZE",
+      "name": "Fragrant Daze"
+    },
+    {
+      "id": 430,
+      "token": "ABILITY_FREEZING_POINT",
+      "name": "Freezing Point"
+    },
+    {
+      "id": 432,
+      "token": "ABILITY_FROST_BURN",
+      "name": "Frost Burn"
+    },
+    {
+      "id": 433,
+      "token": "ABILITY_FUNERAL_PYRE",
+      "name": "Funeral Pyre"
+    },
+    {
+      "id": 439,
+      "token": "ABILITY_GLADIATOR",
+      "name": "Gladiator"
+    },
+    {
+      "id": 444,
+      "token": "ABILITY_GUILT_TRIP",
+      "name": "Guilt Trip"
+    },
+    {
+      "id": 447,
+      "token": "ABILITY_HAUNTING_FRENZY",
+      "name": "Haunting Frenzy"
+    },
+    {
+      "id": 448,
+      "token": "ABILITY_HEADSTRONG",
+      "name": "Headstrong"
+    },
+    {
+      "id": 450,
+      "token": "ABILITY_HIGHER_RANK",
+      "name": "Higher Rank"
+    },
+    {
+      "id": 453,
+      "token": "ABILITY_HUBRIS",
+      "name": "Hubris"
+    },
+    {
+      "id": 460,
+      "token": "ABILITY_ICE_DOWNFALL",
+      "name": "Ice Downfall"
+    },
+    {
+      "id": 464,
+      "token": "ABILITY_IMPULSE",
+      "name": "Impulse"
+    },
+    {
+      "id": 475,
+      "token": "ABILITY_LAST_STAND",
+      "name": "Last Stand"
+    },
+    {
+      "id": 483,
+      "token": "ABILITY_LOW_VISIBILITY",
+      "name": "Low Visibility"
+    },
+    {
+      "id": 489,
+      "token": "ABILITY_MALICIOUS",
+      "name": "Malicious"
+    },
+    {
+      "id": 494,
+      "token": "ABILITY_METALLIC_JAWS",
+      "name": "Metallic Jaws"
+    },
+    {
+      "id": 496,
+      "token": "ABILITY_MIND_CRUSH",
+      "name": "Mind Crunch"
+    },
+    {
+      "id": 499,
+      "token": "ABILITY_MOLTEN_BLADES",
+      "name": "Molten Blades"
+    },
+    {
+      "id": 502,
+      "token": "ABILITY_MONSTER_MASH",
+      "name": "Monster Mash"
+    },
+    {
+      "id": 503,
+      "token": "ABILITY_MOON_SPIRIT",
+      "name": "Moon Spirit"
+    },
+    {
+      "id": 504,
+      "token": "ABILITY_MOSH_PIT",
+      "name": "Mosh Pit"
+    },
+    {
+      "id": 508,
+      "token": "ABILITY_MYTHICAL_ARROWS",
+      "name": "Mythical Arrows"
+    },
+    {
+      "id": 509,
+      "token": "ABILITY_NEUROTOXIN",
+      "name": "Neurotoxin"
+    },
+    {
+      "id": 510,
+      "token": "ABILITY_NIKA",
+      "name": "Nika"
+    },
+    {
+      "id": 511,
+      "token": "ABILITY_NOISE_CANCEL",
+      "name": "Noise Cancel"
+    },
+    {
+      "id": 512,
+      "token": "ABILITY_OLD_MARINER",
+      "name": "Old Mariner"
+    },
+    {
+      "id": 515,
+      "token": "ABILITY_OVERWATCH",
+      "name": "Overwatch"
+    },
+    {
+      "id": 519,
+      "token": "ABILITY_PATTERN_CHANGE",
+      "name": "Pattern Change"
+    },
+    {
+      "id": 522,
+      "token": "ABILITY_PERMANENCE",
+      "name": "Permanence"
+    },
+    {
+      "id": 523,
+      "token": "ABILITY_PETRIFY",
+      "name": "Petrify"
+    },
+    {
+      "id": 525,
+      "token": "ABILITY_PHANTOM_PAIN",
+      "name": "Phantom Pain"
+    },
+    {
+      "id": 526,
+      "token": "ABILITY_PIERCING_SOLO",
+      "name": "Piercing Solo"
+    },
+    {
+      "id": 529,
+      "token": "ABILITY_POWER_METAL",
+      "name": "Power Metal"
+    },
+    {
+      "id": 530,
+      "token": "ABILITY_PRETENTIOUS",
+      "name": "Pretentious"
+    },
+    {
+      "id": 535,
+      "token": "ABILITY_PUFFY",
+      "name": "Puffy"
+    },
+    {
+      "id": 536,
+      "token": "ABILITY_PURGATORY",
+      "name": "Purgatory"
+    },
+    {
+      "id": 537,
+      "token": "ABILITY_PURPLE_HAZE",
+      "name": "Purple Haze"
+    },
+    {
+      "id": 538,
+      "token": "ABILITY_PYROCLASTIC_FLOW",
+      "name": "Pyroclastic Flow"
+    },
+    {
+      "id": 543,
+      "token": "ABILITY_RADIO_JAM",
+      "name": "Radio Jam"
+    },
+    {
+      "id": 544,
+      "token": "ABILITY_RAGE_POINT",
+      "name": "Rage Point"
+    },
+    {
+      "id": 546,
+      "token": "ABILITY_RAGING_GODDESS",
+      "name": "Raging Goddess"
+    },
+    {
+      "id": 550,
+      "token": "ABILITY_RESERVOIR",
+      "name": "Reservoir"
+    },
+    {
+      "id": 551,
+      "token": "ABILITY_RESONANCE",
+      "name": "Resonance"
+    },
+    {
+      "id": 553,
+      "token": "ABILITY_RETRIEVER",
+      "name": "Retriever"
+    },
+    {
+      "id": 554,
+      "token": "ABILITY_REVERBATE",
+      "name": "Reverberate"
+    },
+    {
+      "id": 560,
+      "token": "ABILITY_SAND_GUARD",
+      "name": "Sand Guard"
+    },
+    {
+      "id": 561,
+      "token": "ABILITY_SAND_PIT",
+      "name": "Sand Pit"
+    },
+    {
+      "id": 565,
+      "token": "ABILITY_SEPIA_LENS",
+      "name": "Sepia Lens"
+    },
+    {
+      "id": 566,
+      "token": "ABILITY_SHINY_LIGHTNING",
+      "name": "Shiny Lightning"
+    },
+    {
+      "id": 569,
+      "token": "ABILITY_SLUDGY_MIX",
+      "name": "Sludgy Mix"
+    },
+    {
+      "id": 570,
+      "token": "ABILITY_SMOKEY_MANEUVERS",
+      "name": "Smokey Maneuvers"
+    },
+    {
+      "id": 571,
+      "token": "ABILITY_SMOLDERING_WOOD",
+      "name": "Smoldering Wood"
+    },
+    {
+      "id": 572,
+      "token": "ABILITY_SNOWY_WRATH",
+      "name": "Snowy Wrath"
+    },
+    {
+      "id": 573,
+      "token": "ABILITY_SNOW_SONG",
+      "name": "Snow Song"
+    },
+    {
+      "id": 580,
+      "token": "ABILITY_SPIKE_ARMOR",
+      "name": "Spike Armor"
+    },
+    {
+      "id": 584,
+      "token": "ABILITY_STEEL_BEETLE",
+      "name": "Steel Beetle"
+    },
+    {
+      "id": 585,
+      "token": "ABILITY_STRIKER_PIXILATE",
+      "name": "Twinkle Toes"
+    },
+    {
+      "id": 586,
+      "token": "ABILITY_STUN_SHOCK",
+      "name": "Stun Shock"
+    },
+    {
+      "id": 587,
+      "token": "ABILITY_SUBDUE",
+      "name": "Subdue"
+    },
+    {
+      "id": 589,
+      "token": "ABILITY_SUPER_HOT_GOO",
+      "name": "Super Hot Goo"
+    },
+    {
+      "id": 590,
+      "token": "ABILITY_SUPER_SLAMMER",
+      "name": "Super Slammer"
+    },
+    {
+      "id": 594,
+      "token": "ABILITY_TAR_TOSS",
+      "name": "Tar Toss"
+    },
+    {
+      "id": 596,
+      "token": "ABILITY_TERMINAL_VELOCITY",
+      "name": "TerminalVelocity"
+    },
+    {
+      "id": 598,
+      "token": "ABILITY_THERMAL_SLIDE",
+      "name": "Thermal Slide"
+    },
+    {
+      "id": 599,
+      "token": "ABILITY_THERMOMANCY",
+      "name": "Thermomancy"
+    },
+    {
+      "id": 601,
+      "token": "ABILITY_TIPPING_POINT",
+      "name": "Tipping Point"
+    },
+    {
+      "id": 603,
+      "token": "ABILITY_TO_THE_BONE",
+      "name": "To The Bone"
+    },
+    {
+      "id": 604,
+      "token": "ABILITY_TRASH_HEAP",
+      "name": "Trash Heap"
+    },
+    {
+      "id": 605,
+      "token": "ABILITY_TRICKSTER",
+      "name": "Trickster"
+    },
+    {
+      "id": 606,
+      "token": "ABILITY_TWO_STEP",
+      "name": "Two Step"
+    },
+    {
+      "id": 609,
+      "token": "ABILITY_VENOBLAZE_PINCERS",
+      "name": "VenoblazePincers"
+    },
+    {
+      "id": 610,
+      "token": "ABILITY_VENOM_CROWN",
+      "name": "Venom Crown"
+    },
+    {
+      "id": 612,
+      "token": "ABILITY_VITALITY_STRIKE",
+      "name": "Vitality Strike"
+    },
+    {
+      "id": 615,
+      "token": "ABILITY_WATCH_YOUR_STEP",
+      "name": "Watch Your Step"
+    },
+    {
+      "id": 616,
+      "token": "ABILITY_WATER_GALE_WINGS",
+      "name": "Tidal Rush"
+    },
+    {
+      "id": 618,
+      "token": "ABILITY_WEATHER_DOUBLE_BOOST",
+      "name": "Catastrophe"
+    },
+    {
+      "id": 619,
+      "token": "ABILITY_WEB_SPINNER",
+      "name": "Web Spinner"
+    },
+    {
+      "id": 622,
+      "token": "ABILITY_WHITE_NOISE",
+      "name": "White Noise"
+    },
+    {
+      "id": 624,
+      "token": "ABILITY_WIND_RAGE",
+      "name": "Wind Rage"
+    },
+    {
+      "id": 625,
+      "token": "ABILITY_WOODLAND_CURSE",
+      "name": "Woodland Curse"
+    }
+  ]
+}
