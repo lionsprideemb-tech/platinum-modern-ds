@@ -20,48 +20,146 @@
     {
       "name": "D24A generated-action extensions",
       "abilities": [
-        {"name":"Sumo Wrestler","id":425,"token":"ABILITY_MR_SUMO_WRESTLER","reuse":"MR10D7 generated action","trigger":"end of every second eligible active turn","generated_move":"Circle Throw","forced_power":20},
-        {"name":"Sludge Spit","id":571,"token":"ABILITY_MR_SLUDGE_SPIT","reuse":"MR10D7 generated action","trigger":"after successful damaging move","generated_move":"Venom Bolt","forced_power":35},
-        {"name":"Wind Chimes","id":681,"token":"ABILITY_MR_WIND_CHIMES","reuse":"MR10D8 reactive counter + Amplifier semantics","trigger":"after qualifying hit received","generated_move":"Hyper Voice","forced_power":30},
-        {"name":"Greedy","id":697,"token":"ABILITY_MR_GREEDY","reuse":"MR10D7 generated action","trigger":"when held item is lost","generated_move":"Thief"},
-        {"name":"Thundercall","id":867,"token":"ABILITY_MR_THUNDERCALL","reuse":"MR10D7 generated action","trigger":"after Electric-type move resolves","generated_move":"Smite","power_rule":"20 percent of normal power"}
+        {
+          "name": "Sumo Wrestler",
+          "id": 425,
+          "token": "ABILITY_MR_SUMO_WRESTLER",
+          "reuse": "MR10D7 generated action",
+          "trigger": "end of every second eligible active turn",
+          "generated_move": "Circle Throw",
+          "forced_power": 20
+        },
+        {
+          "name": "Sludge Spit",
+          "id": 571,
+          "token": "ABILITY_MR_SLUDGE_SPIT",
+          "reuse": "MR10D7 generated action",
+          "trigger": "after successful damaging move",
+          "generated_move": "Venom Bolt",
+          "forced_power": 35
+        },
+        {
+          "name": "Wind Chimes",
+          "id": 681,
+          "token": "ABILITY_MR_WIND_CHIMES",
+          "reuse": "MR10D8 reactive counter + Amplifier semantics",
+          "trigger": "after qualifying hit received",
+          "generated_move": "Hyper Voice",
+          "forced_power": 30
+        },
+        {
+          "name": "Greedy",
+          "id": 697,
+          "token": "ABILITY_MR_GREEDY",
+          "reuse": "MR10D7 generated action",
+          "trigger": "when held item is lost",
+          "generated_move": "Thief"
+        },
+        {
+          "name": "Thundercall",
+          "id": 867,
+          "token": "ABILITY_MR_THUNDERCALL",
+          "reuse": "MR10D7 generated action",
+          "trigger": "after Electric-type move resolves",
+          "generated_move": "Smite",
+          "power_rule": "20 percent of normal power"
+        }
       ]
     },
     {
       "name": "D24B composites and defensive typing",
       "abilities": [
-        {"name":"Hydra","id":739,"token":"ABILITY_MR_HYDRA","reuse":"MR10D11 multi-hit family + Hubris KO stat trigger","effect":"Multi-Headed + Hubris"},
-        {"name":"3 > 1","id":914,"token":"ABILITY_MR_3_1","reuse":"MR10D11 multi-hit family + Riptide type damage boost","effect":"Multi-Headed + Riptide"},
-        {"name":"Color Change","id":16,"token":"ABILITY_COLOR_CHANGE","reuse":"MR10 dynamic battle typing/type-chart hooks","effect":"before a damaging hit, once per turn, choose the best defensive type against the incoming resolved move type"}
+        {
+          "name": "Hydra",
+          "id": 739,
+          "token": "ABILITY_MR_HYDRA",
+          "reuse": "MR10D11 multi-hit family + Hubris KO stat trigger",
+          "effect": "Multi-Headed + Hubris"
+        },
+        {
+          "name": "3 > 1",
+          "id": 914,
+          "token": "ABILITY_MR_3_1",
+          "reuse": "MR10D11 multi-hit family + Riptide type damage boost",
+          "effect": "Multi-Headed + Riptide"
+        },
+        {
+          "name": "Color Change",
+          "id": 16,
+          "token": "ABILITY_COLOR_CHANGE",
+          "reuse": "MR10 dynamic battle typing/type-chart hooks",
+          "effect": "before a damaging hit, once per turn, choose the best defensive type against the incoming resolved move type"
+        }
       ]
     },
     {
       "name": "D24C field and item state",
       "abilities": [
-        {"name":"Toxic Surge","id":692,"token":"ABILITY_MR_TOXIC_SURGE","reuse":"MR08 terrain/field lifecycle hooks","effect":"sets Toxic Terrain on entry"},
-        {"name":"Craving","id":699,"token":"ABILITY_MR_CRAVING","reuse":"item-consumption + end-turn hooks","effect":"after the entry turn, consume a random Berry at each end turn using the locked Craving pool"}
+        {
+          "name": "Toxic Surge",
+          "id": 692,
+          "token": "ABILITY_MR_TOXIC_SURGE",
+          "reuse": "MR08 terrain/field lifecycle hooks",
+          "effect": "sets Toxic Terrain on entry"
+        },
+        {
+          "name": "Craving",
+          "id": 699,
+          "token": "ABILITY_MR_CRAVING",
+          "reuse": "item-consumption + end-turn hooks",
+          "effect": "after the entry turn, consume a random Berry at each end turn using the locked Craving pool"
+        }
       ]
     },
     {
       "name": "D24D form-state controller",
       "abilities": [
-        {"name":"DNA Scramble","id":734,"token":"ABILITY_MR_DNA_SCRAMBLE","reuse":"MR08 canonical form controller patterns","effect":"Deoxys changes form immediately before move execution using the locked move-to-form mapping"},
-        {"name":"Locust Swarm","id":736,"token":"ABILITY_MR_LOCUST_SWARM","reuse":"MR08 threshold-form patterns","effect":"mapped species uses Hivemind form while above one-quarter max HP"},
-        {"name":"Revelation","id":737,"token":"ABILITY_MR_REVELATION","reuse":"MR08 threshold-form patterns","effect":"mapped species uses Revelation form while above one-quarter max HP"}
+        {
+          "name": "DNA Scramble",
+          "id": 734,
+          "token": "ABILITY_MR_DNA_SCRAMBLE",
+          "reuse": "MR08 canonical form controller patterns",
+          "effect": "Deoxys changes form immediately before move execution using the locked move-to-form mapping"
+        },
+        {
+          "name": "Locust Swarm",
+          "id": 736,
+          "token": "ABILITY_MR_LOCUST_SWARM",
+          "reuse": "MR08 threshold-form patterns",
+          "effect": "mapped species uses Hivemind form while above one-quarter max HP"
+        },
+        {
+          "name": "Revelation",
+          "id": 737,
+          "token": "ABILITY_MR_REVELATION",
+          "reuse": "MR08 threshold-form patterns",
+          "effect": "mapped species uses Revelation form while above one-quarter max HP"
+        }
       ]
     },
     {
       "name": "D24E custom status composite",
       "abilities": [
-        {"name":"Blood Stain","id":764,"token":"ABILITY_MR_BLOOD_STAIN","reuse":"existing Mercury custom-status/contact state patterns where present","effect":"holder remains in Bleeding state and spreads Bleed through qualifying contact"}
+        {
+          "name": "Blood Stain",
+          "id": 764,
+          "token": "ABILITY_MR_BLOOD_STAIN",
+          "reuse": "existing Mercury custom-status/contact state patterns where present",
+          "effect": "holder remains in Bleeding state and spreads Bleed through qualifying contact"
+        }
       ]
     }
   ],
   "known_donor_recovery": {
     "Amplifier": "Sound-based moves target all opposing Pokemon and deal 30 percent more damage.",
-    "Riptide": "Water-type moves deal 30 percent more damage normally and 80 percent more damage at or below one-third max HP.",
+    "Riptide": "Water-type moves deal 30 percent more damage normally and 80 percent more damage at or below one-third max HP; the low-HP value replaces the normal boost.",
     "Hubris": "Raise Special Attack by one stage when the user directly KOs an opponent.",
-    "Multi-Headed": "Extra strikes depend on head count; authoritative ER documentation gives 2-head total 100%+25% and 3-head total 100%+20%+15%, with independent secondary-effect rolls except flinch. Recover the exact species/head mapping from donor data before wiring species-specific behavior."
+    "Multi-Headed": "Extra strikes depend on head count. Donor documentation: two heads = first hit 100 percent plus second hit 25 percent; three heads = 100 percent plus 20 percent plus 15 percent. Secondary effects roll independently except flinch. Recover the exact species/head mapping before species-specific wiring.",
+    "Craving": "End-turn pool: Sitrus, Liechi, Ganlon, Salac, Petaya, Apicot, Lansat, Starf, or a random pinch-healing berry. Mercury approval additionally requires no activation on the entry turn.",
+    "Toxic Terrain": "Donor terrain lasts 8 turns, boosts Poison-type moves, and deals 1/16 max HP at turn end to grounded non-Poison Pokemon; standard terrain replacement/lifecycle applies unless Mercury data overrides it.",
+    "Blood Stain": "Holder gains an unremovable Bleed state if not immune and re-applies it if cured; offensive or defensive qualifying contact spreads Bleed. Donor Bleed: 1/16 max HP per turn, prevents healing, negates effects of stat stages, and Rock/Ghost types are immune. Mercury's approved text controls if any local rule differs.",
+    "DNA Scramble": "Deoxys changes before move execution: damaging move -> Attack Forme; Recover -> Defense Forme; any other status move -> Speed Forme.",
+    "Locust Swarm / Revelation": "Use Mercury-approved threshold direction: transformed form while above 1/4 max HP, revert at or below 1/4. Donor naming confirms Hivemind and Revelation form keys."
   },
   "completion_gate": {
     "keep_as_written": "75/75",
