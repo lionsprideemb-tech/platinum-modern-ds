@@ -1,0 +1,118 @@
+{
+  "gate": "MERCURY_16BIT_NAMESPACE_RECOVERY_PLAN",
+  "date": "2026-09-30",
+  "status": "CANONICAL_TAIL_VERIFIED_NAMESPACE_REMAP_REQUIRED",
+  "storage": {
+    "bits": 16,
+    "max_id": 65535,
+    "implementation_branch": "feature/mr10-16bit-ability-storage",
+    "zero_growth_layout": true
+  },
+  "canonical_tail_verified": [
+    {
+      "id": 311,
+      "token": "ABILITY_PIERCING_DRILL",
+      "name": "Piercing Drill"
+    },
+    {
+      "id": 312,
+      "token": "ABILITY_DRAGONIZE",
+      "name": "Dragonize"
+    },
+    {
+      "id": 313,
+      "token": "ABILITY_EELEVATE",
+      "name": "Eelevate"
+    },
+    {
+      "id": 315,
+      "token": "ABILITY_MEGA_SOL",
+      "name": "Mega Sol"
+    },
+    {
+      "id": 316,
+      "token": "ABILITY_FIRE_MANE",
+      "name": "Fire Mane"
+    },
+    {
+      "id": 318,
+      "token": "ABILITY_SPICY_SPRAY",
+      "name": "Spicy Spray"
+    },
+    {
+      "id": 319,
+      "token": "ABILITY_AURA_GUARD",
+      "name": "Aura Guard"
+    }
+  ],
+  "noncanonical_hg_engine_slots": [
+    {
+      "id": 314,
+      "token": "ABILITY_TEMP2",
+      "policy": "do_not_import_as_official"
+    },
+    {
+      "id": 317,
+      "token": "ABILITY_TEMP4",
+      "policy": "do_not_import_as_official"
+    }
+  ],
+  "current_mercury_collisions": [
+    {
+      "id": 311,
+      "current": "Controlled Fury",
+      "official": "Piercing Drill"
+    },
+    {
+      "id": 312,
+      "current": "Eternal Life",
+      "official": "Dragonize"
+    },
+    {
+      "id": 313,
+      "current": "Hollow Shell",
+      "official": "Eelevate"
+    },
+    {
+      "id": 315,
+      "current": "The Look",
+      "official": "Mega Sol"
+    },
+    {
+      "id": 316,
+      "current": "Prismatic Pelt",
+      "official": "Fire Mane"
+    },
+    {
+      "id": 318,
+      "current": "Adaptive Genome",
+      "official": "Spicy Spray"
+    },
+    {
+      "id": 319,
+      "current": "Storm Sequence",
+      "official": "Aura Guard"
+    }
+  ],
+  "preserved_customs": [
+    "Controlled Fury",
+    "Eternal Life",
+    "Hollow Shell",
+    "Mind Games",
+    "The Look",
+    "Prismatic Pelt",
+    "Lockdown Protocol",
+    "Adaptive Genome",
+    "Storm Sequence"
+  ],
+  "migration_policy": [
+    "Official canonical index numbers own their official IDs.",
+    "Mercury custom abilities currently colliding with official IDs are relocated into the recovered custom namespace, never deleted.",
+    "Legacy Mercury IDs are translated deterministically on load/import where required.",
+    "Newest approved Mercury redesign semantics win over historical donor versions.",
+    "Do not import hg-engine placeholder TEMP2 or TEMP4 as official abilities.",
+    "Recover historical active custom namespace through ID 1042 before assigning final relocated custom IDs.",
+    "Reserve stable headroom for Deep Pockets, Predator's Edge, future canon, and future Mercury originals."
+  ],
+  "next_gate": "Recover historical 1043-entry namespace and emit deterministic old-ID -> 16-bit-ID migration map before applying remaps."
+}
