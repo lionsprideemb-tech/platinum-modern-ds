@@ -1,0 +1,39 @@
+{
+  "gate": "MERCURY_MR10D24K_ER_THRESHOLD_FORM_DATA",
+  "source_policy": "Elite Redux Next Dex / ER Next Dex generated data only; no guessed values.",
+  "nextdex_generator": {
+    "repository": "ForwardFeed/ER-nextdex",
+    "er_config_submodule_commit": "6a30b667c6adbc660648d31117ec138ee2e72304",
+    "generator_path": "src/species/species.ts",
+    "source_repository": "Elite-Redux/er-config"
+  },
+  "forms": {
+    "SPECIES_WISPYWASPY": {
+      "types": ["BUG", "GHOST"],
+      "base_stats": {"hp": 50, "atk": 20, "def": 15, "spa": 20, "spd": 15, "spe": 55},
+      "bst": 175
+    },
+    "SPECIES_WISPYWASPY_HIVEMIND": {
+      "elite_redux_id": 2262,
+      "types": ["BUG", "GHOST"],
+      "base_stats": {"hp": 50, "atk": 130, "def": 120, "spa": 130, "spd": 115, "spe": 75},
+      "bst": 620,
+      "abilities": ["Shield Dust", "Early Grave", "Surprise!"],
+      "innates": ["Locust Swarm", "Shadow Shield", "Curse of Famine"],
+      "threshold": "active while current HP > 1/4 max HP",
+      "base_form": "SPECIES_WISPYWASPY"
+    },
+    "SPECIES_UNOWN_REVELATION": {
+      "elite_redux_id": 1865,
+      "types": ["PSYCHIC"],
+      "base_stats": {"hp": 58, "atk": 138, "def": 133, "spa": 138, "spd": 133, "spe": 30},
+      "bst": 630,
+      "abilities": ["Anticipation", "Minion Control", "Magic Bounce"],
+      "innates": ["Revelation", "Wonder Skin", "Unown Power"],
+      "threshold": "active while current HP > 1/4 max HP",
+      "base_form": "SPECIES_UNOWN"
+    }
+  },
+  "implementation_note": "D24J battle controllers are already staged. These records remove the missing battle-data ambiguity. Mercury's canonical 1025 registry intentionally contains base species only, so Redux-only Wispywaspy/Hivemind still require the custom-content species layer before Locust Swarm can be runtime-certified. Unown Revelation can use the recovered form record when the form-content layer is materialized.",
+  "mr07_visuals_touched": false
+}
