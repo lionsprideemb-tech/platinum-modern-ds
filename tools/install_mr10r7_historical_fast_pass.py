@@ -1146,7 +1146,7 @@ def patch_brawling_wyvern_classification(root: Path) -> None:
 """
     insert_before_once(
         lib,
-        "BOOL Mercury_R7AddedType(BattleContext *battleCtx, int battler)\n",
+        "int Mercury_R7AddedType(BattleContext *battleCtx, int battler)\n",
         local + helper,
         "Mercury_R7MoveCountsAsPunching",
         "Brawling Wyvern punching classification",
