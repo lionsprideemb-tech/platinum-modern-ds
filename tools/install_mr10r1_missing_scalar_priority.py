@@ -16,6 +16,7 @@ IMPLEMENTED = {
     "Early Grave": ("ABILITY_EARLY_GRAVE", 400),
     "Fighter": ("ABILITY_FIGHTER", 420),
     "Fire Scales": ("ABILITY_FIRE_SCALES", 421),
+    "Flame Shield": ("ABILITY_FLAME_SHIELD", 423),
     "Gladiator": ("ABILITY_GLADIATOR", 439),
     "Higher Rank": ("ABILITY_HIGHER_RANK", 450),
     "Purgatory": ("ABILITY_PURGATORY", 536),
@@ -180,6 +181,23 @@ def patch_damage(root: Path) -> None:
 """
     insert_before_once(path,defensive_anchor,defensive,"ABILITY_CHROME_COAT) == TRUE","Fire Scales/Chrome Coat special reduction")
 
+
+    super_effective_anchor="""        if ((*moveStatusMask & MOVE_STATUS_SUPER_EFFECTIVE) && movePower) {
+"""
+    flame_shield="""            if (Battler_IgnorableAbility(
+                    battleCtx, attacker, defender, ABILITY_FLAME_SHIELD) == TRUE) {
+                damage = BattleSystem_Divide(damage * 65, 100);
+            }
+
+"""
+    insert_after_once(
+        path,
+        super_effective_anchor,
+        flame_shield,
+        "ABILITY_FLAME_SHIELD) == TRUE",
+        "Flame Shield super-effective reduction",
+    )
+
 def patch_sharp_edges(root: Path) -> None:
     path=root/"src/battle/battle_lib.c"
     anchor="""    case ABILITY_ROUGH_SKIN:
@@ -245,6 +263,7 @@ def validate(root: Path, registry: Path) -> dict[str,bool]:
         "gladiator_scalars":"ABILITY_GLADIATOR" in lib and "? 180 : 130" in lib,
         "purgatory_scalars":"ABILITY_PURGATORY" in lib and "moveType == TYPE_GHOST" in lib,
         "fire_scales_half_special":"ABILITY_FIRE_SCALES" in lib and "damage /= 2;" in lib,
+        "flame_shield_65_percent":"ABILITY_FLAME_SHIELD" in lib and "damage * 65, 100" in lib,
         "higher_rank_priority_power":"ABILITY_HIGHER_RANK" in lib and "MOVE_DATA(move).priority > 0" in lib,
         "shiny_lightning_accuracy":"ABILITY_SHINY_LIGHTNING" in ctl and "move == MOVE_THUNDER" in ctl,
         "registry_updated":all(tok in reg for tok in TOKENS),
