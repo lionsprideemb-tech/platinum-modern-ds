@@ -1,7 +1,7 @@
 {
   "gate": "MERCURY_MISSING_HISTORICAL_RUNTIME_RECOVERY",
   "date": "2026-09-30",
-  "status": "IN_PROGRESS",
+  "status": "PASS",
   "historical_missing_identities_original": 124,
   "identities_restored_to_namespace": 124,
   "exact_semantics_recovered": 124,
@@ -192,7 +192,7 @@
   ],
   "explicit_runtime_restored_so_far": 125,
   "explicit_runtime_remaining": 0,
-  "certification": "All 124 reconciled historical-missing identities are now assigned to explicit runtime passes R1-R8; Pretty Privilege is an additional restored identity outside that 124-row queue, giving 125 explicit runtime identities tracked. Final cumulative R8 native compile/ROM certification is pending Actions PASS.",
+  "certification": "CERTIFIED: cumulative R1-R8 native compile and ROM build passed in GitHub Actions run 36790890967 at commit 736cd50b47afd22bd8a922801d1aaaa4f6356f4d. All 124 historical-missing identities are restored; Pretty Privilege remains an additional restored runtime identity outside that queue. Proof artifact uploaded as mercury-missing-abilities-r8.",
   "namespace": {
     "official_range": [
       0,
@@ -205,5 +205,8 @@
     "next_free_id": 1067,
     "persistence_bits": 16
   },
-  "historical_missing_runtime_restored": 124
+  "historical_missing_runtime_restored": 124,
+  "certification_run_id": 36790890967,
+  "certification_commit": "736cd50b47afd22bd8a922801d1aaaa4f6356f4d",
+  "proof_artifact": "mercury-missing-abilities-r8"
 }
