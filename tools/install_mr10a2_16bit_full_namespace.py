@@ -113,8 +113,13 @@ def main():
 
     reg=root/"generated/abilities.txt"
     abilities=[x.strip() for x in reg.read_text().splitlines() if x.strip()]
-    if len(abilities) != CANONICAL_BASE_MAX+1:
-        raise SystemExit(f"expected MP05 registry length 311, got {len(abilities)}")
+    if len(abilities) < CANONICAL_BASE_MAX+1:
+        raise SystemExit(f"expected at least MP05 registry length 311, got {len(abilities)}")
+    # This installer is deliberately safe to run after the old MR10 custom
+    # namespace/mechanics chain. Runtime code refers to symbolic tokens, so we
+    # can discard the temporary numeric tail here and rebuild the authoritative
+    # 16-bit registry without losing installed mechanics.
+    abilities = abilities[:CANONICAL_BASE_MAX+1]
 
     for i in range(CANONICAL_BASE_MAX+1, CANONICAL_TAIL_MAX+1):
         abilities.append(donor_by_id[i])
