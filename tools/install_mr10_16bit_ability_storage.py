@@ -8,6 +8,8 @@ from pathlib import Path
 
 def replace_once(path: Path, old: str, new: str) -> None:
     text = path.read_text()
+    if new in text:
+        return
     count = text.count(old)
     if count != 1:
         raise SystemExit(f"{path}: expected one match, found {count}: {old!r}")
