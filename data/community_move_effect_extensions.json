@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "policy": "Custom Mercury battle effects append after native Platinum effects. Every extension must have a unique stable ID, a named installer, and a batch owner.",
+  "effects": [
+    {
+      "id": 277,
+      "name": "BATTLE_EFFECT_RAISE_SPEED_HIT",
+      "batch": "CM08",
+      "installer": "tools/install_cm08_simple_effects.py",
+      "scope": "battle-script-only"
+    },
+    {
+      "id": 278,
+      "name": "BATTLE_EFFECT_DOUBLE_POWER_IF_TARGET_PARALYZED",
+      "batch": "CM08",
+      "installer": "tools/install_cm08_simple_effects.py",
+      "scope": "battle-script-only"
+    }
+  ]
+}

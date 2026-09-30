@@ -1,0 +1,337 @@
+name: CM06 Native Mechanics Bulk
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "tools/build_cm06_native_community_bulk.py"
+      - "tools/install_cm01_community_moves.py"
+      - "data/community_moves_cm01.json"
+      - "data/community_moves_cm02.json"
+      - "data/community_moves_cm03.json"
+      - "data/community_moves_cm04.json"
+      - "data/community_moves_cm05.json"
+      - ".github/workflows/cm06-native-mechanics-bulk.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cm06-native-mechanics-bulk
+  cancel-in-progress: true
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+  COMMUNITY_SOURCE_COMMIT: 4250c4bfbb2e8dddd117160cec9e1e8395dfe9f7
+
+jobs:
+  build-and-prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core ffmpeg
+
+      - name: Checkout pinned Platinum, HG-Engine, and community library
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+          git clone https://github.com/lionsprideemb-tech/Pokemon-moves.git vendor/community-moves
+          git -C vendor/community-moves checkout "$COMMUNITY_SOURCE_COMMIT"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Rebuild complete 1025-species layer
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report cm06-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --gate "CM06_${tag}_RESOURCE_INSTALL" \
+              --report "cm06-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+      - name: Restore certified Gen 5-9 move foundation
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report cm06-modern-moves.json \
+            --implemented-registry cm06-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves cm06-implemented-moves.txt \
+            --report cm06-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report cm06-evolutions.json
+
+      - name: Restore certified CM01 through CM05
+        shell: bash
+        run: |
+          for batch in 01 02 03 04 05; do
+            python3 tools/install_cm01_community_moves.py \
+              vendor/pokeplatinum \
+              --batch "data/community_moves_cm${batch}.json" \
+              --report "cm06-cm${batch}-restore.json"
+          done
+
+          test "$(jq -r '.last_community_id_this_pass' cm06-cm05-restore.json)" = "1047"
+          test "$(jq -r '.total_community_moves_materialized' cm06-cm05-restore.json)" = "24"
+
+      - name: Select every no-new-mechanics community move
+        shell: bash
+        run: |
+          python3 tools/build_cm06_native_community_bulk.py \
+            vendor/community-moves \
+            vendor/pokeplatinum \
+            --mercury-root . \
+            --start-id 1048 \
+            --output cm06-native-bulk.json \
+            --report cm06-native-selection.json
+
+          selected="$(jq -r '.selected_without_new_mechanics' cm06-native-selection.json)"
+          deferred="$(jq -r '.deferred_for_review' cm06-native-selection.json)"
+          first="$(jq -r '.first_id' cm06-native-selection.json)"
+          last="$(jq -r '.last_id' cm06-native-selection.json)"
+
+          test "$selected" -ge 40
+          test "$first" = "1048"
+          test "$last" -le 1599
+          test "$(( selected + deferred + 24 ))" = "519"
+
+          echo "Selected $selected no-new-mechanics moves; deferred $deferred for later mechanics review."
+
+      - name: Install complete native-mechanics bulk
+        shell: bash
+        run: |
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch cm06-native-bulk.json \
+            --report cm06-native-install.json
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          selection = json.loads(Path("cm06-native-selection.json").read_text())
+          install = json.loads(Path("cm06-native-install.json").read_text())
+          moves = Path("vendor/pokeplatinum/generated/moves.txt").read_text().splitlines()
+
+          selected = selection["selected_without_new_mechanics"]
+          first = selection["first_id"]
+          last = selection["last_id"]
+
+          assert first == 1048
+          assert install["community_moves_installed_this_pass"] == selected
+          assert install["first_community_id_this_pass"] == first
+          assert install["last_community_id_this_pass"] == last
+          assert install["total_community_moves_materialized"] == 24 + selected
+          assert moves[last + 1] == "MAX_MOVES", (last + 1, moves[last + 1])
+          assert "MOVE_IRON_FANGS" in moves[first:last + 1]
+          print(f"CM06 native-mechanics bulk registry: PASS ({selected} moves)")
+          PY
+
+      - name: Install one representative native runtime proof
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_runtime_harness.py \
+            vendor/pokeplatinum --report cm06-base-party.json
+          python3 tools/install_pt04c_summary_harness.py \
+            vendor/pokeplatinum --report cm06-base-summary.json
+          python3 tools/install_pt04c_pc_harness.py \
+            vendor/pokeplatinum --report cm06-base-pc.json
+          python3 tools/install_pt04c_battle_harness.py \
+            vendor/pokeplatinum --report cm06-base-battle.json
+
+          python3 tools/install_pt05d_animation_preview_harness.py \
+            vendor/pokeplatinum \
+            --move MOVE_IRON_FANGS \
+            --preview-id cm06_native_bulk \
+            --report cm06-runtime-harness.json
+
+          grep -q 'MOVE_IRON_FANGS' vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Build native Platinum with complete native-mechanics sweep
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Run representative native runtime proof
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/cm06-venv"
+          . "$RUNNER_TEMP/cm06-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+          mp4 = out / "cm06-native-bulk-iron-fangs.mp4"
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("CM06 native Platinum ROM did not boot")
+
+          fps = 15
+          sample_every = 4
+          proc = subprocess.Popen([
+              "ffmpeg", "-y", "-loglevel", "error",
+              "-f", "rawvideo", "-pix_fmt", "rgb24",
+              "-s", "256x192", "-r", str(fps), "-i", "-",
+              "-an", "-c:v", "libx264", "-preset", "veryfast",
+              "-crf", "25", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+              str(mp4)
+          ], stdin=subprocess.PIPE)
+
+          current = 0
+          written = 0
+
+          def cycle(frames):
+              global current, written
+              for _ in range(frames):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"CM06 emulator stopped at frame {current}")
+                  if current % sample_every == 0:
+                      image = emu.screenshot().crop((0, 0, 256, 192)).convert("RGB")
+                      proc.stdin.write(image.tobytes())
+                      written += 1
+
+          def pulse_a(held=20, settle=180):
+              emu.input.keypad_add_key(keymask(Keys.KEY_A))
+              cycle(held)
+              emu.input.keypad_rm_key(keymask(Keys.KEY_A))
+              cycle(settle)
+
+          try:
+              cycle(1500)
+              for _ in range(14):
+                  pulse_a()
+              cycle(800)
+              emu.screenshot().save(out / "cm06-native-bulk-final.png")
+          finally:
+              try:
+                  if proc.stdin is not None:
+                      proc.stdin.close()
+                  rc = proc.wait()
+                  if rc != 0:
+                      raise SystemExit(f"ffmpeg failed with exit code {rc}")
+              finally:
+                  emu.destroy()
+
+          if written < 100 or not mp4.exists() or mp4.stat().st_size < 10_000:
+              raise SystemExit("CM06 runtime video proof is incomplete")
+
+          selection = json.loads(Path("cm06-native-selection.json").read_text())
+          meta = {
+              "gate": "CM06_NATIVE_MECHANICS_BULK_RUNTIME",
+              "runtime": "pokeplatinum",
+              "representative_move": "MOVE_IRON_FANGS",
+              "selected_without_new_mechanics": selection["selected_without_new_mechanics"],
+              "deferred_for_mechanics_review": selection["deferred_for_review"],
+              "captured_frames": written,
+              "emulator_cycles": current,
+              "mp4": mp4.name,
+              "mp4_bytes": mp4.stat().st_size,
+          }
+          (out / "cm06-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          print(json.dumps(meta, indent=2))
+          PY
+
+      - name: Upload CM06 native-mechanics proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: cm06-native-mechanics-bulk-proof
+          path: |
+            cm06-native-bulk.json
+            cm06-native-selection.json
+            cm06-native-install.json
+            cm06-runtime-harness.json
+            runtime-preview/cm06-native-bulk-iron-fangs.mp4
+            runtime-preview/cm06-native-bulk-final.png
+            runtime-preview/cm06-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: CM06 summary
+        shell: bash
+        run: |
+          selected="$(jq -r '.selected_without_new_mechanics' cm06-native-selection.json)"
+          deferred="$(jq -r '.deferred_for_review' cm06-native-selection.json)"
+          last="$(jq -r '.last_id' cm06-native-selection.json)"
+          {
+            echo "## CM06 native-mechanics bulk"
+            echo
+            echo "- Previous certified community moves: 24"
+            echo "- Added without new battle mechanics: $selected"
+            echo "- Total live community moves: $((24 + selected))"
+            echo "- Last live community move ID: $last"
+            echo "- Deferred for mechanics review: $deferred"
+            echo "- Full native Platinum ROM build + representative battle runtime proof required"
+          } >> "$GITHUB_STEP_SUMMARY"

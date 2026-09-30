@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "lane": "community_imports",
+  "start_id": 1036,
+  "source_library": "lionsprideemb-tech/Pokemon-moves",
+  "source_manifest": "manifests/community_moves.csv",
+  "batch": "CM04",
+  "moves": [
+    {
+      "id": 1036,
+      "token": "MOVE_SHOCKING_JAB",
+      "name": "Shocking Jab",
+      "type": "TYPE_ELECTRIC",
+      "class": "CLASS_PHYSICAL",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_PARALYZE_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_COOL"
+      },
+      "description": [
+        "An electrified strike hits\n",
+        "the target. It may leave\n",
+        "the target paralyzed."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "thunder_punch"
+      },
+      "traits": [
+        "horn"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1037,
+      "token": "MOVE_AQUA_FANG",
+      "name": "Aqua Fang",
+      "type": "TYPE_WATER",
+      "class": "CLASS_PHYSICAL",
+      "power": 85,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_FLINCH_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "The target is bitten with\n",
+        "water-charged fangs. It\n",
+        "may make the target flinch."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "bite"
+      },
+      "traits": [
+        "strong-jaw"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1038,
+      "token": "MOVE_PIXIE_BEAM",
+      "name": "Pixie Beam",
+      "type": "TYPE_FAIRY",
+      "class": "CLASS_SPECIAL",
+      "power": 110,
+      "accuracy": 85,
+      "pp": 5,
+      "effect": {
+        "type": "BATTLE_EFFECT_LOWER_SP_ATK_HIT",
+        "chance": 20
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_BEAUTY"
+      },
+      "description": [
+        "A brilliant fairy beam\n",
+        "blasts the target. It may\n",
+        "lower Sp. Atk."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "aurora_beam"
+      },
+      "traits": [
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1039,
+      "token": "MOVE_MOUNTAIN_CHUNK",
+      "name": "Mountain Chunk",
+      "type": "TYPE_GROUND",
+      "class": "CLASS_PHYSICAL",
+      "power": 110,
+      "accuracy": 90,
+      "pp": 10,
+      "effect": {
+        "type": "BATTLE_EFFECT_FLINCH_HIT",
+        "chance": 30
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE",
+        "MOVE_FLAG_TRIGGERS_KINGS_ROCK"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "A massive chunk of earth\n",
+        "crashes into the target. It\n",
+        "may make the target flinch."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "rock_slide"
+      },
+      "traits": [
+        "mega-launcher"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1040,
+      "token": "MOVE_JAGGED_FANGS",
+      "name": "Jagged Fangs",
+      "type": "TYPE_ROCK",
+      "class": "CLASS_PHYSICAL",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_RAISE_ATTACK_HIT",
+        "chance": 10
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "Jagged fangs tear into the\n",
+        "target. The attack may\n",
+        "raise the user’s Attack."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "crunch"
+      },
+      "traits": [
+        "strong-jaw"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    },
+    {
+      "id": 1041,
+      "token": "MOVE_TECTONIC_FANGS",
+      "name": "Tectonic Fangs",
+      "type": "TYPE_GROUND",
+      "class": "CLASS_PHYSICAL",
+      "power": 85,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": {
+        "type": "BATTLE_EFFECT_FLINCH_HIT",
+        "chance": 10
+      },
+      "range": "RANGE_SINGLE_TARGET",
+      "priority": 0,
+      "flags": [
+        "MOVE_FLAG_MAKES_CONTACT",
+        "MOVE_FLAG_CAN_PROTECT",
+        "MOVE_FLAG_CAN_MIRROR_MOVE"
+      ],
+      "contest": {
+        "effect": "CONTEST_EFFECT_BASIC",
+        "type": "CONTEST_TYPE_TOUGH"
+      },
+      "description": [
+        "The user bites with fangs\n",
+        "charged by tectonic force.\n",
+        "It may make the target flinch."
+      ],
+      "animation": {
+        "mode": "copy_native_platinum",
+        "donor_move": "bite"
+      },
+      "traits": [
+        "strong-jaw"
+      ],
+      "provenance": "Pokemon Elite Redux / Elite-Redux/er-config @ e32616fea6ccf5245096d8d7eeb54f0f5ac0b2a7"
+    }
+  ]
+}

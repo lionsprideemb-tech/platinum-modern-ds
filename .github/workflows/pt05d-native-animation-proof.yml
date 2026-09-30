@@ -1,0 +1,230 @@
+name: PT05D Native Platinum Animation Proof
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "tools/install_pt05d_animation_preview_harness.py"
+      - ".github/workflows/pt05d-native-animation-proof.yml"
+      - "platinum-overlay/**"
+      - "upstream/LOCK.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pt05d-native-animation-proof
+  cancel-in-progress: true
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+  PREVIEW_ID: anim_0003
+  PREVIEW_MOVE: MOVE_DOUBLE_SLAP
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install native Platinum build and capture dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends             bison flex g++ gcc-arm-none-eabi git make ninja-build pkg-config             python3 python3-venv python3-pip wget xz-utils libpng-dev             rsync jq libsdl2-2.0-0 ffmpeg
+
+      - name: Checkout pinned pokeplatinum
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+      - name: Apply certified Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Install proven direct-boot native battle harness
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_runtime_harness.py             vendor/pokeplatinum --report pt05d-base-party.json
+          python3 tools/install_pt04c_summary_harness.py             vendor/pokeplatinum --report pt05d-base-summary.json
+          python3 tools/install_pt04c_pc_harness.py             vendor/pokeplatinum --report pt05d-base-pc.json
+          python3 tools/install_pt04c_battle_harness.py             vendor/pokeplatinum --report pt05d-base-battle.json
+
+      - name: Finalize native animation proof fixture
+        shell: bash
+        run: |
+          python3 tools/install_pt05d_animation_preview_harness.py             vendor/pokeplatinum             --move "$PREVIEW_MOVE"             --preview-id "$PREVIEW_ID"             --report pt05d-animation-harness.json
+          grep -q "$PREVIEW_MOVE" vendor/pokeplatinum/src/field_map_change.c
+          grep -q '"runtime": "pokeplatinum"' pt05d-animation-harness.json
+
+      - name: Verify native Platinum animation source exists
+        shell: bash
+        run: |
+          test -s vendor/pokeplatinum/res/moves/double_slap/anim.s
+          grep -q 'double_slap_spa' vendor/pokeplatinum/res/moves/double_slap/anim.s
+
+      - name: Install MetroSkrew
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: sudo make skrew
+
+      - name: Configure native Platinum proof ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: make configure
+
+      - name: Build native Platinum proof ROM
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Install emulator capture environment
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pt05d-venv"
+          . "$RUNNER_TEMP/pt05d-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+      - name: Capture Double Slap from the actual Platinum runtime
+        shell: bash
+        run: |
+          . "$RUNNER_TEMP/pt05d-venv/bin/activate"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+          mp4 = out / "anim_0003-double-slap-native-platinum.mp4"
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("native Platinum animation proof ROM did not boot")
+
+          fps = 15
+          sample_every = 4
+          proc = subprocess.Popen([
+              "ffmpeg", "-y", "-loglevel", "error",
+              "-f", "rawvideo", "-pix_fmt", "rgb24",
+              "-s", "256x192", "-r", str(fps), "-i", "-",
+              "-an", "-c:v", "libx264", "-preset", "veryfast",
+              "-crf", "25", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+              str(mp4)
+          ], stdin=subprocess.PIPE)
+
+          current = 0
+          written = 0
+          snapshots = []
+
+          def cycle(frames, capture=True):
+              global current, written
+              for _ in range(frames):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"emulator stopped at frame {current}")
+                  if capture and current % sample_every == 0:
+                      image = emu.screenshot().crop((0, 0, 256, 192)).convert("RGB")
+                      proc.stdin.write(image.tobytes())
+                      written += 1
+
+          def pulse_a(held=20, settle=180):
+              emu.input.keypad_add_key(keymask(Keys.KEY_A))
+              cycle(held)
+              emu.input.keypad_rm_key(keymask(Keys.KEY_A))
+              cycle(settle)
+
+          try:
+              # Direct-new-save and battle-entry harness reaches the native fight
+              # screen quickly. Record from boot so a proof failure remains diagnosable.
+              cycle(1500)
+
+              # Repeated A pulses safely advance battle intro text, choose Fight,
+              # choose the only populated move slot, and advance post-hit text.
+              for _ in range(14):
+                  pulse_a()
+
+              cycle(1200)
+
+              for frame in (current - 900, current - 450, current):
+                  if frame <= 0:
+                      continue
+                  image = emu.screenshot()
+                  path = out / f"anim_0003-proof-{frame:05d}.png"
+                  image.save(path)
+                  colors = image.convert("RGB").getcolors(maxcolors=256 * 384)
+                  snapshots.append({
+                      "file": path.name,
+                      "frame": frame,
+                      "unique_colors": len(colors) if colors is not None else 256 * 384,
+                  })
+          finally:
+              try:
+                  if proc.stdin is not None:
+                      proc.stdin.close()
+                  rc = proc.wait()
+                  if rc != 0:
+                      raise SystemExit(f"ffmpeg failed with exit code {rc}")
+              finally:
+                  emu.destroy()
+
+          if written < 100:
+              raise SystemExit(f"too few captured frames: {written}")
+          if not mp4.exists() or mp4.stat().st_size < 10_000:
+              raise SystemExit("native Platinum MP4 proof was not produced correctly")
+
+          meta = {
+              "gate": "PT05D_NATIVE_PLATINUM_ANIMATION_PROOF",
+              "preview_id": "anim_0003",
+              "move": "MOVE_DOUBLE_SLAP",
+              "runtime": "pokeplatinum",
+              "source_animation": "res/moves/double_slap/anim.s",
+              "captured_frames": written,
+              "emulator_cycles": current,
+              "mp4": mp4.name,
+              "mp4_bytes": mp4.stat().st_size,
+              "snapshots": snapshots,
+              "visual_certification_required": True,
+          }
+          (out / "anim_0003-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          print(json.dumps(meta, indent=2))
+          PY
+
+      - name: Upload native Platinum animation proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: pt05d-anim-0003-native-platinum
+          path: |
+            pt05d-animation-harness.json
+            runtime-preview/anim_0003-double-slap-native-platinum.mp4
+            runtime-preview/anim_0003-proof-*.png
+            runtime-preview/anim_0003-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: PT05D summary
+        shell: bash
+        run: |
+          {
+            echo "## PT05D native Platinum animation proof"
+            echo
+            echo "- Runtime: pokeplatinum"
+            echo "- Preview: anim_0003"
+            echo "- Move: Double Slap"
+            echo "- Native animation source: res/moves/double_slap/anim.s"
+            echo "- HG-Engine is not the runtime for this proof"
+            echo "- MP4 artifact uploaded for visual certification"
+          } >> "$GITHUB_STEP_SUMMARY"

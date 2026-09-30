@@ -1,0 +1,331 @@
+name: CM04 Community Moves Native Platinum
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "data/community_moves_cm01.json"
+      - "data/community_moves_cm02.json"
+      - "data/community_moves_cm03.json"
+      - "data/community_moves_cm04.json"
+      - "tools/install_cm01_community_moves.py"
+      - "tools/install_pt05d_animation_preview_harness.py"
+      - ".github/workflows/cm04-community-moves-native-platinum.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cm04-community-moves-native-platinum
+  cancel-in-progress: true
+
+env:
+  BUILD: /var/tmp/pokeplatinum
+  SDL_VIDEODRIVER: dummy
+
+jobs:
+  build-and-prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+
+    steps:
+      - name: Checkout Mercury DS
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            bison flex g++ gcc-arm-none-eabi git make ninja-build \
+            pkg-config python3 python3-venv python3-pip wget xz-utils \
+            libpng-dev rsync jq libsdl2-2.0-0 fonts-dejavu-core ffmpeg
+
+      - name: Checkout pinned Platinum and HG-Engine donor
+        shell: bash
+        run: |
+          git clone https://github.com/pret/pokeplatinum.git vendor/pokeplatinum
+          git -C vendor/pokeplatinum checkout "$(jq -r '.sources["pokeplatinum"].commit' upstream/LOCK.json)"
+
+          git clone --filter=blob:none --no-checkout https://github.com/BluRosie/hg-engine.git vendor/hg-engine
+          git -C vendor/hg-engine sparse-checkout init --no-cone
+          git -C vendor/hg-engine sparse-checkout set \
+            /include/constants/moves.h \
+            /include/constants/move_effects.h \
+            /data/Moves.c \
+            /data/Species.c \
+            /data/BaseExperienceTable.c \
+            /data/IconPaletteTable.c \
+            /data/HeightTable.c \
+            /data/SpriteOffsets.c \
+            /data/Evolutions.c \
+            /data/graphics/sprites/ \
+            /data/learnsets/learnsets.json \
+            /data/learnsets/base/21_sv.json
+          git -C vendor/hg-engine checkout "$(jq -r '.sources["hg-engine"].commit' upstream/LOCK.json)"
+
+      - name: Apply Mercury Platinum overlay
+        shell: bash
+        run: rsync -a --exclude README.md platinum-overlay/ vendor/pokeplatinum/
+
+      - name: Rebuild complete 1025-species layer
+        shell: bash
+        run: |
+          python3 tools/build_species_registry.py vendor/pokeplatinum \
+            --through 1025 \
+            --output vendor/pokeplatinum/generated/species.txt \
+            --report cm04-species-registry.json
+
+          while read -r start end tag; do
+            python3 tools/install_pt04d_species_batch.py \
+              vendor/pokeplatinum vendor/hg-engine \
+              --start-dex "$start" --end-dex "$end" \
+              --gate "CM04_${tag}_RESOURCE_INSTALL" \
+              --report "cm04-${tag}.json"
+          done <<'EOF'
+          494 649 GEN5
+          650 721 GEN6
+          722 809 GEN7
+          810 905 GEN8
+          906 1025 GEN9
+          EOF
+
+      - name: Restore certified Gen 5-9 move foundation
+        shell: bash
+        run: |
+          python3 tools/audit_move_id_namespace.py
+          python3 tools/install_pt05c_move_id_width.py vendor/pokeplatinum
+
+          python3 tools/install_pt05c1_modern_moves.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --report cm04-modern-moves.json \
+            --implemented-registry cm04-implemented-moves.txt
+
+          python3 tools/install_pt05a_compatible_learnsets.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --implemented-moves cm04-implemented-moves.txt \
+            --report cm04-learnsets.json
+
+          python3 tools/install_pt05b_compatible_evolutions.py \
+            vendor/pokeplatinum vendor/hg-engine \
+            --start-dex 494 --end-dex 1025 \
+            --report cm04-evolutions.json
+
+      - name: Restore certified CM01 through CM03 community moves
+        shell: bash
+        run: |
+          for batch in 01 02 03; do
+            python3 tools/install_cm01_community_moves.py \
+              vendor/pokeplatinum \
+              --batch "data/community_moves_cm${batch}.json" \
+              --report "cm04-cm${batch}-restore.json"
+          done
+
+          test "$(jq -r '.last_community_id_this_pass' cm04-cm01-restore.json)" = "1026"
+          test "$(jq -r '.last_community_id_this_pass' cm04-cm02-restore.json)" = "1029"
+          test "$(jq -r '.last_community_id_this_pass' cm04-cm03-restore.json)" = "1035"
+          test "$(jq -r '.total_community_moves_materialized' cm04-cm03-restore.json)" = "12"
+
+      - name: Install CM04 community moves
+        shell: bash
+        run: |
+          python3 tools/install_cm01_community_moves.py \
+            vendor/pokeplatinum \
+            --batch data/community_moves_cm04.json \
+            --report cm04-community-moves-install.json
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          moves = Path("vendor/pokeplatinum/generated/moves.txt").read_text().splitlines()
+          expected = {
+              1024: "MOVE_DRACONIC_FANGS",
+              1029: "MOVE_SMOLDER_BASH",
+              1030: "MOVE_SHOCKING_EDGE",
+              1035: "MOVE_PRIMAL_BEAM",
+              1036: "MOVE_SHOCKING_JAB",
+              1037: "MOVE_AQUA_FANG",
+              1038: "MOVE_PIXIE_BEAM",
+              1039: "MOVE_MOUNTAIN_CHUNK",
+              1040: "MOVE_JAGGED_FANGS",
+              1041: "MOVE_TECTONIC_FANGS",
+              1042: "MAX_MOVES",
+          }
+          for move_id, token in expected.items():
+              assert moves[move_id] == token, (move_id, moves[move_id], token)
+
+          report = json.loads(Path("cm04-community-moves-install.json").read_text())
+          assert report["community_moves_installed_this_pass"] == 6
+          assert report["reserved_placeholder_count_added_this_pass"] == 0
+          assert report["total_community_moves_materialized"] == 18
+          print("CM04 registry layout: PASS")
+          PY
+
+      - name: Install native battle proof for Shocking Jab
+        shell: bash
+        run: |
+          python3 tools/install_pt04c_runtime_harness.py \
+            vendor/pokeplatinum --report cm04-base-party.json
+          python3 tools/install_pt04c_summary_harness.py \
+            vendor/pokeplatinum --report cm04-base-summary.json
+          python3 tools/install_pt04c_pc_harness.py \
+            vendor/pokeplatinum --report cm04-base-pc.json
+          python3 tools/install_pt04c_battle_harness.py \
+            vendor/pokeplatinum --report cm04-base-battle.json
+
+          python3 tools/install_pt05d_animation_preview_harness.py \
+            vendor/pokeplatinum \
+            --move MOVE_SHOCKING_JAB \
+            --preview-id cm04_1036 \
+            --report cm04-runtime-harness.json
+
+          grep -q 'MOVE_SHOCKING_JAB' vendor/pokeplatinum/src/field_map_change.c
+
+      - name: Verify CM04 native animation sources
+        shell: bash
+        run: |
+          cmp vendor/pokeplatinum/res/moves/shocking_jab/anim.s vendor/pokeplatinum/res/moves/thunder_punch/anim.s
+          cmp vendor/pokeplatinum/res/moves/aqua_fang/anim.s vendor/pokeplatinum/res/moves/bite/anim.s
+          cmp vendor/pokeplatinum/res/moves/pixie_beam/anim.s vendor/pokeplatinum/res/moves/aurora_beam/anim.s
+          cmp vendor/pokeplatinum/res/moves/mountain_chunk/anim.s vendor/pokeplatinum/res/moves/rock_slide/anim.s
+          cmp vendor/pokeplatinum/res/moves/jagged_fangs/anim.s vendor/pokeplatinum/res/moves/crunch/anim.s
+          cmp vendor/pokeplatinum/res/moves/tectonic_fangs/anim.s vendor/pokeplatinum/res/moves/bite/anim.s
+
+      - name: Build native Platinum with CM01 through CM04
+        working-directory: vendor/pokeplatinum
+        shell: bash
+        run: |
+          sudo make skrew
+          make configure
+          make rom
+          test -s "$BUILD/pokeplatinum.us.nds"
+
+      - name: Run Shocking Jab native runtime proof
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/cm04-venv"
+          . "$RUNNER_TEMP/cm04-venv/bin/activate"
+          pip install --upgrade pip
+          pip install py-desmume Pillow
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          from desmume.emulator import DeSmuME
+          from desmume.controls import keymask, Keys
+
+          rom = Path("/var/tmp/pokeplatinum/pokeplatinum.us.nds")
+          out = Path("runtime-preview")
+          out.mkdir(exist_ok=True)
+          mp4 = out / "cm04-shocking-jab-native-platinum.mp4"
+
+          emu = DeSmuME()
+          emu.open(str(rom))
+          if not emu.is_running():
+              raise SystemExit("CM04 native Platinum ROM did not boot")
+
+          fps = 15
+          sample_every = 4
+          proc = subprocess.Popen([
+              "ffmpeg", "-y", "-loglevel", "error",
+              "-f", "rawvideo", "-pix_fmt", "rgb24",
+              "-s", "256x192", "-r", str(fps), "-i", "-",
+              "-an", "-c:v", "libx264", "-preset", "veryfast",
+              "-crf", "25", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+              str(mp4)
+          ], stdin=subprocess.PIPE)
+
+          current = 0
+          written = 0
+
+          def cycle(frames):
+              global current, written
+              for _ in range(frames):
+                  emu.cycle(False)
+                  current += 1
+                  if not emu.is_running():
+                      raise SystemExit(f"CM04 emulator stopped at frame {current}")
+                  if current % sample_every == 0:
+                      image = emu.screenshot().crop((0, 0, 256, 192)).convert("RGB")
+                      proc.stdin.write(image.tobytes())
+                      written += 1
+
+          def pulse_a(held=20, settle=180):
+              emu.input.keypad_add_key(keymask(Keys.KEY_A))
+              cycle(held)
+              emu.input.keypad_rm_key(keymask(Keys.KEY_A))
+              cycle(settle)
+
+          try:
+              cycle(1500)
+              for _ in range(14):
+                  pulse_a()
+              cycle(800)
+              emu.screenshot().save(out / "cm04-shocking-jab-final.png")
+          finally:
+              try:
+                  if proc.stdin is not None:
+                      proc.stdin.close()
+                  rc = proc.wait()
+                  if rc != 0:
+                      raise SystemExit(f"ffmpeg failed with exit code {rc}")
+              finally:
+                  emu.destroy()
+
+          if written < 100 or not mp4.exists() or mp4.stat().st_size < 10_000:
+              raise SystemExit("CM04 runtime video proof is incomplete")
+
+          meta = {
+              "gate": "CM04_SHOCKING_JAB_NATIVE_RUNTIME",
+              "runtime": "pokeplatinum",
+              "move_id": 1036,
+              "move": "MOVE_SHOCKING_JAB",
+              "mechanics": {
+                  "type": "Electric",
+                  "class": "Physical",
+                  "power": 80,
+                  "accuracy": 100,
+                  "pp": 10,
+                  "effect": "BATTLE_EFFECT_PARALYZE_HIT",
+                  "effect_chance": 20
+              },
+              "animation": "native Platinum Thunder Punch animation",
+              "captured_frames": written,
+              "emulator_cycles": current,
+              "mp4": mp4.name,
+              "mp4_bytes": mp4.stat().st_size,
+              "visual_review_required": True
+          }
+          (out / "cm04-meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+          print(json.dumps(meta, indent=2))
+          PY
+
+      - name: Upload CM04 proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: cm04-community-moves-native-platinum-proof
+          path: |
+            cm04-community-moves-install.json
+            cm04-runtime-harness.json
+            runtime-preview/cm04-shocking-jab-native-platinum.mp4
+            runtime-preview/cm04-shocking-jab-final.png
+            runtime-preview/cm04-meta.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: CM04 summary
+        shell: bash
+        run: |
+          {
+            echo "## CM04 community move implementation"
+            echo
+            echo "- Native runtime: pokeplatinum"
+            echo "- CM01 through CM03 retained at IDs 1024-1035"
+            echo "- Six new moves installed at IDs 1036-1041"
+            echo "- All six animation sources verified against native Platinum donors"
+            echo "- Shocking Jab exercised in a real native Platinum battle"
+            echo "- Community move total: 18"
+          } >> "$GITHUB_STEP_SUMMARY"
