@@ -1,0 +1,654 @@
+{
+  "gate": "MERCURY_16BIT_ABILITY_RECONCILIATION_AUDIT",
+  "date": "2026-09-30",
+  "status": "AUDIT_COMPLETE_RECOVERY_REQUIRED",
+  "historical_imported_block": {
+    "range": [
+      319,
+      1042
+    ],
+    "count": 724
+  },
+  "current_ds_partition": {
+    "rows": 888,
+    "custom_id_rows": 619,
+    "canonical_alias_rows": 269
+  },
+  "reconciliation_counts": {
+    "present_in_ds_partition": 576,
+    "superseded_by_approved_successor": 22,
+    "missing_from_ds_partition": 124,
+    "retired_cut_tombstone": 2
+  },
+  "actual_missing_historical_identity_count": 124,
+  "actual_missing_historical_identities": [
+    {
+      "id": 349,
+      "symbol": "ABILITY_BALLOON_BLITZ",
+      "name": "Balloon Blitz"
+    },
+    {
+      "id": 353,
+      "symbol": "ABILITY_BATTLE_AURA",
+      "name": "Battle Aura"
+    },
+    {
+      "id": 358,
+      "symbol": "ABILITY_BLIND_RAGE",
+      "name": "Blind Rage"
+    },
+    {
+      "id": 362,
+      "symbol": "ABILITY_BLOOD_PRICE",
+      "name": "Blood Price"
+    },
+    {
+      "id": 364,
+      "symbol": "ABILITY_BLOOD_STIGMA",
+      "name": "Blood Stigma"
+    },
+    {
+      "id": 365,
+      "symbol": "ABILITY_BRAWLING_WYVERN",
+      "name": "Brawling Wyvern"
+    },
+    {
+      "id": 371,
+      "symbol": "ABILITY_CHROME_COAT",
+      "name": "Chrome Coat"
+    },
+    {
+      "id": 372,
+      "symbol": "ABILITY_CHUNKY_BASS_LINE",
+      "name": "Chunky Bass Line"
+    },
+    {
+      "id": 378,
+      "symbol": "ABILITY_CONTEMPT",
+      "name": "Contempt"
+    },
+    {
+      "id": 379,
+      "symbol": "ABILITY_CRUSHING_JAW",
+      "name": "Crushing Jaw"
+    },
+    {
+      "id": 380,
+      "symbol": "ABILITY_CRYO_PROFICIENCY",
+      "name": "Cryo Proficiency"
+    },
+    {
+      "id": 385,
+      "symbol": "ABILITY_DEAD_POWER",
+      "name": "Dead Power"
+    },
+    {
+      "id": 387,
+      "symbol": "ABILITY_DEPRAVITY",
+      "name": "Depravity"
+    },
+    {
+      "id": 391,
+      "symbol": "ABILITY_DOUBLE_IRON_BARBS",
+      "name": "Sharp Edges"
+    },
+    {
+      "id": 395,
+      "symbol": "ABILITY_DRAKE_OF_RAGE",
+      "name": "Drake Of Rage"
+    },
+    {
+      "id": 400,
+      "symbol": "ABILITY_EARLY_GRAVE",
+      "name": "Early Grave"
+    },
+    {
+      "id": 402,
+      "symbol": "ABILITY_ECTOPLASM",
+      "name": "Ectoplasm"
+    },
+    {
+      "id": 406,
+      "symbol": "ABILITY_ELEMENTAL_VORTEX",
+      "name": "Elemental Vortex"
+    },
+    {
+      "id": 407,
+      "symbol": "ABILITY_EMANATE",
+      "name": "Emanate"
+    },
+    {
+      "id": 408,
+      "symbol": "ABILITY_ENERGY_SIPHON",
+      "name": "Energy Siphon"
+    },
+    {
+      "id": 410,
+      "symbol": "ABILITY_ENVENOM",
+      "name": "Envenom"
+    },
+    {
+      "id": 413,
+      "symbol": "ABILITY_ETHEREAL_RUSH",
+      "name": "Ethereal Rush"
+    },
+    {
+      "id": 419,
+      "symbol": "ABILITY_FERTILIZE",
+      "name": "Fertilize"
+    },
+    {
+      "id": 420,
+      "symbol": "ABILITY_FIGHTER",
+      "name": "Fighter"
+    },
+    {
+      "id": 421,
+      "symbol": "ABILITY_FIRE_SCALES",
+      "name": "Fire Scales"
+    },
+    {
+      "id": 422,
+      "symbol": "ABILITY_FLAME_BUBBLE",
+      "name": "Flame Bubble"
+    },
+    {
+      "id": 423,
+      "symbol": "ABILITY_FLAME_SHIELD",
+      "name": "Flame Shield"
+    },
+    {
+      "id": 424,
+      "symbol": "ABILITY_FLAMING_MAW",
+      "name": "Flaming Maw"
+    },
+    {
+      "id": 429,
+      "symbol": "ABILITY_FRAGRANT_DAZE",
+      "name": "Fragrant Daze"
+    },
+    {
+      "id": 430,
+      "symbol": "ABILITY_FREEZING_POINT",
+      "name": "Freezing Point"
+    },
+    {
+      "id": 432,
+      "symbol": "ABILITY_FROST_BURN",
+      "name": "Frost Burn"
+    },
+    {
+      "id": 433,
+      "symbol": "ABILITY_FUNERAL_PYRE",
+      "name": "Funeral Pyre"
+    },
+    {
+      "id": 439,
+      "symbol": "ABILITY_GLADIATOR",
+      "name": "Gladiator"
+    },
+    {
+      "id": 444,
+      "symbol": "ABILITY_GUILT_TRIP",
+      "name": "Guilt Trip"
+    },
+    {
+      "id": 447,
+      "symbol": "ABILITY_HAUNTING_FRENZY",
+      "name": "Haunting Frenzy"
+    },
+    {
+      "id": 448,
+      "symbol": "ABILITY_HEADSTRONG",
+      "name": "Headstrong"
+    },
+    {
+      "id": 450,
+      "symbol": "ABILITY_HIGHER_RANK",
+      "name": "Higher Rank"
+    },
+    {
+      "id": 453,
+      "symbol": "ABILITY_HUBRIS",
+      "name": "Hubris"
+    },
+    {
+      "id": 460,
+      "symbol": "ABILITY_ICE_DOWNFALL",
+      "name": "Ice Downfall"
+    },
+    {
+      "id": 464,
+      "symbol": "ABILITY_IMPULSE",
+      "name": "Impulse"
+    },
+    {
+      "id": 475,
+      "symbol": "ABILITY_LAST_STAND",
+      "name": "Last Stand"
+    },
+    {
+      "id": 483,
+      "symbol": "ABILITY_LOW_VISIBILITY",
+      "name": "Low Visibility"
+    },
+    {
+      "id": 489,
+      "symbol": "ABILITY_MALICIOUS",
+      "name": "Malicious"
+    },
+    {
+      "id": 494,
+      "symbol": "ABILITY_METALLIC_JAWS",
+      "name": "Metallic Jaws"
+    },
+    {
+      "id": 496,
+      "symbol": "ABILITY_MIND_CRUSH",
+      "name": "Mind Crunch"
+    },
+    {
+      "id": 499,
+      "symbol": "ABILITY_MOLTEN_BLADES",
+      "name": "Molten Blades"
+    },
+    {
+      "id": 502,
+      "symbol": "ABILITY_MONSTER_MASH",
+      "name": "Monster Mash"
+    },
+    {
+      "id": 503,
+      "symbol": "ABILITY_MOON_SPIRIT",
+      "name": "Moon Spirit"
+    },
+    {
+      "id": 504,
+      "symbol": "ABILITY_MOSH_PIT",
+      "name": "Mosh Pit"
+    },
+    {
+      "id": 508,
+      "symbol": "ABILITY_MYTHICAL_ARROWS",
+      "name": "Mythical Arrows"
+    },
+    {
+      "id": 509,
+      "symbol": "ABILITY_NEUROTOXIN",
+      "name": "Neurotoxin"
+    },
+    {
+      "id": 510,
+      "symbol": "ABILITY_NIKA",
+      "name": "Nika"
+    },
+    {
+      "id": 511,
+      "symbol": "ABILITY_NOISE_CANCEL",
+      "name": "Noise Cancel"
+    },
+    {
+      "id": 512,
+      "symbol": "ABILITY_OLD_MARINER",
+      "name": "Old Mariner"
+    },
+    {
+      "id": 515,
+      "symbol": "ABILITY_OVERWATCH",
+      "name": "Overwatch"
+    },
+    {
+      "id": 519,
+      "symbol": "ABILITY_PATTERN_CHANGE",
+      "name": "Pattern Change"
+    },
+    {
+      "id": 522,
+      "symbol": "ABILITY_PERMANENCE",
+      "name": "Permanence"
+    },
+    {
+      "id": 523,
+      "symbol": "ABILITY_PETRIFY",
+      "name": "Petrify"
+    },
+    {
+      "id": 525,
+      "symbol": "ABILITY_PHANTOM_PAIN",
+      "name": "Phantom Pain"
+    },
+    {
+      "id": 526,
+      "symbol": "ABILITY_PIERCING_SOLO",
+      "name": "Piercing Solo"
+    },
+    {
+      "id": 529,
+      "symbol": "ABILITY_POWER_METAL",
+      "name": "Power Metal"
+    },
+    {
+      "id": 530,
+      "symbol": "ABILITY_PRETENTIOUS",
+      "name": "Pretentious"
+    },
+    {
+      "id": 535,
+      "symbol": "ABILITY_PUFFY",
+      "name": "Puffy"
+    },
+    {
+      "id": 536,
+      "symbol": "ABILITY_PURGATORY",
+      "name": "Purgatory"
+    },
+    {
+      "id": 537,
+      "symbol": "ABILITY_PURPLE_HAZE",
+      "name": "Purple Haze"
+    },
+    {
+      "id": 538,
+      "symbol": "ABILITY_PYROCLASTIC_FLOW",
+      "name": "Pyroclastic Flow"
+    },
+    {
+      "id": 543,
+      "symbol": "ABILITY_RADIO_JAM",
+      "name": "Radio Jam"
+    },
+    {
+      "id": 544,
+      "symbol": "ABILITY_RAGE_POINT",
+      "name": "Rage Point"
+    },
+    {
+      "id": 546,
+      "symbol": "ABILITY_RAGING_GODDESS",
+      "name": "Raging Goddess"
+    },
+    {
+      "id": 547,
+      "symbol": "ABILITY_RAGING_STORM",
+      "name": "Raging Storm"
+    },
+    {
+      "id": 550,
+      "symbol": "ABILITY_RESERVOIR",
+      "name": "Reservoir"
+    },
+    {
+      "id": 551,
+      "symbol": "ABILITY_RESONANCE",
+      "name": "Resonance"
+    },
+    {
+      "id": 553,
+      "symbol": "ABILITY_RETRIEVER",
+      "name": "Retriever"
+    },
+    {
+      "id": 554,
+      "symbol": "ABILITY_REVERBATE",
+      "name": "Reverberate"
+    },
+    {
+      "id": 560,
+      "symbol": "ABILITY_SAND_GUARD",
+      "name": "Sand Guard"
+    },
+    {
+      "id": 561,
+      "symbol": "ABILITY_SAND_PIT",
+      "name": "Sand Pit"
+    },
+    {
+      "id": 565,
+      "symbol": "ABILITY_SEPIA_LENS",
+      "name": "Sepia Lens"
+    },
+    {
+      "id": 566,
+      "symbol": "ABILITY_SHINY_LIGHTNING",
+      "name": "Shiny Lightning"
+    },
+    {
+      "id": 569,
+      "symbol": "ABILITY_SLUDGY_MIX",
+      "name": "Sludgy Mix"
+    },
+    {
+      "id": 570,
+      "symbol": "ABILITY_SMOKEY_MANEUVERS",
+      "name": "Smokey Maneuvers"
+    },
+    {
+      "id": 571,
+      "symbol": "ABILITY_SMOLDERING_WOOD",
+      "name": "Smoldering Wood"
+    },
+    {
+      "id": 572,
+      "symbol": "ABILITY_SNOWY_WRATH",
+      "name": "Snowy Wrath"
+    },
+    {
+      "id": 573,
+      "symbol": "ABILITY_SNOW_SONG",
+      "name": "Snow Song"
+    },
+    {
+      "id": 580,
+      "symbol": "ABILITY_SPIKE_ARMOR",
+      "name": "Spike Armor"
+    },
+    {
+      "id": 584,
+      "symbol": "ABILITY_STEEL_BEETLE",
+      "name": "Steel Beetle"
+    },
+    {
+      "id": 585,
+      "symbol": "ABILITY_STRIKER_PIXILATE",
+      "name": "Twinkle Toes"
+    },
+    {
+      "id": 586,
+      "symbol": "ABILITY_STUN_SHOCK",
+      "name": "Stun Shock"
+    },
+    {
+      "id": 587,
+      "symbol": "ABILITY_SUBDUE",
+      "name": "Subdue"
+    },
+    {
+      "id": 588,
+      "symbol": "ABILITY_SUGAR_RUSH",
+      "name": "Sugar Rush"
+    },
+    {
+      "id": 589,
+      "symbol": "ABILITY_SUPER_HOT_GOO",
+      "name": "Super Hot Goo"
+    },
+    {
+      "id": 590,
+      "symbol": "ABILITY_SUPER_SLAMMER",
+      "name": "Super Slammer"
+    },
+    {
+      "id": 594,
+      "symbol": "ABILITY_TAR_TOSS",
+      "name": "Tar Toss"
+    },
+    {
+      "id": 596,
+      "symbol": "ABILITY_TERMINAL_VELOCITY",
+      "name": "TerminalVelocity"
+    },
+    {
+      "id": 598,
+      "symbol": "ABILITY_THERMAL_SLIDE",
+      "name": "Thermal Slide"
+    },
+    {
+      "id": 599,
+      "symbol": "ABILITY_THERMOMANCY",
+      "name": "Thermomancy"
+    },
+    {
+      "id": 601,
+      "symbol": "ABILITY_TIPPING_POINT",
+      "name": "Tipping Point"
+    },
+    {
+      "id": 603,
+      "symbol": "ABILITY_TO_THE_BONE",
+      "name": "To The Bone"
+    },
+    {
+      "id": 604,
+      "symbol": "ABILITY_TRASH_HEAP",
+      "name": "Trash Heap"
+    },
+    {
+      "id": 605,
+      "symbol": "ABILITY_TRICKSTER",
+      "name": "Trickster"
+    },
+    {
+      "id": 606,
+      "symbol": "ABILITY_TWO_STEP",
+      "name": "Two Step"
+    },
+    {
+      "id": 608,
+      "symbol": "ABILITY_VENGEFUL_SPIRIT",
+      "name": "Vengeful Spirit"
+    },
+    {
+      "id": 609,
+      "symbol": "ABILITY_VENOBLAZE_PINCERS",
+      "name": "VenoblazePincers"
+    },
+    {
+      "id": 610,
+      "symbol": "ABILITY_VENOM_CROWN",
+      "name": "Venom Crown"
+    },
+    {
+      "id": 612,
+      "symbol": "ABILITY_VITALITY_STRIKE",
+      "name": "Vitality Strike"
+    },
+    {
+      "id": 615,
+      "symbol": "ABILITY_WATCH_YOUR_STEP",
+      "name": "Watch Your Step"
+    },
+    {
+      "id": 616,
+      "symbol": "ABILITY_WATER_GALE_WINGS",
+      "name": "Tidal Rush"
+    },
+    {
+      "id": 618,
+      "symbol": "ABILITY_WEATHER_DOUBLE_BOOST",
+      "name": "Catastrophe"
+    },
+    {
+      "id": 619,
+      "symbol": "ABILITY_WEB_SPINNER",
+      "name": "Web Spinner"
+    },
+    {
+      "id": 622,
+      "symbol": "ABILITY_WHITE_NOISE",
+      "name": "White Noise"
+    },
+    {
+      "id": 623,
+      "symbol": "ABILITY_WILDFIRE",
+      "name": "Wildfire"
+    },
+    {
+      "id": 624,
+      "symbol": "ABILITY_WIND_RAGE",
+      "name": "Wind Rage"
+    },
+    {
+      "id": 625,
+      "symbol": "ABILITY_WOODLAND_CURSE",
+      "name": "Woodland Curse"
+    },
+    {
+      "id": 1007,
+      "symbol": "ABILITY_SET_ABLAZE",
+      "name": "Set Ablaze"
+    },
+    {
+      "id": 1008,
+      "symbol": "ABILITY_GRASS_FLUTE",
+      "name": "Grass Flute"
+    },
+    {
+      "id": 1010,
+      "symbol": "ABILITY_LOOSE_THORNS",
+      "name": "Loose Thorns"
+    },
+    {
+      "id": 1013,
+      "symbol": "ABILITY_MENTAL_POLLUTION",
+      "name": "Mental Pollution"
+    },
+    {
+      "id": 1014,
+      "symbol": "ABILITY_MADNESS_ENHANCEMENT",
+      "name": "Madness Enh."
+    },
+    {
+      "id": 1017,
+      "symbol": "ABILITY_COSMIC_DAZE",
+      "name": "Cosmic Daze"
+    },
+    {
+      "id": 1018,
+      "symbol": "ABILITY_DEVIATE",
+      "name": "Deviate"
+    },
+    {
+      "id": 1019,
+      "symbol": "ABILITY_MOB_BOSS",
+      "name": "Mob Boss"
+    },
+    {
+      "id": 1020,
+      "symbol": "ABILITY_COSMIC_DUST",
+      "name": "Cosmic Dust"
+    },
+    {
+      "id": 1029,
+      "symbol": "ABILITY_CURSE_OF_FAMINE",
+      "name": "Curse of Famine"
+    },
+    {
+      "id": 1030,
+      "symbol": "ABILITY_ANGELS_WRATH",
+      "name": "Angel's Wrath"
+    },
+    {
+      "id": 1031,
+      "symbol": "ABILITY_ARCHMAGE",
+      "name": "Archmage"
+    }
+  ],
+  "corrections": [
+    "Reaper's Embarce (historical ID 836) is the same retained identity as current Reaper's Embrace; it is not a new post-1042 identity.",
+    "Approved redesign successors inherit the historical slot of the identity they replace.",
+    "Phantom and Rat King are intentional cuts and remain reserved tombstones rather than being counted as missing.",
+    "Foamy Web is superseded by Fresh Start at historical ID 998; the retired Foamy Web behavior must not return.",
+    "Prismatic Fur is superseded by Prismatic Pelt at historical ID 972."
+  ],
+  "next_action": "Restore the 124 genuinely missing historical identities at their historical IDs, then apply corrected V2 remap to the current DS partition and regenerate the runtime namespace."
+}
