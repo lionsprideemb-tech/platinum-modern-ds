@@ -628,8 +628,32 @@ def patch_thermomancy_effect_chance(root: Path) -> None:
 
 def patch_subdue(root: Path) -> None:
     path = root / "src/battle/battle_script.c"
+    signature = "static BOOL BtlCmd_ChangeStatStage(BattleSystem *battleSys, BattleContext *battleCtx)\n{"
+    text = path.read_text(encoding="utf-8")
+    start = text.find(signature)
+    if start < 0:
+        raise SystemExit("Subdue: BtlCmd_ChangeStatStage definition missing")
+    brace = text.find("{", start)
+    depth = 0
+    end = -1
+    for i in range(brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end < 0:
+        raise SystemExit("Subdue: function end missing")
+    block = text[start:end]
+    marker = "Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_SUBDUE"
+    if marker in block:
+        return
     anchor = """    if (stageChange > 0) {
 """
+    if block.count(anchor) != 1:
+        raise SystemExit(f"Subdue: expected one stat direction anchor, found {block.count(anchor)}")
     insertion = """    if (stageChange < 0
         && battleCtx->attacker != battleCtx->sideEffectMon
         && Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_SUBDUE) {
@@ -640,13 +664,8 @@ def patch_subdue(root: Path) -> None:
     }
 
 """
-    insert_before_once(
-        path,
-        anchor,
-        insertion,
-        "Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_SUBDUE",
-        "Subdue doubled stat drops",
-    )
+    block = block.replace(anchor, insertion + anchor, 1)
+    path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
 def patch_moonlight(root: Path) -> None:
