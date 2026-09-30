@@ -41,12 +41,9 @@ def patch(root):
 }
 
 """
- # D11's helper is emitted with its return type on the previous line; anchor on
- # the unique function signature rather than assuming "static BOOL" is adjacent.
- anchor="""static BOOL Mercury_CustomMultiHitBaseAllowed(
-    BattleSystem *battleSys,
-    BattleContext *battleCtx)
-"""
+ # Insert beside the D11 count dispatcher, which remains the stable extension
+ # point even after later controller consolidations rewrite eligibility helpers.
+ anchor="static int Mercury_CustomMultiHitCount("
  ins(ctl,anchor,metadata)
  rep(ctl,
 """    case ABILITY_MR_DUAL_WIELD:
