@@ -1,0 +1,63 @@
+{
+  "gate": "MERCURY_FINAL_ABILITY_COUNT_AUDIT",
+  "date": "2026-09-30",
+  "status": "COUNT_RECONCILED",
+  "total_unique_ability_identities": 1062,
+  "breakdown": {
+    "main_series_gen1_9_canonical": 310,
+    "hg_engine_tail_noncanonical_slots": 7,
+    "mercury_custom_and_historical": 745,
+    "mercury_custom_breakdown": {
+      "current_ds_custom_rows": 619,
+      "restored_historical_missing_identities": 124,
+      "newly_locked_post_checkpoint_identities": 2
+    }
+  },
+  "namespace": {
+    "highest_assigned_id": 1066,
+    "next_free_id": 1067,
+    "occupied_ids": 1062,
+    "intentional_unoccupied_or_reconciled_ids": [
+      314,
+      317,
+      382,
+      558
+    ],
+    "notes": {
+      "314": "reserved official gap",
+      "317": "reserved official gap",
+      "382": "historical duplicate Pretty Privilege identity; current reconciled identity is ID 893",
+      "558": "historical duplicate Megabite identity; current reconciled identity is ID 895"
+    }
+  },
+  "post_checkpoint_locked_identities": [
+    {
+      "id": 1065,
+      "name": "Deep Pockets",
+      "token": "ABILITY_MR_DEEP_POCKETS",
+      "repo_status": "SPEC_LOCKED_IMPLEMENTATION_PENDING_NATIVE_ITEM_ARCHITECTURE"
+    },
+    {
+      "id": 1066,
+      "name": "Predator's Edge",
+      "token": "ABILITY_MR_PREDATORS_EDGE",
+      "repo_status": "SPEC_LOCKED_IMPLEMENTATION_PENDING"
+    }
+  ],
+  "final_semantics_followup": [
+    {
+      "id": 1058,
+      "name": "Nerve Agent",
+      "token": "ABILITY_MR_NERVE_AGENT",
+      "repo_status": "identity_present; compound poison+paralysis redesign spec still marks runtime implementation required"
+    }
+  ],
+  "historical_runtime_recovery": {
+    "historical_missing_original": 124,
+    "restored": 124,
+    "remaining": 0,
+    "cumulative_r8_certification_run": 36790890967,
+    "cumulative_r8_certification_commit": "736cd50b47afd22bd8a922801d1aaaa4f6356f4d"
+  },
+  "interpretation": "No worked-on ability identity is absent from the reconciled namespace. The count audit distinguishes identity coverage from three post-checkpoint mechanic implementations/final-semantics followups that are still marked pending by their authoritative spec files."
+}
