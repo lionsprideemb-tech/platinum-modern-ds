@@ -625,7 +625,7 @@ def patch_permanence(root: Path) -> None:
     if "mercuryPermanenceBattler" not in body:
         readpos = body.find("BattleScript_Read(battleCtx)")
         if readpos < 0:
-            raise SystemExit("Permanence: battler input read missing")
+            raise SystemExit("Permanence BODY\\n" + body[:4000])
         semi = body.find(";", readpos)
         if semi < 0:
             raise SystemExit("Permanence: battler input terminator missing")
