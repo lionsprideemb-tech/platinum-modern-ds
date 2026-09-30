@@ -1,0 +1,63 @@
+{
+  "gate": "MERCURY_ABILITY_NAMESPACE_RECOVERY_AUDIT",
+  "date": "2026-09-30",
+  "status": "RECOVERY_REQUIRED",
+  "current_ds": {
+    "canonical_installer_range": [0, 310],
+    "canonical_non_none_count": 310,
+    "native_platinum_range": [0, 123],
+    "post_platinum_canonical_count": 187,
+    "custom_first_id": 311,
+    "custom_partition_last_id": 929,
+    "partition_identity_rows": 888,
+    "saved_ability_capacity": 1023,
+    "saved_ability_width_bits": 10
+  },
+  "verified_current_canon_gap": [
+    {
+      "name": "Dragonize",
+      "generation": 9,
+      "hg_engine_id": 312,
+      "conflicts_with_current_mercury_id": 312,
+      "current_mercury_name_at_conflict": "Eternal Life"
+    },
+    {
+      "name": "Fire Mane",
+      "generation": 9,
+      "hg_engine_id": 316,
+      "conflicts_with_current_mercury_id": 316,
+      "current_mercury_name_at_conflict": "Prismatic Pelt"
+    },
+    {
+      "name": "Spicy Spray",
+      "generation": 9,
+      "hg_engine_id": 318,
+      "conflicts_with_current_mercury_id": 318,
+      "current_mercury_name_at_conflict": "Adaptive Genome"
+    }
+  ],
+  "older_mercury_evidence": {
+    "ability_audit_final_active_ids": 1043,
+    "highest_active_id": 1042,
+    "imported_runtime_block": [319, 1042],
+    "imported_runtime_block_count": 724,
+    "consequence": "The current 10-bit DS save encoding cannot represent the complete older Mercury namespace."
+  },
+  "recovery_rules": [
+    "Newest explicit Mercury redesign/approval wins over older donor semantics.",
+    "Do not resurrect superseded abilities or old mechanics such as retired versions of Foamy Web.",
+    "All official current Generation 3-9 abilities must exist exactly once.",
+    "Donor/library abilities are deduplicated by identity and mechanics, not blindly summed by source.",
+    "Mercury originals and signature abilities are preserved.",
+    "Deep Pockets and Predator's Edge are included as new Mercury abilities.",
+    "Do not renumber or migrate live ability IDs until the full collision/rewrite map and persistent-save width migration are audited."
+  ],
+  "required_next_steps": [
+    "Build full canonical current-generation name set and compare against DS generated namespace.",
+    "Recover the older 1043-entry Mercury namespace/ledgers.",
+    "Overlay all later Mercury redesign decisions and mark KEEP/RESTORE/SUPERSEDED/ALIAS.",
+    "Design and certify 11-bit-or-wider persistent ability storage for DS.",
+    "Create deterministic ID migration/remap before changing the custom namespace.",
+    "Re-run native compile, ROM build, Primary/Innate routing, and assignment audits."
+  ]
+}
