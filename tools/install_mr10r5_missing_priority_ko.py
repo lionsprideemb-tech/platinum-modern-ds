@@ -605,11 +605,28 @@ def patch_permanence(root: Path) -> None:
     }
 
 """
-    insert_after_once(
-        script, anchor, block,
-        "Mercury_PermanenceBlocksHealing(",
-        "Permanence global heal lock",
-    )
+    text = script.read_text(encoding="utf-8")
+    sig = "static BOOL BtlCmd_UpdateHealthBarValue(BattleSystem *battleSys, BattleContext *battleCtx)"
+    start = text.find(sig)
+    if start < 0:
+        raise SystemExit("Permanence: UpdateHealthBarValue definition missing")
+    brace = text.find("{", start)
+    depth = 0
+    end = -1
+    for i in range(brace, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    body = text[start:end]
+    if "Mercury_PermanenceBlocksHealing(" not in body:
+        if body.count(anchor) != 1:
+            raise SystemExit(f"Permanence scoped heal anchor: {body.count(anchor)}")
+        body = body.replace(anchor, anchor + block, 1)
+        script.write_text(text[:start] + body + text[end:], encoding="utf-8")
 
 
 def patch_turn_end_family(root: Path) -> None:
