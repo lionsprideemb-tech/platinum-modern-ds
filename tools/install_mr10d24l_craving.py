@@ -55,14 +55,16 @@ static BOOL Mercury_CravingEatBerry(BattleSystem *battleSys, BattleContext *batt
         if (battleCtx->battleMons[battler].curHP >= battleCtx->battleMons[battler].maxHP) return FALSE;
         battleCtx->hpCalcTemp = BattleSystem_Divide(battleCtx->battleMons[battler].maxHP * 25, 100);
         LOAD_SUBSEQ(subscript_held_item_hp_restore); break;
-    case ITEM_LIECHI_BERRY: battleCtx->msgTemp=BATTLE_STAT_ATTACK; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
-    case ITEM_GANLON_BERRY: battleCtx->msgTemp=BATTLE_STAT_DEFENSE; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
-    case ITEM_SALAC_BERRY: battleCtx->msgTemp=BATTLE_STAT_SPEED; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
-    case ITEM_PETAYA_BERRY: battleCtx->msgTemp=BATTLE_STAT_SP_ATTACK; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
-    case ITEM_APICOT_BERRY: battleCtx->msgTemp=BATTLE_STAT_SP_DEFENSE; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
-    case ITEM_LANSAT_BERRY: LOAD_SUBSEQ(subscript_held_item_raise_crit); break;
+    case ITEM_LIECHI_BERRY: if (battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_ATTACK] >= MAX_STAT_STAGE) return FALSE; battleCtx->msgTemp=BATTLE_STAT_ATTACK; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
+    case ITEM_GANLON_BERRY: if (battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_DEFENSE] >= MAX_STAT_STAGE) return FALSE; battleCtx->msgTemp=BATTLE_STAT_DEFENSE; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
+    case ITEM_SALAC_BERRY: if (battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_SPEED] >= MAX_STAT_STAGE) return FALSE; battleCtx->msgTemp=BATTLE_STAT_SPEED; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
+    case ITEM_PETAYA_BERRY: if (battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_SP_ATTACK] >= MAX_STAT_STAGE) return FALSE; battleCtx->msgTemp=BATTLE_STAT_SP_ATTACK; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
+    case ITEM_APICOT_BERRY: if (battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_SP_DEFENSE] >= MAX_STAT_STAGE) return FALSE; battleCtx->msgTemp=BATTLE_STAT_SP_DEFENSE; LOAD_SUBSEQ(subscript_held_item_raise_stat); break;
+    case ITEM_LANSAT_BERRY: if (battleCtx->battleMons[battler].statusVolatile & VOLATILE_CONDITION_FOCUS_ENERGY) return FALSE; LOAD_SUBSEQ(subscript_held_item_raise_crit); break;
     case ITEM_STARF_BERRY: {
-        int i;
+        int i, open=0;
+        for (i=0;i<5;i++) if (battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_ATTACK+i] < MAX_STAT_STAGE) open++;
+        if (!open) return FALSE;
         do { i=BattleSystem_RandNext(battleSys)%5; }
         while (battleCtx->battleMons[battler].statBoosts[BATTLE_STAT_ATTACK+i] == MAX_STAT_STAGE);
         battleCtx->msgTemp=BATTLE_STAT_ATTACK+i; LOAD_SUBSEQ(subscript_held_item_sharply_raise_stat); break;
@@ -118,7 +120,7 @@ def main():
  lib=(root/"src/battle/battle_lib.c").read_text();ctx=(root/"include/battle/battle_context.h").read_text()
  checks={"stable_id":len(ab)>ID and ab[ID]==ABILITY,
  "locked_primary_pool":all(x in lib for x in PRIMARY),"pinch_pool":all(x in lib for x in PINCH),
- "nine_way_choice":"% 9" in lib,"native_subscripts":"subscript_held_item_sharply_raise_stat" in lib,
+ "nine_way_choice":"% 9" in lib,"native_subscripts":"subscript_held_item_sharply_raise_stat" in lib,"effect_guards":"if (!open) return FALSE;" in lib and "MAX_STAT_STAGE" in lib,
  "held_item_preserved":"mercuryCravingBerry" in ctx and "heldItem =" not in lib[lib.find("Mercury_CravingEatBerry"):lib.find("Mercury_CravingEatBerry")+5000],
  "entry_turn_blocked":"mercuryCravingEnteredThisTurn" in lib,
  "registry":ABILITY in a.implemented_registry.read_text(),"mr07_untouched":True}
