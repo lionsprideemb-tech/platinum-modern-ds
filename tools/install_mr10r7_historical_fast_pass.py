@@ -118,6 +118,26 @@ def insert_before_in_function(
     path.write_text(text[:start] + block + text[end:], encoding="utf-8")
 
 
+def insert_after_in_function(
+    path: Path,
+    signature: str,
+    anchor: str,
+    insertion: str,
+    marker: str,
+    label: str,
+) -> None:
+    text = path.read_text(encoding="utf-8")
+    start, end = function_bounds(text, signature)
+    block = text[start:end]
+    if marker in block:
+        return
+    count = block.count(anchor)
+    if count != 1:
+        raise SystemExit(f"{label}: expected one scoped anchor, found {count}")
+    block = block.replace(anchor, anchor + insertion, 1)
+    path.write_text(text[:start] + block + text[end:], encoding="utf-8")
+
+
 def validate_partition(path: Path) -> None:
     rows = json.loads(path.read_text(encoding="utf-8"))["abilities"]
     for name, (token, ability_id) in IMPLEMENTED.items():
@@ -645,8 +665,9 @@ static BOOL Mercury_R7TryGenerated(
     )
 
     # Retriever returns a consumed/lost item as it switches out.
-    insert_after_once(
+    insert_after_in_function(
         path,
+        "static void BattleControllerPlayer_SwitchCommand(",
         """    battleCtx->attacker = battleCtx->battlerActionOrder[battleCtx->turnOrderCounter];
 """,
         """    if (Battler_Ability(battleCtx, battleCtx->attacker) == ABILITY_RETRIEVER
