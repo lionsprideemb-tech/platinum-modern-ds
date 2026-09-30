@@ -117,6 +117,16 @@ jobs:
           make rom
           test -s "$BUILD/pokeplatinum.us.nds"
 
+      - name: Dump compile context on failure
+        if: failure()
+        run: |
+          echo "=== battle_lib around current compile failure lanes ==="
+          sed -n '5450,5525p' vendor/pokeplatinum/src/battle/battle_lib.c || true
+          echo "=== controller around R8 Angel hooks ==="
+          sed -n '4780,4855p' vendor/pokeplatinum/src/battle/battle_controller_player.c || true
+          echo "=== script around HP/stat hooks ==="
+          sed -n '1680,1760p' vendor/pokeplatinum/src/battle/battle_script.c || true
+
       - name: Stage proof
         run: |
           mkdir -p proof
