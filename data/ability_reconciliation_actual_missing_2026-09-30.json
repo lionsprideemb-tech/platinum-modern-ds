@@ -1,0 +1,1070 @@
+{
+  "gate": "MERCURY_ABILITY_RECONCILIATION_ACTUAL_MISSING",
+  "date": "2026-09-30",
+  "status": "AUDITED_AGAINST_SEALED_HISTORICAL_724_BLOCK_AND_CURRENT_DS_PARTITION",
+  "sources": {
+    "historical": "Batch025 Final Audit Imported Abilities tab, IDs 319-1042 (724 identities)",
+    "current_ds_partition": "data/mr10_safe_ability_partition.json",
+    "migration_plan": "data/ability_id_migration_16bit_v2.json"
+  },
+  "counts": {
+    "historical_imported_identities": 724,
+    "present_same_identity": 576,
+    "approved_successor_same_historical_slot": 22,
+    "intentionally_retired": 2,
+    "actually_absent_from_current_ds_partition": 124,
+    "current_ds_custom_rows": 619,
+    "genuinely_current_only_custom_identities": 21
+  },
+  "interpretation": [
+    "The old 1,043 total was 319 pre-import/canonical-or-existing IDs plus 724 imported IDs 319-1042; this audit reconciles the 724 historical imported identities directly.",
+    "Approved redesigns are not missing: they inherit the historical identity slot in the corrected 16-bit namespace.",
+    "Owner-cut identities are not implementation gaps; their IDs remain reserved tombstones.",
+    "Only entries listed under actually_missing require restoration from historical source/donor semantics.",
+    "The current DS partition reused old numeric IDs, so numeric equality in the staging file is not identity equality. V2 remapping is authoritative."
+  ],
+  "actually_missing": [
+    {
+      "id": 349,
+      "symbol": "ABILITY_BALLOON_BLITZ",
+      "name": "Balloon Blitz",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 353,
+      "symbol": "ABILITY_BATTLE_AURA",
+      "name": "Battle Aura",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 358,
+      "symbol": "ABILITY_BLIND_RAGE",
+      "name": "Blind Rage",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 362,
+      "symbol": "ABILITY_BLOOD_PRICE",
+      "name": "Blood Price",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 364,
+      "symbol": "ABILITY_BLOOD_STIGMA",
+      "name": "Blood Stigma",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 365,
+      "symbol": "ABILITY_BRAWLING_WYVERN",
+      "name": "Brawling Wyvern",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 371,
+      "symbol": "ABILITY_CHROME_COAT",
+      "name": "Chrome Coat",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 372,
+      "symbol": "ABILITY_CHUNKY_BASS_LINE",
+      "name": "Chunky Bass Line",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 378,
+      "symbol": "ABILITY_CONTEMPT",
+      "name": "Contempt",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 379,
+      "symbol": "ABILITY_CRUSHING_JAW",
+      "name": "Crushing Jaw",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 380,
+      "symbol": "ABILITY_CRYO_PROFICIENCY",
+      "name": "Cryo Proficiency",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 385,
+      "symbol": "ABILITY_DEAD_POWER",
+      "name": "Dead Power",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 387,
+      "symbol": "ABILITY_DEPRAVITY",
+      "name": "Depravity",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 391,
+      "symbol": "ABILITY_DOUBLE_IRON_BARBS",
+      "name": "Sharp Edges",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 395,
+      "symbol": "ABILITY_DRAKE_OF_RAGE",
+      "name": "Drake Of Rage",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 400,
+      "symbol": "ABILITY_EARLY_GRAVE",
+      "name": "Early Grave",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 402,
+      "symbol": "ABILITY_ECTOPLASM",
+      "name": "Ectoplasm",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 406,
+      "symbol": "ABILITY_ELEMENTAL_VORTEX",
+      "name": "Elemental Vortex",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 407,
+      "symbol": "ABILITY_EMANATE",
+      "name": "Emanate",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 408,
+      "symbol": "ABILITY_ENERGY_SIPHON",
+      "name": "Energy Siphon",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 410,
+      "symbol": "ABILITY_ENVENOM",
+      "name": "Envenom",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 413,
+      "symbol": "ABILITY_ETHEREAL_RUSH",
+      "name": "Ethereal Rush",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 419,
+      "symbol": "ABILITY_FERTILIZE",
+      "name": "Fertilize",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 420,
+      "symbol": "ABILITY_FIGHTER",
+      "name": "Fighter",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 421,
+      "symbol": "ABILITY_FIRE_SCALES",
+      "name": "Fire Scales",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 422,
+      "symbol": "ABILITY_FLAME_BUBBLE",
+      "name": "Flame Bubble",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 423,
+      "symbol": "ABILITY_FLAME_SHIELD",
+      "name": "Flame Shield",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 424,
+      "symbol": "ABILITY_FLAMING_MAW",
+      "name": "Flaming Maw",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 429,
+      "symbol": "ABILITY_FRAGRANT_DAZE",
+      "name": "Fragrant Daze",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 430,
+      "symbol": "ABILITY_FREEZING_POINT",
+      "name": "Freezing Point",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 432,
+      "symbol": "ABILITY_FROST_BURN",
+      "name": "Frost Burn",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 433,
+      "symbol": "ABILITY_FUNERAL_PYRE",
+      "name": "Funeral Pyre",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 439,
+      "symbol": "ABILITY_GLADIATOR",
+      "name": "Gladiator",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 444,
+      "symbol": "ABILITY_GUILT_TRIP",
+      "name": "Guilt Trip",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 447,
+      "symbol": "ABILITY_HAUNTING_FRENZY",
+      "name": "Haunting Frenzy",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 448,
+      "symbol": "ABILITY_HEADSTRONG",
+      "name": "Headstrong",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 450,
+      "symbol": "ABILITY_HIGHER_RANK",
+      "name": "Higher Rank",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 453,
+      "symbol": "ABILITY_HUBRIS",
+      "name": "Hubris",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 460,
+      "symbol": "ABILITY_ICE_DOWNFALL",
+      "name": "Ice Downfall",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 464,
+      "symbol": "ABILITY_IMPULSE",
+      "name": "Impulse",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 475,
+      "symbol": "ABILITY_LAST_STAND",
+      "name": "Last Stand",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 483,
+      "symbol": "ABILITY_LOW_VISIBILITY",
+      "name": "Low Visibility",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 489,
+      "symbol": "ABILITY_MALICIOUS",
+      "name": "Malicious",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 494,
+      "symbol": "ABILITY_METALLIC_JAWS",
+      "name": "Metallic Jaws",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 496,
+      "symbol": "ABILITY_MIND_CRUSH",
+      "name": "Mind Crunch",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 499,
+      "symbol": "ABILITY_MOLTEN_BLADES",
+      "name": "Molten Blades",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 502,
+      "symbol": "ABILITY_MONSTER_MASH",
+      "name": "Monster Mash",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 503,
+      "symbol": "ABILITY_MOON_SPIRIT",
+      "name": "Moon Spirit",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 504,
+      "symbol": "ABILITY_MOSH_PIT",
+      "name": "Mosh Pit",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 508,
+      "symbol": "ABILITY_MYTHICAL_ARROWS",
+      "name": "Mythical Arrows",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 509,
+      "symbol": "ABILITY_NEUROTOXIN",
+      "name": "Neurotoxin",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 510,
+      "symbol": "ABILITY_NIKA",
+      "name": "Nika",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 511,
+      "symbol": "ABILITY_NOISE_CANCEL",
+      "name": "Noise Cancel",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 512,
+      "symbol": "ABILITY_OLD_MARINER",
+      "name": "Old Mariner",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 515,
+      "symbol": "ABILITY_OVERWATCH",
+      "name": "Overwatch",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 519,
+      "symbol": "ABILITY_PATTERN_CHANGE",
+      "name": "Pattern Change",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 522,
+      "symbol": "ABILITY_PERMANENCE",
+      "name": "Permanence",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 523,
+      "symbol": "ABILITY_PETRIFY",
+      "name": "Petrify",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 525,
+      "symbol": "ABILITY_PHANTOM_PAIN",
+      "name": "Phantom Pain",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 526,
+      "symbol": "ABILITY_PIERCING_SOLO",
+      "name": "Piercing Solo",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 529,
+      "symbol": "ABILITY_POWER_METAL",
+      "name": "Power Metal",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 530,
+      "symbol": "ABILITY_PRETENTIOUS",
+      "name": "Pretentious",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 535,
+      "symbol": "ABILITY_PUFFY",
+      "name": "Puffy",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 536,
+      "symbol": "ABILITY_PURGATORY",
+      "name": "Purgatory",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 537,
+      "symbol": "ABILITY_PURPLE_HAZE",
+      "name": "Purple Haze",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 538,
+      "symbol": "ABILITY_PYROCLASTIC_FLOW",
+      "name": "Pyroclastic Flow",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 543,
+      "symbol": "ABILITY_RADIO_JAM",
+      "name": "Radio Jam",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 544,
+      "symbol": "ABILITY_RAGE_POINT",
+      "name": "Rage Point",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 546,
+      "symbol": "ABILITY_RAGING_GODDESS",
+      "name": "Raging Goddess",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 547,
+      "symbol": "ABILITY_RAGING_STORM",
+      "name": "Raging Storm",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 550,
+      "symbol": "ABILITY_RESERVOIR",
+      "name": "Reservoir",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 551,
+      "symbol": "ABILITY_RESONANCE",
+      "name": "Resonance",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 553,
+      "symbol": "ABILITY_RETRIEVER",
+      "name": "Retriever",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 554,
+      "symbol": "ABILITY_REVERBATE",
+      "name": "Reverberate",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 560,
+      "symbol": "ABILITY_SAND_GUARD",
+      "name": "Sand Guard",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 561,
+      "symbol": "ABILITY_SAND_PIT",
+      "name": "Sand Pit",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 565,
+      "symbol": "ABILITY_SEPIA_LENS",
+      "name": "Sepia Lens",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 566,
+      "symbol": "ABILITY_SHINY_LIGHTNING",
+      "name": "Shiny Lightning",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 569,
+      "symbol": "ABILITY_SLUDGY_MIX",
+      "name": "Sludgy Mix",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 570,
+      "symbol": "ABILITY_SMOKEY_MANEUVERS",
+      "name": "Smokey Maneuvers",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 571,
+      "symbol": "ABILITY_SMOLDERING_WOOD",
+      "name": "Smoldering Wood",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 572,
+      "symbol": "ABILITY_SNOWY_WRATH",
+      "name": "Snowy Wrath",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 573,
+      "symbol": "ABILITY_SNOW_SONG",
+      "name": "Snow Song",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 580,
+      "symbol": "ABILITY_SPIKE_ARMOR",
+      "name": "Spike Armor",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 584,
+      "symbol": "ABILITY_STEEL_BEETLE",
+      "name": "Steel Beetle",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 585,
+      "symbol": "ABILITY_STRIKER_PIXILATE",
+      "name": "Twinkle Toes",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 586,
+      "symbol": "ABILITY_STUN_SHOCK",
+      "name": "Stun Shock",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 587,
+      "symbol": "ABILITY_SUBDUE",
+      "name": "Subdue",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 588,
+      "symbol": "ABILITY_SUGAR_RUSH",
+      "name": "Sugar Rush",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 589,
+      "symbol": "ABILITY_SUPER_HOT_GOO",
+      "name": "Super Hot Goo",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 590,
+      "symbol": "ABILITY_SUPER_SLAMMER",
+      "name": "Super Slammer",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 594,
+      "symbol": "ABILITY_TAR_TOSS",
+      "name": "Tar Toss",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 596,
+      "symbol": "ABILITY_TERMINAL_VELOCITY",
+      "name": "TerminalVelocity",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 598,
+      "symbol": "ABILITY_THERMAL_SLIDE",
+      "name": "Thermal Slide",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 599,
+      "symbol": "ABILITY_THERMOMANCY",
+      "name": "Thermomancy",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 601,
+      "symbol": "ABILITY_TIPPING_POINT",
+      "name": "Tipping Point",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 603,
+      "symbol": "ABILITY_TO_THE_BONE",
+      "name": "To The Bone",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 604,
+      "symbol": "ABILITY_TRASH_HEAP",
+      "name": "Trash Heap",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 605,
+      "symbol": "ABILITY_TRICKSTER",
+      "name": "Trickster",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 606,
+      "symbol": "ABILITY_TWO_STEP",
+      "name": "Two Step",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 608,
+      "symbol": "ABILITY_VENGEFUL_SPIRIT",
+      "name": "Vengeful Spirit",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 609,
+      "symbol": "ABILITY_VENOBLAZE_PINCERS",
+      "name": "VenoblazePincers",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 610,
+      "symbol": "ABILITY_VENOM_CROWN",
+      "name": "Venom Crown",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 612,
+      "symbol": "ABILITY_VITALITY_STRIKE",
+      "name": "Vitality Strike",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 615,
+      "symbol": "ABILITY_WATCH_YOUR_STEP",
+      "name": "Watch Your Step",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 616,
+      "symbol": "ABILITY_WATER_GALE_WINGS",
+      "name": "Tidal Rush",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 618,
+      "symbol": "ABILITY_WEATHER_DOUBLE_BOOST",
+      "name": "Catastrophe",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 619,
+      "symbol": "ABILITY_WEB_SPINNER",
+      "name": "Web Spinner",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 622,
+      "symbol": "ABILITY_WHITE_NOISE",
+      "name": "White Noise",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 623,
+      "symbol": "ABILITY_WILDFIRE",
+      "name": "Wildfire",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 624,
+      "symbol": "ABILITY_WIND_RAGE",
+      "name": "Wind Rage",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 625,
+      "symbol": "ABILITY_WOODLAND_CURSE",
+      "name": "Woodland Curse",
+      "description": "Elite Redux supporting ability."
+    },
+    {
+      "id": 1007,
+      "symbol": "ABILITY_SET_ABLAZE",
+      "name": "Set Ablaze",
+      "description": "Inflicting burn also inflicts Fear."
+    },
+    {
+      "id": 1008,
+      "symbol": "ABILITY_GRASS_FLUTE",
+      "name": "Grass Flute",
+      "description": "Sound moves inflict Fear on hit."
+    },
+    {
+      "id": 1010,
+      "symbol": "ABILITY_LOOSE_THORNS",
+      "name": "Loose Thorns",
+      "description": "Sets Creeping Thorns when hit by contact."
+    },
+    {
+      "id": 1013,
+      "symbol": "ABILITY_MENTAL_POLLUTION",
+      "name": "Mental Pollution",
+      "description": "On becoming enraged, suppresses other battlers' abilities."
+    },
+    {
+      "id": 1014,
+      "symbol": "ABILITY_MADNESS_ENHANCEMENT",
+      "name": "Madness Enh.",
+      "description": "Enrages in fog; takes half damage while enraged."
+    },
+    {
+      "id": 1017,
+      "symbol": "ABILITY_COSMIC_DAZE",
+      "name": "Cosmic Daze",
+      "description": "Deals double damage to confused or Enraged foes."
+    },
+    {
+      "id": 1018,
+      "symbol": "ABILITY_DEVIATE",
+      "name": "Deviate",
+      "description": "Normal moves become Dark; Dark moves gain STAB or can Enrage."
+    },
+    {
+      "id": 1019,
+      "symbol": "ABILITY_MOB_BOSS",
+      "name": "Mob Boss",
+      "description": "Terrify + Deviate."
+    },
+    {
+      "id": 1020,
+      "symbol": "ABILITY_COSMIC_DUST",
+      "name": "Cosmic Dust",
+      "description": "Magic Guard + Cosmic Daze."
+    },
+    {
+      "id": 1029,
+      "symbol": "ABILITY_CURSE_OF_FAMINE",
+      "name": "Curse of Famine",
+      "description": "Consumes terrain on entry, heals 1/4 HP and raises a defense."
+    },
+    {
+      "id": 1030,
+      "symbol": "ABILITY_ANGELS_WRATH",
+      "name": "Angel's Wrath",
+      "description": "Drastically alters the user's basic moves."
+    },
+    {
+      "id": 1031,
+      "symbol": "ABILITY_ARCHMAGE",
+      "name": "Archmage",
+      "description": "Damaging moves have a 30% type-based bonus effect."
+    }
+  ],
+  "approved_successors": [
+    {
+      "historical_id": 338,
+      "historical_name": "Ape Shift",
+      "current_name": "Overexertion",
+      "current_staging_id": 327,
+      "current_token": "ABILITY_MR_OVEREXERTION"
+    },
+    {
+      "historical_id": 345,
+      "historical_name": "Atomic Burst",
+      "current_name": "Execution Drive",
+      "current_staging_id": 885,
+      "current_token": "ABILITY_MR_EXECUTION_DRIVE"
+    },
+    {
+      "historical_id": 369,
+      "historical_name": "Cheating Death",
+      "current_name": "Two Lives",
+      "current_staging_id": 767,
+      "current_token": "ABILITY_MR_TWO_LIVES"
+    },
+    {
+      "historical_id": 376,
+      "historical_name": "Color Spectrum",
+      "current_name": "Grand Choreography",
+      "current_staging_id": 326,
+      "current_token": "ABILITY_MR_GRAND_CHOREOGRAPHY"
+    },
+    {
+      "historical_id": 467,
+      "historical_name": "Inversion",
+      "current_name": "Unyielding",
+      "current_staging_id": 322,
+      "current_token": "ABILITY_MR_UNYIELDING"
+    },
+    {
+      "historical_id": 498,
+      "historical_name": "Minion Control",
+      "current_name": "Pack Tactics",
+      "current_staging_id": 323,
+      "current_token": "ABILITY_MR_PACK_TACTICS"
+    },
+    {
+      "historical_id": 540,
+      "historical_name": "Pyro Shells",
+      "current_name": "Rangefinder",
+      "current_staging_id": 910,
+      "current_token": "ABILITY_MR_RANGEFINDER"
+    },
+    {
+      "historical_id": 591,
+      "historical_name": "Surprise!",
+      "current_name": "First Strike",
+      "current_staging_id": 324,
+      "current_token": "ABILITY_MR_FIRST_STRIKE"
+    },
+    {
+      "historical_id": 593,
+      "historical_name": "Tag",
+      "current_name": "Bloodhound",
+      "current_staging_id": 325,
+      "current_token": "ABILITY_MR_BLOODHOUND"
+    },
+    {
+      "historical_id": 780,
+      "historical_name": "Ominous Shroud",
+      "current_name": "Spectral Body",
+      "current_staging_id": 549,
+      "current_token": "ABILITY_MR_SPECTRAL_BODY"
+    },
+    {
+      "historical_id": 819,
+      "historical_name": "Backflip",
+      "current_name": "Counterstep",
+      "current_staging_id": 588,
+      "current_token": "ABILITY_MR_COUNTERSTEP"
+    },
+    {
+      "historical_id": 836,
+      "historical_name": "Reaper's Embarce",
+      "current_name": "Reaper's Embrace",
+      "current_staging_id": 605,
+      "current_token": "ABILITY_MR_REAPER_S_EMBRACE"
+    },
+    {
+      "historical_id": 872,
+      "historical_name": "Faraday Cage",
+      "current_name": "Countercurrent",
+      "current_staging_id": 641,
+      "current_token": "ABILITY_MR_COUNTERCURRENT"
+    },
+    {
+      "historical_id": 910,
+      "historical_name": "Rejection",
+      "current_name": "Null Ward",
+      "current_staging_id": 476,
+      "current_token": "ABILITY_MR_NULL_WARD"
+    },
+    {
+      "historical_id": 950,
+      "historical_name": "Dead Bark",
+      "current_name": "Heartwood",
+      "current_staging_id": 686,
+      "current_token": "ABILITY_MR_HEARTWOOD"
+    },
+    {
+      "historical_id": 966,
+      "historical_name": "Lethargy",
+      "current_name": "Pressure Valve",
+      "current_staging_id": 395,
+      "current_token": "ABILITY_MR_PRESSURE_VALVE"
+    },
+    {
+      "historical_id": 972,
+      "historical_name": "Prismatic Fur",
+      "current_name": "Prismatic Pelt",
+      "current_staging_id": 316,
+      "current_token": "ABILITY_PRISMATIC_PELT"
+    },
+    {
+      "historical_id": 989,
+      "historical_name": "Retribution Blow",
+      "current_name": "Backlash",
+      "current_staging_id": 427,
+      "current_token": "ABILITY_MR_BACKLASH"
+    },
+    {
+      "historical_id": 998,
+      "historical_name": "Foamy Web",
+      "current_name": "Fresh Start",
+      "current_staging_id": 436,
+      "current_token": "ABILITY_MR_FRESH_START"
+    },
+    {
+      "historical_id": 1021,
+      "historical_name": "Temporal Rupture",
+      "current_name": "Time Compression",
+      "current_staging_id": 696,
+      "current_token": "ABILITY_MR_TIME_COMPRESSION"
+    },
+    {
+      "historical_id": 1038,
+      "historical_name": "Strikeout",
+      "current_name": "Pattern Breaker",
+      "current_staging_id": 738,
+      "current_token": "ABILITY_MR_PATTERN_BREAKER"
+    },
+    {
+      "historical_id": 1040,
+      "historical_name": "Hand Barnacles",
+      "current_name": "Undertow",
+      "current_staging_id": 740,
+      "current_token": "ABILITY_MR_UNDERTOW"
+    }
+  ],
+  "retired_tombstones": [
+    {
+      "historical_id": 524,
+      "name": "Phantom",
+      "current_name": "Phantom",
+      "current_staging_id": 907
+    },
+    {
+      "historical_id": 1004,
+      "name": "Rat King",
+      "current_name": "Rat King",
+      "current_staging_id": 690
+    }
+  ],
+  "current_only_custom_identities": [
+    {
+      "staging_id": 311,
+      "name": "Controlled Fury",
+      "token": "ABILITY_CONTROLLED_FURY",
+      "source_name": "Controlled Fury"
+    },
+    {
+      "staging_id": 312,
+      "name": "Eternal Life",
+      "token": "ABILITY_ETERNAL_LIFE",
+      "source_name": "Eternal Life"
+    },
+    {
+      "staging_id": 313,
+      "name": "Hollow Shell",
+      "token": "ABILITY_HOLLOW_SHELL",
+      "source_name": "Hollow Shell"
+    },
+    {
+      "staging_id": 314,
+      "name": "Mind Games",
+      "token": "ABILITY_MIND_GAMES",
+      "source_name": "Mind Games"
+    },
+    {
+      "staging_id": 315,
+      "name": "The Look",
+      "token": "ABILITY_THE_LOOK",
+      "source_name": "The Look"
+    },
+    {
+      "staging_id": 317,
+      "name": "Lockdown Protocol",
+      "token": "ABILITY_LOCKDOWN_PROTOCOL",
+      "source_name": "Lockdown Protocol"
+    },
+    {
+      "staging_id": 318,
+      "name": "Adaptive Genome",
+      "token": "ABILITY_ADAPTIVE_GENOME",
+      "source_name": "Adaptive Genome"
+    },
+    {
+      "staging_id": 319,
+      "name": "Storm Sequence",
+      "token": "ABILITY_STORM_SEQUENCE",
+      "source_name": "Storm Sequence"
+    },
+    {
+      "staging_id": 320,
+      "name": "Field Commissioner",
+      "token": "ABILITY_FIELD_COMMISSIONER",
+      "source_name": "Field Commissioner"
+    },
+    {
+      "staging_id": 321,
+      "name": "Protean Maxima",
+      "token": "ABILITY_PROTEAN_MAXIMA",
+      "source_name": "Protean Maxima"
+    },
+    {
+      "staging_id": 328,
+      "name": "Ancient Script",
+      "token": "ABILITY_MR_ANCIENT_SCRIPT",
+      "source_name": "Ancient Script"
+    },
+    {
+      "staging_id": 329,
+      "name": "Aura Mantle",
+      "token": "ABILITY_MR_AURA_MANTLE",
+      "source_name": "Aura Mantle"
+    },
+    {
+      "staging_id": 330,
+      "name": "Sand Skimmer",
+      "token": "ABILITY_MR_SAND_SKIMMER",
+      "source_name": "Sand Skimmer"
+    },
+    {
+      "staging_id": 331,
+      "name": "Calamity Edge",
+      "token": "ABILITY_MR_CALAMITY_EDGE",
+      "source_name": "Calamity Edge"
+    },
+    {
+      "staging_id": 333,
+      "name": "Dam Builder",
+      "token": "ABILITY_MR_DAM_BUILDER",
+      "source_name": "Dam Builder"
+    },
+    {
+      "staging_id": 334,
+      "name": "Nerve Agent",
+      "token": "ABILITY_MR_NERVE_AGENT",
+      "source_name": "Nerve Agent"
+    },
+    {
+      "staging_id": 335,
+      "name": "Siege Engine",
+      "token": "ABILITY_MR_SIEGE_ENGINE",
+      "source_name": "Siege Engine"
+    },
+    {
+      "staging_id": 346,
+      "name": "Aerial Predator",
+      "token": "ABILITY_MR_AERIAL_PREDATOR",
+      "source_name": "Aerial Predator"
+    },
+    {
+      "staging_id": 347,
+      "name": "Dynamo Fist",
+      "token": "ABILITY_MR_DYNAMO_FIST",
+      "source_name": "Dynamo Fist"
+    },
+    {
+      "staging_id": 348,
+      "name": "Sovereign Arsenal",
+      "token": "ABILITY_MR_SOVEREIGN_ARSENAL",
+      "source_name": "Sovereign Arsenal"
+    },
+    {
+      "staging_id": 350,
+      "name": "Cold Calculation",
+      "token": "ABILITY_MR_COLD_CALCULATION",
+      "source_name": "Cold Calculation"
+    }
+  ]
+}
