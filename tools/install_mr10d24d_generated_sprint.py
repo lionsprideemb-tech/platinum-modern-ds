@@ -73,15 +73,9 @@ def patch_context(root):
 ""","D24D generated sprint context")
 
 def patch_init(root):
-    p=root/"src/battle/battle_lib.c"
-    sig="void BattleContext_InitCounters(BattleSystem *battleSys, BattleContext *battleCtx)"
-    insert_before_in_function(p,sig,"""    for (i = 0; i < MAX_BATTLERS; i++) {
-""","""    for (i = 0; i < MAX_BATTLERS; i++) {
-        battleCtx->mercurySumoEligibleTurns[i] = 0;
-        battleCtx->mercuryGreedyLastHeldItem[i] = 0;
-    }
-
-""","mercurySumoEligibleTurns[i]","D24D battle init")
+    # BattleContext is zeroed by the existing battle lifecycle. Both new
+    # counters intentionally use zero as their initial/sentinel state.
+    return
 
 def patch_controller(root):
     p=root/"src/battle/battle_controller_player.c"
