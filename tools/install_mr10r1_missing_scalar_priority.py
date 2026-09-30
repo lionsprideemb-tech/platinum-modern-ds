@@ -107,6 +107,27 @@ def patch_speed_and_priority(root: Path) -> None:
 """
     insert_after_once(path,priority_anchor,priority_ins,"ABILITY_WATER_GALE_WINGS","Early Grave/Tidal Rush priority")
 
+
+    helper_old="""    if (Battler_Ability(battleCtx, attacker) == ABILITY_GALE_WINGS
+        && battleCtx->battleMons[attacker].curHP
+            == battleCtx->battleMons[attacker].maxHP
+        && moveType == TYPE_FLYING) {
+        priority++;
+    }
+"""
+    helper_new="""    if (battleCtx->battleMons[attacker].curHP
+            == battleCtx->battleMons[attacker].maxHP
+        && ((Battler_Ability(battleCtx, attacker) == ABILITY_GALE_WINGS
+                && moveType == TYPE_FLYING)
+            || (Battler_Ability(battleCtx, attacker) == ABILITY_EARLY_GRAVE
+                && moveType == TYPE_GHOST)
+            || (Battler_Ability(battleCtx, attacker) == ABILITY_WATER_GALE_WINGS
+                && moveType == TYPE_WATER))) {
+        priority++;
+    }
+"""
+    replace_once(path,helper_old,helper_new,"Early Grave/Tidal Rush priority helper")
+
 def patch_damage(root: Path) -> None:
     path=root/"src/battle/battle_lib.c"
 
@@ -219,6 +240,7 @@ def validate(root: Path, registry: Path) -> dict[str,bool]:
         "sharp_edges_one_sixth":"ABILITY_DOUBLE_IRON_BARBS" in lib and "ATTACKING_MON.maxHP * -1, 6" in lib,
         "early_grave_priority":"ABILITY_EARLY_GRAVE" in lib and "TYPE_GHOST" in lib,
         "tidal_rush_priority":"ABILITY_WATER_GALE_WINGS" in lib and "TYPE_WATER" in lib,
+        "priority_blocker_helper_restored":"Mercury_CurrentMovePriority" in lib and "ABILITY_WATER_GALE_WINGS" in lib,
         "fighter_scalars":"ABILITY_FIGHTER" in lib and "? 150 : 120" in lib,
         "gladiator_scalars":"ABILITY_GLADIATOR" in lib and "? 180 : 130" in lib,
         "purgatory_scalars":"ABILITY_PURGATORY" in lib and "moveType == TYPE_GHOST" in lib,
