@@ -1,0 +1,89 @@
+name: Reset DS Approval Labels to Candidates
+
+on:
+  push:
+    branches: [work/sprites-audit-20260930]
+    paths:
+      - '.github/workflows/reset-ds-approval-to-candidates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Reclassify staged DS art
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil, json
+
+          src=Path('sprite-work/native-ds-approved')
+          dst=Path('sprite-work/native-ds-candidates')
+          if src.exists():
+              dst.mkdir(parents=True,exist_ok=True)
+              for child in src.iterdir():
+                  target=dst/child.name
+                  if target.exists():
+                      shutil.rmtree(target)
+                  shutil.move(str(child),str(target))
+              try:
+                  src.rmdir()
+              except OSError:
+                  pass
+
+          for p in dst.rglob('*.json'):
+              try:
+                  data=json.loads(p.read_text())
+              except Exception:
+                  continue
+              s=json.dumps(data)
+              s=s.replace('APPROVED_FOR_ENGINE_INTEGRATION','PENDING_VISUAL_APPROVAL')
+              s=s.replace('APPROVE_NATIVE_DS_SET','STAGED_CANDIDATE')
+              s=s.replace('approved_count','candidate_count')
+              s=s.replace('"approved"','"candidates"')
+              data=json.loads(s)
+              if isinstance(data,dict):
+                  data['pipeline_order_note']='Candidate only. Must pass user visual design/concept approval before any game-ready promotion or engine integration.'
+              p.write_text(json.dumps(data,indent=2))
+
+          qa=Path('sprite-work/native-ds-imports/batch1-priority-megas/qa/promotion_decision.json')
+          if qa.exists():
+              data=json.loads(qa.read_text())
+              data['gate']='PRIORITY_MEGA_DS_CANDIDATE_STATUS'
+              data['method']='Side-by-side proof established DS quality and design relationship only; user visual approval is still required before implementation.'
+              for d in data.get('decisions',[]):
+                  d['decision']='STAGED_CANDIDATE_PENDING_USER_APPROVAL'
+              data['approved_destination']=''
+              data['candidate_destination']='sprite-work/native-ds-candidates/priority-megas'
+              data['live_engine_overwritten']=False
+              qa.write_text(json.dumps(data,indent=2))
+
+          Path('sprite-work/DS_PIPELINE_ORDER_2026-10-01.md').write_text(
+              '# Native DS sprite pipeline\n\n'
+              '1. Collect all native DS source packs.\n'
+              '2. Build one complete native DS inventory.\n'
+              '3. Compare against Mercury GBA/custom inventory for overlap.\n'
+              '4. Generate visual approval sheets for overlapping/custom designs.\n'
+              '5. User approves/rejects designs and concepts.\n'
+              '6. Only approved sprites become game-ready masters.\n'
+              '7. Integrate approved masters into hg-engine.\n\n'
+              'No sprite is considered visually approved merely because a native DS counterpart exists.\n'
+          )
+          PY
+
+      - name: Commit corrected pipeline state
+        run: |
+          git config user.name "Mercury Sprite Pipeline Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A sprite-work/native-ds-approved sprite-work/native-ds-candidates sprite-work/native-ds-imports/batch1-priority-megas/qa/promotion_decision.json sprite-work/DS_PIPELINE_ORDER_2026-10-01.md .github/workflows/reset-ds-approval-to-candidates.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "sprites: reset native DS art to candidate status pending visual approval"
+          git push origin HEAD:work/sprites-audit-20260930
