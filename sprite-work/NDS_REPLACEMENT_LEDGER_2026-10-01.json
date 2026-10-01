@@ -50,19 +50,42 @@
         "sprite-work/nds-conversions/heliomodo/heliomodo_front_ds80_candidate.png"
       ],
       "status": "CONVERT_FROM_CLEAN_SOURCE"
-    }
-  ],
-  "queued_existing_review": [
-    {
-      "species": "Mega Spiritomb",
-      "action": "Recover original public-resource source, then DS-convert; do not use degraded archive conversion.",
-      "status": "RECOVER_SOURCE_THEN_CONVERT"
     },
     {
       "species": "Mega Magmortar",
-      "action": "Recover original public-resource source, then DS-convert; do not use degraded archive conversion.",
+      "reason": "Mercury archive Mega Magmortar was explicitly audited as a heavily scaled, palette-quantized degraded conversion. A better public-resource original is known.",
+      "replacement": "Recover the original King_Waluigi/Zygoat public-resource sprite, then perform a deliberate NDS conversion. Do not rebuild from the degraded archive copy.",
+      "deleted_paths": [
+        "sprite-work/raw-batches/batch01/base64/04_magmortar_10.png.b64",
+        "sprite-work/raw-batches/batch01/base64/04_magmortar_11.png.b64",
+        "sprite-work/raw-batches/batch01/base64/04_magmortar_12.png.b64",
+        "sprite-work/raw-batches/batch01/base64/04_magmortar_13.png.b64"
+      ],
+      "preserved_reference": [
+        "cpf_0229_magmortar_alternate_form_1 staged variants",
+        "source audit metadata with original-source provenance"
+      ],
       "status": "RECOVER_SOURCE_THEN_CONVERT"
     },
+    {
+      "species": "Mega Spiritomb",
+      "reason": "Mercury archive Mega Spiritomb was explicitly audited as a downscaled degraded conversion of a larger public-resource original.",
+      "replacement": "Recover the original King_Waluigi/Zygoat public-resource sprite, then perform a deliberate NDS conversion. Keep alternate/reference concepts until the recovered original is verified.",
+      "deleted_paths": [
+        "sprite-work/raw-batches/batch01/base64/15_spiritomb_05.png.b64",
+        "sprite-work/raw-batches/batch01/base64/15_spiritomb_06.png.b64",
+        "sprite-work/raw-batches/batch01/base64/15_spiritomb_07.png.b64",
+        "sprite-work/raw-batches/batch01/base64/15_spiritomb_08.png.b64"
+      ],
+      "preserved_reference": [
+        "spiritomb_redux staged variants",
+        "cpf_0212_spiritomb_alternate_form_1 staged variants",
+        "source audit metadata with original-source provenance"
+      ],
+      "status": "RECOVER_SOURCE_THEN_CONVERT"
+    }
+  ],
+  "queued_existing_review": [
     {
       "species": "Mega Roserade",
       "action": "Keep accepted matched Rachel T/camioftargon source; normalize/polish only.",
@@ -74,5 +97,5 @@
       "status": "KEEP_SOURCE"
     }
   ],
-  "next_rule": "As each sprite is reviewed, add it to this ledger before deleting any rejected asset."
+  "next_rule": "Continue auditing staged Mercury/custom assets. Delete only positively identified degraded or rejected copies after recording them here; preserve clean community/GBA/Elite Redux sources and provenance."
 }

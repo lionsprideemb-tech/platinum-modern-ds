@@ -46,10 +46,6 @@
 	hg_engine_ready/data/graphics/sprites/magmortar/icon.png	04_magmortar_07.png.b64
 	hg_engine_ready/data/graphics/sprites/magmortar/male/back.png	04_magmortar_08.png.b64
 	hg_engine_ready/data/graphics/sprites/magmortar/male/front.png	04_magmortar_09.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_magmortar/female/back.png	04_magmortar_10.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_magmortar/female/front.png	04_magmortar_11.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_magmortar/male/back.png	04_magmortar_12.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_magmortar/male/front.png	04_magmortar_13.png.b64
 05	porygon	19
 	hg_engine_ready/data/graphics/sprites/mega_porygon/female/back.png	05_porygon_01.png.b64
 	hg_engine_ready/data/graphics/sprites/mega_porygon/female/front.png	05_porygon_02.png.b64
@@ -213,10 +209,6 @@
 	hg_engine_ready/data/graphics/sprites/cpf_0212_spiritomb_alternate_form_1/female/front.png	15_spiritomb_02.png.b64
 	hg_engine_ready/data/graphics/sprites/cpf_0212_spiritomb_alternate_form_1/male/back.png	15_spiritomb_03.png.b64
 	hg_engine_ready/data/graphics/sprites/cpf_0212_spiritomb_alternate_form_1/male/front.png	15_spiritomb_04.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_spiritomb/female/back.png	15_spiritomb_05.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_spiritomb/female/front.png	15_spiritomb_06.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_spiritomb/male/back.png	15_spiritomb_07.png.b64
-	hg_engine_ready/data/graphics/sprites/mega_spiritomb/male/front.png	15_spiritomb_08.png.b64
 	hg_engine_ready/data/graphics/sprites/spiritomb/female/back.png	15_spiritomb_09.png.b64
 	hg_engine_ready/data/graphics/sprites/spiritomb/female/front.png	15_spiritomb_10.png.b64
 	hg_engine_ready/data/graphics/sprites/spiritomb/icon.png	15_spiritomb_11.png.b64
