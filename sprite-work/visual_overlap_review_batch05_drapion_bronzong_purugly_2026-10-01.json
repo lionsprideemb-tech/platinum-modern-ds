@@ -1,0 +1,49 @@
+{
+  "gate": "MERCURY_VISUAL_OVERLAP_REVIEW_BATCH05",
+  "date": "2026-10-01",
+  "status": "COMPLETE_MULTI_SPECIES_VISUAL_BATCH",
+  "species_reviewed": ["Drapion","Bronzong","Purugly"],
+  "reviews": [
+    {
+      "species":"Drapion",
+      "concept":"Mega Drapion",
+      "visual_sources_reviewed":[
+        "Cybernetic Drapion Sprite Sheet.png",
+        "Mega Drapion Pixel Sprite Sheet.png",
+        "Mega Drapion Pixel Sprite Sheet(1).png"
+      ],
+      "visual_conclusion":"All three files belong to one Mega Drapion development line centered on a giant hypodermic-needle tail and Nerve Agent identity. The cybernetic sheet is an earlier, more cyberpunk interpretation; the later Mega sheets deliberately reduce the cyberpunk treatment while preserving the same poison-injector concept.",
+      "action":"GROUP_AS_ONE_MEGA_DRAPION_CONCEPT_WITH_THREE_DEVELOPMENT_ART_OPTIONS",
+      "distinct_design_policy":"Keep the cybernetic interpretation as a preserved design option/reference because its styling is materially different enough to revisit, but do not count it as a separate roster identity unless the user later promotes it to one.",
+      "custom_designs_deleted":0,
+      "false_duplicate_roster_slots_removed":2
+    },
+    {
+      "species":"Bronzong",
+      "concept":"Mega Bronzong",
+      "visual_sources_reviewed":["Mega Bronzong Pixel Sprite Sheet.png"],
+      "visual_conclusion":"Only one directly retrievable Mercury Mega Bronzong sheet is present in the current Library surface. It is therefore a single-candidate custom design, not an overlap candidate.",
+      "action":"KEEP_AS_SINGLE_APPROVAL_CONCEPT",
+      "custom_designs_deleted":0,
+      "false_duplicate_roster_slots_removed":0
+    },
+    {
+      "species":"Purugly",
+      "concept":"Mega Purugly",
+      "visual_sources_reviewed":["Mega Purugly Pixel Sprite Sheet.png"],
+      "visual_conclusion":"Only one directly retrievable Mercury Mega Purugly sheet is present in the current Library surface. It is therefore a single-candidate custom design, not an overlap candidate.",
+      "action":"KEEP_AS_SINGLE_APPROVAL_CONCEPT",
+      "custom_designs_deleted":0,
+      "false_duplicate_roster_slots_removed":0
+    }
+  ],
+  "batch_effect": {
+    "species_reviewed":3,
+    "source_images_reviewed":5,
+    "custom_designs_deleted":0,
+    "false_duplicate_roster_slots_removed":2,
+    "single_candidate_concepts_confirmed":2
+  },
+  "policy":"Development iterations may be grouped under one roster identity while materially different art directions remain preserved as selectable art options. A single available custom sheet is never discarded for lack of duplicates.",
+  "next_action":"Continue in larger 3-5 species visual batches, prioritizing Mercury-created custom Megas and then unresolved same-role community overlaps."
+}
