@@ -1,0 +1,78 @@
+[
+  {
+    "key": "absol-mega-z",
+    "poses": {
+      "front": {
+        "silhouette_iou": 0.4493,
+        "luminance_corr_01": 0.2349,
+        "occupancy_delta": 0.4216,
+        "identity_score": 0.385
+      },
+      "back": {
+        "silhouette_iou": 0.6081,
+        "luminance_corr_01": 0.2792,
+        "occupancy_delta": 0.3,
+        "identity_score": 0.5094
+      }
+    },
+    "average_identity_score": 0.4472,
+    "classification": "LIKELY_DIFFERENT_DESIGN"
+  },
+  {
+    "key": "lucario-mega-z",
+    "poses": {
+      "front": {
+        "silhouette_iou": 0.4136,
+        "luminance_corr_01": 0.4553,
+        "occupancy_delta": 0.449,
+        "identity_score": 0.4261
+      },
+      "back": {
+        "silhouette_iou": 0.5373,
+        "luminance_corr_01": 0.4235,
+        "occupancy_delta": 0.3542,
+        "identity_score": 0.5032
+      }
+    },
+    "average_identity_score": 0.4646,
+    "classification": "REVIEW_MATCH"
+  },
+  {
+    "key": "baxcalibur-mega",
+    "poses": {
+      "front": {
+        "silhouette_iou": 0.545,
+        "luminance_corr_01": 0.4994,
+        "occupancy_delta": 0.3484,
+        "identity_score": 0.5313
+      },
+      "back": {
+        "silhouette_iou": 0.4908,
+        "luminance_corr_01": 0.3116,
+        "occupancy_delta": 0.3899,
+        "identity_score": 0.437
+      }
+    },
+    "average_identity_score": 0.4841,
+    "classification": "REVIEW_MATCH"
+  },
+  {
+    "key": "golisopod-mega",
+    "poses": {
+      "front": {
+        "silhouette_iou": 0.6231,
+        "luminance_corr_01": 0.5297,
+        "occupancy_delta": 0.2886,
+        "identity_score": 0.5951
+      },
+      "back": {
+        "silhouette_iou": 0.6508,
+        "luminance_corr_01": 0.4232,
+        "occupancy_delta": 0.2673,
+        "identity_score": 0.5825
+      }
+    },
+    "average_identity_score": 0.5888,
+    "classification": "REVIEW_MATCH"
+  }
+]
