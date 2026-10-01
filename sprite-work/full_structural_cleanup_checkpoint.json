@@ -1,0 +1,29 @@
+{
+  "gate": "MERCURY_FULL_SPRITE_STRUCTURAL_CLEANUP_V1",
+  "date": "2026-10-01",
+  "status": "FIRST_PASS_COMPLETE",
+  "source_rows": 2455,
+  "method": {
+    "exact_overlap": "normalized front+back pixel identity",
+    "palette_only": "same normalized front+back pixel/color topology with different RGB palette",
+    "same_silhouette": "same normalized front+back foreground geometry with altered internal pixels",
+    "policy": "Do not treat palette-only custom variants as new Pokémon designs. Keep canon form aliases/reference sprites separate from custom approval candidates."
+  },
+  "all_rows": {
+    "distinct_pixel_design": 2140,
+    "same_silhouette_edit_or_pattern_variant": 183,
+    "palette_only_recolor_or_shared_design": 64,
+    "exact_same_art_overlap": 64,
+    "placeholder_or_invalid": 4
+  },
+  "custom_non_generation_pool": {
+    "total": 995,
+    "distinct_pixel_design_candidates": 945,
+    "palette_only_or_shared_design": 21,
+    "same_silhouette_manual_recolor_checks": 21,
+    "exact_same_art_overlap": 4,
+    "placeholder_or_invalid": 4
+  },
+  "immediate_filter": "The custom approval pool is reduced from 995 rows to 945 structurally distinct designs before semantic/source overlap review. Palette-only custom variants, exact duplicate art, and placeholders are not approval candidates.",
+  "next_pass": "Collapse semantic/source overlap among the 945 distinct custom designs, then run DS-quality READY/POLISH/REWORK/REJECT review. Recolor flags remain excluded unless a canon form must be retained as an official reference."
+}
