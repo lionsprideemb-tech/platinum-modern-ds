@@ -1,0 +1,49 @@
+name: Stage Mercury Sprite Cleanup Batch 1 Sources
+on:
+  push:
+    branches: [work/sprites-audit-20260930]
+    paths: ['.github/workflows/mercury-sprite-stage-batch1.yml']
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+          lfs: true
+      - name: Extract selected source sprites
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP=/tmp/mercury-sprites
+          ROOT="$TMP/DS01_Expanded_Community_Sprite_Library_2026-09-22"
+          OUT=sprite-work/raw-batches/batch01
+          rm -rf "$TMP" "$OUT/base64"
+          mkdir -p "$TMP" "$OUT/base64"
+          unzip -q staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip -d "$TMP"
+          species=(rhyperior tangrowth electivire magmortar porygon yanmega honchkrow weavile mamoswine probopass roserade milotic rampardos bastiodon spiritomb)
+          : > "$OUT/manifest.tsv"
+          i=0
+          for s in "${species[@]}"; do
+            i=$((i+1))
+            mapfile -t files < <(find "$ROOT/hg_engine_ready/data/graphics/sprites" -type f -iname '*.png' -ipath "*${s}*" | sort)
+            printf "%02d\t%s\t%d\n" "$i" "$s" "${#files[@]}" >> "$OUT/manifest.tsv"
+            j=0
+            for f in "${files[@]}"; do
+              j=$((j+1))
+              rel="${f#$ROOT/}"
+              safe="$(printf '%02d_%s_%02d' "$i" "$s" "$j")"
+              base64 -w 0 "$f" > "$OUT/base64/${safe}.png.b64"
+              printf "\t%s\t%s.png.b64\n" "$rel" "$safe" >> "$OUT/manifest.tsv"
+            done
+          done
+      - name: Commit selected raw source payloads
+        run: |
+          git config user.name "Mercury Sprite Batch Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/raw-batches/batch01
+          git commit -m "Stage real sprite sources for cleanup batch 1" || true
+          git push origin HEAD:work/sprites-audit-20260930
