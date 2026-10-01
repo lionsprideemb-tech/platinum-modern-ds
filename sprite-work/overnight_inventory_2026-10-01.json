@@ -1,0 +1,24 @@
+{
+  "gate": "MERCURY_OVERNIGHT_SPRITE_INVENTORY",
+  "date": "2026-10-01",
+  "status": "ACTIVE",
+  "source_archive": "DS01_Expanded_Community_Sprite_Library_2026-09-22",
+  "total_hg_engine_ready_folders": 2455,
+  "likely_extra_or_special_sprite_rows": 1098,
+  "rough_inventory": {
+    "mega_related": 352,
+    "alternate_form_related": 302,
+    "redux_related": 299,
+    "regional_related": 59,
+    "other_special_forms": 86
+  },
+  "overnight_scope": [
+    "Canon and custom Megas",
+    "Delta / Redux forms",
+    "Regional forms",
+    "Alternate forms",
+    "New evolutions and other special forms"
+  ],
+  "quality_bar": "Compare every approval candidate against native Platinum/HGSS battle sprite readability, silhouette, outline, palette discipline, front/back consistency, and DS-scale framing.",
+  "current_hour_action": "Inventory pass completed before the scheduled 2 AM continuation. Next actions are deduplication, canonical-source preference, and approval-candidate classification."
+}
