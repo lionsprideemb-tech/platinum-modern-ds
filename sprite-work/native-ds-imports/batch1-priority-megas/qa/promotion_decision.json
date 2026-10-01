@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-01",
+  "gate": "PRIORITY_MEGA_DS_PROMOTION_DECISION",
+  "rule": "Do not overwrite Mercury-approved GBA/custom designs solely because a native DS sprite shares the same form name.",
+  "decisions": [
+    {
+      "key": "absol-mega-z",
+      "identity_score": 0.4472,
+      "decision": "HOLD_DIFFERENT_DESIGN_RISK",
+      "next": "Manual visual comparison against Mercury Mega Absol Z design before any promotion."
+    },
+    {
+      "key": "lucario-mega-z",
+      "identity_score": 0.4646,
+      "decision": "MANUAL_VISUAL_REVIEW",
+      "next": "Compare front/back design details with approved Mercury Mega Lucario Z before promotion."
+    },
+    {
+      "key": "baxcalibur-mega",
+      "identity_score": 0.4841,
+      "decision": "MANUAL_VISUAL_REVIEW",
+      "next": "Compare front/back design details with approved Mercury Mega Baxcalibur before promotion."
+    },
+    {
+      "key": "golisopod-mega",
+      "identity_score": 0.5888,
+      "decision": "PRIORITY_MANUAL_VISUAL_REVIEW",
+      "next": "Closest structural match; review this one first for possible promotion."
+    }
+  ],
+  "auto_promoted": [],
+  "preserved_originals": true
+}
