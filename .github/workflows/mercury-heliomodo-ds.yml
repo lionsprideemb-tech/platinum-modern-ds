@@ -1,0 +1,123 @@
+name: Mercury Heliomodo DS Source Recovery
+
+on:
+  push:
+    branches:
+      - work/sprites-audit-20260930
+    paths:
+      - '.github/workflows/mercury-heliomodo-ds.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover-and-convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Fetch Heliomodo source
+        run: |
+          mkdir -p sprite-work/authoritative-sources/heliomodo-elite-redux
+          curl -fL --retry 3 \
+            'https://assets.project-pokemon.com/pokemon/static/heliomodo.png' \
+            -o sprite-work/authoritative-sources/heliomodo-elite-redux/source.png
+
+      - name: Build native-grid and DS candidates
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import json, hashlib, math
+
+          root = Path('sprite-work/authoritative-sources/heliomodo-elite-redux')
+          out = Path('sprite-work/nds-conversions/heliomodo')
+          out.mkdir(parents=True, exist_ok=True)
+
+          src = Image.open(root/'source.png').convert('RGBA')
+          bbox = src.getbbox()
+          crop = src.crop(bbox) if bbox else src
+
+          report = {
+              'source_url': 'https://assets.project-pokemon.com/pokemon/static/heliomodo.png',
+              'source_size': list(src.size),
+              'alpha_bbox': list(bbox) if bbox else None,
+              'crop_size': list(crop.size),
+              'source_sha256': hashlib.sha256((root/'source.png').read_bytes()).hexdigest(),
+              'rule': 'No image generation; preserve Elite Redux Heliomodo design.'
+          }
+
+          # Score integer reductions by how much each NxN block agrees internally.
+          # This identifies nearest-neighbor webpage enlargement if present.
+          def block_agreement(im, factor):
+              w,h=im.size
+              if w < factor or h < factor:
+                  return 0.0
+              px=im.load()
+              good=total=0
+              for y in range(0,h-factor+1,factor):
+                  for x in range(0,w-factor+1,factor):
+                      vals=[px[x+dx,y+dy] for dy in range(factor) for dx in range(factor)]
+                      total += len(vals)
+                      base=vals[0]
+                      good += sum(v==base for v in vals)
+              return good/total if total else 0.0
+
+          scores={str(f):block_agreement(crop,f) for f in range(2,9)}
+          report['integer_block_scores']=scores
+          best=max(range(2,9), key=lambda f:scores[str(f)])
+          report['best_integer_factor']=best
+
+          # If there is strong exact-block evidence, reverse it with nearest neighbor.
+          # Otherwise keep the downloaded source as design authority and fit conservatively.
+          if scores[str(best)] >= 0.82:
+              native=crop.resize((max(1,crop.width//best), max(1,crop.height//best)), Image.Resampling.NEAREST)
+              report['native_recovery']='integer_nearest'
+          else:
+              native=crop
+              report['native_recovery']='source_is_not_simple_integer_enlargement'
+
+          native.save(out/'heliomodo_native_recovered.png')
+          report['native_size']=list(native.size)
+
+          # DS candidate: no smoothing. If native fits 80x80, center/bottom align.
+          # If just slightly oversized, crop transparent margins only; do not redraw.
+          n=native
+          if n.width <= 80 and n.height <= 80:
+              ds=Image.new('RGBA',(80,80),(0,0,0,0))
+              ds.alpha_composite(n,((80-n.width)//2,80-n.height))
+              report['ds_transform']='center_bottom_no_scale'
+          else:
+              # Nearest-neighbor only for initial technical candidate.
+              scale=min(80/n.width,80/n.height)
+              nw=max(1,round(n.width*scale)); nh=max(1,round(n.height*scale))
+              fitted=n.resize((nw,nh),Image.Resampling.NEAREST)
+              ds=Image.new('RGBA',(80,80),(0,0,0,0))
+              ds.alpha_composite(fitted,((80-nw)//2,80-nh))
+              report['ds_transform']=f'nearest_fit_{nw}x{nh}'
+          ds.save(out/'heliomodo_front_ds80_candidate.png')
+
+          # Large review preview.
+          ds.resize((480,480),Image.Resampling.NEAREST).save(out/'heliomodo_front_ds80_preview6x.png')
+
+          for p in [out/'heliomodo_native_recovered.png', out/'heliomodo_front_ds80_candidate.png']:
+              report[p.name+'_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+          (out/'source_recovery_report.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          PY
+
+      - name: Commit recovered source and candidate
+        run: |
+          git config user.name "Mercury Sprite Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/authoritative-sources/heliomodo-elite-redux sprite-work/nds-conversions/heliomodo
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "sprites: recover Heliomodo source and stage DS candidate"
+          git push origin HEAD:work/sprites-audit-20260930
