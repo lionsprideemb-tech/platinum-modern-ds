@@ -1,0 +1,78 @@
+{
+  "title": "Mercury NDS Sprite Replacement Ledger",
+  "date": "2026-10-01",
+  "branch": "work/sprites-audit-20260930",
+  "policy": {
+    "preserve": [
+      "Clean existing GBA/Elite Redux/community sprites that can be converted cleanly",
+      "Authoritative source files and provenance even when their old conversion is rejected",
+      "Accepted source-matched custom Megas such as Mega Roserade and Mega Milotic"
+    ],
+    "remove": [
+      "Rejected assistant-made DS drafts",
+      "Bad conversions derived from muddy Mercury-created GBA sprites",
+      "Hand-drawn/custom drafts that fail native Platinum/HGSS readability"
+    ],
+    "replacement_standard": "Rebuild rejected Mercury-original designs from scratch as native NDS pixel art, using Platinum/HGSS quality, 80x80 battle readability, matched front/back design, and no generative image tool."
+  },
+  "deleted_now": [
+    {
+      "species": "Mega Rhyperior",
+      "reason": "Stage22 Mercury-created GBA source is too noisy/muddy to convert cleanly; all attempted DS outputs were rejected.",
+      "replacement": "Keep Stage22 source only as design/provenance reference. Remake Mega Rhyperior front/back from scratch specifically for NDS.",
+      "deleted_paths": [
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/approval-v2/manifest.json",
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/approval-v2/mega_rhyperior_front_ds_clean_v2.png",
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/pass1/conversion_manifest.json",
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/pass1/mega_rhyperior_back_ds80.png",
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/pass1/mega_rhyperior_front_ds80.png",
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/pass2/conversion_manifest_pass2.json",
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/pass2/mega_rhyperior_back_ds80_crisp.png",
+        "sprite-work/nds-conversions/mega-rhyperior-stage22/pass2/mega_rhyperior_front_ds80_crisp.png"
+      ],
+      "preserved_source": [
+        "sprite-work/authoritative-sources/mega-rhyperior-stage22/front.png",
+        "sprite-work/authoritative-sources/mega-rhyperior-stage22/back.png"
+      ],
+      "status": "REBUILD_NATIVE_NDS"
+    },
+    {
+      "species": "Heliomodo",
+      "reason": "Manual assistant-made v2 draft is inferior to the recovered real Elite Redux source conversion.",
+      "replacement": "Use recovered Elite Redux source as conversion authority; continue from the clean 80x80 candidate.",
+      "deleted_paths": [
+        "sprite-work/nds-conversions/heliomodo/v2/heliomodo_front_ds_v2.png",
+        "sprite-work/nds-conversions/heliomodo/v2/manifest_v2.json"
+      ],
+      "preserved_source": [
+        "sprite-work/authoritative-sources/heliomodo-elite-redux/source.png",
+        "sprite-work/nds-conversions/heliomodo/heliomodo_native_recovered.png",
+        "sprite-work/nds-conversions/heliomodo/heliomodo_front_ds80_candidate.png"
+      ],
+      "status": "CONVERT_FROM_CLEAN_SOURCE"
+    }
+  ],
+  "queued_existing_review": [
+    {
+      "species": "Mega Spiritomb",
+      "action": "Recover original public-resource source, then DS-convert; do not use degraded archive conversion.",
+      "status": "RECOVER_SOURCE_THEN_CONVERT"
+    },
+    {
+      "species": "Mega Magmortar",
+      "action": "Recover original public-resource source, then DS-convert; do not use degraded archive conversion.",
+      "status": "RECOVER_SOURCE_THEN_CONVERT"
+    },
+    {
+      "species": "Mega Roserade",
+      "action": "Keep accepted matched Rachel T/camioftargon source; normalize/polish only.",
+      "status": "KEEP_SOURCE"
+    },
+    {
+      "species": "Mega Milotic",
+      "action": "Keep accepted ThunderRainbow source; normalize/polish only.",
+      "status": "KEEP_SOURCE"
+    }
+  ],
+  "next_rule": "As each sprite is reviewed, add it to this ledger before deleting any rejected asset."
+}

@@ -1,8 +1,0 @@
-{
-  "species": "Heliomodo",
-  "version": "v2",
-  "reference": "clean Heliomodo design reference located online",
-  "method": "manual 80x80 DS-style repixel; no image generation",
-  "intent": "faithful circular solar-frill silhouette, Heliolisk-like anatomy, orange flare spikes, yellow solar markings, dark curved tail",
-  "sha256": {"heliomodo_front_ds_v2.png":"15628a78c1ea75d419e3b17a37dd88ae8c5e27365e85a2b45035644863dd2400"}
-}
