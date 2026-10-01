@@ -1,0 +1,87 @@
+name: Build DS vs GBA Priority Mega Proofs
+
+on:
+  push:
+    branches: [work/sprites-audit-20260930]
+    paths:
+      - '.github/workflows/build-priority-mega-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Clone GBA source repo
+        run: |
+          rm -rf /tmp/sinnoh-gba
+          git clone --depth 1 https://github.com/lionsprideemb-tech/Sinnoh-gba.git /tmp/sinnoh-gba
+
+      - name: Build proof package
+        run: |
+          python -m pip install pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps, ImageDraw
+          import json, hashlib, shutil
+
+          pairs={
+            'absol-mega-z':'game/graphics/pokemon/absol/mega_z',
+            'lucario-mega-z':'game/graphics/pokemon/lucario/mega_z',
+            'baxcalibur-mega':'game/graphics/pokemon/baxcalibur/mega',
+            'golisopod-mega':'game/graphics/pokemon/golisopod/mega',
+          }
+          dsroot=Path('sprite-work/native-ds-imports/batch1-priority-megas')
+          gba=Path('/tmp/sinnoh-gba')
+          out=Path('sprite-work/native-ds-imports/batch1-priority-megas/qa')
+          out.mkdir(parents=True,exist_ok=True)
+          report=[]
+
+          for key,gbase in pairs.items():
+              rec={'key':key,'gba_source':gbase,'comparisons':{}}
+              for pose in ['front','back']:
+                  ds=Image.open(dsroot/key/f'{pose}.png').convert('RGBA')
+                  gs=Image.open(gba/gbase/f'{pose}.png').convert('RGBA')
+
+                  def stats(im):
+                      alpha=im.getchannel('A')
+                      box=alpha.getbbox()
+                      colors=len(im.getcolors(maxcolors=1000000) or [])
+                      return {'size':list(im.size),'alpha_bbox':list(box) if box else None,'rgba_colors':colors}
+
+                  rec['comparisons'][pose]={'ds':stats(ds),'gba':stats(gs)}
+
+                  # 4x nearest-neighbor side-by-side, preserving actual pixel structure.
+                  scale=4
+                  dw,dh=ds.size
+                  gw,gh=gs.size
+                  canvas=Image.new('RGBA',((dw+gw)*scale+60,max(dh,gh)*scale+52),(255,255,255,255))
+                  draw=ImageDraw.Draw(canvas)
+                  draw.text((8,6),f'{key} — {pose.upper()}   GBA source (left) vs native DS (right)',fill=(0,0,0,255))
+                  gzoom=gs.resize((gw*scale,gh*scale),Image.Resampling.NEAREST)
+                  dzoom=ds.resize((dw*scale,dh*scale),Image.Resampling.NEAREST)
+                  canvas.alpha_composite(gzoom,(8,32))
+                  canvas.alpha_composite(dzoom,(gw*scale+38,32))
+                  proof=out/f'{key}_{pose}_gba_vs_ds.png'
+                  canvas.save(proof)
+
+              report.append(rec)
+
+          (out/'qa_report.json').write_text(json.dumps(report,indent=2))
+          PY
+
+      - name: Commit proofs
+        run: |
+          git config user.name "Mercury Sprite QA Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/native-ds-imports/batch1-priority-megas/qa .github/workflows/build-priority-mega-proof.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "sprites: add DS vs GBA proof sheets for priority Megas"
+          git push origin HEAD:work/sprites-audit-20260930
