@@ -1,0 +1,119 @@
+{
+  "gate": "MERCURY_SPRITE_APPROVAL_BATCH01",
+  "source": "04_Elite_Redux",
+  "reviewed_count": 21,
+  "quality_reference": "Native Platinum/HGSS DS battle sprites: silhouette readability, restrained palette, coherent front/back design, clean outline, and 80x80 framing.",
+  "summary": {
+    "READY": 5,
+    "POLISH": 8,
+    "REWORK": 8
+  },
+  "entries": [
+    {
+      "name": "abyssand",
+      "status": "POLISH",
+      "note": "Strong front/back silhouette and DS readability; back is much darker than front, so palette/contrast needs a consistency pass."
+    },
+    {
+      "name": "amphybuzz",
+      "status": "READY",
+      "note": "Crisp outline, readable silhouette, coherent design and palette across front/back at DS scale."
+    },
+    {
+      "name": "arachtres",
+      "status": "POLISH",
+      "note": "Good silhouette and detail density, but front is much warmer/brighter than back; palette harmonization needed."
+    },
+    {
+      "name": "arashinne",
+      "status": "REWORK",
+      "note": "Front/back palette and material treatment diverge too much (gold front vs brown back); needs matched-pair correction."
+    },
+    {
+      "name": "bariong",
+      "status": "POLISH",
+      "note": "Strong readable design, but front/back value balance and white/teal treatment differ enough to warrant cleanup."
+    },
+    {
+      "name": "beefender",
+      "status": "REWORK",
+      "note": "Front and back read as different palette interpretations; needs matched palette and shading treatment."
+    },
+    {
+      "name": "beniccino",
+      "status": "REWORK",
+      "note": "Front is dark/purple while back is pale/cream; pair is not visually coherent enough for approval."
+    },
+    {
+      "name": "bewarden",
+      "status": "POLISH",
+      "note": "Design matches, but front/back gray/black values differ; small palette consistency pass should fix it."
+    },
+    {
+      "name": "blizzard_maw",
+      "status": "REWORK",
+      "note": "Already flagged palette-quantized; white front and dark back are too inconsistent for DS-quality approval."
+    },
+    {
+      "name": "blocli",
+      "status": "READY",
+      "note": "Simple geometric form reads cleanly at DS scale and front/back presentation is coherent."
+    },
+    {
+      "name": "bloxtack",
+      "status": "READY",
+      "note": "Clean, readable block silhouette and consistent palette logic across front/back."
+    },
+    {
+      "name": "boarlock",
+      "status": "READY",
+      "note": "Strong DS-style silhouette and coherent front/back palette; ready for approval review."
+    },
+    {
+      "name": "breezing",
+      "status": "POLISH",
+      "note": "Readable and coherent, but front/back saturation and highlight treatment need a small cleanup pass."
+    },
+    {
+      "name": "brontonana",
+      "status": "POLISH",
+      "note": "Good silhouette and anatomy; orange/green front vs darker green/brown back needs palette harmonization."
+    },
+    {
+      "name": "bubbleo",
+      "status": "REWORK",
+      "note": "Front is blue/white while back is brown/yellow; matched-pair palette correction required."
+    },
+    {
+      "name": "cacjack",
+      "status": "REWORK",
+      "note": "Front uses neon red/orange/green while back is near-black; pair fails front/back consistency."
+    },
+    {
+      "name": "carbonix",
+      "status": "REWORK",
+      "note": "Front is pale/cream while back is dark blue/black; likely mismatched conversion/palette source."
+    },
+    {
+      "name": "castform_foggy",
+      "status": "POLISH",
+      "note": "Form reads well and pose is DS-friendly; front/back value balance differs but is recoverable."
+    },
+    {
+      "name": "castform_sandy",
+      "status": "READY",
+      "note": "Front/back form, palette family, and scale are coherent; good approval candidate."
+    },
+    {
+      "name": "chesnaught_clemont",
+      "status": "REWORK",
+      "note": "Front/back colors are radically inconsistent (blue/white vs green); needs source recovery or palette reconstruction."
+    },
+    {
+      "name": "clodsire_mega",
+      "status": "POLISH",
+      "note": "Visible candidate is strong but needs complete pair/asset verification before approval."
+    }
+  ],
+  "next_batch": "Continue Elite Redux custom forms/evolutions alphabetically, while separating palette-only fixes from source-recovery redraws."
+}
