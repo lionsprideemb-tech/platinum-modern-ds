@@ -1,0 +1,55 @@
+name: Inspect Mercury Sprite Archive Names
+
+on:
+  push:
+    branches:
+      - work/sprites-audit-20260930
+    paths:
+      - '.github/workflows/mercury-sprite-inspect-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+          lfs: true
+
+      - name: Inspect archive naming
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP=/tmp/mercury-sprites
+          OUT=sprite-work/raw-batches/batch01
+          rm -rf "$TMP"
+          mkdir -p "$TMP" "$OUT"
+          unzip -q staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip -d "$TMP"
+          find "$TMP" -type f | sort | head -n 400 | sed "s#^$TMP/##" > "$OUT/archive_sample_400.txt"
+          find "$TMP" -type d | sort | head -n 250 | sed "s#^$TMP/##" > "$OUT/archive_dirs_250.txt"
+          python3 - <<'PY'
+import os
+root='/tmp/mercury-sprites'
+out='sprite-work/raw-batches/batch01/name_samples.txt'
+rows=[]
+for dp, dns, fns in os.walk(root):
+    for fn in fns:
+        if fn.lower().endswith('.png'):
+            rel=os.path.relpath(os.path.join(dp,fn),root)
+            rows.append(rel)
+            if len(rows)>=800: break
+    if len(rows)>=800: break
+open(out,'w').write('\n'.join(rows))
+PY
+
+      - name: Commit inspection
+        run: |
+          git config user.name "Mercury Sprite Batch Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/raw-batches/batch01
+          git commit -m "Inspect authoritative sprite archive naming" || true
+          git push origin HEAD:work/sprites-audit-20260930
