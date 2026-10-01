@@ -1,0 +1,81 @@
+name: Extract Mercury Sprite Cleanup Batch 1
+
+on:
+  push:
+    branches:
+      - work/sprites-audit-20260930
+    paths:
+      - '.github/workflows/mercury-sprite-batch1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Extract authoritative sprite archive
+        run: |
+          rm -rf /tmp/mercury-sprites
+          mkdir -p /tmp/mercury-sprites
+          unzip -q staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip -d /tmp/mercury-sprites
+
+      - name: Select first 15 cleanup concepts and preserve raw PNG bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="sprite-work/raw-batches/batch01"
+          rm -rf "$OUT"
+          mkdir -p "$OUT/base64"
+          : > "$OUT/manifest.tsv"
+
+          concepts=(
+            "r0175__mega_rhyperior"
+            "r0184__mega_tangrowth"
+            "r0205__mega_electivire"
+            "r0210__mega_magmortar"
+            "r0241__mega_porygon"
+            "r0310__mega_yanmega"
+            "r0315__mega_honchkrow"
+            "r0343__mega_weavile"
+            "r0354__mega_mamoswine"
+            "r0438__mega_probopass"
+            "r0470__mega_roserade"
+            "r0517__mega_milotic"
+            "r0598__mega_rampardos"
+            "r0602__mega_bastiodon"
+            "r0636__mega_spiritomb"
+          )
+
+          i=0
+          for concept in "${concepts[@]}"; do
+            i=$((i+1))
+            mapfile -t files < <(find /tmp/mercury-sprites -type f -iname '*.png' -path "*${concept}*" | sort)
+            printf "%02d\t%s\t%d\n" "$i" "$concept" "${#files[@]}" >> "$OUT/manifest.tsv"
+            j=0
+            for f in "${files[@]}"; do
+              j=$((j+1))
+              safe="$(printf '%02d_%s_%02d' "$i" "$concept" "$j")"
+              base64 -w 0 "$f" > "$OUT/base64/${safe}.png.b64"
+              printf "\t%s\n" "$f" >> "$OUT/manifest.tsv"
+            done
+          done
+
+          find /tmp/mercury-sprites -type f | sort | sed 's#^/tmp/mercury-sprites/##' > "$OUT/archive_file_inventory.txt"
+
+      - name: Commit extracted source batch
+        run: |
+          git config user.name "Mercury Sprite Batch Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/raw-batches/batch01
+          if git diff --cached --quiet; then
+            echo "No batch changes."
+          else
+            git commit -m "Extract raw sprite cleanup batch 1"
+            git push origin HEAD:work/sprites-audit-20260930
+          fi
