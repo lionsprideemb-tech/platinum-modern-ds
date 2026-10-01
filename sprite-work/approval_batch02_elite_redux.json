@@ -1,0 +1,135 @@
+{
+  "gate": "MERCURY_SPRITE_APPROVAL_BATCH02",
+  "source": "04_Elite_Redux",
+  "reviewed_count": 24,
+  "quality_reference": "Native Platinum/HGSS DS battle sprites: silhouette readability, restrained palette, coherent front/back design, clean outline, and 80x80 framing.",
+  "summary": {
+    "READY": 2,
+    "POLISH": 11,
+    "REWORK": 10,
+    "REJECT": 1
+  },
+  "entries": [
+    {
+      "name": "chesnaught_mega",
+      "status": "REWORK",
+      "note": "Front/back palette and design treatment diverge strongly; pair does not look like one finished DS asset set."
+    },
+    {
+      "name": "chien_pao_mega",
+      "status": "POLISH",
+      "note": "Readable silhouette and matching concept, but front/back value and color treatment need harmonization."
+    },
+    {
+      "name": "chimecho_mega",
+      "status": "POLISH",
+      "note": "Clear form and strong readability; back uses noticeably different warm palette, so minor palette correction needed."
+    },
+    {
+      "name": "cinderace_mega",
+      "status": "REWORK",
+      "note": "Front and back use incompatible palettes and shading; needs matched-pair reconstruction."
+    },
+    {
+      "name": "clefable_mega",
+      "status": "POLISH",
+      "note": "Good DS-scale silhouette and coherent form; back is much bluer/brighter than front."
+    },
+    {
+      "name": "clefable_mega_y",
+      "status": "POLISH",
+      "note": "Concept and silhouette are consistent, but back is dramatically lighter; palette balance needs fixing."
+    },
+    {
+      "name": "coalossal_mega",
+      "status": "REWORK",
+      "note": "Front is bright gold while back is near-black/red; likely source/palette mismatch rather than an intentional lighting shift."
+    },
+    {
+      "name": "copperajah_mega",
+      "status": "POLISH",
+      "note": "Same form reads clearly from both angles; orange vs green/brown palette needs harmonization."
+    },
+    {
+      "name": "corm",
+      "status": "READY",
+      "note": "Simple small evolution/form reads cleanly and front/back are coherent at DS scale."
+    },
+    {
+      "name": "cormoth",
+      "status": "READY",
+      "note": "Strong silhouette, restrained palette, and coherent front/back presentation."
+    },
+    {
+      "name": "cormoth_mega",
+      "status": "POLISH",
+      "note": "Good readable form; front/back palette differs enough to need a final matched-color pass."
+    },
+    {
+      "name": "corviknight_mega",
+      "status": "POLISH",
+      "note": "Excellent silhouette and DS readability; back is more desaturated than front but easily correctable."
+    },
+    {
+      "name": "crawdauntles",
+      "status": "REWORK",
+      "note": "Front is ice-blue/white while back is orange/purple; clear palette mismatch."
+    },
+    {
+      "name": "crobat_mega",
+      "status": "REWORK",
+      "note": "Front and back color families are incompatible; requires source recovery or intentional palette remap."
+    },
+    {
+      "name": "darkrai_mega",
+      "status": "REJECT",
+      "note": "Current asset is a placeholder/question-mark sprite, not a usable battle sprite."
+    },
+    {
+      "name": "darkrai_nightmare",
+      "status": "POLISH",
+      "note": "Strong readable form and coherent design; front/back palette balance needs a small consistency pass."
+    },
+    {
+      "name": "decidueye_hisuian_mega",
+      "status": "REWORK",
+      "note": "Front/back palette and costume treatment differ strongly; needs matched-pair correction."
+    },
+    {
+      "name": "decidueye_mega",
+      "status": "REWORK",
+      "note": "Front is bright multicolor while back is near-monochrome dark; not approval-ready."
+    },
+    {
+      "name": "dedelibird",
+      "status": "POLISH",
+      "note": "Form reads clearly and pair is recognizable; front/back saturation differs but is recoverable."
+    },
+    {
+      "name": "delphox_battle_bond",
+      "status": "REWORK",
+      "note": "Front white/orange and back magenta/purple are too inconsistent for one finished form."
+    },
+    {
+      "name": "delphox_mega",
+      "status": "REWORK",
+      "note": "Front and back palettes are radically different; matched source or palette reconstruction required."
+    },
+    {
+      "name": "delphox_serena",
+      "status": "POLISH",
+      "note": "Same design reads from both sides, but the back is substantially darker/purpler than the front."
+    },
+    {
+      "name": "dewgong_mega",
+      "status": "POLISH",
+      "note": "Readable and coherent design; front/back palette/value treatment needs final cleanup."
+    },
+    {
+      "name": "dracovish_mega",
+      "status": "REWORK",
+      "note": "Front/back palette families are incompatible; requires matched-pair correction."
+    }
+  ],
+  "next_batch": "Continue alphabetically; prioritize READY/POLISH forms for the first approval sheet and quarantine placeholder/mismatched pairs."
+}
