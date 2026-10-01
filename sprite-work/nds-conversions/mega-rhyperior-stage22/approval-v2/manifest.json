@@ -1,0 +1,16 @@
+{
+  "species": "Mega Rhyperior",
+  "status": "approval candidate",
+  "method": "manual pixel edit/composite from native DS Rhyperior plus Stage22 artillery concept; no image generation",
+  "base": "native DS Rhyperior front sprite from Mercury raw batch",
+  "stage22_source": "authoritative GBA Stage22 Mega Rhyperior package",
+  "canvas": [
+    80,
+    80
+  ],
+  "sha256": {
+    "mega_rhyperior_front_ds_clean_v2.png": "0383e8ac0a00e8414e4a8c88290846f1a93f67e92c9cf210cf8845a7682de479",
+    "mega_rhyperior_front_ds_clean_v2_preview6x.png": "3dfdf79f1bf76d2b9bc8addde7f5669668bc517a6898417fa6b0d1bd1553bf84",
+    "mega_rhyperior_front_ds_clean_v2_compare.png": "adcc093212edd8ea586294372fafcd38f628bd41daf6286dd15169dc9b85acea"
+  }
+}
