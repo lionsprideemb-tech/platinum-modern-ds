@@ -25,48 +25,49 @@ jobs:
           mkdir -p /tmp/mercury-sprites
           unzip -q staging-assets/community-sprites/2026-09-22/DS01_Expanded_Community_Sprite_Library_2026-09-22.zip -d /tmp/mercury-sprites
 
-      - name: Select first 15 cleanup concepts and preserve raw PNG bytes
+      - name: Inspect archive and select first 15 cleanup concepts
         shell: bash
         run: |
           set -euo pipefail
           OUT="sprite-work/raw-batches/batch01"
           rm -rf "$OUT"
           mkdir -p "$OUT/base64"
-          : > "$OUT/manifest.tsv"
+          find /tmp/mercury-sprites -maxdepth 3 -type f | sort | head -n 300 | sed 's#^/tmp/mercury-sprites/##' > "$OUT/archive_sample.txt" || true
+          find /tmp/mercury-sprites -maxdepth 2 -type d | sort | head -n 200 | sed 's#^/tmp/mercury-sprites/##' > "$OUT/archive_dirs.txt" || true
+          printf "files\t%s\n" "$(find /tmp/mercury-sprites -type f | wc -l)" > "$OUT/archive_summary.tsv"
+          printf "pngs\t%s\n" "$(find /tmp/mercury-sprites -type f -iname '*.png' | wc -l)" >> "$OUT/archive_summary.tsv"
 
-          concepts=(
-            "r0175__mega_rhyperior"
-            "r0184__mega_tangrowth"
-            "r0205__mega_electivire"
-            "r0210__mega_magmortar"
-            "r0241__mega_porygon"
-            "r0310__mega_yanmega"
-            "r0315__mega_honchkrow"
-            "r0343__mega_weavile"
-            "r0354__mega_mamoswine"
-            "r0438__mega_probopass"
-            "r0470__mega_roserade"
-            "r0517__mega_milotic"
-            "r0598__mega_rampardos"
-            "r0602__mega_bastiodon"
-            "r0636__mega_spiritomb"
+          species=(
+            "rhyperior"
+            "tangrowth"
+            "electivire"
+            "magmortar"
+            "porygon"
+            "yanmega"
+            "honchkrow"
+            "weavile"
+            "mamoswine"
+            "probopass"
+            "roserade"
+            "milotic"
+            "rampardos"
+            "bastiodon"
+            "spiritomb"
           )
-
+          : > "$OUT/manifest.tsv"
           i=0
-          for concept in "${concepts[@]}"; do
+          for s in "${species[@]}"; do
             i=$((i+1))
-            mapfile -t files < <(find /tmp/mercury-sprites -type f -iname '*.png' -path "*${concept}*" | sort)
-            printf "%02d\t%s\t%d\n" "$i" "$concept" "${#files[@]}" >> "$OUT/manifest.tsv"
+            mapfile -t files < <(find /tmp/mercury-sprites -type f -iname "*${s}*.png" | sort)
+            printf "%02d\t%s\t%d\n" "$i" "$s" "${#files[@]}" >> "$OUT/manifest.tsv"
             j=0
             for f in "${files[@]}"; do
               j=$((j+1))
-              safe="$(printf '%02d_%s_%02d' "$i" "$concept" "$j")"
+              safe="$(printf '%02d_%s_%02d' "$i" "$s" "$j")"
               base64 -w 0 "$f" > "$OUT/base64/${safe}.png.b64"
-              printf "\t%s\n" "$f" >> "$OUT/manifest.tsv"
+              printf "\t%s\n" "${f#/tmp/mercury-sprites/}" >> "$OUT/manifest.tsv"
             done
           done
-
-          find /tmp/mercury-sprites -type f | sort | sed 's#^/tmp/mercury-sprites/##' > "$OUT/archive_file_inventory.txt"
 
       - name: Commit extracted source batch
         run: |
@@ -76,6 +77,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No batch changes."
           else
-            git commit -m "Extract raw sprite cleanup batch 1"
+            git commit -m "Refresh raw sprite cleanup batch 1"
             git push origin HEAD:work/sprites-audit-20260930
           fi
