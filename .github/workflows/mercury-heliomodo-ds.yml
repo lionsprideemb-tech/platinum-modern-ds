@@ -97,7 +97,12 @@ jobs:
               report['ds_transform']=f'nearest_fit_{nw}x{nh}'
 
           ds.save(out/'heliomodo_front_ds80_candidate.png')
-          ds.resize((480,480),Image.Resampling.NEAREST).save(out/'heliomodo_front_ds80_preview6x.png')
+          preview_path = out/'heliomodo_front_ds80_preview6x.png'
+          ds.resize((480,480),Image.Resampling.NEAREST).save(preview_path)
+
+          import base64
+          for p in [root/'source.png', out/'heliomodo_native_recovered.png', out/'heliomodo_front_ds80_candidate.png', preview_path]:
+              (p.parent/(p.name + '.b64')).write_text(base64.b64encode(p.read_bytes()).decode('ascii'))
 
           for p in [out/'heliomodo_native_recovered.png', out/'heliomodo_front_ds80_candidate.png']:
               report[p.name+'_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
