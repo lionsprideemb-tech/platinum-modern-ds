@@ -1,0 +1,89 @@
+{
+  "gate": "MERCURY_MEGA_MULTI_DESIGN_REVIEW_BATCH01",
+  "date": "2026-10-01",
+  "status": "COMPLETE_CONSERVATIVE_GROUPING",
+  "source_reference": "MERCURY_SPRITE_TECH_AUDIT_2026-09-12.csv plus current sprite-work checkpoint chain",
+  "scope_note": "This batch resolves only groups where the older technical audit provides enough naming/provenance to distinguish duplicate art-options from genuinely different Mega concepts. It does not claim to cover all 68 current multi-design Mega species.",
+  "same_named_concept_art_options_grouped_not_deleted": [
+    {
+      "species": "Weavile",
+      "concept": "Mega Weavile",
+      "art_options": [
+        "banished_megas_approved/r0343__mega_weavile",
+        "er_reaudit_approved/r0345__weavile_mega"
+      ],
+      "decision": "KEEP_BOTH_AS_ART_OPTIONS_UNTIL_VISUAL_APPROVAL",
+      "separate_concept_preserved": "elite_redux_approved/weavile_redux_mega"
+    },
+    {
+      "species": "Mamoswine",
+      "concept": "Mega Mamoswine",
+      "art_options": [
+        "banished_megas_approved/r0354__mega_mamoswine",
+        "er_reaudit_approved/r0356__mamoswine_mega"
+      ],
+      "decision": "KEEP_BOTH_AS_ART_OPTIONS_UNTIL_VISUAL_APPROVAL"
+    },
+    {
+      "species": "Roserade",
+      "concept": "Mega Roserade",
+      "art_options": [
+        "banished_megas_approved/r0470__mega_roserade",
+        "er_reaudit_approved/r0471__roserade_mega"
+      ],
+      "decision": "KEEP_BOTH_AS_ART_OPTIONS_UNTIL_VISUAL_APPROVAL"
+    },
+    {
+      "species": "Milotic",
+      "concept": "Mega Milotic",
+      "art_options": [
+        "banished_megas_approved/r0517__mega_milotic",
+        "er_reaudit_approved/r0518__milotic_mega"
+      ],
+      "decision": "KEEP_BOTH_AS_ART_OPTIONS_UNTIL_VISUAL_APPROVAL",
+      "mercury_lock_note": "Previously owner-approved Mercury/Cynthia Mega Milotic art must not be replaced automatically by another source option."
+    }
+  ],
+  "distinct_concept_groups_explicitly_preserved": [
+    "Aegislash: Redux Blade Mega / Redux Mega / Mercury-original Mega",
+    "Arcanine: Redux Mega / Hisuian Mega",
+    "Clefable: Redux Mega / Mega Y",
+    "Empoleon: Redux Mega / regular Mega",
+    "Feraligatr: Mega X / Mega Y",
+    "Flygon: regular Mega / Redux Mega / Redux B Mega",
+    "Gyaradeath: Mega X / Mega Y",
+    "Infernape: Redux Mega / regular Mega",
+    "Kingdra: regular Mega / Mega Y",
+    "Kingler: regular Mega / Redux Mega",
+    "Lapras: regular Mega / Mega X",
+    "Machamp: regular Mega / Redux Mega",
+    "Mawile: Redux Mega / Redux B Mega",
+    "Rapidash: regular Mega / Galarian Mega",
+    "Ribombee: regular Mega / Redux Mega",
+    "Sableye: Redux Mega / alternate Gemstone Mega",
+    "Sandslash: regular Mega / Alolan Mega",
+    "Slaking: regular Mega / Ape Shift Mega",
+    "Slowking: regular Mega / Galarian Mega",
+    "Tinkaton: regular Mega / Redux Mega",
+    "Torterra: Redux Mega / regular Mega",
+    "Toxtricity: regular Mega / Redux Mega / Redux Fuzz Mega",
+    "Typhlosion: regular Mega / Hisuian Mega",
+    "Wigglytuff: regular Mega / Mega X",
+    "Scyther: regular Mega / Redux Mega",
+    "Kleavor: regular Mega / Redux Mega",
+    "Snorlax: regular Mega / Redux Mega",
+    "Altaria: Redux Mega / alternate Mega",
+    "Luxray: regular Mega / Redux Mega",
+    "Samurott: regular Mega / Hisuian Mega",
+    "Vanilluxe: regular Mega / Redux Mega",
+    "Goodra: regular Mega / Hisuian Mega",
+    "Decidueye: regular Mega / Hisuian Mega"
+  ],
+  "cleanup_effect": {
+    "custom_designs_deleted": 0,
+    "art_options_grouped": 8,
+    "same_named_concepts_grouped": 4,
+    "distinct_concept_families_protected": 33
+  },
+  "policy": "No distinct concept is removed. Same-name cross-source options are grouped for side-by-side visual approval. Explicit X/Y, Redux, regional, alternate-mega, and Mercury-original identities remain separate."
+}
