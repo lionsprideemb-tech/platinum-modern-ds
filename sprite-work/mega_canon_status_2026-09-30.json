@@ -1,0 +1,77 @@
+{
+  "gate": "MERCURY_MEGA_CANON_SPRITE_SOURCE_AUDIT",
+  "date": "2026-09-30",
+  "rule": "Before polishing or redrawing any Mega, verify whether an official Pokemon design now exists. If official, the official design is the visual source of truth and fan interpretations are not used as the final Mercury sprite.",
+  "verified_official": [
+    {
+      "name": "Mega Staraptor",
+      "status": "OFFICIAL_CANON",
+      "sprite_policy": "Use DS conversion of official design",
+      "evidence": "Pokemon.com Pokédex lists Mega Staraptor."
+    },
+    {
+      "name": "Mega Golisopod",
+      "status": "OFFICIAL_CANON",
+      "sprite_policy": "Use DS conversion of official design",
+      "evidence": "Pokemon.com Pokédex lists Mega Golisopod."
+    },
+    {
+      "name": "Mega Lucario Z",
+      "status": "OFFICIAL_CANON",
+      "sprite_policy": "Use DS conversion of official design",
+      "evidence": "Pokemon.com Pokédex/news lists Mega Lucario Z."
+    },
+    {
+      "name": "Mega Garchomp Z",
+      "status": "OFFICIAL_CANON",
+      "sprite_policy": "Use DS conversion of official design",
+      "evidence": "Official Pokemon Legends Z-A Mega Dimension page/news lists Mega Garchomp Z."
+    },
+    {
+      "name": "Mega Baxcalibur",
+      "status": "OFFICIAL_CANON",
+      "sprite_policy": "Use DS conversion of official design",
+      "evidence": "Official Pokemon Legends Z-A Mega Dimension page lists Mega Baxcalibur."
+    },
+    {
+      "name": "Mega Absol Z",
+      "status": "OFFICIAL_CANON",
+      "sprite_policy": "Use DS conversion of official design",
+      "evidence": "Pokemon.com Pokédex lists Mega Absol Z."
+    },
+    {
+      "name": "Mega Absol",
+      "status": "OFFICIAL_CANON",
+      "sprite_policy": "Use existing official Mega Absol design where that form is intended",
+      "evidence": "Pokemon official Mega Evolution/Pokedex sources list Mega Absol."
+    }
+  ],
+  "not_officially_verified_in_current_audit": [
+    {
+      "name": "Mega Spiritomb",
+      "status": "MERCURY_CUSTOM_UNLESS_LATER_VERIFIED",
+      "sprite_policy": "Custom matched DS front/back rework"
+    },
+    {
+      "name": "Mega Roserade",
+      "status": "MERCURY_CUSTOM_UNLESS_LATER_VERIFIED",
+      "sprite_policy": "Custom matched DS front/back rework"
+    },
+    {
+      "name": "Mega Magmortar",
+      "status": "MERCURY_CUSTOM_UNLESS_LATER_VERIFIED",
+      "sprite_policy": "Custom matched DS front/back rework"
+    },
+    {
+      "name": "Mega Milotic",
+      "status": "MERCURY_CUSTOM_UNLESS_LATER_VERIFIED",
+      "sprite_policy": "Custom matched DS front/back rework"
+    }
+  ],
+  "workflow": [
+    "Check official Pokemon sources before accepting any fan Mega sprite.",
+    "For verified official forms, prefer an existing DS-style conversion that accurately matches the official design.",
+    "If the archive conversion does not match the official design closely enough, replace/rework it against official reference art.",
+    "Only fully custom Mercury forms remain eligible for original redesign work."
+  ]
+}
