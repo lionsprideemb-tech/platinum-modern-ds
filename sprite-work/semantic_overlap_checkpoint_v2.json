@@ -1,0 +1,13 @@
+{
+  "gate": "MERCURY_SPRITE_SEMANTIC_OVERLAP_V2",
+  "date": "2026-10-01",
+  "status": "COMPLETE",
+  "custom_design_rows": 945,
+  "normalized_named_concepts": 905,
+  "concepts_with_multiple_art_options": 38,
+  "rows_inside_same_named_concept_groups": 78,
+  "species_overlap_groups": 184,
+  "groups_with_multiple_mega_candidates": 93,
+  "policy": "Do not auto-delete different pixel art that represents the same named concept. Present it as multiple art options under one approval concept; keep genuinely different forms as separate concepts. Custom Mega remains preferred over G-Max when both exist.",
+  "next_action": "Review 93 multi-Mega groups and 38 same-named concept art-option groups first, choosing one art direction per concept while preserving genuinely distinct forms."
+}
