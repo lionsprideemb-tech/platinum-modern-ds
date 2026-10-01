@@ -1,0 +1,83 @@
+{
+  "gate": "MERCURY_CUSTOM_MEGA_REDRAW_QUEUE",
+  "date": "2026-09-30",
+  "status": "CONCEPT_BASES_LOCKED",
+  "policy": "For Mercury-only Megas with no verified official form, preserve the strongest existing concept where useful, but redraw matched Platinum-era front/back sprites rather than trying to repair mismatched source pairs.",
+  "entries": [
+    {
+      "name": "Mega Spiritomb",
+      "concept_base": "spiritomb_redux",
+      "secondary_reference": "mega_spiritomb",
+      "verdict": "FULL_MATCHED_REDRAW",
+      "keep": [
+        "large ominous spirit mass",
+        "keystone anchor",
+        "multiple spirit/orb motifs"
+      ],
+      "change": [
+        "replace oversized cropped back sprite",
+        "reduce muddy teal/purple mismatch",
+        "build front/back from one shared palette and silhouette language"
+      ],
+      "target": "native Platinum battle-sprite readability"
+    },
+    {
+      "name": "Mega Roserade",
+      "concept_base": "roserade_mega",
+      "secondary_reference": "mega_roserade",
+      "verdict": "FULL_MATCHED_REDRAW",
+      "keep": [
+        "elegant thorn/rose silhouette",
+        "larger rose weapons",
+        "dramatic cape/petal mass"
+      ],
+      "change": [
+        "redraw back to match the same costume/flower geometry as front",
+        "simplify over-detailed outlines",
+        "use Platinum-style shading"
+      ],
+      "target": "native Platinum battle-sprite readability"
+    },
+    {
+      "name": "Mega Magmortar",
+      "concept_base": "mega_magmortar",
+      "secondary_reference": "cpf_0229_magmortar_alternate_form_1",
+      "verdict": "FULL_MATCHED_REDRAW",
+      "keep": [
+        "heavy cannon-arm identity",
+        "larger furnace/fire silhouette"
+      ],
+      "change": [
+        "replace unrelated back design",
+        "normalize body proportions",
+        "retain recognizable Magmortar anatomy",
+        "build matched front/back with one palette"
+      ],
+      "target": "native Platinum battle-sprite readability"
+    },
+    {
+      "name": "Mega Milotic",
+      "concept_base": "milotic_mega",
+      "secondary_reference": "mega_milotic",
+      "verdict": "FULL_MATCHED_REDRAW",
+      "keep": [
+        "long elegant serpentine body",
+        "expanded fins/hair ornamentation",
+        "regal silhouette"
+      ],
+      "change": [
+        "redraw both views as same design",
+        "reduce excessive detail at 80x80",
+        "preserve readable face and tail shape"
+      ],
+      "target": "native Platinum battle-sprite readability"
+    }
+  ],
+  "redraw_order": [
+    "Mega Milotic",
+    "Mega Roserade",
+    "Mega Spiritomb",
+    "Mega Magmortar"
+  ],
+  "next_action": "Produce one matched front/back DS pixel pair at a time, beginning with Mega Milotic, then review before moving to the next custom Mega."
+}
