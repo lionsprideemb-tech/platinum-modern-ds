@@ -1,0 +1,67 @@
+{
+  "gate": "MERCURY_CUSTOM_MEGA_SOURCE_AUDIT_BATCH1",
+  "date": "2026-09-30",
+  "status": "PARTIAL_SOURCE_RECOVERY_COMPLETE",
+  "policy": "For Mercury-custom Megas, prefer an existing matched front/back sprite set with clear attribution over redrawing. Redraw only if no coherent source pair can be found.",
+  "entries": [
+    {
+      "name": "Mega Roserade",
+      "current_verdict": "REPLACE_ARCHIVE_PAIR",
+      "better_source_found": true,
+      "source_repository": "TeamAquasHideout/Team-Aquas-Asset-Repo",
+      "source_path": "Pokemon/New Megas/iriv24/roserade/",
+      "files": [
+        "megaroserade.png",
+        "megaroserade_back.png",
+        "megaroserade.pal"
+      ],
+      "credits": {
+        "front": "Rachel T",
+        "back": "camioftargon"
+      },
+      "note": "This is a deliberately paired front/back set used in-game by Emerald Imperium. Use it as the new source candidate instead of the mismatched Banished/ER archive pair."
+    },
+    {
+      "name": "Mega Milotic",
+      "current_verdict": "REPLACE_ARCHIVE_PAIR",
+      "better_source_found": true,
+      "source_repository": "TeamAquasHideout/Team-Aquas-Asset-Repo",
+      "source_path": "Pokemon/New Megas/ThunderRainbow/milotic/mega/",
+      "files": [
+        "front.png",
+        "back.png",
+        "icon.png",
+        "normal.pal",
+        "shiny.pal"
+      ],
+      "credits": {
+        "sprite_sheet": "ThunderRainbow",
+        "artwork_reference": "an_artist_astray"
+      },
+      "note": "Complete front/back/icon/palette package found. This is a stronger integration candidate than the mismatched archive sources and avoids a redraw unless DS-scale review fails."
+    },
+    {
+      "name": "Mega Spiritomb",
+      "current_verdict": "REDRAW_OR_EXTERNAL_SOURCE",
+      "better_source_found": false,
+      "checked_sources": [
+        "Mercury archive",
+        "Team Aqua asset repository",
+        "general GitHub search"
+      ],
+      "note": "No clearly matched, attributed front/back set located yet."
+    },
+    {
+      "name": "Mega Magmortar",
+      "current_verdict": "REDRAW_OR_EXTERNAL_SOURCE",
+      "better_source_found": false,
+      "checked_sources": [
+        "Mercury archive",
+        "Team Aqua asset repository",
+        "general GitHub search"
+      ],
+      "note": "References to fan Mega Magmortar exist, but no clean matched DS-ready front/back package with clear source/permission has been located yet."
+    }
+  ],
+  "next_action": "Promote Roserade and Milotic to source-review/polish. Continue source hunt for Spiritomb and Magmortar; if no strong matched pair is found, move only those two to true redraw."
+}
