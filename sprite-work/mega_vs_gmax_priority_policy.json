@@ -1,0 +1,61 @@
+{
+  "gate": "MERCURY_MEGA_VS_GMAX_PRIORITY_POLICY",
+  "date": "2026-10-01",
+  "status": "LOCKED",
+  "user_preference": "When a species has both a custom Mega design and Gigantamax art, prefer the custom Mega. Do not repurpose Gigantamax art as the Mega merely because it is official.",
+  "rules": [
+    "Custom Mega beats Gigantamax when choosing Mercury's Mega design.",
+    "Gigantamax art may remain in the library as a canon reference/form asset, but it is not a substitute for a distinct Mega.",
+    "If multiple custom Mega designs exist for the same species, keep them grouped for side-by-side approval rather than silently choosing one.",
+    "Official Mega forms still take precedence over fan/custom Mega interpretations when the Mega itself is canon."
+  ],
+  "detected_species_with_both_gmax_and_mega_candidates": {
+    "alcremie": [
+      "alcremie_mega"
+    ],
+    "blastoise": [
+      "blastoise-mega"
+    ],
+    "butterfree": [
+      "butterfree_mega"
+    ],
+    "charizard": [
+      "charizard-mega-x",
+      "charizard-mega-y"
+    ],
+    "cinderace": [
+      "cinderace_mega"
+    ],
+    "eevee": [
+      "eevee_partner_mega"
+    ],
+    "gengar": [
+      "gengar-mega"
+    ],
+    "kingler": [
+      "kingler_mega",
+      "kingler_redux_mega"
+    ],
+    "lapras": [
+      "lapras_mega_x"
+    ],
+    "machamp": [
+      "machamp_mega_redux"
+    ],
+    "snorlax": [
+      "snorlax_redux_mega"
+    ],
+    "toxtricity": [
+      "toxtricity_redux_fuzz_mega",
+      "toxtricity_redux_mega"
+    ],
+    "urshifu": [
+      "urshifu_mega"
+    ],
+    "venusaur": [
+      "venusaur_mega_x",
+      "venusaur-mega"
+    ]
+  },
+  "approval_sheet_behavior": "These species will show the custom Mega candidate(s) in the Mega approval pool. G-Max versions will not be presented as Mega replacements."
+}
