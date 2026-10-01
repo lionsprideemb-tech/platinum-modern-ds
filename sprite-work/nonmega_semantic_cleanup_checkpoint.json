@@ -1,0 +1,26 @@
+{
+  "gate": "MERCURY_NONMEGA_SEMANTIC_CLEANUP_V1",
+  "date": "2026-10-01",
+  "status": "FIRST_COLLAPSE_COMPLETE",
+  "input": "945 structurally distinct custom designs after exact/recolor/same-silhouette filtering",
+  "mega_rows_removed_for_separate_pipeline": 320,
+  "nonmega_rows": 625,
+  "nonmega_base_species_keys": 540,
+  "single_candidate_designs": 464,
+  "species_with_multiple_nonmega_designs": 76,
+  "rows_inside_multi_design_species_groups": 161,
+  "category_counts": {
+    "alternate_form": 298,
+    "redux_redesign": 161,
+    "other_custom_or_new_species": 165,
+    "explicitly_named_regional": 1
+  },
+  "interpretation": [
+    "These 625 rows have already survived the structural recolor filter, so none is being kept merely because of a different palette.",
+    "The 464 single-candidate rows can go directly to DS-quality review.",
+    "The 76 multi-design species groups need side-by-side concept review because they represent genuinely different non-Mega designs for the same base species, not simple duplicate art.",
+    "Reborn-style numbered alternate forms remain separate concepts until visual/theme review establishes that two are effectively the same design."
+  ],
+  "user_policy": "Recolors are excluded from the approval pool. Distinct redesigns, Delta-like forms, regional-style forms, new evolutions/species, and other genuinely new silhouettes remain eligible.",
+  "next_action": "Review the 76 multi-design non-Mega groups first, then send the 464 single-candidate designs through READY/POLISH/REWORK/REJECT quality grading."
+}
