@@ -1,0 +1,87 @@
+{
+  "gate": "MERCURY_NONMEGA_FAMILY_GROUPING_BATCH03",
+  "date": "2026-10-01",
+  "status": "COMPLETE_PRESERVATION_GROUPING",
+  "purpose": "Finish another safe set of obvious evolutionary-family groupings without collapsing any custom design identity.",
+  "source_reference": "MERCURY_SPRITE_TECH_AUDIT_2026-09-12.csv",
+  "approval_families": [
+    {
+      "family":"Weedle Redux line",
+      "members":["Weedle Redux","Kakuna Redux","Beedrill Redux"],
+      "linked_mega":"Beedrill Mega Redux"
+    },
+    {
+      "family":"Honedge Redux line",
+      "members":["Honedge Redux","Doublade Redux","Aegislash Redux","Aegislash Blade Redux"],
+      "linked_megas":["Aegislash Redux Mega","Aegislash Blade Redux Mega"],
+      "protected_parallel_concept":"Mercury-original Aegislash Mega remains a separate approval concept"
+    },
+    {
+      "family":"Snorunt Redux split line",
+      "members":["Snorunt Redux","Glalie Redux","Froslass Redux"],
+      "linked_megas":["Glalie Redux Mega","Froslass Redux Mega"]
+    },
+    {
+      "family":"Happiny Redux line",
+      "members":["Happiny Redux","Chansey Redux","Blissey Redux"],
+      "parallel_design_note":"Platinum-form Blissey remains a separate non-Redux concept"
+    },
+    {
+      "family":"Munchlax Redux line",
+      "members":["Munchlax Redux","Snorlax Redux"],
+      "linked_mega":"Snorlax Redux Mega",
+      "protected_parallel_concepts":["Snorlax Primal","Platinum-form Snorlax","regular Mega Snorlax"]
+    },
+    {
+      "family":"Scyther Redux split line",
+      "members":["Scyther Redux","Scizor Redux","Kleavor Redux"],
+      "linked_megas":["Scyther Redux Mega","Scizor Redux Mega","Kleavor Redux Mega"],
+      "protected_parallel_concepts":["regular Mega Scyther","regular Mega Kleavor"]
+    },
+    {
+      "family":"Exeggcute Redux line",
+      "members":["Exeggcute Redux","Exeggutor Redux"]
+    },
+    {
+      "family":"Makuhita Redux line",
+      "members":["Makuhita Redux","Hariyama Redux"],
+      "linked_mega":"Hariyama Mega",
+      "parallel_design_note":"Platinum-form Hariyama stays separate from the Redux line"
+    },
+    {
+      "family":"Toxel Redux line",
+      "members":["Toxel Redux","Toxtricity Redux"],
+      "parallel_final_stage":"Toxtricity Redux Fuzz",
+      "linked_megas":["Toxtricity Redux Mega","Toxtricity Redux Fuzz Mega"],
+      "protected_parallel_concept":"regular Mega Toxtricity"
+    },
+    {
+      "family":"Mawile Redux concept family",
+      "members":["Mawile Redux","Mawile Redux B"],
+      "linked_megas":["Mawile Mega Redux","Mawile Redux B Mega"],
+      "protected_parallel_concept":"Platinum-form Mawile",
+      "note":"Grouped only as a review family; Redux and Redux B remain distinct designs."
+    },
+    {
+      "family":"Flygon Redux concept family",
+      "members":["Flygon Redux","Flygon Redux B"],
+      "linked_megas":["Flygon Redux Mega","Flygon Redux B Mega"],
+      "protected_parallel_concepts":["regular Mega Flygon","Platinum-form Flygon"],
+      "note":"Redux and Redux B remain separate concepts."
+    },
+    {
+      "family":"Bewear Redux line",
+      "members":["Stufful Redux","Bewear Redux"],
+      "protected_parallel_concepts":["Bewarden","Bewarden Redux"],
+      "note":"Bewarden is a separate custom species/concept and is not merged into the Bewear line."
+    }
+  ],
+  "cleanup_effect": {
+    "family_review_units_created": 12,
+    "custom_designs_deleted": 0,
+    "individual_sprite_rows_preserved": true,
+    "parallel_concepts_explicitly_protected": true
+  },
+  "policy": "Family grouping is for review organization only. Split evolutions, stance forms, Redux B/Fuzz variants, Mercury originals, Platinum-source redesigns, Primals, and regular-vs-Redux Megas retain separate design identities.",
+  "next_action": "Move from obvious family grouping into the unresolved one-off overlap set and create side-by-side review candidates for same-name or same-role designs that cannot be safely collapsed from metadata alone."
+}
