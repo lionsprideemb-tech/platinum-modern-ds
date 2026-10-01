@@ -1,0 +1,35 @@
+{
+  "gate": "MERCURY_VISUAL_OVERLAP_REVIEW_BATCH04",
+  "date": "2026-10-01",
+  "status": "COMPLETE_VISUAL_PROGRESSION_GROUP",
+  "species": "Toxicroak",
+  "concept": "Mega Toxicroak",
+  "visual_sources_reviewed": [
+    "Menacing Mega Toad Poison Sprite.png",
+    "Mega Toxicroak’s Venomous Claws.png",
+    "Mega Toxicroak Sprite Sheet.png"
+  ],
+  "visual_conclusion": "These three images are one continuous Mega Toxicroak design progression. The core silhouette and identity remain the same: bulky amphibian brawler, oversized curved forearm poison blades, heavy spikes, large red throat sac, and aggressive crouched stance. The venom-drip image is a refinement request applied to that same concept, and the final sprite sheet carries the same design into front/back and shiny views.",
+  "action": "GROUP_AS_ONE_MEGA_TOXICROAK_APPROVAL_CONCEPT_WITH_SOURCE_PROGRESSION",
+  "deletion_action": "NONE",
+  "preservation": {
+    "all_source_images_preserved": true,
+    "original_concept_reference_preserved": true,
+    "venom_refinement_reference_preserved": true,
+    "final_sprite_sheet_preserved": true,
+    "automatic_winner_selected": false
+  },
+  "quality_notes": [
+    "The green/purple venom is a design refinement, not a separate form identity.",
+    "Normal and shiny views are palette variants of the same Mega concept.",
+    "Keep front/back anatomy and toxin-blade placement consistent at DS scale.",
+    "Any previously approved Mercury Mega Toxicroak art remains protected until explicit replacement approval."
+  ],
+  "cleanup_effect": {
+    "roster_concepts_after_grouping": 1,
+    "source_progression_files_retained": 3,
+    "custom_designs_deleted": 0,
+    "false_duplicate_roster_slots_removed": 2
+  },
+  "next_action": "Continue direct visual progression cleanup on the next Mercury-created Mega with multiple development sheets."
+}
