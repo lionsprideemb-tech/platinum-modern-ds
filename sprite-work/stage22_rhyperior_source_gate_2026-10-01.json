@@ -1,0 +1,31 @@
+{
+  "gate": "MERCURY_STAGE22_RHYPERIOR_SOURCE_GATE",
+  "date": "2026-10-01",
+  "status": "BLOCKED_ON_AUTHORITATIVE_STAGE22_BINARY_SOURCE",
+  "branch": "work/sprites-audit-20260930",
+  "source_of_truth": "GitHub",
+  "authoritative_graphics_reference": {
+    "master": "Pokemon_Mercury_Redux_CUSTOM_MEGA_GRAPHICS_MASTER_SOURCE_STAGE23_2026-09-13.zip",
+    "package_path": "01_GBA_READY_PACKAGES/Mega_Rhyperior_STAGE22",
+    "stage": "Stage22",
+    "project_status": "FINISHED_CURRENT_GRAPHICS / owner-approved artillery master"
+  },
+  "current_branch_findings": {
+    "authoritative_stage23_master_present": false,
+    "authoritative_stage22_package_present": false,
+    "generic_archive_pair_present": true,
+    "generic_archive_paths": [
+      "sprite-work/raw-batches/batch01/base64/01_rhyperior_05.png.b64",
+      "sprite-work/raw-batches/batch01/base64/01_rhyperior_06.png.b64"
+    ],
+    "generic_archive_origin": "hg_engine_ready/data/graphics/sprites/mega_rhyperior/{female,male}/{back,front}.png",
+    "verdict": "DO_NOT_USE_AS_STAGE22_AUTHORITY"
+  },
+  "preservation_rules": [
+    "Do not redesign Mega Rhyperior.",
+    "Do not substitute regular Rhyperior or a generic community Mega Rhyperior for the Stage22 owner-approved design.",
+    "Do not use image generation.",
+    "Once Stage22 binaries are present on this branch, only perform preservation-first DS cleanup: exact silhouette/design retained, nearest-neighbor/pixel edits only, Platinum/HGSS outline/palette/readability/framing discipline."
+  ],
+  "next_action": "Import the exact Stage23 graphics master or extracted Mega_Rhyperior_STAGE22 package into this branch, verify identity/provenance, then begin the first small pixel-cleanup batch."
+}
