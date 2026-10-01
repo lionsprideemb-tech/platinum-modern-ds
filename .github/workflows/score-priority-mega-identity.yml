@@ -1,0 +1,106 @@
+name: Score Priority Mega DS Identity Match
+
+on:
+  push:
+    branches: [work/sprites-audit-20260930]
+    paths:
+      - '.github/workflows/score-priority-mega-identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Score DS against GBA design references
+        run: |
+          python -m pip install pillow numpy
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import numpy as np, base64, io, json, math
+
+          root=Path('sprite-work/native-ds-imports/batch1-priority-megas')
+          refroot=root/'qa'/'gba-reference-b64'
+          keys=['absol-mega-z','lucario-mega-z','baxcalibur-mega','golisopod-mega']
+
+          def fg(im):
+              a=np.array(im.convert('RGBA'))[:,:,3]
+              return a>0
+
+          def normalize_mask(mask,size=64):
+              ys,xs=np.where(mask)
+              if len(xs)==0:
+                  return np.zeros((size,size),dtype=bool)
+              crop=mask[ys.min():ys.max()+1,xs.min():xs.max()+1]
+              img=Image.fromarray((crop*255).astype('uint8'))
+              # preserve aspect ratio inside 56x56
+              img.thumbnail((56,56),Image.Resampling.NEAREST)
+              can=Image.new('L',(size,size),0)
+              x=(size-img.width)//2; y=size-img.height
+              can.paste(img,(x,y))
+              return np.array(can)>127
+
+          def iou(a,b):
+              inter=np.logical_and(a,b).sum()
+              union=np.logical_or(a,b).sum()
+              return float(inter/union) if union else 1.0
+
+          def occupancy(mask):
+              return float(mask.sum()/mask.size)
+
+          report=[]
+          for key in keys:
+              item={'key':key,'poses':{}}
+              pose_scores=[]
+              for pose in ['front','back']:
+                  ds=Image.open(root/key/f'{pose}.png').convert('RGBA')
+                  b64=(refroot/f'{key}_{pose}.png.b64').read_text().strip()
+                  gb=Image.open(io.BytesIO(base64.b64decode(b64))).convert('RGBA')
+                  dm=normalize_mask(fg(ds)); gm=normalize_mask(fg(gb))
+                  siou=iou(dm,gm)
+                  occ_delta=abs(occupancy(dm)-occupancy(gm))
+                  # coarse luminance projection similarity
+                  def proj(im):
+                      arr=np.array(im.resize((32,32),Image.Resampling.NEAREST).convert('RGBA')).astype(float)
+                      alpha=arr[:,:,3]/255.0
+                      lum=(0.299*arr[:,:,0]+0.587*arr[:,:,1]+0.114*arr[:,:,2])*alpha
+                      v=lum.flatten()
+                      if v.std()==0:return v
+                      return (v-v.mean())/(v.std()+1e-8)
+                  a=proj(ds); b=proj(gb)
+                  corr=float(np.clip(np.corrcoef(a,b)[0,1],-1,1))
+                  corr01=(corr+1)/2
+                  score=0.70*siou+0.30*corr01
+                  pose_scores.append(score)
+                  item['poses'][pose]={
+                    'silhouette_iou':round(siou,4),
+                    'luminance_corr_01':round(corr01,4),
+                    'occupancy_delta':round(occ_delta,4),
+                    'identity_score':round(score,4)
+                  }
+              avg=sum(pose_scores)/len(pose_scores)
+              item['average_identity_score']=round(avg,4)
+              item['classification']='STRONG_MATCH' if avg>=0.60 else ('REVIEW_MATCH' if avg>=0.45 else 'LIKELY_DIFFERENT_DESIGN')
+              report.append(item)
+
+          out=root/'qa'/'identity_match_report.json'
+          out.write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          PY
+
+      - name: Commit identity report
+        run: |
+          git config user.name "Mercury Sprite QA Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/native-ds-imports/batch1-priority-megas/qa/identity_match_report.json .github/workflows/score-priority-mega-identity.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "sprites: score native DS Mega identity against GBA designs"
+          git push origin HEAD:work/sprites-audit-20260930
