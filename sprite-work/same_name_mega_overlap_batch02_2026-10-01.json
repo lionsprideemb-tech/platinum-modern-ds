@@ -1,0 +1,53 @@
+{
+  "gate": "MERCURY_SAME_NAME_MEGA_OVERLAP_BATCH02",
+  "date": "2026-10-01",
+  "status": "COMPLETE_METADATA_SAFE_GROUPING",
+  "source_reference": "Pokemon_Mercury_Redux_Authoritative_Pokedex_REAUDIT_REV6_2026-09-06.xlsx",
+  "scope_note": "Direct image assets for these three overlap groups were not all available in the current Library surface, so this pass performs only source-identity grouping. No visual-equivalence claim is made.",
+  "groups": [
+    {
+      "species": "Roserade",
+      "approval_concept": "Mega Roserade",
+      "art_options": [
+        {"source":"Banished Platinum / Original Megas","identity":"Mega Roserade","asset_status":"front/back resolved"},
+        {"source":"Elite Redux","identity":"Roserade Mega","asset_status":"normal front/back + shiny front/back resolved"}
+      ],
+      "action":"GROUP_UNDER_ONE_SAME_ROLE_APPROVAL_HEADER_KEEP_BOTH_ART_OPTIONS",
+      "automatic_deletion":false
+    },
+    {
+      "species": "Milotic",
+      "approval_concept": "Mega Milotic",
+      "art_options": [
+        {"source":"Banished Platinum / Original Megas","identity":"Mega Milotic","asset_status":"front/back resolved"},
+        {"source":"Elite Redux","identity":"Milotic Mega","asset_status":"normal front/back + shiny front/back resolved"}
+      ],
+      "parallel_nonmega_concept":{"source":"Platinum Redux","identity":"Platinum Redux Milotic","action":"KEEP_SEPARATE"},
+      "owner_lock":"Previously approved Cynthia/Mercury Mega Milotic art cannot be replaced automatically.",
+      "action":"GROUP_UNDER_ONE_SAME_ROLE_APPROVAL_HEADER_KEEP_BOTH_ART_OPTIONS",
+      "automatic_deletion":false
+    },
+    {
+      "species": "Weavile",
+      "approval_concept": "Mega Weavile",
+      "art_options": [
+        {"source":"Banished Platinum / Original Megas","identity":"Mega Weavile","asset_status":"front/back resolved"},
+        {"source":"Elite Redux","identity":"Weavile Mega","asset_status":"normal front/back + shiny front/back resolved"}
+      ],
+      "parallel_concepts":[
+        {"identity":"Weavile Redux","action":"KEEP_SEPARATE_NONMEGA_DESIGN"},
+        {"identity":"Weavile Redux Mega","action":"KEEP_SEPARATE_MEGA_DELTA_DESIGN"}
+      ],
+      "action":"GROUP_UNDER_ONE_SAME_ROLE_APPROVAL_HEADER_KEEP_BOTH_ART_OPTIONS",
+      "automatic_deletion":false
+    }
+  ],
+  "cleanup_effect": {
+    "same_role_approval_headers_created": 3,
+    "art_options_retained": 6,
+    "parallel_distinct_concepts_protected": 3,
+    "custom_designs_deleted": 0
+  },
+  "policy": "Shared role/name across sources is not enough to delete an art option. Collapse only the approval header until direct visual comparison proves two assets are truly redundant. Redux/Delta/Platinum identities remain distinct unless explicitly reviewed otherwise.",
+  "next_action": "Continue through remaining same-role overlaps and only mark an art option redundant after direct sprite comparison confirms no meaningful design difference."
+}
