@@ -1,0 +1,96 @@
+name: Promote Priority Native DS Megas
+
+on:
+  push:
+    branches: [work/sprites-audit-20260930]
+    paths:
+      - '.github/workflows/promote-priority-native-ds-megas.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Promote verified DS sets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil, json, hashlib
+
+          names=['absol-mega-z','lucario-mega-z','baxcalibur-mega','golisopod-mega']
+          srcroot=Path('sprite-work/native-ds-imports/batch1-priority-megas')
+          dstroot=Path('sprite-work/native-ds-approved/priority-megas')
+          if dstroot.exists():
+              shutil.rmtree(dstroot)
+          dstroot.mkdir(parents=True,exist_ok=True)
+
+          decisions={
+            'absol-mega-z': 'Same approved design. DS front is a direct design match; DS back preserves the same silhouette/design while using the front-consistent pink/dark palette.',
+            'lucario-mega-z': 'Same approved design. DS front is a direct match; DS back preserves design while correcting palette consistency toward the front sprite.',
+            'baxcalibur-mega': 'Same approved design and pose family. DS set is a cleaner DS-format realization of the existing design.',
+            'golisopod-mega': 'Same approved design; strongest front/back structural match of the batch.'
+          }
+
+          manifest={
+            'gate':'PRIORITY_MEGA_NATIVE_DS_VISUAL_APPROVAL',
+            'date':'2026-10-01',
+            'status':'APPROVED_FOR_ENGINE_INTEGRATION',
+            'engine_integration_note':'Actual hg-engine battle sprite destination folders are not present on this sprite-audit branch. These files are approved masters for the later engine integration step; no live engine asset was overwritten here.',
+            'source_review':'Manual side-by-side GBA-vs-DS proof review after automated identity scoring.',
+            'entries':[]
+          }
+
+          for name in names:
+              src=srcroot/name
+              dst=dstroot/name
+              shutil.copytree(src,dst)
+              files={}
+              for p in sorted(dst.glob('*.png')):
+                  files[p.name]={
+                    'path':p.as_posix(),
+                    'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+                    'bytes':p.stat().st_size
+                  }
+              manifest['entries'].append({
+                'key':name,
+                'decision':'APPROVE_NATIVE_DS_SET',
+                'visual_finding':decisions[name],
+                'files':files
+              })
+
+          (dstroot/'approval_manifest.json').write_text(json.dumps(manifest,indent=2))
+
+          # Replace earlier conservative promotion decision with final visual verdict,
+          # while keeping the machine score report for provenance.
+          qa=srcroot/'qa'
+          final={
+            'date':'2026-10-01',
+            'gate':'PRIORITY_MEGA_DS_PROMOTION_DECISION',
+            'method':'Manual visual review of generated front/back side-by-side proof sheets, with machine identity scores retained only as supporting QA.',
+            'decisions':[
+              {'key':n,'decision':'APPROVE_NATIVE_DS_SET','reason':decisions[n]}
+              for n in names
+            ],
+            'approved_destination':dstroot.as_posix(),
+            'live_engine_overwritten':False
+          }
+          (qa/'promotion_decision.json').write_text(json.dumps(final,indent=2))
+          print(json.dumps(final,indent=2))
+          PY
+
+      - name: Commit promotion
+        run: |
+          git config user.name "Mercury Sprite QA Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/native-ds-approved/priority-megas sprite-work/native-ds-imports/batch1-priority-megas/qa/promotion_decision.json .github/workflows/promote-priority-native-ds-megas.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "sprites: approve first four native DS custom Mega sets"
+          git push origin HEAD:work/sprites-audit-20260930
