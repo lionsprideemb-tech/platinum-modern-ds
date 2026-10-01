@@ -1,0 +1,23 @@
+{
+  "gate": "MERCURY_SPRITE_SEMANTIC_OVERLAP_PASS_V1",
+  "date": "2026-10-01",
+  "status": "COMPLETE",
+  "input_custom_distinct_rows": 945,
+  "derived_species_keys": 620,
+  "species_with_multiple_candidates": 184,
+  "rows_in_multi_candidate_groups": 509,
+  "single_candidate_rows": 436,
+  "form_class_counts": {
+    "MEGA": 320,
+    "ALTERNATE": 298,
+    "OTHER_CUSTOM": 165,
+    "REDUX": 161,
+    "REGIONAL": 1
+  },
+  "corrected_mega_vs_gmax_overlap": {
+    "species_count": 29,
+    "policy": "When both exist, custom Mega stays in the Mega approval pool and Gigantamax remains reference-only; do not substitute G-Max for the Mega.",
+    "note": "Earlier quick scan identified only 14 species because hyphenated G-Max folder names were under-grouped. This pass normalizes hyphens and finds the complete current set of 29."
+  },
+  "next_action": "Within the 184 multi-candidate species groups, collapse same-concept duplicates and source aliases while preserving genuinely different custom designs side-by-side. Then continue DS-quality READY/POLISH/REWORK review."
+}
