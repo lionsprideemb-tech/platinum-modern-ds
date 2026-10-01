@@ -1,0 +1,20 @@
+{
+  "species": "Mega Rhyperior",
+  "pass": 2,
+  "goal": "Crisp NDS baseline",
+  "rules": [
+    "No image generation",
+    "No fractional enlargement",
+    "No redesign",
+    "Each authoritative GBA source pixel remains exactly 1x1",
+    "Source 64x64 frame centered on transparent 80x80 NDS canvas"
+  ],
+  "placement": {
+    "x": 8,
+    "y": 16
+  },
+  "sha256": {
+    "mega_rhyperior_front_ds80_crisp.png": "18c019f7e13a2a7e011ff861fc1fd2d0c2664ae386bc253e08786f8eae60d2d5",
+    "mega_rhyperior_back_ds80_crisp.png": "1a52065b2f93ffd6b57932d90d2cc238c7d2f1b2860a680b11eb9675935363ba"
+  }
+}
