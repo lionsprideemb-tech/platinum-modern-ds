@@ -1,0 +1,67 @@
+{
+  "phase": "Phase 1 - Mercury required custom/canon Megas",
+  "batch": 2,
+  "date": "2026-09-30",
+  "status": "OFFICIAL_DESIGN_SOURCE_AUDIT_COMPLETE",
+  "policy": "Official Pokémon designs override fan/community interpretations. Existing archive sprites are accepted only when they clearly match the official form.",
+  "entries": [
+    {
+      "species_form": "Mega Garchomp Z",
+      "official_status": "OFFICIAL_CANON",
+      "official_reference": "Pokémon Legends: Z-A – Mega Dimension official Mega Garchomp Z reveal",
+      "archive_candidates": [
+        "garchomp_mega_z",
+        "garchomp-mega",
+        "garchomp_mega_redux",
+        "cpf_0217_garchomp_alternate_mega_form_3"
+      ],
+      "verdict": "REPLACE_WITH_OFFICIAL_DS_CONVERSION",
+      "reason": "The archived Z candidate has a pale/white front and a dark mismatched back and does not accurately represent the official airborne navy/orange, huge-winged design."
+    },
+    {
+      "species_form": "Mega Absol Z",
+      "official_status": "OFFICIAL_CANON",
+      "official_reference": "Pokémon.com Pokédex lists Mega Absol Z as Dark/Ghost",
+      "archive_candidates": [
+        "absol-mega-z",
+        "absol_mega_z",
+        "absol-mega",
+        "cpf_0186_absol_alternate_mega_form_3"
+      ],
+      "verdict": "REPLACE_WITH_OFFICIAL_DS_CONVERSION",
+      "reason": "Available archive Z candidates are inconsistent front/back fan interpretations; use the official Mega Absol Z design as the visual source of truth."
+    },
+    {
+      "species_form": "Mega Baxcalibur",
+      "official_status": "OFFICIAL_CANON",
+      "official_reference": "Pokémon Legends: Z-A – Mega Dimension official DLC materials",
+      "archive_candidates": [
+        "baxcalibur-mega",
+        "baxcalibur_mega"
+      ],
+      "verdict": "REPLACE_WITH_OFFICIAL_DS_CONVERSION",
+      "reason": "Neither archive candidate accurately matches the official Mega Baxcalibur silhouette, palette, and enlarged crystalline dorsal blade."
+    },
+    {
+      "species_form": "Mega Magmortar",
+      "official_status": "MERCURY_CUSTOM_UNLESS_LATER_VERIFIED",
+      "archive_candidates": [
+        "mega_magmortar",
+        "cpf_0229_magmortar_alternate_form_1"
+      ],
+      "verdict": "CUSTOM_REDRAW",
+      "reason": "No verified official Mega Magmortar source was found in the current canon audit and the current Mega front/back set is stylistically mismatched."
+    },
+    {
+      "species_form": "Mega Milotic",
+      "official_status": "MERCURY_CUSTOM_UNLESS_LATER_VERIFIED",
+      "archive_candidates": [
+        "mega_milotic",
+        "milotic_mega"
+      ],
+      "verdict": "CUSTOM_REDRAW",
+      "reason": "No verified official Mega Milotic source was found in the current canon audit. The ER option is the stronger concept base but still needs a coherent matched DS front/back redraw."
+    }
+  ],
+  "next_action": "Create/locate faithful DS-style conversions for official Mega Garchomp Z, Mega Absol Z, and Mega Baxcalibur before any further fan-sprite polishing. Keep Magmortar and Milotic in the custom redraw queue."
+}
