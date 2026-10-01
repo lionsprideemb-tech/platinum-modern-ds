@@ -1,12 +1,12 @@
 {
   "gate": "MERCURY_CUSTOM_MEGA_SOURCE_AUDIT_BATCH1",
   "date": "2026-09-30",
-  "status": "SOURCE_RECOVERY_COMPLETE_FOR_ALL_FOUR",
+  "status": "ROSERADE_MILOTIC_DS_NORMALIZATION_COMPLETE",
   "policy": "For Mercury-custom Megas, prefer an existing matched front/back sprite set with clear attribution over redrawing. Redraw only if no coherent source pair can be found.",
   "entries": [
     {
       "name": "Mega Roserade",
-      "current_verdict": "REPLACE_ARCHIVE_PAIR",
+      "current_verdict": "SOURCE_ACCEPTED_NORMALIZED",
       "better_source_found": true,
       "source_repository": "TeamAquasHideout/Team-Aquas-Asset-Repo",
       "source_path": "Pokemon/New Megas/iriv24/roserade/",
@@ -19,11 +19,17 @@
         "front": "Rachel T",
         "back": "camioftargon"
       },
-      "note": "This is a deliberately paired front/back set used in-game by Emerald Imperium. Use it as the new source candidate instead of the mismatched Banished/ER archive pair."
+      "note": "Matched Rachel T/camioftargon front/back set normalized to DS battle-sheet dimensions without resampling. Normal sprite pair accepted; distinct shiny/icon still pending.",
+      "ds_normalization": {
+        "canvas": "80x80 per normal/shiny half, packed as 160x80 front/back sheets",
+        "normal_sprite": "accepted",
+        "shiny_sprite": "PENDING_DISTINCT_PALETTE",
+        "icon": "PENDING"
+      }
     },
     {
       "name": "Mega Milotic",
-      "current_verdict": "REPLACE_ARCHIVE_PAIR",
+      "current_verdict": "SOURCE_ACCEPTED_NORMALIZED",
       "better_source_found": true,
       "source_repository": "TeamAquasHideout/Team-Aquas-Asset-Repo",
       "source_path": "Pokemon/New Megas/ThunderRainbow/milotic/mega/",
@@ -38,7 +44,13 @@
         "sprite_sheet": "ThunderRainbow",
         "artwork_reference": "an_artist_astray"
       },
-      "note": "Complete front/back/icon/palette package found. This is a stronger integration candidate than the mismatched archive sources and avoids a redraw unless DS-scale review fails."
+      "note": "ThunderRainbow front/back source normalized to DS battle-sheet dimensions without resampling; shiny generated strictly from the source's own normal/shiny JASC palettes. Ready for in-engine framing check.",
+      "ds_normalization": {
+        "canvas": "80x80 per normal/shiny half, packed as 160x80 front/back sheets",
+        "normal_sprite": "accepted",
+        "shiny_sprite": "generated from source-provided ThunderRainbow shiny palette",
+        "icon": "source icon available"
+      }
     },
     {
       "name": "Mega Spiritomb",
@@ -89,5 +101,5 @@
       }
     }
   ],
-  "next_action": "Recover original Banished Platinum Mega Spiritomb and Mega Magmortar assets from the public Eevee Expo resource, then perform controlled DS conversions. Roserade and Milotic already have stronger matched sprite packages."
+  "next_action": "Run in-engine framing/visibility checks for normalized Roserade and Milotic. Continue original-source recovery for Spiritomb and Magmortar; do not use the degraded archive conversions as final art."
 }
