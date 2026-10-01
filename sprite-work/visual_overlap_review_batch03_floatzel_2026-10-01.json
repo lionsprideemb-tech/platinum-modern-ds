@@ -1,0 +1,32 @@
+{
+  "gate": "MERCURY_VISUAL_OVERLAP_REVIEW_BATCH03",
+  "date": "2026-10-01",
+  "status": "COMPLETE_VISUAL_PROGRESSION_GROUP",
+  "species": "Floatzel",
+  "concept": "Mega Floatzel",
+  "visual_sources_reviewed": [
+    "Mega Floatzel Sprite Sheet.png",
+    "Mega Floatzel Sprite Sheet(1).png"
+  ],
+  "visual_conclusion": "These two files represent the same Mega Floatzel concept direction: a sleek, hydrodynamic, speedboat-inspired otter Mega. The later sheet is a refinement/redesign pass of the same concept rather than a separate roster identity.",
+  "action": "GROUP_AS_ONE_MEGA_FLOATZEL_APPROVAL_CONCEPT_WITH_TWO_ART_OPTIONS",
+  "deletion_action": "NONE",
+  "preservation": {
+    "both_source_images_preserved": true,
+    "automatic_winner_selected": false,
+    "concept_identity_preserved": true
+  },
+  "quality_notes": [
+    "Keep the organic speedboat/hydrofoil design language as the concept anchor.",
+    "Do not treat normal/shiny palette variants as separate design identities.",
+    "Final selection should favor the version with the cleanest DS-scale silhouette and front/back anatomical consistency after owner review.",
+    "Any previously approved Mercury Mega Floatzel sprite remains protected until explicit replacement approval."
+  ],
+  "cleanup_effect": {
+    "roster_concepts_after_grouping": 1,
+    "art_options_retained": 2,
+    "custom_designs_deleted": 0,
+    "false_duplicate_roster_slots_removed": 1
+  },
+  "next_action": "Continue direct visual progression cleanup on the next Mercury-created custom Mega with multiple sheets."
+}
