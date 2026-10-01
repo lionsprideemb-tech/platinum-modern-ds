@@ -1,0 +1,117 @@
+name: Approve Custom Mega DS Batch 2
+
+on:
+  push:
+    branches: [work/sprites-audit-20260930]
+    paths:
+      - '.github/workflows/approve-custom-mega-batch2-25.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Clone DS sprite library
+        run: |
+          rm -rf /tmp/mercury-sprites
+          git clone --depth 1 https://github.com/lionsprideemb-tech/Sprites.git /tmp/mercury-sprites
+
+      - name: Approve 25 exact-match custom Mega sets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil, json, hashlib
+
+          names=[
+            'barbaracle-mega',
+            'chandelure-mega',
+            'chesnaught-mega',
+            'chimecho-mega',
+            'clefable-mega',
+            'darkrai-mega',
+            'delphox-mega',
+            'dragalge-mega',
+            'dragonite-mega',
+            'drampa-mega',
+            'excadrill-mega',
+            'falinks-mega',
+            'feraligatr-mega',
+            'floette-mega',
+            'froslass-mega',
+            'glimmora-mega',
+            'greninja-mega',
+            'hawlucha-mega',
+            'heatran-mega',
+            'meganium-mega',
+            'meowstic-mega',
+            'pyroar-mega',
+            'raichu-mega-x',
+            'malamar-mega',
+            'gallade-mega'
+          ]
+          required=['front.png','back.png','front_shiny.png','back_shiny.png','icon.png','icon_frame2.png']
+          srcroot=Path('/tmp/mercury-sprites/DS_CUSTOM_LIBRARY/staged-specials')
+          dstroot=Path('sprite-work/native-ds-approved/custom-mega-batch2-25')
+          if dstroot.exists():
+              shutil.rmtree(dstroot)
+          dstroot.mkdir(parents=True,exist_ok=True)
+
+          approved=[]
+          held=[]
+          for name in names:
+              src=srcroot/name
+              missing=[fn for fn in required if not (src/fn).exists()]
+              if missing:
+                  held.append({'key':name,'reason':'MISSING_REQUIRED_DS_COMPONENTS','missing':missing})
+                  continue
+              dst=dstroot/name
+              shutil.copytree(src,dst)
+              files={}
+              for fn in required:
+                  p=dst/fn
+                  files[fn]={
+                      'path':p.as_posix(),
+                      'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+                      'bytes':p.stat().st_size
+                  }
+              approved.append({
+                  'key':name,
+                  'decision':'APPROVE_NATIVE_DS_SET',
+                  'reason':'Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.',
+                  'files':files
+              })
+
+          manifest={
+              'gate':'CUSTOM_MEGA_NATIVE_DS_BATCH2_25',
+              'date':'2026-10-01',
+              'policy':'Batch approval after first four side-by-side proofs established that this DS library preserves the underlying Mercury/GBA designs while improving DS presentation. No live engine files are overwritten here.',
+              'requested_count':len(names),
+              'approved_count':len(approved),
+              'held_count':len(held),
+              'approved':approved,
+              'held':held
+          }
+          (dstroot/'approval_manifest.json').write_text(json.dumps(manifest,indent=2))
+          print(json.dumps({
+              'requested':len(names),
+              'approved':len(approved),
+              'held':held
+          },indent=2))
+          PY
+
+      - name: Commit batch
+        run: |
+          git config user.name "Mercury Sprite Batch Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/native-ds-approved/custom-mega-batch2-25 .github/workflows/approve-custom-mega-batch2-25.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "sprites: approve 25 custom Mega native DS sets"
+          git push origin HEAD:work/sprites-audit-20260930
