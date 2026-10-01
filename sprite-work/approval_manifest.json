@@ -1,0 +1,11 @@
+{
+  "gate":"MERCURY_SPRITE_APPROVAL_MANIFEST_V1",
+  "status":"ACTIVE",
+  "quality_reference":"Native Platinum/HGSS DS-scale silhouette, outline, palette, front/back consistency and framing.",
+  "candidates":[
+    {"name":"Mega Roserade","category":"custom_mega","source_credit":"iriv24 via TeamAquasHideout asset repo","front":"SOURCE_FOUND","back":"SOURCE_FOUND","shiny":"PENDING","icon":"PENDING","status":"POLISH"},
+    {"name":"Mega Milotic","category":"custom_mega","source_credit":"ThunderRainbow via TeamAquasHideout asset repo","front":"SOURCE_FOUND","back":"SOURCE_FOUND","shiny":"SOURCE_PALETTE_FOUND","icon":"SOURCE_FOUND","status":"POLISH"},
+    {"name":"Mega Spiritomb","category":"custom_mega","source_credit":"Banished Platinum resource; King_Waluigi and Zygoat","front":"ORIGINAL_RECOVERY_REQUIRED","back":"ORIGINAL_RECOVERY_REQUIRED","shiny":"PENDING","icon":"PENDING","status":"REWORK"},
+    {"name":"Mega Magmortar","category":"custom_mega","source_credit":"Banished Platinum resource; King_Waluigi and Zygoat","front":"ORIGINAL_RECOVERY_REQUIRED","back":"ORIGINAL_RECOVERY_REQUIRED","shiny":"PENDING","icon":"PENDING","status":"REWORK"}
+  ]
+}
