@@ -1,7 +1,7 @@
 {
   "gate": "MERCURY_OVERNIGHT_SPRITE_INVENTORY",
   "date": "2026-10-01",
-  "status": "ACTIVE",
+  "status": "ACTIVE_DEDUPING",
   "source_archive": "DS01_Expanded_Community_Sprite_Library_2026-09-22",
   "total_hg_engine_ready_folders": 2455,
   "likely_extra_or_special_sprite_rows": 1098,
@@ -20,5 +20,25 @@
     "New evolutions and other special forms"
   ],
   "quality_bar": "Compare every approval candidate against native Platinum/HGSS battle sprite readability, silhouette, outline, palette discipline, front/back consistency, and DS-scale framing.",
-  "current_hour_action": "Inventory pass completed before the scheduled 2 AM continuation. Next actions are deduplication, canonical-source preference, and approval-candidate classification."
+  "current_hour_action": "Locked dedupe/quality pipeline so later passes classify the 1,098 rough special-form rows consistently and avoid wasting redraw effort on recoverable or duplicate assets.",
+  "pipeline": {
+    "tier_0": "Native Platinum/HGSS comparison reference; never replace.",
+    "tier_1": "Official/canon later-generation forms: source-match first; convert without reinterpretation.",
+    "tier_2": "Community sprites with complete front/back + provenance: polish/normalize.",
+    "tier_3": "Community sprites missing one component: repair only missing component; preserve original design.",
+    "tier_4": "Degraded conversion but recoverable original: recover original before any redraw.",
+    "tier_5": "No viable source: redraw to DS quality; hold subjective design changes for approval."
+  },
+  "approval_requirements": [
+    "front readability",
+    "back readability",
+    "80x80 DS framing",
+    "palette discipline",
+    "outline cleanup",
+    "front/back design consistency",
+    "shiny status",
+    "icon status",
+    "source/credit recorded"
+  ],
+  "blocker_policy": "Ordinary technical conversion/integration blockers may be resolved automatically. Subjective redesigns remain flagged NEEDS_ART_APPROVAL."
 }
