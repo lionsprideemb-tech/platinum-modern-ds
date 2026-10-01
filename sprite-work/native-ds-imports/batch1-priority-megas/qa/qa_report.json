@@ -1,0 +1,250 @@
+[
+  {
+    "key": "absol-mega-z",
+    "gba_source": "game/graphics/pokemon/absol/mega_z",
+    "comparisons": {
+      "front": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            4,
+            64,
+            63
+          ],
+          "rgba_colors": 16
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 16
+        }
+      },
+      "back": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 15
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 15
+        }
+      }
+    }
+  },
+  {
+    "key": "lucario-mega-z",
+    "gba_source": "game/graphics/pokemon/lucario/mega_z",
+    "comparisons": {
+      "front": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 15
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 15
+        }
+      },
+      "back": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            1,
+            0,
+            62,
+            64
+          ],
+          "rgba_colors": 15
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 15
+        }
+      }
+    }
+  },
+  {
+    "key": "baxcalibur-mega",
+    "gba_source": "game/graphics/pokemon/baxcalibur/mega",
+    "comparisons": {
+      "front": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            1,
+            0,
+            63,
+            64
+          ],
+          "rgba_colors": 16
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 16
+        }
+      },
+      "back": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            8,
+            7,
+            57,
+            64
+          ],
+          "rgba_colors": 15
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 14
+        }
+      }
+    }
+  },
+  {
+    "key": "golisopod-mega",
+    "gba_source": "game/graphics/pokemon/golisopod/mega",
+    "comparisons": {
+      "front": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            1,
+            64,
+            64
+          ],
+          "rgba_colors": 16
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 16
+        }
+      },
+      "back": {
+        "ds": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            1,
+            9,
+            63,
+            64
+          ],
+          "rgba_colors": 15
+        },
+        "gba": {
+          "size": [
+            64,
+            64
+          ],
+          "alpha_bbox": [
+            0,
+            0,
+            64,
+            64
+          ],
+          "rgba_colors": 14
+        }
+      }
+    }
+  }
+]
