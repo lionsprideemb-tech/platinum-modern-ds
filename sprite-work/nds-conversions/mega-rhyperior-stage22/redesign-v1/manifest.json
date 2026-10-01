@@ -1,0 +1,14 @@
+{
+  "species": "Mega Rhyperior",
+  "version": "DS-native redesign v1",
+  "canvas": [
+    80,
+    80
+  ],
+  "method": "manual pixel drawing in Python; no generative image model",
+  "design_goal": "clean Platinum/HGSS-style readability; artillery Mega identity",
+  "sha256": {
+    "mega_rhyperior_front_ds_native_redesign_v1.png": "68ca3cc125ebbb3c7b52753911a2768b0e783f9164f3ef0e52fdf093b5e113a3",
+    "mega_rhyperior_front_ds_native_redesign_v1_preview4x.png": "ac51a1bdc00d9be22f23897b8a9234913debf38405037c6b74316138f1739333"
+  }
+}
