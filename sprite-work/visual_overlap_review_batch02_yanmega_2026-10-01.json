@@ -1,0 +1,35 @@
+{
+  "gate": "MERCURY_VISUAL_OVERLAP_REVIEW_BATCH02",
+  "date": "2026-10-01",
+  "status": "COMPLETE_VISUAL_PROGRESSION_GROUP",
+  "species": "Yanmega",
+  "concept": "Mega Yanmega",
+  "visual_sources_reviewed": [
+    "Mega Yanmega Sprite Concept Sheet.png",
+    "Mega Yanmega Sprite Comparison.png",
+    "Mega Yanmega Sprite Showcase.png"
+  ],
+  "visual_conclusion": "These three files represent one continuing Mega Yanmega design/conversion progression rather than three separate custom Mega identities. The later sheets refine and clean the same core silhouette, markings, wing treatment, body plan, and Bug/Dragon direction.",
+  "action": "GROUP_AS_ONE_MEGA_YANMEGA_APPROVAL_CONCEPT_WITH_SOURCE_PROGRESSION",
+  "deletion_action": "NONE",
+  "preservation": {
+    "all_source_images_preserved": true,
+    "concept_sheet_preserved_as_design_reference": true,
+    "comparison_sheet_preserved_as_intermediate_conversion_reference": true,
+    "showcase_sheet_preserved_as_latest_clean_visual_candidate": true,
+    "automatic_winner_selected": false
+  },
+  "quality_notes": [
+    "The comparison-stage art contains visible cleanup/color-fill issues and should not be mistaken for a separate design.",
+    "The concept sheet establishes the approved Bug/Dragon visual direction.",
+    "The showcase sheet is the strongest current presentation candidate but remains subject to owner approval before final binding.",
+    "Shiny palette changes do not create additional concept identities."
+  ],
+  "cleanup_effect": {
+    "roster_concepts_after_grouping": 1,
+    "source_progression_files_retained": 3,
+    "custom_designs_deleted": 0,
+    "false_duplicate_roster_slots_removed": 2
+  },
+  "next_action": "Continue direct visual review on other Mercury-created sprite progressions so concept/reference/conversion/final sheets do not inflate the approval roster."
+}
