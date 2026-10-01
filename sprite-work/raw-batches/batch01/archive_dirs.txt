@@ -1,9 +1,0 @@
-/tmp/mercury-sprites
-DS01_Expanded_Community_Sprite_Library_2026-09-22
-DS01_Expanded_Community_Sprite_Library_2026-09-22/hg_engine_ready
-DS01_Expanded_Community_Sprite_Library_2026-09-22/manifests
-DS01_Expanded_Community_Sprite_Library_2026-09-22/partial_assets
-DS01_Expanded_Community_Sprite_Library_2026-09-22/previews
-DS01_Expanded_Community_Sprite_Library_2026-09-22/raw_source_packs
-DS01_Expanded_Community_Sprite_Library_2026-09-22/source_metadata
-DS01_Expanded_Community_Sprite_Library_2026-09-22/tools
