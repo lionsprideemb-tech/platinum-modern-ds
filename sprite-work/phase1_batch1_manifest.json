@@ -1,0 +1,70 @@
+{
+  "phase": "Phase 1 - Mercury required custom Megas",
+  "batch": 1,
+  "date": "2026-09-30",
+  "status": "SOURCE_SELECTION_AND_POLISH_PLAN_LOCKED",
+  "review_rule": "Prefer an existing DS-style battle sprite when a suitable one already exists; otherwise polish/rework the best matching source without bulk-integrating the archive.",
+  "entries": [
+    {
+      "species_form": "Mega Spiritomb",
+      "selected_source": "mega_spiritomb",
+      "source_library": "Original non-canon master pack / Banished Platinum originals",
+      "current_status": "POLISH",
+      "reason": "Correct custom Mega identity and readable DS-scale silhouette; no better matching DS Mega Spiritomb source found in the archive.",
+      "work_needed": [
+        "clean outline/shading consistency",
+        "verify 80x80 battle framing",
+        "create/restore distinct shiny palette",
+        "icon still needed"
+      ]
+    },
+    {
+      "species_form": "Mega Staraptor",
+      "selected_source": "staraptor-mega",
+      "source_library": "DS-style community resource mirror",
+      "current_status": "READY_WITH_SHINY_FOLLOWUP",
+      "reason": "Existing DS-style front/back/icon set is stronger and cleaner than the Banished/ER alternatives.",
+      "work_needed": [
+        "verify in-engine framing",
+        "restore distinct shiny palette if desired/required"
+      ]
+    },
+    {
+      "species_form": "Mega Roserade",
+      "selected_source": "mega_roserade",
+      "rejected_alternative_for_now": "roserade_mega",
+      "source_library": "Original non-canon master pack / Banished Platinum originals",
+      "current_status": "POLISH",
+      "reason": "The Banished design has the more coherent front/back visual identity of the two Mega Roserade candidates in the archive.",
+      "work_needed": [
+        "unify back shading/palette with front",
+        "clean silhouette details",
+        "create distinct shiny palette",
+        "icon needed"
+      ]
+    },
+    {
+      "species_form": "Mega Golisopod",
+      "selected_source": "golisopod-mega",
+      "source_library": "DS-style community resource mirror",
+      "current_status": "READY_WITH_SHINY_FOLLOWUP",
+      "reason": "Existing DS-style community front/back/icon set is cleaner and more Platinum-compatible than the ER alternatives.",
+      "work_needed": [
+        "verify in-engine framing",
+        "restore distinct shiny palette if desired/required"
+      ]
+    },
+    {
+      "species_form": "Mega Lucario Z",
+      "selected_source": "lucario-mega-z",
+      "source_library": "DS-style community resource mirror",
+      "current_status": "REWORK_BACK",
+      "reason": "Best DS-scale front sprite and already has an icon, but front/back palettes currently do not read as the same finished form.",
+      "work_needed": [
+        "rework back sprite palette/details to match selected front design",
+        "preserve DS pixel-art resolution",
+        "restore distinct shiny palette"
+      ]
+    }
+  ]
+}
