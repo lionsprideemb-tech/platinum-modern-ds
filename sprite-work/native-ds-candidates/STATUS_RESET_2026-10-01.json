@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-01",
+  "reason": "Pipeline order correction: collect all native DS sources first, compare overlap second, visual approval third, engine integration last.",
+  "status": "STAGED_CANDIDATES_PENDING_VISUAL_APPROVAL",
+  "moved_groups": [
+    "custom-mega-batch2-25",
+    "priority-megas"
+  ],
+  "rule": "No sprite is visually approved merely because a native DS counterpart exists or has a matching filename."
+}
