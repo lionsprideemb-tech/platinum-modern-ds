@@ -1,0 +1,63 @@
+{
+  "gate": "MERCURY_CANON_MEGA_DS_SOURCE_PASS",
+  "date": "2026-09-30",
+  "status": "SOURCE_FOUND",
+  "policy": "For official canon Megas, prefer a faithful existing DS-style sprite set with explicit reuse permission and creator credit over redrawing from scratch.",
+  "source_repository": "Pokéngine Nintendo collection / imagery pages",
+  "permission": "Pokéngine pages report these assets as free to use with credit.",
+  "credits": {
+    "battle_front_back": "Kyledove",
+    "icons": "ezerart / flea_alex"
+  },
+  "entries": [
+    {
+      "name": "Mega Staraptor",
+      "pokengine_id": "003ukwh1",
+      "status": "USE_EXISTING_DS_SET",
+      "front": "https://pokengine.b-cdn.net/play/images/mons/fronts/003ukwh1.webp?t=77",
+      "back": "https://pokengine.b-cdn.net/play/images/mons/backs/003ukwh1.webp?t=77",
+      "note": "Matches official canon design; replaces any weaker archive interpretation."
+    },
+    {
+      "name": "Mega Golisopod",
+      "pokengine_id": "0023wjdf",
+      "status": "USE_EXISTING_DS_SET",
+      "front": "https://pokengine.b-cdn.net/play/images/mons/fronts/0023wjdf.webp?t=145",
+      "back": "https://pokengine.b-cdn.net/play/images/mons/backs/0023wjdf.webp?t=145",
+      "note": "Faithful official-design DS conversion; supersedes prior fan Mega Y selection."
+    },
+    {
+      "name": "Mega Lucario Z",
+      "pokengine_id": "003c1v1w",
+      "status": "USE_EXISTING_DS_SET",
+      "front": "https://pokengine.b-cdn.net/play/images/mons/fronts/003c1v1w.webp?t=71",
+      "back": "https://pokengine.b-cdn.net/play/images/mons/backs/003c1v1w.webp?t=71",
+      "note": "Matched front/back DS set exists; cancel custom redraw."
+    },
+    {
+      "name": "Mega Garchomp Z",
+      "pokengine_id": "00g0e3vs",
+      "status": "USE_EXISTING_DS_SET",
+      "front": "https://pokengine.b-cdn.net/play/images/mons/fronts/00g0e3vs.webp?t=32",
+      "back": "https://pokengine.b-cdn.net/play/images/mons/backs/00g0e3vs.webp?t=32",
+      "note": "Matched official-design flying Mega Garchomp Z DS set exists; cancel archive fan version."
+    },
+    {
+      "name": "Mega Absol Z",
+      "pokengine_id": "009umneh",
+      "status": "USE_EXISTING_DS_SET",
+      "front": "https://pokengine.b-cdn.net/play/images/mons/fronts/009umneh.webp?t=156",
+      "back": "https://pokengine.b-cdn.net/play/images/mons/backs/009umneh.webp?t=156",
+      "note": "Matched official-design DS set exists; cancel custom redraw."
+    },
+    {
+      "name": "Mega Baxcalibur",
+      "pokengine_id": "00bzo9rd",
+      "status": "USE_EXISTING_DS_SET",
+      "front": "https://pokengine.b-cdn.net/play/images/mons/fronts/00bzo9rd.webp?t=353",
+      "back": "https://pokengine.b-cdn.net/play/images/mons/backs/00bzo9rd.webp?t=353",
+      "note": "Matched official-design DS set exists; cancel custom redraw."
+    }
+  ],
+  "integration_next": "Import these credited front/back assets into the sprite audit workspace, normalize to HG-engine battle sheet dimensions/palette constraints, then source matching shiny/icon assets from the same set before marking READY."
+}
