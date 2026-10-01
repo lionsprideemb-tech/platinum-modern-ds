@@ -1,33 +1,29 @@
 {
   "date": "2026-10-01",
   "gate": "PRIORITY_MEGA_DS_PROMOTION_DECISION",
-  "rule": "Do not overwrite Mercury-approved GBA/custom designs solely because a native DS sprite shares the same form name.",
+  "method": "Manual visual review of generated front/back side-by-side proof sheets, with machine identity scores retained only as supporting QA.",
   "decisions": [
     {
       "key": "absol-mega-z",
-      "identity_score": 0.4472,
-      "decision": "HOLD_DIFFERENT_DESIGN_RISK",
-      "next": "Manual visual comparison against Mercury Mega Absol Z design before any promotion."
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Same approved design. DS front is a direct design match; DS back preserves the same silhouette/design while using the front-consistent pink/dark palette."
     },
     {
       "key": "lucario-mega-z",
-      "identity_score": 0.4646,
-      "decision": "MANUAL_VISUAL_REVIEW",
-      "next": "Compare front/back design details with approved Mercury Mega Lucario Z before promotion."
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Same approved design. DS front is a direct match; DS back preserves design while correcting palette consistency toward the front sprite."
     },
     {
       "key": "baxcalibur-mega",
-      "identity_score": 0.4841,
-      "decision": "MANUAL_VISUAL_REVIEW",
-      "next": "Compare front/back design details with approved Mercury Mega Baxcalibur before promotion."
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Same approved design and pose family. DS set is a cleaner DS-format realization of the existing design."
     },
     {
       "key": "golisopod-mega",
-      "identity_score": 0.5888,
-      "decision": "PRIORITY_MANUAL_VISUAL_REVIEW",
-      "next": "Closest structural match; review this one first for possible promotion."
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Same approved design; strongest front/back structural match of the batch."
     }
   ],
-  "auto_promoted": [],
-  "preserved_originals": true
+  "approved_destination": "sprite-work/native-ds-approved/priority-megas",
+  "live_engine_overwritten": false
 }
