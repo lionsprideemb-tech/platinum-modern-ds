@@ -1,0 +1,80 @@
+name: Import Priority Native DS Megas
+
+on:
+  push:
+    branches:
+      - work/sprites-audit-20260930
+    paths:
+      - '.github/workflows/import-priority-native-ds-megas.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Import four priority Mega sets from Sprites repo
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, json, urllib.request
+
+          names=['absol-mega-z','lucario-mega-z','baxcalibur-mega','golisopod-mega']
+          files=['front.png','back.png','front_shiny.png','back_shiny.png','icon.png','icon_frame2.png']
+          base='https://raw.githubusercontent.com/lionsprideemb-tech/Sprites/main/DS_CUSTOM_LIBRARY/staged-specials-b64'
+          out=Path('sprite-work/native-ds-imports/batch1-priority-megas')
+          out.mkdir(parents=True,exist_ok=True)
+
+          manifest={
+              'gate':'MERCURY_NATIVE_DS_PRIORITY_MEGA_IMPORT_BATCH1',
+              'date':'2026-10-01',
+              'source_repo':'lionsprideemb-tech/Sprites',
+              'source_branch':'main',
+              'policy':'Non-destructive import. Existing Mercury assets are not overwritten until in-engine review passes.',
+              'entries':[]
+          }
+
+          for name in names:
+              d=out/name
+              d.mkdir(parents=True,exist_ok=True)
+              entry={'key':name,'status':'IMPORTED_FOR_REVIEW','files':{}}
+              for fn in files:
+                  url=f'{base}/{name}/{fn}.b64'
+                  with urllib.request.urlopen(url, timeout=30) as r:
+                      b64=r.read().decode('ascii').strip()
+                  data=base64.b64decode(b64)
+                  p=d/fn
+                  p.write_bytes(data)
+                  entry['files'][fn]={
+                      'path':p.as_posix(),
+                      'bytes':len(data),
+                      'sha256':hashlib.sha256(data).hexdigest()
+                  }
+              manifest['entries'].append(entry)
+
+          (out/'import_manifest.json').write_text(json.dumps(manifest,indent=2))
+          print(json.dumps({
+              'imported_species':names,
+              'files_imported':len(names)*len(files),
+              'manifest':str(out/'import_manifest.json')
+          },indent=2))
+          PY
+
+      - name: Commit imported DS sets
+        run: |
+          git config user.name "Mercury Native DS Import Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sprite-work/native-ds-imports/batch1-priority-megas .github/workflows/import-priority-native-ds-megas.yml
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "sprites: import priority native DS Mega sets for review"
+          git push origin HEAD:work/sprites-audit-20260930
