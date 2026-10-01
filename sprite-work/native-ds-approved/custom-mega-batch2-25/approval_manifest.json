@@ -1,0 +1,936 @@
+{
+  "gate": "CUSTOM_MEGA_NATIVE_DS_BATCH2_25",
+  "date": "2026-10-01",
+  "policy": "Batch approval after first four side-by-side proofs established that this DS library preserves the underlying Mercury/GBA designs while improving DS presentation. No live engine files are overwritten here.",
+  "requested_count": 25,
+  "approved_count": 25,
+  "held_count": 0,
+  "approved": [
+    {
+      "key": "barbaracle-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/barbaracle-mega/front.png",
+          "sha256": "1db6175853382c5c9a7304a0980b09ab244323bf9b4db9cda341b1d011dafffc",
+          "bytes": 2905
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/barbaracle-mega/back.png",
+          "sha256": "86a8e7f6e818f6a85af9ba4cda57cb94f79247acf894915caae54e37bd5e7117",
+          "bytes": 2004
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/barbaracle-mega/front_shiny.png",
+          "sha256": "7ac7d76afe09be3e05586c1bee7c03aac2644fcf10e6b775cc20b0365ef9fd17",
+          "bytes": 2996
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/barbaracle-mega/back_shiny.png",
+          "sha256": "a39a7d3ff0102d08850ea881419cf63dedb17a5e3e9dd17508af24b7cfe5bd76",
+          "bytes": 2043
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/barbaracle-mega/icon.png",
+          "sha256": "dadce79dcf7ae84d23a90dcd726db213a7b977d979a94309d8eb81ee0d10176e",
+          "bytes": 1010
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/barbaracle-mega/icon_frame2.png",
+          "sha256": "fa43eaa8eaeb7509b8f3b97178da5b768bfa84eb5ed204959d6fc537206ff647",
+          "bytes": 936
+        }
+      }
+    },
+    {
+      "key": "chandelure-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chandelure-mega/front.png",
+          "sha256": "f247a184aa06a36c944c196d2fe64b287a9c019fe4d8b7a7e0e37c4c5d07a0da",
+          "bytes": 2285
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chandelure-mega/back.png",
+          "sha256": "0f467c6637e6c729837d2272cd98d4f5dbc8d77eb434a3bba12e1b54c0f9cbf5",
+          "bytes": 1560
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chandelure-mega/front_shiny.png",
+          "sha256": "e5c8ac20dfa026cf00afcd628474eb236df65e95100d1f722cec267f56b7913e",
+          "bytes": 2235
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chandelure-mega/back_shiny.png",
+          "sha256": "2e3d18c6a48582b5136ba526cbcef6c76a4c0d96dbb5bda270dbb576cc26c50c",
+          "bytes": 1550
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chandelure-mega/icon.png",
+          "sha256": "111b60a47c8cfc28aa5d1ddaa18fb50efaaf6a3f31c1a0d64d0725034a8942cf",
+          "bytes": 906
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chandelure-mega/icon_frame2.png",
+          "sha256": "fe5d9da30e19e63312d282726cd2855d66cb7a36655e996f7ef17a7123b8aeb7",
+          "bytes": 860
+        }
+      }
+    },
+    {
+      "key": "chesnaught-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chesnaught-mega/front.png",
+          "sha256": "01d66b983cf58dc6b92d8158424a1817ce1451718ef230b3675c7bbba3dd81c9",
+          "bytes": 3098
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chesnaught-mega/back.png",
+          "sha256": "1a96c052e653ec696da4992945a8342fdf339952e8ed7e4322c0fb531ec957db",
+          "bytes": 1272
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chesnaught-mega/front_shiny.png",
+          "sha256": "3cdba013fa6638f270b99193655f1075af18ffafa7216f11e70ca97002d3a6be",
+          "bytes": 3146
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chesnaught-mega/back_shiny.png",
+          "sha256": "0d5f4bca8cb09178807f30bb917a5b50a837724a7c787f61474a71910e42fd7e",
+          "bytes": 1274
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chesnaught-mega/icon.png",
+          "sha256": "336d4006c2ec658d8a128d807f00a136cd213412e434464c9249dc35f58eddf1",
+          "bytes": 965
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chesnaught-mega/icon_frame2.png",
+          "sha256": "37e45bd60e2f52a00b22f1c10019ded324bec269d52ade49098d5e20a1dc3aa5",
+          "bytes": 952
+        }
+      }
+    },
+    {
+      "key": "chimecho-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chimecho-mega/front.png",
+          "sha256": "1ae685582a5ec7d0209315c5d692fb78be2d3daf527e88f6656867c14c29cce4",
+          "bytes": 2769
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chimecho-mega/back.png",
+          "sha256": "91082140950af696faecd39ac3d9abeca2c5785284eb710c8bab6d62f30450dc",
+          "bytes": 2221
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chimecho-mega/front_shiny.png",
+          "sha256": "d9128cce0dcd581ea39df72015c767ff3e0deb1312a8d41a69e5e7c73db9727e",
+          "bytes": 2603
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chimecho-mega/back_shiny.png",
+          "sha256": "8b8de582bf458ac2769d07269fbee493cc9cdec85fd20ce09df9ba78261b350e",
+          "bytes": 2124
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chimecho-mega/icon.png",
+          "sha256": "85db24d30cc8d36e915f2c308b0b478288c5973607df2f9988bb0b91a43d7ecb",
+          "bytes": 921
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/chimecho-mega/icon_frame2.png",
+          "sha256": "d5233fbd32a1cee3440be90cf559582131db7724540d7a6fafac6fa0cc030443",
+          "bytes": 914
+        }
+      }
+    },
+    {
+      "key": "clefable-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/clefable-mega/front.png",
+          "sha256": "d9b7e659632f960bd5bbbb0f7727de6ac2ef1ba6d16c75b72278cd8eb1865edf",
+          "bytes": 1744
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/clefable-mega/back.png",
+          "sha256": "79cbfbe70b5e478d3e4d78d5a02f0c80407bf5527bb777238f3b320b8a1b18fd",
+          "bytes": 1518
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/clefable-mega/front_shiny.png",
+          "sha256": "6238224ca22af85ef0d8bf6f8703400e0c5e1c7b1a6d5f8a9c67523728fa8396",
+          "bytes": 1732
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/clefable-mega/back_shiny.png",
+          "sha256": "e5ac5d71ec947cc10d516a145da4502daf0f019ad331077c4dede5b8104962aa",
+          "bytes": 1524
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/clefable-mega/icon.png",
+          "sha256": "7fe4ddb18ea651172635e209aa5b50414fd9b5feaefa481951565f36972525c5",
+          "bytes": 904
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/clefable-mega/icon_frame2.png",
+          "sha256": "4830a0865cfac3d8729c4a4f146acd86cd2c5b7d393dc489855e20aeb1fa9a30",
+          "bytes": 914
+        }
+      }
+    },
+    {
+      "key": "darkrai-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/darkrai-mega/front.png",
+          "sha256": "333ec9e9b554e8e545dd1b46a4c189c14db75be7582ec859b252abbb25f6a368",
+          "bytes": 2434
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/darkrai-mega/back.png",
+          "sha256": "6f7cc3eec71fb3ca565ac84eb068d39aea05934233e6fbb2c0ab9a98d67be1f4",
+          "bytes": 1474
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/darkrai-mega/front_shiny.png",
+          "sha256": "24497bf201f260401281f348fcb1bf389d54e5b7cb9ff7ab1158c9c9b49de428",
+          "bytes": 2546
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/darkrai-mega/back_shiny.png",
+          "sha256": "73939092b42df1da5eb2b164203052ed45c69587cba6290571ea726f8ea1ddcc",
+          "bytes": 1488
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/darkrai-mega/icon.png",
+          "sha256": "fdefadc7388150d3127c121866f4c4832df491a01047d76ae02e6805234e4499",
+          "bytes": 715
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/darkrai-mega/icon_frame2.png",
+          "sha256": "f2a2151a25fe0fbbfb827353972351ce62613a33b82a2a712237fd0898fceeab",
+          "bytes": 707
+        }
+      }
+    },
+    {
+      "key": "delphox-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/delphox-mega/front.png",
+          "sha256": "75a2c31ed4bf4f543452c6362aaaf14e60e9e00dc0e986f0a356da65b6fdacd1",
+          "bytes": 2886
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/delphox-mega/back.png",
+          "sha256": "4b9db4e318e346a2252d7c7d6a8e15d06bea05d95b201c054578e5917567d144",
+          "bytes": 2034
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/delphox-mega/front_shiny.png",
+          "sha256": "0c75b65e0652335d9759d99ee5df23758b9fd7f695e872f7410969a8085a0375",
+          "bytes": 2894
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/delphox-mega/back_shiny.png",
+          "sha256": "a4f60378e54c48d0649dc7ea5e2cd94a39e2b552985249788b91a3c44dd846a1",
+          "bytes": 2062
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/delphox-mega/icon.png",
+          "sha256": "7a74ea14580241af889faee877642530d96ef6ce4827325ce9466e4cf958096b",
+          "bytes": 993
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/delphox-mega/icon_frame2.png",
+          "sha256": "dabdb68c3467cede72826d96adcaff9b7e5dfe231db01ebbb6832885a4589680",
+          "bytes": 960
+        }
+      }
+    },
+    {
+      "key": "dragalge-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragalge-mega/front.png",
+          "sha256": "94eba3f623b3ac4d1fa0237960521ae44c83b24f6205725e7cca2bc8bffb930c",
+          "bytes": 3077
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragalge-mega/back.png",
+          "sha256": "7ab25ded9acfdc999ad49393018c45781bf0b1389b4c9566268283468144cfd8",
+          "bytes": 2059
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragalge-mega/front_shiny.png",
+          "sha256": "71a68b93aaf5001b19ebe63d4a07f168e88592033811b3483e1b2088b2e54a61",
+          "bytes": 3023
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragalge-mega/back_shiny.png",
+          "sha256": "8e2f5e9e8fe47963441c2ce425213501daa1ca9c01641b76c20c4352cffef854",
+          "bytes": 2139
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragalge-mega/icon.png",
+          "sha256": "14d1608be514fdf415bb57c9019aee6f1afca7307e23db6541ede3ca32dc91a4",
+          "bytes": 912
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragalge-mega/icon_frame2.png",
+          "sha256": "355dd40fa3008b38262ab847c4a40fd77114a1ce6b8dfb74fed1988af19ccf4f",
+          "bytes": 821
+        }
+      }
+    },
+    {
+      "key": "dragonite-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragonite-mega/front.png",
+          "sha256": "41cf1e0724ef70b7b9dde18d0ea67991ff1654b4ae3a78e2c06f1f4f147d6620",
+          "bytes": 2602
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragonite-mega/back.png",
+          "sha256": "c5e553b6de4c885a522c9297287a3818d8d93e5568c3ab3fea355cb0584754ae",
+          "bytes": 1752
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragonite-mega/front_shiny.png",
+          "sha256": "2332e5565bbfe22b29bdccb6a640431dbf7e4a1e19b8f6e015760216a4a067ae",
+          "bytes": 2542
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragonite-mega/back_shiny.png",
+          "sha256": "9916b6ee763d85debad376fbf1d5388586d17416bcd9b7ef97ba8463284dc02f",
+          "bytes": 1741
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragonite-mega/icon.png",
+          "sha256": "5f35b805abe8392e7392803e3014eda8e1fe5e68dcdf2707f4bf31c02f91885a",
+          "bytes": 822
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/dragonite-mega/icon_frame2.png",
+          "sha256": "3b63f00f7ff7f0e9f0410be25b37a42652fbf2437066a143426a94210763d0a2",
+          "bytes": 809
+        }
+      }
+    },
+    {
+      "key": "drampa-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/drampa-mega/front.png",
+          "sha256": "afb2e4d2d154de4aa0a1fe9731dfb8e6fe0f6504a88c23b23e688191080514dc",
+          "bytes": 2821
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/drampa-mega/back.png",
+          "sha256": "2f8608be29517cbb3bdc9f5de60c36d1004a6430e42c2b2770538197fd2159fa",
+          "bytes": 1850
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/drampa-mega/front_shiny.png",
+          "sha256": "1e989522084799612dc6abddcf16c9095221fd6cf43a583822ec942ef506f5d1",
+          "bytes": 2929
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/drampa-mega/back_shiny.png",
+          "sha256": "c5f58e912c79f8b68bcfd1c2613f4a1e557299300a70f29f8fef4f63462629e3",
+          "bytes": 1915
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/drampa-mega/icon.png",
+          "sha256": "65801ec29db2f02927257d39cabdd849490c6fa2bf8ae0a8f835e1bba96b8625",
+          "bytes": 798
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/drampa-mega/icon_frame2.png",
+          "sha256": "75ac09d870a747ba22b2c4db39b07376e0661ac39ee60bcef92b0d17d44aeee1",
+          "bytes": 759
+        }
+      }
+    },
+    {
+      "key": "excadrill-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/excadrill-mega/front.png",
+          "sha256": "2fea8db2dd743d20c8532567ad2e82475b14c5090e9d99d3947cdeedb6970c7b",
+          "bytes": 2326
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/excadrill-mega/back.png",
+          "sha256": "57d9bf58894cba70ece31d8b7292161a93e2a453e8e69240783a32d14b660cc7",
+          "bytes": 2172
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/excadrill-mega/front_shiny.png",
+          "sha256": "ee596d9640e14e4f7ed53c6272ed1ce448f096cc98c140df1aa3841a979c3cce",
+          "bytes": 2403
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/excadrill-mega/back_shiny.png",
+          "sha256": "2a505461307cb51c0b9468bcd536a91150115f6e149d3772096f9cac2c5f6f8f",
+          "bytes": 2223
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/excadrill-mega/icon.png",
+          "sha256": "270402e9f7bd55fdc00f6dff437373f0d5509217e679fa770bcf8e37da479a9f",
+          "bytes": 765
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/excadrill-mega/icon_frame2.png",
+          "sha256": "afa8b059d0bdcfc518f63becd75e6c41b567e5d6a02ba7b0e7396f8c71137c48",
+          "bytes": 740
+        }
+      }
+    },
+    {
+      "key": "falinks-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/falinks-mega/front.png",
+          "sha256": "c12f6dd2bc2b1093e70faeafb5b0fab73936aee7be031c85bbe12e17ed2b7017",
+          "bytes": 2428
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/falinks-mega/back.png",
+          "sha256": "f3cf1f5dc7475e32239c3b6aacdecd6a252b2bb4cbc725ee4896806d2b47c6eb",
+          "bytes": 1139
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/falinks-mega/front_shiny.png",
+          "sha256": "07d3fc9f7721790c49020022e362859a646f24248d41726dcc421686f088c747",
+          "bytes": 2414
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/falinks-mega/back_shiny.png",
+          "sha256": "178e1594f066e2efa09d4af1d2ce6417fa0cc45abba2145208bf34b5e9628c78",
+          "bytes": 1137
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/falinks-mega/icon.png",
+          "sha256": "952d96ca87555278a3a4bdf7e01ce55e67317dc1df75269e395c16bb1ec32449",
+          "bytes": 951
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/falinks-mega/icon_frame2.png",
+          "sha256": "394a53086caa6736d8d59d397e3438ced81ccbe1b5fadf549cecd01d8e2344cc",
+          "bytes": 886
+        }
+      }
+    },
+    {
+      "key": "feraligatr-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/feraligatr-mega/front.png",
+          "sha256": "f6b89c7f1f9eb2f9b89c4d48e3060d45910cfa13a47ab858b2b5a76b30b3b338",
+          "bytes": 2456
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/feraligatr-mega/back.png",
+          "sha256": "cf40425514c96e9b013487488e17fbcafe1d1cd8c28bf588d887a288d7f17884",
+          "bytes": 1595
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/feraligatr-mega/front_shiny.png",
+          "sha256": "a6eb283247476acf7ff4665d723bc8d2251c582f8829f9042ab0240df9971aec",
+          "bytes": 2509
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/feraligatr-mega/back_shiny.png",
+          "sha256": "f63d436037fc57d4869ca8d5bf1c1d43408b33289919200c2ed7d1922d5bfa8e",
+          "bytes": 1601
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/feraligatr-mega/icon.png",
+          "sha256": "2bda4d0d25eb9fd30044f8e925769c00b05aafd119fe814f25680290b59598d8",
+          "bytes": 805
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/feraligatr-mega/icon_frame2.png",
+          "sha256": "09da3d7d47b9be502ceb69224eb54159b8b877f9055022ca19ba914175263f37",
+          "bytes": 771
+        }
+      }
+    },
+    {
+      "key": "floette-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/floette-mega/front.png",
+          "sha256": "099285003f713f12fe165117caeeb4c82d87a95f99db3b4c8c487871ba88ca33",
+          "bytes": 2102
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/floette-mega/back.png",
+          "sha256": "5c887fbb6763a70fd0fed5c1192f5d651130fe6176a0c6f6c048b825423544ff",
+          "bytes": 1650
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/floette-mega/front_shiny.png",
+          "sha256": "51fb334589c9bed32e06e8e85ba6c6d36a13eded89d8f5b7c27d420bef9e4110",
+          "bytes": 2098
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/floette-mega/back_shiny.png",
+          "sha256": "3bf44e5761354655473f9f59826a76b828edfde9fcbcd18a9b8397f20ea9af43",
+          "bytes": 1643
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/floette-mega/icon.png",
+          "sha256": "2ca5cbba2552731cfaba8c491d18958b1ad95213792322f7a5b258490c162789",
+          "bytes": 890
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/floette-mega/icon_frame2.png",
+          "sha256": "ef62cd74519d5526d87746ea8243ff7c0db3e110301773c1594491e11da4894f",
+          "bytes": 857
+        }
+      }
+    },
+    {
+      "key": "froslass-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/froslass-mega/front.png",
+          "sha256": "045455695fc6156da629ed1a6cfd428afa6f3ca030b4a29cc5446163c296f29a",
+          "bytes": 2503
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/froslass-mega/back.png",
+          "sha256": "fd38c0d35f05763b9d19f3e525ededf1667158bfc43408c2be58d736cdd879ae",
+          "bytes": 1237
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/froslass-mega/front_shiny.png",
+          "sha256": "6dc54f40073c80c519e863011c3766fa5f8ce7d15927867ef4372614f0b7c8e8",
+          "bytes": 2568
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/froslass-mega/back_shiny.png",
+          "sha256": "c5c2cae6fcd4511986e7d4a4320c6bbd65bb6e7380a6e1385fc7cb9c94b32c00",
+          "bytes": 1249
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/froslass-mega/icon.png",
+          "sha256": "0a1c5bd5a98acc5da718e48a767a55a27f7decdd6fb6d5c5ac1fdedb3bfaf024",
+          "bytes": 728
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/froslass-mega/icon_frame2.png",
+          "sha256": "55a386d8cc36340b5b67a5b94dad9b6524061b5b28a4b1bafbfadf56cef3d3ea",
+          "bytes": 690
+        }
+      }
+    },
+    {
+      "key": "glimmora-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/glimmora-mega/front.png",
+          "sha256": "afda15e614d7d0823abf1e2cc354ebe306c8a1c1a4a756114d820ab4c14ff135",
+          "bytes": 2443
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/glimmora-mega/back.png",
+          "sha256": "040f07f89c6edc281855f6f3a0f70fdb673990a3ac7df865d4013ab4f4efe505",
+          "bytes": 1527
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/glimmora-mega/front_shiny.png",
+          "sha256": "3c6943021046237bc4a1e1cd457f6e9523d5290fb182643b8aa4375bf516abf4",
+          "bytes": 2445
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/glimmora-mega/back_shiny.png",
+          "sha256": "4df035f00b8da8f0705bc5bcbedaf0b5242eebc9443cbdaa104cee31e0c243b9",
+          "bytes": 1500
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/glimmora-mega/icon.png",
+          "sha256": "18aafe9caa8d9e2da8908b049c2444ff7e38b144006ec4cfd124853655d551e3",
+          "bytes": 854
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/glimmora-mega/icon_frame2.png",
+          "sha256": "432ab0b8a645f28184571c2e45f1e672563fd6eac0d9c0fb425ffe94b003b83b",
+          "bytes": 879
+        }
+      }
+    },
+    {
+      "key": "greninja-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/greninja-mega/front.png",
+          "sha256": "5434e89906284be816560af2485efa24848f78e4e82c3aa7cf5fca082202118d",
+          "bytes": 2483
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/greninja-mega/back.png",
+          "sha256": "64a666335e932d5e33eb43e0e9f9f649cfce9eb879ad120a6b3a2f874ee34cc7",
+          "bytes": 1359
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/greninja-mega/front_shiny.png",
+          "sha256": "9076655e15207b0099e20f00867e07f7870098b66d18de5d466b30130f48acd1",
+          "bytes": 2562
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/greninja-mega/back_shiny.png",
+          "sha256": "9878362a71497fa8bfd5483e2d0c8b3ad50e4aa59ceb4c691ed95983ebf57d07",
+          "bytes": 1375
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/greninja-mega/icon.png",
+          "sha256": "2e1d4cd97cf32f7b8327f14dc2e181315d5f05e22e3c0d5bebf0a144851cce32",
+          "bytes": 855
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/greninja-mega/icon_frame2.png",
+          "sha256": "691bb71cd7990334286cf430c13e2d99a20b5fd721091c2102a61812dad3f2f9",
+          "bytes": 848
+        }
+      }
+    },
+    {
+      "key": "hawlucha-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/hawlucha-mega/front.png",
+          "sha256": "2eae6418988a6f8c0a3adb4e888bf0cc68db4ec5b7a34e66fddb971fc0136eac",
+          "bytes": 2401
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/hawlucha-mega/back.png",
+          "sha256": "2418a040811395b0bc966c63d62125e1790f8b156ea5322528db3d7f545e102c",
+          "bytes": 1996
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/hawlucha-mega/front_shiny.png",
+          "sha256": "56361fc0356f10f89a2f3f8495c2b4b97e107355bae8cbff5c35d1069acca53c",
+          "bytes": 2374
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/hawlucha-mega/back_shiny.png",
+          "sha256": "2dfb603706ee79c4dfb91e92b160af9825959becba751726895e1d6ab28f041c",
+          "bytes": 2002
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/hawlucha-mega/icon.png",
+          "sha256": "be96e11274eef11d7373ed1216ed664ffd68297e107fa4b2633d6b4baa6fedb3",
+          "bytes": 843
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/hawlucha-mega/icon_frame2.png",
+          "sha256": "a7bdd5f4f6641e8b872fa9f33cb24359b531f31ded97eb80a3ce043cc824d5f9",
+          "bytes": 824
+        }
+      }
+    },
+    {
+      "key": "heatran-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/heatran-mega/front.png",
+          "sha256": "df503475655df1c9f797bf83d9a292c14c2de0ee69cce97b619571e05bf9afca",
+          "bytes": 2969
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/heatran-mega/back.png",
+          "sha256": "8e43f34d6974e3ce96dda0c5373adefa66d70a34e1babe360c459df4c56608a3",
+          "bytes": 1310
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/heatran-mega/front_shiny.png",
+          "sha256": "ea759c0be1d1317b9bcdd41ddfeea17b6845f1e3e23d8b2c447b1d5fd990e5a8",
+          "bytes": 3080
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/heatran-mega/back_shiny.png",
+          "sha256": "ceec8ce9480c09ed9489b9bcdbd41721ae296ffc2cf155eff9b0237df831c92d",
+          "bytes": 1330
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/heatran-mega/icon.png",
+          "sha256": "1d3b07e80ef864bd7f1c3b871e5e16ce58bbbc9e27a4c80c44f869e8e2f4a09a",
+          "bytes": 895
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/heatran-mega/icon_frame2.png",
+          "sha256": "b3bf23c3d57373ef085c615f18b6104e1fde70c40dc10ad2c96fe4bfbd68e53f",
+          "bytes": 882
+        }
+      }
+    },
+    {
+      "key": "meganium-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meganium-mega/front.png",
+          "sha256": "7326e6cf482d92e01f75fae681815826e80e3ed99b1cd48768e9ad4349b82cfe",
+          "bytes": 2381
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meganium-mega/back.png",
+          "sha256": "8d32c6af9eaf121791801d63a6b5239a924acd8ab9e436208dc5d753ef7ba512",
+          "bytes": 2126
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meganium-mega/front_shiny.png",
+          "sha256": "ccfd703b720d5679afc5b83bbb6a8952ec86d7a511ed1b7de753c3f29a8b4a6d",
+          "bytes": 2423
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meganium-mega/back_shiny.png",
+          "sha256": "fd77cdc150e4ed45de075dd88a05c05b0ea1121e5a01075524549b48425841fd",
+          "bytes": 2127
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meganium-mega/icon.png",
+          "sha256": "db416c0589ec2b3e39300a193ce1d00236b61e0728ebae8354f3d0ddfc6db076",
+          "bytes": 905
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meganium-mega/icon_frame2.png",
+          "sha256": "4d9454fa42e89b8d265a6ac253671f61bf691796bbd135222b968f0187090a8f",
+          "bytes": 889
+        }
+      }
+    },
+    {
+      "key": "meowstic-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meowstic-mega/front.png",
+          "sha256": "aee5e0a1a829c26eab94753fff0f8a2a19dad7865f3e4bcf17b46a96a6e66be3",
+          "bytes": 1581
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meowstic-mega/back.png",
+          "sha256": "71cb1c26c867378a8797ca2a125f59e78674213a7749ce3986ffc46e7833dd84",
+          "bytes": 1388
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meowstic-mega/front_shiny.png",
+          "sha256": "9c27944f4c62800ecf08ff38139a919cc30e5dce9f0774364954439c6119ff76",
+          "bytes": 1611
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meowstic-mega/back_shiny.png",
+          "sha256": "56d14d5c438ce96710343b73ec84d5b357b1b48ac8da386fcad6936fdbaadce8",
+          "bytes": 1425
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meowstic-mega/icon.png",
+          "sha256": "d1aab22c88d1b1461db392038e7d0e30ba179adca33d1f82136a23d7507b157e",
+          "bytes": 639
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/meowstic-mega/icon_frame2.png",
+          "sha256": "6c52007bc651d69bb296f670646f54e3e2ec0e64fcd480e7039cd72182e6ea31",
+          "bytes": 615
+        }
+      }
+    },
+    {
+      "key": "pyroar-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/pyroar-mega/front.png",
+          "sha256": "ca76466d3812686d0f0e8580dd383a73447855a8660b11e85c5aff7b8b81768f",
+          "bytes": 2717
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/pyroar-mega/back.png",
+          "sha256": "ef440cf73088736b87a25355f92ba11667161130a427fe0f46b367643290cebc",
+          "bytes": 1327
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/pyroar-mega/front_shiny.png",
+          "sha256": "de580267214a585d4dd78100b00deca4f84b35d166ea6e1e1275c0966e655e28",
+          "bytes": 2732
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/pyroar-mega/back_shiny.png",
+          "sha256": "5e9386cfb95c683b5671db7f4cfdc266eeabf02f6317c34dba19beed8c2c37be",
+          "bytes": 1327
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/pyroar-mega/icon.png",
+          "sha256": "739253acff1ef308b939893ccbc9ef7e503ded459c2d346ac232cf6f2f59fa17",
+          "bytes": 925
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/pyroar-mega/icon_frame2.png",
+          "sha256": "7f05654fb3d49841f14b87b32c748e0c3be5482ad21cecaaad45ccf857b8e063",
+          "bytes": 917
+        }
+      }
+    },
+    {
+      "key": "raichu-mega-x",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/raichu-mega-x/front.png",
+          "sha256": "a9aa654af43432ee19efeac9e5308d03d221dbd6e856081dbe5518b69e22bd7a",
+          "bytes": 1591
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/raichu-mega-x/back.png",
+          "sha256": "937a338b438e14e6d2785cf2d8ae621b9359691d62419a326b8528c5ae6b796d",
+          "bytes": 1356
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/raichu-mega-x/front_shiny.png",
+          "sha256": "29b02dc61f8e662014242855dae16681a689e9a14142bb35c7d177da50dc47d7",
+          "bytes": 1643
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/raichu-mega-x/back_shiny.png",
+          "sha256": "4d551f29bea4aeeefe18aa4335c3ab58fdce6a68caada6d56fa49f17bb14e562",
+          "bytes": 1358
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/raichu-mega-x/icon.png",
+          "sha256": "38fe0120019a69f67705a323704adb70b8586dd6650bd374bab6a1175728b112",
+          "bytes": 673
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/raichu-mega-x/icon_frame2.png",
+          "sha256": "d39fd7d09bb0c8f2c99664e1857612f0725ff45fc0b11d63ecfd019da53c98ca",
+          "bytes": 659
+        }
+      }
+    },
+    {
+      "key": "malamar-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/malamar-mega/front.png",
+          "sha256": "c8bf3fc83468ff8ff35d5f49e0cea078bcc01424bd6e3f14eef3b99d40d4757b",
+          "bytes": 2115
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/malamar-mega/back.png",
+          "sha256": "32e269233175ac2d577eab8bd8c4b1f29cec1de83349285ff874ff0699011dd2",
+          "bytes": 1292
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/malamar-mega/front_shiny.png",
+          "sha256": "e21a57d0fcb601aad034b76752ff668f8f5eba3a43ceb8b4287507ae92cc953b",
+          "bytes": 2115
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/malamar-mega/back_shiny.png",
+          "sha256": "2d95018f7be28257bdce6f477106cb006b7d4a6e19d80aee7c5d452e533623d7",
+          "bytes": 1267
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/malamar-mega/icon.png",
+          "sha256": "015d9b83b9e90c68ab809f9bb258a7dc73fafcd38d035b5dd5f260bf4a1aa2df",
+          "bytes": 882
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/malamar-mega/icon_frame2.png",
+          "sha256": "367f4613cb14a3445b9342aa9d59ed6e69204d5e21b2f38f08c006850fe4f1d3",
+          "bytes": 839
+        }
+      }
+    },
+    {
+      "key": "gallade-mega",
+      "decision": "APPROVE_NATIVE_DS_SET",
+      "reason": "Exact Mercury form-name match and complete native-DS front/back/shiny/icon set from the proven DS library.",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/gallade-mega/front.png",
+          "sha256": "f131733a060d5e6f7d7abc8ac36494553e2f265e7aba535fbb1b74e9587c6614",
+          "bytes": 2204
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/gallade-mega/back.png",
+          "sha256": "4a73b7a56aad919d05606d8bf845d130d58bd9c148d3a121b3cb430d4e255e5a",
+          "bytes": 1561
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/gallade-mega/front_shiny.png",
+          "sha256": "a4befb6fbee02fa5c6c2f5c9bf75ce4cf01f293bcf538687c27fe19a2dae4068",
+          "bytes": 2244
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/gallade-mega/back_shiny.png",
+          "sha256": "69624b5f02441d92f5c92ac8f57ab03b38e9d4bc95bed0550a4c071381c78728",
+          "bytes": 1555
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/gallade-mega/icon.png",
+          "sha256": "fbd1a036fe98c3f3af3621e4d5453244d67887dd645712260054f7fa86f17bee",
+          "bytes": 637
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-approved/custom-mega-batch2-25/gallade-mega/icon_frame2.png",
+          "sha256": "242f6a9b6bd92a9f4c448a95211f08c28dc01aba8edd425d0c5799102b475e0e",
+          "bytes": 608
+        }
+      }
+    }
+  ],
+  "held": []
+}
