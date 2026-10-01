@@ -1,0 +1,24 @@
+{
+  "gate": "MERCURY_MEGA_OVERLAP_COLLAPSE_V1",
+  "date": "2026-10-01",
+  "status": "COMPLETE",
+  "before": {
+    "mega_sprite_rows": 320,
+    "species_with_multiple_mega_rows": 93
+  },
+  "after": {
+    "mega_approval_concepts": 280,
+    "species_with_multiple_distinct_mega_concepts": 68
+  },
+  "collapsed": {
+    "duplicate_art_slots_removed_from_approval_sheet": 40,
+    "same_named_concepts_with_multiple_art_options": 38
+  },
+  "policy": [
+    "Same-named Mega art from multiple sources is one approval concept with side-by-side art options.",
+    "X/Y/Z, regional Mega, Redux Mega, and other explicitly distinct Mega concepts remain separate.",
+    "Custom Mega is preferred over Gigantamax art when both exist.",
+    "Official canon Mega remains source of truth when the Mega itself is canon."
+  ],
+  "next_action": "Resolve the remaining 68 species with genuinely different Mega concepts, then apply the same concept-collapse process to Delta/Redux/regional/evolution pools."
+}
