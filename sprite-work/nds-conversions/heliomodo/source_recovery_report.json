@@ -1,0 +1,37 @@
+{
+  "source_url": "https://assets.project-pokemon.com/pokemon/static/heliomodo.png",
+  "source_size": [
+    420,
+    420
+  ],
+  "alpha_bbox": [
+    0,
+    0,
+    420,
+    420
+  ],
+  "crop_size": [
+    420,
+    420
+  ],
+  "source_sha256": "6dc81d6d87b4066ecb3ec0f5a43cbdb76291ada751889e7e10f7729fd7e5639d",
+  "rule": "No image generation; preserve Elite Redux Heliomodo design.",
+  "integer_block_scores": {
+    "2": 0.8990362811791384,
+    "3": 0.8447562358276643,
+    "4": 0.7890532879818594,
+    "5": 0.7552834467120182,
+    "6": 0.7167687074829932,
+    "7": 0.6876303854875283,
+    "8": 0.6589427699704142
+  },
+  "best_integer_factor": 2,
+  "native_recovery": "integer_nearest",
+  "native_size": [
+    210,
+    210
+  ],
+  "ds_transform": "nearest_fit_80x80",
+  "heliomodo_native_recovered.png_sha256": "793f70681fa84dd7973181464c6346ba148544bcbdcd0b2b716f61e2915df27d",
+  "heliomodo_front_ds80_candidate.png_sha256": "bfe16bb45b85523c9aa2d6b414579b924b47e5b85a3256bd8ceb57eb68b95646"
+}
