@@ -1,0 +1,32 @@
+{
+  "gate": "MERCURY_VISUAL_OVERLAP_REVIEW_BATCH01",
+  "date": "2026-10-01",
+  "status": "COMPLETE_FIRST_VISUAL_GROUP",
+  "species": "Mamoswine",
+  "concept": "Mega Mamoswine",
+  "visual_sources_reviewed": [
+    "Mega Mamoswine Sprite Sheet.png",
+    "GBA-Style Mamoswine Sprite Sheet.png",
+    "Mamoswine Mega Evolution Sprite Sheet.png"
+  ],
+  "visual_conclusion": "The available sheets belong to the same broad ice-armored Mega Mamoswine design direction. Differences are being treated as art/conversion variants rather than separate roster identities unless a later side-by-side approval reveals a materially different concept.",
+  "action": "GROUP_AS_ONE_MEGA_MAMOSWINE_APPROVAL_CONCEPT_WITH_MULTIPLE_ART_OPTIONS",
+  "deletion_action": "NONE",
+  "preservation": {
+    "all_source_art_preserved": true,
+    "all_variants_kept_for_side_by_side_approval": true,
+    "automatic_winner_selected": false
+  },
+  "quality_review_notes": [
+    "Use native Platinum/HGSS readability and DS-scale framing as the quality target.",
+    "Prefer the cleanest front/back-consistent conversion only after the user sees the alternatives.",
+    "Shiny recolors do not create additional concept identities.",
+    "Do not replace any previously approved Mercury Mega Mamoswine art automatically."
+  ],
+  "cleanup_effect": {
+    "roster_concepts_after_grouping": 1,
+    "art_options_retained": 3,
+    "custom_designs_deleted": 0
+  },
+  "next_action": "Repeat direct visual comparison for the next same-name overlap group with available source art; keep genuinely different silhouettes as separate concepts."
+}
