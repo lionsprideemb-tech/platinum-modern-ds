@@ -1,0 +1,153 @@
+{
+  "gate": "MERCURY_NATIVE_DS_PRIORITY_MEGA_IMPORT_BATCH1",
+  "date": "2026-10-01",
+  "source_repo": "lionsprideemb-tech/Sprites",
+  "source_branch": "main",
+  "policy": "Non-destructive import. Existing Mercury assets are not overwritten until in-engine review passes.",
+  "entries": [
+    {
+      "key": "absol-mega-z",
+      "status": "IMPORTED_FOR_REVIEW",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/absol-mega-z/front.png",
+          "bytes": 2382,
+          "sha256": "7bc411bf813a79a367e421458c893ff3450a0de311fee91e662be3fb62572472"
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/absol-mega-z/back.png",
+          "bytes": 2210,
+          "sha256": "4c9ed7ee7b9816ed24847b510905edae9b38eef11ee6d50e8b569519f39c9422"
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/absol-mega-z/front_shiny.png",
+          "bytes": 2424,
+          "sha256": "1421390fdd697b156443e69b976594dc19c27ca183f67832858f775ad3f0c380"
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/absol-mega-z/back_shiny.png",
+          "bytes": 2197,
+          "sha256": "4d6e53d0e457459b24d6aeaa0ec83839f81e3326954cac3366e0036092c4c23d"
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/absol-mega-z/icon.png",
+          "bytes": 789,
+          "sha256": "c7f57eaa90901e0b3dd792b01e279ff97fe71edeff5cbe018f120250f02bd076"
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/absol-mega-z/icon_frame2.png",
+          "bytes": 695,
+          "sha256": "e42da2bcfe64b3d5197a50be0ba0a2543515f8a8966aba1c0b5d1f145f10f642"
+        }
+      }
+    },
+    {
+      "key": "lucario-mega-z",
+      "status": "IMPORTED_FOR_REVIEW",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/lucario-mega-z/front.png",
+          "bytes": 2484,
+          "sha256": "5691a4008c6060aa493db9342f9f69f5348c9cac33559205cf94a1b6b5c41e3a"
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/lucario-mega-z/back.png",
+          "bytes": 2225,
+          "sha256": "c27b57bece15a61361f436fafba8541dd29d1bbcbdfc71bae1018c11a548a6f6"
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/lucario-mega-z/front_shiny.png",
+          "bytes": 2488,
+          "sha256": "f8a5f7890afef2fc5a6acd12a497f2a1505ab3186cd27c8bf41d1415e10b0e79"
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/lucario-mega-z/back_shiny.png",
+          "bytes": 2219,
+          "sha256": "d496c4467b6535b04183aaf0148bd1b0bdb7e404aafa0e94f0905211a138ae89"
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/lucario-mega-z/icon.png",
+          "bytes": 683,
+          "sha256": "41cd28fab23f7e1024bf71396547e36dcf1ac2b91a274498e803fd8b0565a891"
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/lucario-mega-z/icon_frame2.png",
+          "bytes": 665,
+          "sha256": "92ff7b269bfc2c9231b5e2c8e840b5a87cf459ab2b83c34f7224e582de0e6724"
+        }
+      }
+    },
+    {
+      "key": "baxcalibur-mega",
+      "status": "IMPORTED_FOR_REVIEW",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/baxcalibur-mega/front.png",
+          "bytes": 2511,
+          "sha256": "005d5afa724c1864136885c1adb5b890d187145aef249fbccb9f8a375456a6ed"
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/baxcalibur-mega/back.png",
+          "bytes": 1250,
+          "sha256": "50991e73921d1d9e3106e6df26e1de410a0c365574263e241ea0f9e6abc6ca87"
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/baxcalibur-mega/front_shiny.png",
+          "bytes": 2548,
+          "sha256": "569fe4df1e6b7f0d24e7f50af161cb2d58ec8bcc6a56ea1895d240344120b06f"
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/baxcalibur-mega/back_shiny.png",
+          "bytes": 1231,
+          "sha256": "f604e86dffcc84551a08ac5fb6c61b4acb22add79d3eb6a67fd3acae97a3e0a9"
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/baxcalibur-mega/icon.png",
+          "bytes": 988,
+          "sha256": "dacb2bdf061ddadb4afa471ce81b647c7c008506ccb8d0e729249f51561fed8c"
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/baxcalibur-mega/icon_frame2.png",
+          "bytes": 933,
+          "sha256": "17f6421e18f5a5db8cf8eeb898eee407b3aa70b22aa4e8b82e05836f0d55cfb5"
+        }
+      }
+    },
+    {
+      "key": "golisopod-mega",
+      "status": "IMPORTED_FOR_REVIEW",
+      "files": {
+        "front.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/golisopod-mega/front.png",
+          "bytes": 2903,
+          "sha256": "ed2c8dfc66d1478570f2a493a215ec0ff8bfe8ff5069ed9e25769bae2d89a34f"
+        },
+        "back.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/golisopod-mega/back.png",
+          "bytes": 2167,
+          "sha256": "2eb653974ffc8856466317c60250132e7c4d793eb2d5b019f6c1c74fcec3bd07"
+        },
+        "front_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/golisopod-mega/front_shiny.png",
+          "bytes": 2899,
+          "sha256": "94ff9c3733c50ca71d9047b11e2b8575c448201aa9b9d4d87c6dc89efdce40dd"
+        },
+        "back_shiny.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/golisopod-mega/back_shiny.png",
+          "bytes": 2130,
+          "sha256": "2217aed59759a501a35b50ad54c78444a0f131119a53973766df21566f21eda6"
+        },
+        "icon.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/golisopod-mega/icon.png",
+          "bytes": 790,
+          "sha256": "3945dfee3be3e00d3397dd067040a027f5a474d07c31e342c27f59d1f24aed41"
+        },
+        "icon_frame2.png": {
+          "path": "sprite-work/native-ds-imports/batch1-priority-megas/golisopod-mega/icon_frame2.png",
+          "bytes": 773,
+          "sha256": "1a386ee434459d50c9aae86b47838a6a195bbed460c7ea7309f6c43c8e29b020"
+        }
+      }
+    }
+  ]
+}
