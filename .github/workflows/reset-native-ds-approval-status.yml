@@ -1,0 +1,63 @@
+name: Reset Native DS Approval Status
+
+on:
+  push:
+    branches: [work/sprites-audit-20260930]
+    paths:
+      - '.github/workflows/reset-native-ds-approval-status.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/sprites-audit-20260930
+          fetch-depth: 0
+
+      - name: Move premature approvals back to candidates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil, json
+
+          srcroot=Path('sprite-work/native-ds-approved')
+          dstroot=Path('sprite-work/native-ds-candidates')
+          dstroot.mkdir(parents=True,exist_ok=True)
+
+          moved=[]
+          if srcroot.exists():
+              for child in sorted(srcroot.iterdir()):
+                  target=dstroot/child.name
+                  if target.exists():
+                      shutil.rmtree(target)
+                  shutil.move(str(child),str(target))
+                  moved.append(child.name)
+              try:
+                  srcroot.rmdir()
+              except OSError:
+                  pass
+
+          reset={
+            'date':'2026-10-01',
+            'reason':'Pipeline order correction: collect all native DS sources first, compare overlap second, visual approval third, engine integration last.',
+            'status':'STAGED_CANDIDATES_PENDING_VISUAL_APPROVAL',
+            'moved_groups':moved,
+            'rule':'No sprite is visually approved merely because a native DS counterpart exists or has a matching filename.'
+          }
+          Path('sprite-work/native-ds-candidates/STATUS_RESET_2026-10-01.json').write_text(json.dumps(reset,indent=2))
+          print(json.dumps(reset,indent=2))
+          PY
+
+      - name: Commit reset
+        run: |
+          git config user.name "Mercury Sprite Pipeline Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A sprite-work/native-ds-approved sprite-work/native-ds-candidates .github/workflows/reset-native-ds-approval-status.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "sprites: reset DS sets to candidates pending visual approval"
+          git push origin HEAD:work/sprites-audit-20260930
