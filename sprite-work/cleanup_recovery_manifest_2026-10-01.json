@@ -1,0 +1,31 @@
+{
+  "gate": "MERCURY_SPRITE_CLEANUP_RECOVERY_V1",
+  "date": "2026-10-01",
+  "status": "AUTHORITATIVE_RESUME_STATE",
+  "repository": "lionsprideemb-tech/platinum-modern-ds",
+  "branch": "work/sprites-audit-20260930",
+  "head_when_recovered": "a4cdff7ccc886b9add5d5b3c0703f33eec74a23d",
+  "checkpoint_chain": [
+    {"commit":"ef4490e51af1e24a93408074a068db4ddbbf83ba","file":"sprite-work/full_structural_cleanup_checkpoint.json","meaning":"2455 source rows -> 945 structurally distinct custom designs after exact/recolor/same-silhouette/placeholder filtering"},
+    {"commit":"46e3687ea57040e6269cc477a4dd3af060cbd638","file":"sprite-work/semantic_overlap_checkpoint_2026-10-01.json","meaning":"945 custom designs grouped into 620 species keys; 184 multi-candidate species groups"},
+    {"commit":"7af3c4ce3618f4f5f4585161fecf9407fe15e47a","file":"sprite-work/semantic_overlap_checkpoint_v2.json","meaning":"905 named approval concepts; 38 concepts have multiple art options"},
+    {"commit":"1ce56e4bce8dafbe76c2c2cc11926a6dc7b28fed","file":"sprite-work/mega_overlap_collapse_checkpoint.json","meaning":"320 Mega rows -> 280 Mega approval concepts; 68 species retain multiple genuinely distinct Mega concepts"},
+    {"commit":"a4cdff7ccc886b9add5d5b3c0703f33eec74a23d","file":"sprite-work/nonmega_semantic_cleanup_checkpoint.json","meaning":"625 non-Mega designs; 540 base-species keys; 464 single-candidate; 76 multi-design species groups containing 161 sprites"}
+  ],
+  "preservation_policy": [
+    "Never delete a genuinely different custom design during cleanup.",
+    "Automatic removal is limited to exact same art, palette-only recolors, same-silhouette duplicate/pattern edits when they are not a canon form, placeholders/invalid exports, and duplicate source aliases.",
+    "If two designs differ materially in silhouette, anatomy, theme, armor, appendages, proportions, or concept, both survive for side-by-side approval.",
+    "Same-named concepts with different art are grouped as art options, not silently deleted.",
+    "X/Y/Z, regional Mega, Redux Mega, Delta Mega, and other explicitly distinct concepts remain separate.",
+    "Custom Mega is preferred over Gigantamax art when both exist; Gigantamax stays reference-only.",
+    "Official canon Mega remains source of truth for canon Mega identity."
+  ],
+  "current_work_queue": {
+    "mega_multi_design_species_groups": 68,
+    "nonmega_multi_design_species_groups": 76,
+    "nonmega_rows_in_multi_design_groups": 161,
+    "nonmega_single_candidate_designs": 464
+  },
+  "recovery_note": "Resume from these committed checkpoint files. Do not depend on a transient local CSV or /mnt/data mount to recover cleanup state. Any future row-level approval/export table must be committed under sprite-work/ before being treated as authoritative."
+}
