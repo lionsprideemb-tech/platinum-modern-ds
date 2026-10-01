@@ -1,7 +1,7 @@
 {
   "gate": "MERCURY_CUSTOM_MEGA_SOURCE_AUDIT_BATCH1",
   "date": "2026-09-30",
-  "status": "PARTIAL_SOURCE_RECOVERY_COMPLETE",
+  "status": "SOURCE_RECOVERY_COMPLETE_FOR_ALL_FOUR",
   "policy": "For Mercury-custom Megas, prefer an existing matched front/back sprite set with clear attribution over redrawing. Redraw only if no coherent source pair can be found.",
   "entries": [
     {
@@ -42,26 +42,52 @@
     },
     {
       "name": "Mega Spiritomb",
-      "current_verdict": "REDRAW_OR_EXTERNAL_SOURCE",
-      "better_source_found": false,
+      "current_verdict": "RECOVER_ORIGINAL_SOURCE_THEN_DS_CONVERT",
+      "better_source_found": true,
       "checked_sources": [
         "Mercury archive",
         "Team Aqua asset repository",
         "general GitHub search"
       ],
-      "note": "No clearly matched, attributed front/back set located yet."
+      "note": "The ugly Mercury archive result is a downscaled conversion of a much larger original Banished Platinum sprite. Recover the original public-resource image and perform a deliberate DS conversion instead of redrawing the design.",
+      "source_repository": "Eevee Expo resource 651: Free to Use Mega Evolutions v1.0.0",
+      "source_author": "King_Waluigi",
+      "credit_required": [
+        "King_Waluigi",
+        "Zygoat"
+      ],
+      "archive_conversion_evidence": {
+        "original_front_size": "160x160",
+        "original_back_size": "160x115",
+        "converted_art_bbox_front": "78x78",
+        "converted_art_bbox_back": "78x56",
+        "conversion_notes": "art_fit_scaled; missing shiny frames"
+      }
     },
     {
       "name": "Mega Magmortar",
-      "current_verdict": "REDRAW_OR_EXTERNAL_SOURCE",
-      "better_source_found": false,
+      "current_verdict": "RECOVER_ORIGINAL_SOURCE_THEN_DS_CONVERT",
+      "better_source_found": true,
       "checked_sources": [
         "Mercury archive",
         "Team Aqua asset repository",
         "general GitHub search"
       ],
-      "note": "References to fan Mega Magmortar exist, but no clean matched DS-ready front/back package with clear source/permission has been located yet."
+      "note": "The current archive sprite was both palette-quantized and heavily scaled. Recover the original public-resource art, then hand-convert it to the DS palette/size rather than redrawing or using the degraded conversion.",
+      "source_repository": "Eevee Expo resource 651: Free to Use Mega Evolutions v1.0.0",
+      "source_author": "King_Waluigi",
+      "credit_required": [
+        "King_Waluigi",
+        "Zygoat"
+      ],
+      "archive_conversion_evidence": {
+        "original_front_size": "138x140",
+        "original_back_size": "142x131",
+        "converted_art_bbox_front": "77x78",
+        "converted_art_bbox_back": "78x72",
+        "conversion_notes": "palette quantized 28->15; art_fit_scaled; missing shiny frames"
+      }
     }
   ],
-  "next_action": "Promote Roserade and Milotic to source-review/polish. Continue source hunt for Spiritomb and Magmortar; if no strong matched pair is found, move only those two to true redraw."
+  "next_action": "Recover original Banished Platinum Mega Spiritomb and Mega Magmortar assets from the public Eevee Expo resource, then perform controlled DS conversions. Roserade and Milotic already have stronger matched sprite packages."
 }
