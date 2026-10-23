@@ -1,0 +1,21 @@
+# Mercury Redux DS — sprite review integration safety (2026-10-23)
+
+## Single source of truth
+Do not integrate custom Pokémon/forms from isolated reviewer pages or inferences. Use the canonical [Sprites master reviewer](https://github.com/lionsprideemb-tech/Sprites/blob/main/master-review.html) and its [dataset](https://github.com/lionsprideemb-tech/Sprites/blob/main/master-review-data.json), with the [uploaded 166 user decisions](https://github.com/lionsprideemb-tech/Sprites/blob/main/review/user-iphone-decisions-2026-10-23.json) and [identity/artist audit](https://github.com/lionsprideemb-tech/Sprites/blob/main/review/identity-provenance-audit-2026-10-23.json). Primary review webpage: https://lionsprideemb-tech.github.io/Sprites/master-review.html
+
+## Preserve existing playable DS work
+This audit does not modify native Platinum progression, encounter tables, Poké Radar, Move Learner, ability mechanics, title assets, any build checkpoints, or the ROM. The full-game baseline and DS QoL work remain independent of sprite selection.
+
+## Mandatory gate for sprite integration
+1. Candidate has a deliberate user KEEP with stable source/structural identity. Archive an alternative CUT without deleting image files.
+2. Species and correct form name are verified *separately* from artist name, original filename, source pack, and regional/source labels such as Mikitarian or Luminian.
+3. Evolution family and actual type(s) have evidence, not generic Normal or arbitrary guessed lineage.
+4. Front/back and required shiny/icon components are validated as the same design. Do not substitute repeated unrelated backs. Prefer native DS art only after identity matching.
+5. Specifically, the Platinum Redux embedded-workbook [mapping summary](https://github.com/lionsprideemb-tech/Sprites/blob/main/DS_CUSTOM_LIBRARY/DS_READY_MASTER/platinum_redux_workbook_map_summary.json) reports **3 matched of 212 authoritative entries**; do not treat arbitrary numbered workbook-image associations as verified.
+6. No species IDs or ROM changes until the above gates pass and a separate build/test review explicitly approves implementation.
+
+## Existing snapshot
+Canonical iPhone user file: **166 votes = 154 KEEP + 12 CUT**. Canonical current reviewer: **154 active entries**, **18 technical holds**, **25 identity warnings**, with overlapping classifications. These are not counts of finalized species added to the ROM.
+
+## Scope
+Documentation-only cross-repository handoff. No asset deletion, sprite re-selection, Pokédex placement, or ROM integration performed.
