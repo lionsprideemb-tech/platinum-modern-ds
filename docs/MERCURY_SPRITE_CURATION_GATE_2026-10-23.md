@@ -21,6 +21,6 @@ Authoritative review sources:
 5. Preserve protected official Pokémon/Megas, canonical Platinum progression, the locked Summary UI, and Research Poké Radar. Do not overwrite existing working systems.
 6. Integrate *only* explicit final approvals, not items that were imported, automatically staged, or previously rejected.
 
-Current reviewer snapshot has 164 actionable artwork choices and 35 technical holds. These are NOT counts of ROM-ready entries.
+Current reviewer snapshot has 154 actionable artwork choices and 18 technical holds following original user-export recovery. These are NOT counts of ROM-ready entries. The original user-export decisions are preserved at `https://github.com/lionsprideemb-tech/Sprites/blob/main/review/recovered-user-export-decisions-2026-10-23.json`.
 
 **This commit is documentation-only; it does not build, mutate, or integrate the game's sprites.**
