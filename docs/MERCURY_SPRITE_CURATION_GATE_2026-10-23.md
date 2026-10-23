@@ -24,3 +24,7 @@ Authoritative review sources:
 Current reviewer snapshot has 154 actionable artwork choices and 18 technical holds following original user-export recovery. These are NOT counts of ROM-ready entries. The original user-export decisions are preserved at `https://github.com/lionsprideemb-tech/Sprites/blob/main/review/recovered-user-export-decisions-2026-10-23.json`.
 
 **This commit is documentation-only; it does not build, mutate, or integrate the game's sprites.**
+
+## Family regroup and uploaded review export (2026-10-23)
+
+The Sprites master reviewer now uses the verified evolution-family metadata and stage ordering (15 corrected display rows; 75 prior family sections reduced to 69). The user's latest iPhone review export, with 166 choices (154 KEEP / 12 CUT), is archived in [review/user-iphone-decisions-2026-10-23.json](https://github.com/lionsprideemb-tech/Sprites/blob/main/review/user-iphone-decisions-2026-10-23.json). Those user decisions are restored to the reviewer, including newer choices for Mega Lucario Z and Mega Golisopod. The existing game and Pokédex integration state remain unchanged; this is display/approval provenance only.
