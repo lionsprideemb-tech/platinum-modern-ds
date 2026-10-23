@@ -21,6 +21,6 @@ Authoritative review sources:
 5. Preserve protected official Pokémon/Megas, canonical Platinum progression, the locked Summary UI, and Research Poké Radar. Do not overwrite existing working systems.
 6. Integrate *only* explicit final approvals, not items that were imported, automatically staged, or previously rejected.
 
-Current reviewer snapshot has 166 actionable artwork choices and 33 technical holds. These are NOT counts of ROM-ready entries.
+Current reviewer snapshot has 164 actionable artwork choices and 35 technical holds. These are NOT counts of ROM-ready entries.
 
 **This commit is documentation-only; it does not build, mutate, or integrate the game's sprites.**
