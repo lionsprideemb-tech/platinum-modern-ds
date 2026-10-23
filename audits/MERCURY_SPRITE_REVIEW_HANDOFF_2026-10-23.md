@@ -15,7 +15,10 @@ This audit does not modify native Platinum progression, encounter tables, Poké 
 6. No species IDs or ROM changes until the above gates pass and a separate build/test review explicitly approves implementation.
 
 ## Existing snapshot
-Canonical iPhone user file: **166 votes = 154 KEEP + 12 CUT**. Canonical current reviewer: **154 active entries**, **18 technical holds**, **25 identity warnings**, with overlapping classifications. These are not counts of finalized species added to the ROM.
+Canonical iPhone user file: **166 votes = 154 KEEP + 12 CUT**. Canonical current reviewer: **156 active entries** (including 2 unreviewed Wailmer/Wailord original-source previews), **16 technical holds**, **25 identity warnings**, with overlapping classifications. These are not counts of finalized species added to the ROM.
 
 ## Scope
 Documentation-only cross-repository handoff. No asset deletion, sprite re-selection, Pokédex placement, or ROM integration performed.
+
+## October 23 follow-up — source preview recovery
+The original front/back/shiny GBA assets for Flying-type alternate Wailmer and Wailord were recovered in the Sprites repository and exposed as two still-undecided creative comparisons. The preserved **166 explicit iPhone votes remain unchanged**. Those two source designs have **not** been certified as DS-ready, assigned Pokédex IDs, or integrated into Platinum. The canonical reviewer now opens on outstanding families and its bulk KEEP action is restricted to designs actually visible on the current page.
