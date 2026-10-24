@@ -92,3 +92,17 @@ Original Munna and Musharna alternate front/back sprites were recovered **lossle
 Across 83 source artwork sets, there are now **108 source-derived 64×64 technical candidates (68 source-color preserved, 40 palette-reduced)**, **27 complete normal front/back pairs**, and **17 complete four-view sets**. Oversized/partial-alpha original art remains technically blocked (179 + 17 source views), but **196 explicitly comparison-only nearest-neighbor previews** were generated and hash-verified. **28 source views remain missing; zero PNGs remain undecodable.** The 40 palette-reduced views have measured changed-pixel percentages and await the user's actual visual quality choices. **No previews are native DS engine tiles or ROM-ready by default**.
 
 Verified scripts and GitHub Actions include the separate image-container repair workflow, technical sprite converter, nearest-neighbor visual comparison builder, historical decision invariants, and simulated iPhone comparison/JSON export test. Do not infer that a live Safari session or ROM emulator was run. The Dex and Platinum repositories receive **this documentation only**, never the quarantined preview art or changes to species IDs, gameplay, approved design decisions, or the playable ROM.
+
+
+## October 24 final artwork choices — ALL active decisions complete
+
+This updates, rather than replaces, the historical October 23 review. **All 158 actionable artworks have user decisions** (the 154 previously decided active artworks plus four now finalized). The immutable historical 166 original iPhone decisions (154 KEEP / 12 CUT) remain preserved as the original 2026-10-23 source snapshot; four new exact-artwork votes are in a separate appendix: [2026-10-24 final approval overlay](https://github.com/lionsprideemb-tech/Sprites/blob/main/review/final-artwork-approval-overlay-2026-10-24.json).
+
+- Wailmer alternate artwork `reconcile:wailmer-alternate-form-1` — **KEEP**.
+- Wailord alternate artwork `reconcile:wailord-alternate-form-1` — **KEEP**.
+- Rainther original battler artwork `compare:rainther:1` — **CUT competing design only**, not the Pokémon.
+- Rainther Gen 4 artwork `compare:rainther:2` — **KEEP**.
+
+The user also explicitly reconfirmed the latest archived art selections, superseding inconsistent earlier exports without rewriting the original records: **Mega Lucario Z Design 2 (Elite Redux Bulk) KEEP / Design 1 (DrPrettyman) CUT**, and **Mega Golisopod Design 1 (DrPrettyman) KEEP / Design 2 (Elite Redux Bulk) CUT**. These four Mega decisions were already part of the original 166, not four new votes. See [release report](https://github.com/lionsprideemb-tech/Sprites/blob/main/review/FINAL_ARTWORK_APPROVALS_2026-10-24.md).
+
+**No sprite insertion into game code, native DS certification, species/evolution changes or asset file substitutions are authorized by these votes alone.** The original 14 technical holds, five evolution relationship warnings, 179 oversized views, 17 partial-alpha views, 28 missing source views and 40 pending palette-quality checks remain separate. Technical quality feedback cannot override the creative source choice. Future gameplay/Pokédex integration must use the selected exact source and pass native DS tile/palette and relevant QA gates first.
