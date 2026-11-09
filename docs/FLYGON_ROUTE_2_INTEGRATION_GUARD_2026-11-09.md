@@ -6,7 +6,7 @@ Latest user-approved game roster direction: [Sprites Flygon plan JSON](https://g
 ## One-Mega two-family plan
 1. Keep original Trapinch → Vibrava → Flygon species and standard typings.
 2. Keep **one** regular Mega Flygon form (preferred previously approved art candidate `Elite_Redux_Bulk/flygon_mega`, subject to graphics/runtime certification); do not implement all artwork alternatives as separate Megas.
-3. Reserve **three future Delta entries**: Delta Trapinch, Delta Vibrava, Delta Flygon (**Bug/Ground**). Their exact original artwork and earlier-stage types must be verified before species/form IDs are assigned.
+3. Reserve **three future Delta entries**: Delta Trapinch, Delta Vibrava, Delta Flygon (**Bug/Ground**). Delta Trapinch and Delta Vibrava must each have the **Bug** type, but they may be mono Bug or Bug paired with another vanilla type; they are not required to be Bug/Ground. Their exact source-approved artwork and optional secondary types must be verified before species/form IDs are assigned.
 4. No Delta Mega is planned.
 5. Never import Electric/Dragon Redux B `flygon-redux-b` **or** `flygon-redux-b-mega` into the active ROM sprite/species queue; they are archival-only despite old artwork KEEP votes. Leave files and original votes intact.
 6. Do not auto-promote rejected `flygon-redux`, `flygon-redux-mega`, `trapinch-redux`, deleted alternate-form files, or undecided `vibrava-redux`. The older `ER125_REDUX_TO_DELTA_MAP.csv` entries for this family are superseded.
