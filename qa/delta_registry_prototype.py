@@ -267,10 +267,11 @@ def audit(args) -> dict:
     ]
     pal_src = (donor / "data/IconPaletteTable.c").read_text()
     palette_assignments = [
-        int(x) for x in re.findall(r"\[\s*SPECIES_[A-Z0-9_]+\s*\]\s*=\s*([0-3])\s*,", pal_src)
+        int(x) for x in re.findall(r"\[\s*(?:SPECIES_[A-Z0-9_]+|[0-9]+)\s*\]\s*=\s*([0-3])\s*,", pal_src)
     ]
-    if not palette_assignments or 3 in palette_assignments:
-        raise ValueError("Donor palette assignment assumptions invalidated")
+    if (len(palette_assignments) != 1535 or
+            [palette_assignments.count(i) for i in range(4)] != [844, 310, 381, 0]):
+        raise ValueError("Pinned donor palette table count/bank assignment changed")
     # Do not assert this is the full generated DS palette table.
     dex_audit = json.loads((dex / "qa/DELTA_FLYGON_ARCHITECTURE_EVIDENCE_2026-11-11.json").read_text())
     site_duplicate_ids = {
