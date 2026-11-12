@@ -263,7 +263,7 @@ def audit(args) -> dict:
                                                   "evolutionData->currentSpecies = ")),
         require_source(pret / "res/pokemon/meson.build", (
             "species_consts = fs.read(species_txt).splitlines()",
-            "pl_poke_icon.narc", "shared_pals_NCLR", "evo.narc")),
+            "pl_poke_icon.narc", ".shared/pl_poke_icon.pal", "evo.narc")),
     ]
     pal_src = (donor / "data/IconPaletteTable.c").read_text()
     palette_assignments = [
