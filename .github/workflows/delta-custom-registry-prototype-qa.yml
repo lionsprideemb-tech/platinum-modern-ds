@@ -1,0 +1,85 @@
+name: Delta custom-species symbolic registry prototype QA
+on:
+  push:
+    branches:
+      - qa/delta-custom-registry-prototype-20261112
+    paths:
+      - qa/delta_registry_prototype.py
+      - .github/workflows/delta-custom-registry-prototype-qa.yml
+      - qa/DELTA_CUSTOM_REGISTRY_PROTOTYPE_2026-11-12.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qa-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout QA-only engine branch
+        uses: actions/checkout@v4
+      - name: Checkout pinned original sprite decisions without modification
+        uses: actions/checkout@v4
+        with:
+          repository: lionsprideemb-tech/Sprites
+          ref: f15c4671bf7afb15450fc7801bde17aefcdc4f7e
+          path: external/Sprites
+          sparse-checkout: |
+            review/user-iphone-decisions-2026-10-23.json
+            review/flygon-roster-plan-2026-11-09.json
+          sparse-checkout-cone-mode: false
+      - name: Checkout pinned November 11 Dex audit, not main
+        uses: actions/checkout@v4
+        with:
+          repository: lionsprideemb-tech/Mercury-redux-dex
+          ref: 8ea34c7ad72c593b0f9f7845d03acff13fd2ecdd
+          path: external/Dex
+          sparse-checkout: |
+            qa/DELTA_FLYGON_ARCHITECTURE_EVIDENCE_2026-11-11.json
+          sparse-checkout-cone-mode: false
+      - name: Checkout pinned native Platinum source without modification
+        uses: actions/checkout@v4
+        with:
+          repository: pret/pokeplatinum
+          ref: c248fb3f8cc9934ded800e489567c5c0eeee92eb
+          path: external/pokeplatinum
+          sparse-checkout: |
+            include/constants/species.h
+            include/struct_defs/pokemon.h
+            include/pokedex.h
+            src/savedata/save_table.c
+            src/pokemon_icon.c
+            src/evolution.c
+            res/pokemon/meson.build
+          sparse-checkout-cone-mode: false
+      - name: Checkout pinned donor palette assignment source without modification
+        uses: actions/checkout@v4
+        with:
+          repository: BluRosie/hg-engine
+          ref: 5157c501dc0e6f88ef1654ab121352a5cc9ed7de
+          path: external/hg-engine
+          sparse-checkout: |
+            data/IconPaletteTable.c
+          sparse-checkout-cone-mode: false
+      - name: Compile isolated registry prototype
+        run: python3 -m py_compile qa/delta_registry_prototype.py
+      - name: Run fail-closed registry and pinned-source checks
+        run: |
+          python3 qa/delta_registry_prototype.py \
+            --engine . \
+            --sprites external/Sprites \
+            --dex external/Dex \
+            --pret external/pokeplatinum \
+            --donor external/hg-engine \
+            --out qa-output/registry-prototype-evidence.json
+      - name: Report QA outcome
+        run: cat qa-output/registry-prototype-evidence.json
+      - name: Save reproducible QA evidence, never ROM outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: delta-symbolic-registry-qa-only
+          path: qa-output/registry-prototype-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
