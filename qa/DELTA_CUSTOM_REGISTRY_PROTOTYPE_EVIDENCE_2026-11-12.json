@@ -1,0 +1,141 @@
+{
+  "schema": "mercury-delta-symbolic-registry-prototype-v1",
+  "status": "QA_ONLY_NO_NATIVE_REGISTRATION",
+  "snapshots": {
+    "engine": "5525e961a1fb98c62bd53bc4a27b0276a39f6719",
+    "dex_main": "faa7cb4016d8030fb4661b49114352d79cac7944",
+    "dex_audit": "8ea34c7ad72c593b0f9f7845d03acff13fd2ecdd",
+    "sprites": "f15c4671bf7afb15450fc7801bde17aefcdc4f7e",
+    "pret": "c248fb3f8cc9934ded800e489567c5c0eeee92eb",
+    "donor": "5157c501dc0e6f88ef1654ab121352a5cc9ed7de"
+  },
+  "protected": {
+    "canonical_species": 1025,
+    "none": 0,
+    "egg": 1026,
+    "bad_egg": 1027,
+    "historical_votes": 166,
+    "keep": 154,
+    "cut": 12,
+    "site_duplicate_ids_not_native_collisions": [
+      1581,
+      1751,
+      1761
+    ]
+  },
+  "draft": [
+    {
+      "key": "CUSTOM_DELTA_TRAPINCH",
+      "canonical_parent": "SPECIES_TRAPINCH",
+      "required_types": [
+        "Bug"
+      ],
+      "unresolved_secondary_type": true,
+      "evolution_target": "CUSTOM_DELTA_VIBRAVA",
+      "evolution_method": null,
+      "evolution_level": null,
+      "native_id": null,
+      "icon_archive_index": null,
+      "palette_bank": null,
+      "artwork_status": "unapproved"
+    },
+    {
+      "key": "CUSTOM_DELTA_VIBRAVA",
+      "canonical_parent": "SPECIES_VIBRAVA",
+      "required_types": [
+        "Bug"
+      ],
+      "unresolved_secondary_type": true,
+      "evolution_target": "CUSTOM_DELTA_FLYGON",
+      "evolution_method": null,
+      "evolution_level": null,
+      "native_id": null,
+      "icon_archive_index": null,
+      "palette_bank": null,
+      "artwork_status": "unapproved"
+    },
+    {
+      "key": "CUSTOM_DELTA_FLYGON",
+      "canonical_parent": "SPECIES_FLYGON",
+      "required_types": [
+        "Bug",
+        "Ground"
+      ],
+      "unresolved_secondary_type": false,
+      "evolution_target": null,
+      "evolution_method": null,
+      "evolution_level": null,
+      "native_id": null,
+      "icon_archive_index": null,
+      "palette_bank": null,
+      "artwork_status": "unapproved"
+    }
+  ],
+  "static_native_guards": [
+    {
+      "path": "external/pokeplatinum/include/constants/species.h",
+      "sha256": "2b671e0a7b463f9369dad3423d29f463d1db0a8a190a65990a1877bc0254eba3"
+    },
+    {
+      "path": "external/pokeplatinum/include/struct_defs/pokemon.h",
+      "sha256": "e382b931a4eea8cc270cc2ab7fad2f06a70f38d4fca18939bbfcd3cf199b5f95"
+    },
+    {
+      "path": "external/pokeplatinum/include/pokedex.h",
+      "sha256": "0d361cefa79dfec48c439c1ad61c3baaceddd2ce020fcb0f1f764420dff238a4"
+    },
+    {
+      "path": "external/pokeplatinum/src/savedata/save_table.c",
+      "sha256": "8a92e1d62e2bcdfacb1c78343c9289eca1f6501472855e5846009ca2507fb882"
+    },
+    {
+      "path": "external/pokeplatinum/src/pokemon_icon.c",
+      "sha256": "2cce1cc299e8e66d0aac26cf9a0070f7eebb113952a799016527b172afea0710"
+    },
+    {
+      "path": "external/pokeplatinum/src/evolution.c",
+      "sha256": "8f8d8d2570e3204c69b3a13c76ae70537f63d334fc970a0d2e5052db7f90d701"
+    },
+    {
+      "path": "external/pokeplatinum/res/pokemon/meson.build",
+      "sha256": "e00473c652c5d87993b17a6b8d5c4e649fd7719cf2b155f86bb9956fe3dddf10"
+    }
+  ],
+  "donor_palette_scan": {
+    "explicit_matching_entries": 1535,
+    "bank_counts_matching_entries": {
+      "0": 844,
+      "1": 310,
+      "2": 381,
+      "3": 0
+    },
+    "bank3_production_safety": "NOT_VERIFIED",
+    "generated_NCLR_and_UI_lifetime": "NOT_VERIFIED"
+  },
+  "save_model": {
+    "legacy_u16_roundtrip": "PASS_SIMULATED_ONLY",
+    "custom_native_write": "REJECTED_UNTIL_VERSIONED_MIGRATION",
+    "actual_party_pc_trade_save_reload": "NOT_TESTED",
+    "pokedex_mapping_and_dynamic_save_resize": "NOT_TESTED"
+  },
+  "evolution": {
+    "symbolic_delta_graph": "PASS",
+    "delta_method_levels": "UNAPPROVED",
+    "vanilla_family": "UNMODIFIED",
+    "engine_evolution_execution": "NOT_TESTED"
+  },
+  "icons": {
+    "legacy_overflow_falls_back_to_SPECIES_NONE": "SOURCE_VERIFIED",
+    "custom_icons": "BLOCKED_NOT_REGISTERED",
+    "native_icon_archive_palette_display": "NOT_TESTED"
+  },
+  "test_report": {
+    "result": "PASS",
+    "checks": 42,
+    "scope": "symbolic model, not native ROM"
+  },
+  "runtime_build_or_emulator": "NOT_RUN",
+  "artwork_approval": "UNCHANGED_UNAPPROVED",
+  "native_IDs_allocated": 0,
+  "files_in_main_or_rom_modified": 0
+}
