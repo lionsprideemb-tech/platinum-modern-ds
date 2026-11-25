@@ -1,0 +1,40 @@
+{
+  "schema": "mercury-release3-resume-v1",
+  "parent": "7751f387f68e49d6fd52c25dff2093e64de868b3",
+  "source_recovery_blob": "54c413c9584997a26f51d4539e94c80e260c552b",
+  "gba_commit": "5a88bded9ad705029867054b150787e770d649fc",
+  "historical": {
+    "ability_ids": 1043,
+    "unique_ids": 1043,
+    "descriptions": 1043,
+    "legacy_missing_descriptions_recovered": 124,
+    "former_placeholders": 112,
+    "ds_identity_unmatched": 124
+  },
+  "research": {
+    "prior_no_direct_candidate": 622,
+    "new_gba_identity_candidates": 2,
+    "remaining_no_direct_candidate": 620,
+    "approval_inferred": false
+  },
+  "species_probe": {
+    "paths": "game/src/data/pokemon/species_info/gen_1_families.h through gen_9_families.h",
+    "initializers": 1369,
+    "explicit_ability_arrays": 1328,
+    "three_symbol_arrays": 1326,
+    "other_arrays": 2,
+    "six_symbol_arrays": 0,
+    "explicit_innate_arrays": 0,
+    "interpretation": "Native GBA family headers are not a complete six-slot authored assignment source. Do not substitute them for Batch025. Prior historical 1000/1620 exposed rows remain preserved."
+  },
+  "native_status": "No new DS build or implemented-token certification; no runtime changes.",
+  "decision": "Preserve all 124 historical identities pending exact DS semantic reconciliation and approval/retirement checks, preserve both Ancient Script and Revelation, all eleven health mappings and 93 advanced decisions, retired IDs, and gym pause.",
+  "next": [
+    "Use recovered exact descriptions and original symbol aliases to reconcile the 124 identities against later DS partition with semantic evidence, including component dependencies and canonical aliases.",
+    "Crosswalk complete 1043 GBA symbols including pre-import 0..318 and canonical DS registry; resolve Dragonize and Toxic Debris using actual canonical namespace, not partition alone.",
+    "Recover full six-slot authored assignments from original workbook or individual locked exports; no inferred innates.",
+    "Review 620 research candidates against later owner decisions and donor provenance without inferring approvals.",
+    "Verify native implemented registry and save capacity before any new ID allocation."
+  ],
+  "production_allowed": false
+}
