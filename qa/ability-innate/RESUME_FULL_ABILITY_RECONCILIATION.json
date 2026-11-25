@@ -1,0 +1,1624 @@
+{
+  "schema": "mercury-full-ability-reconciliation-checkpoint-v1",
+  "date": "2026-11-25",
+  "status": "STATIC_RECONCILIATION_ONLY_NOT_PRODUCTION_APPROVAL",
+  "parent": "bf2f8626c36f80dd2b61088a45e9fba810809df1",
+  "branch": "qa/full-ability-innate-reconciliation-20261125",
+  "gym_design": {
+    "roark": "preserve existing owner approval",
+    "gardenia": "Revision 3 unapproved",
+    "fantina": "paused"
+  },
+  "source_blobs": {
+    "data/mr10_safe_ability_partition.json": "32706e139e31931231a5ec2c3336b3bf8193282d",
+    "data/mr09_custom_ability_intake.json": "eac0cd0d974b3d3ab11274b0cb10bff1417fa1ab",
+    "docs/approval/mr10-93-mechanics-data.json": "822ed450fba8517f3c6bf8efb0c945b667dad311",
+    "data/mr10d24_final14_recovery_manifest.json": "c6d3803e80e6599465296a7167974dd72eed196a",
+    "data/mr10d24k_er_threshold_form_data.json": "1448c1a4eef31455e4b178db228844ab93fc8e79"
+  },
+  "historical_sources": {
+    "audit_2026_09_08": {
+      "reported_active_ids": 1043,
+      "reported_imported_ids": 724,
+      "source": "FULL_COMPLETE_SYSTEM_HANDOFF_2026-09-08",
+      "native_platform": "GBA, not DS proof"
+    },
+    "batch025": {
+      "reported_mounted_rows": 1620,
+      "visible_rows_recovered": 1000,
+      "visible_complete_six_slot_rows": 1000,
+      "visible_distinct_canonical_natdex": 722,
+      "remaining_rows_unexposed": 620,
+      "warning": "Indexed workbook view caps mounted sheet at 1000 rows; raw materialization denied. Do not mark canonical assignments complete."
+    },
+    "research_2026_09_28": {
+      "rows": 916,
+      "case_normalized_names": 825,
+      "source_counts": {
+        "Exceeded": 716,
+        "InclementEmerald": 10,
+        "EliteRedux": 180,
+        "RadicalRed": 10
+      },
+      "duplicate_families": 97,
+      "source_versions": 200,
+      "actions": {
+        "merge": 91,
+        "keep_one": 3,
+        "pending": 1,
+        "change_name": 1,
+        "change_effect": 1
+      },
+      "health_review": {
+        "redesign": 9,
+        "keep_limits": 1,
+        "keep": 1
+      },
+      "warning": "Research rows are not owner approval by themselves."
+    },
+    "old_imported_to_ds_name_match": {
+      "old_rows": 724,
+      "old_id_range": [
+        319,
+        1042
+      ],
+      "single_name_candidates": 568,
+      "retired_name_candidates": 2,
+      "unmatched": 154,
+      "warning": "Candidate joins only; never transplant GBA IDs or infer identical mechanics."
+    }
+  },
+  "ds_namespace": {
+    "canonical_reserved_range": [
+      0,
+      310
+    ],
+    "custom_reserved_range": [
+      311,
+      929
+    ],
+    "total_reserved_slots": 930,
+    "nonzero_nonretired_slots": 927,
+    "custom_total": 619,
+    "custom_nonretired": 617,
+    "retired_reserved": [
+      {
+        "id": 690,
+        "token": "ABILITY_MR_RAT_KING",
+        "name": "Rat King"
+      },
+      {
+        "id": 907,
+        "token": "ABILITY_MR_PHANTOM",
+        "name": "Phantom"
+      }
+    ],
+    "declared_10bit_ceiling": 1023,
+    "unallocated_tail": 94,
+    "warning": "Count is reserved namespace arithmetic, not definitive active ability count. Capacity claim requires native save verification."
+  },
+  "checks": {
+    "partition_rows": true,
+    "unique_ids": true,
+    "unique_tokens": true,
+    "custom_range_contiguous": true,
+    "all_93_review_names_map_once": true,
+    "two_retired_reserved": true,
+    "all_intake_locked": true
+  },
+  "decision_counts": {
+    "KEEP AS WRITTEN": 75,
+    "REDESIGN": 15,
+    "CUT": 2,
+    "CONVERT TO NORMAL POKEMON MECHANICS": 1
+  },
+  "decision_crosswalk": [
+    {
+      "review_id": 1,
+      "original_name": "Grand Choreography",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 326,
+          "token": "ABILITY_MR_GRAND_CHOREOGRAPHY",
+          "name": "Grand Choreography",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 2,
+      "original_name": "Pinnacle Blade",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 340,
+          "token": "ABILITY_MR_PINNACLE_BLADE",
+          "name": "Pinnacle Blade",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 3,
+      "original_name": "Lethargy",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 395,
+          "token": "ABILITY_MR_PRESSURE_VALVE",
+          "name": "Pressure Valve",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Lethargy",
+        "new_name": "Pressure Valve",
+        "exact_effect": "Once per switch-in, when one or more of the user's stat stages are lowered by an opponent, all of the user's negative stat stages are immediately cleared and its Speed rises by 1 stage.",
+        "trigger": "After an opponent successfully lowers one or more of the user's stat stages.",
+        "restrictions": "Triggers at most once per switch-in. The stat drop must originate from an opponent. Self-inflicted stat drops do not trigger Pressure Valve. If the user has no negative stat stages after the triggering effect resolves, the cleanse portion does nothing but the +1 Speed still applies.",
+        "mechanic_family": "opponent_stat_drop_once_per_entry_cleanse_speed_boost",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Intended as anti-disruption rather than blanket stat-drop immunity."
+      }
+    },
+    {
+      "review_id": 4,
+      "original_name": "Power Outage",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 399,
+          "token": "ABILITY_MR_POWER_OUTAGE",
+          "name": "Power Outage",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 5,
+      "original_name": "Prismatic Pelt",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 316,
+          "token": "ABILITY_PRISMATIC_PELT",
+          "name": "Prismatic Pelt",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 6,
+      "original_name": "Magus Blades",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 417,
+          "token": "ABILITY_MR_MAGUS_BLADES",
+          "name": "Magus Blades",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 7,
+      "original_name": "Soothsayer",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 423,
+          "token": "ABILITY_MR_SOOTHSAYER",
+          "name": "Soothsayer",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 8,
+      "original_name": "Sumo Wrestler",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 425,
+          "token": "ABILITY_MR_SUMO_WRESTLER",
+          "name": "Sumo Wrestler",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 9,
+      "original_name": "Parroting",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 426,
+          "token": "ABILITY_MR_PARROTING",
+          "name": "Parroting",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 10,
+      "original_name": "Retribution Blow",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 427,
+          "token": "ABILITY_MR_BACKLASH",
+          "name": "Backlash",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Retribution Blow",
+        "new_name": "Backlash",
+        "exact_effect": "Whenever an opposing Pokémon successfully raises one or more of its stat stages, the user becomes Primed. While Primed, the user's next damaging move deals 50% more damage and ignores the target's positive Defense, Special Defense, and Evasion stages. Primed is consumed after that damaging move resolves.",
+        "trigger": "After an opposing active battler successfully gains one or more stat stages.",
+        "restrictions": "Primed does not stack. Switching out clears Primed. Only the next damaging move receives the 50% boost and ignores positive Defense, Special Defense, and Evasion stages; negative stages and all other modifiers still apply normally.",
+        "mechanic_family": "opponent_setup_reactive_primed_next_attack",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Replaces automatic Hyper Beam retaliation with an interactive anti-setup window."
+      }
+    },
+    {
+      "review_id": 11,
+      "original_name": "Shallow Grave",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 428,
+          "token": "ABILITY_MR_SHALLOW_GRAVE",
+          "name": "Shallow Grave",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 12,
+      "original_name": "Backup Power",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 429,
+          "token": "ABILITY_MR_BACKUP_POWER",
+          "name": "Backup Power",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 13,
+      "original_name": "Foamy Web",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 436,
+          "token": "ABILITY_MR_FRESH_START",
+          "name": "Fresh Start",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Foamy Web",
+        "new_name": "Fresh Start",
+        "exact_effect": "On switch-in, the user removes all normally removable entry hazards from its own side. If at least one hazard is successfully removed, the user restores 1/8 of its maximum HP.",
+        "trigger": "On switch-in after normal entry processing reaches the Ability hazard-cleanup hook.",
+        "restrictions": "Removes hazards only from the user's side. Does not remove screens, terrain, weather, status conditions, or opponent-side hazards. The healing occurs only if at least one removable hazard was actually cleared.",
+        "mechanic_family": "entry_own_side_hazard_clear_conditional_heal",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Ability-based defensive hazard control."
+      }
+    },
+    {
+      "review_id": 14,
+      "original_name": "Raging Moth",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 442,
+          "token": "ABILITY_MR_RAGING_MOTH",
+          "name": "Raging Moth",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 15,
+      "original_name": "Thunder Clouds",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 473,
+          "token": "ABILITY_MR_THUNDER_CLOUDS",
+          "name": "Thunder Clouds",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 16,
+      "original_name": "Rejection",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 476,
+          "token": "ABILITY_MR_NULL_WARD",
+          "name": "Null Ward",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Rejection",
+        "new_name": "Null Ward",
+        "exact_effect": "The first opposing status move that directly targets the user after each switch-in fails. After Null Ward blocks one qualifying move, it is exhausted until the user leaves battle and re-enters.",
+        "trigger": "When an opponent attempts the first qualifying directly targeted status move against the user after entry.",
+        "restrictions": "Triggers once per switch-in. Does not block damaging moves with secondary effects, self-targeting setup moves, field-wide moves, weather, terrain, or entry hazards aimed at a side rather than the holder.",
+        "mechanic_family": "once_per_entry_targeted_status_move_nullification",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Single-use anti-status shield rather than persistent immunity or reflection."
+      }
+    },
+    {
+      "review_id": 17,
+      "original_name": "Jackhammer",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 490,
+          "token": "ABILITY_MR_JACKHAMMER",
+          "name": "Jackhammer",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 18,
+      "original_name": "Lucky Halo",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 503,
+          "token": "ABILITY_MR_LUCKY_HALO",
+          "name": "Lucky Halo",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 19,
+      "original_name": "Blade Dance",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 505,
+          "token": "ABILITY_MR_BLADE_DANCE",
+          "name": "Blade Dance",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 20,
+      "original_name": "Draconic Might",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 527,
+          "token": "ABILITY_MR_DRACONIC_MIGHT",
+          "name": "Draconic Might",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 21,
+      "original_name": "Fey Flight",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 528,
+          "token": "ABILITY_MR_FEY_FLIGHT",
+          "name": "Fey Flight",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 22,
+      "original_name": "Ominous Shroud",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 549,
+          "token": "ABILITY_MR_SPECTRAL_BODY",
+          "name": "Spectral Body",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Ominous Shroud",
+        "new_name": "Spectral Body",
+        "exact_effect": "Damage from contact moves against the user is reduced by 25%, and the user cannot be trapped by moves, Abilities, or trapping effects.",
+        "trigger": "Contact-damage reduction applies during incoming damage calculation. Trap immunity is continuous while the Ability is active.",
+        "restrictions": "Only contact damage receives the 25% reduction. Non-contact attacks are unaffected. The user remains subject to ordinary switching restrictions unrelated to trapping, such as being the last available party Pokémon.",
+        "mechanic_family": "contact_damage_reduction_plus_trap_immunity",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Intangible defensive identity without added Ghost typing or Shadow Shield."
+      }
+    },
+    {
+      "review_id": 23,
+      "original_name": "Dragonfruit",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 552,
+          "token": "ABILITY_MR_DRAGONFRUIT",
+          "name": "Dragonfruit",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 24,
+      "original_name": "Aftershock",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 556,
+          "token": "ABILITY_MR_AFTERSHOCK",
+          "name": "Aftershock",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 25,
+      "original_name": "High Tide",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 557,
+          "token": "ABILITY_MR_HIGH_TIDE",
+          "name": "High Tide",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 26,
+      "original_name": "Rock Armor",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 562,
+          "token": "ABILITY_MR_ROCK_ARMOR",
+          "name": "Rock Armor",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 27,
+      "original_name": "Glacial Rage",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 570,
+          "token": "ABILITY_MR_GLACIAL_RAGE",
+          "name": "Glacial Rage",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 28,
+      "original_name": "Sludge Spit",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 571,
+          "token": "ABILITY_MR_SLUDGE_SPIT",
+          "name": "Sludge Spit",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 29,
+      "original_name": "Chilling Pellets",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 572,
+          "token": "ABILITY_MR_CHILLING_PELLETS",
+          "name": "Chilling Pellets",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 30,
+      "original_name": "Lunar Wrath",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 573,
+          "token": "ABILITY_MR_LUNAR_WRATH",
+          "name": "Lunar Wrath",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 31,
+      "original_name": "Frost Dragon",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 575,
+          "token": "ABILITY_MR_FROST_DRAGON",
+          "name": "Frost Dragon",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 32,
+      "original_name": "Voltron",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 586,
+          "token": "ABILITY_MR_VOLTRON",
+          "name": "Voltron",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 33,
+      "original_name": "Break it Down",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 587,
+          "token": "ABILITY_MR_BREAK_IT_DOWN",
+          "name": "Break it Down",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 34,
+      "original_name": "Backflip",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 588,
+          "token": "ABILITY_MR_COUNTERSTEP",
+          "name": "Counterstep",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Backflip",
+        "new_name": "Counterstep",
+        "exact_effect": "Once per switch-in, the first time the user takes direct damage from a Pokémon that acted before it, the user gains 1 Speed stage and becomes Ready. While Ready, the user's next damaging move deals 20% more damage, then Ready is consumed.",
+        "trigger": "After the first qualifying direct damaging move from a Pokémon that acted before the user during that switch-in.",
+        "restrictions": "Triggers at most once per switch-in. Multi-hit moves count as one triggering move event. The attacker must have acted before the user in that turn. Ready does not stack, is consumed by the next damaging move, and is cleared on switch-out.",
+        "mechanic_family": "once_per_entry_slower_hit_speed_boost_and_next_attack_boost",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Momentum tool for bulky or slower attackers."
+      }
+    },
+    {
+      "review_id": 35,
+      "original_name": "Faraday Cage",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 641,
+          "token": "ABILITY_MR_COUNTERCURRENT",
+          "name": "Countercurrent",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Faraday Cage",
+        "new_name": "Countercurrent",
+        "exact_effect": "When the user is hit by a contact move, the attacker's Speed falls by 1 stage. If that Speed drop makes the user faster than the attacker, the user's next move gains +1 priority.",
+        "trigger": "After a qualifying contact hit and its Speed-drop resolution.",
+        "restrictions": "The temporary +1 priority bonus can be earned at most once per turn, does not stack, is consumed by the user's next move, and is cleared on switch-out. If the Speed drop is prevented or does not make the user faster, no priority bonus is granted.",
+        "mechanic_family": "contact_speed_drop_conditional_next_move_priority",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Converts contact punishment into tempo control."
+      }
+    },
+    {
+      "review_id": 36,
+      "original_name": "Deflect",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 643,
+          "token": "ABILITY_MR_DEFLECT",
+          "name": "Deflect",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 37,
+      "original_name": "Komodo",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 670,
+          "token": "ABILITY_MR_KOMODO",
+          "name": "Komodo",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 38,
+      "original_name": "Winter Throne",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 671,
+          "token": "ABILITY_MR_WINTER_THRONE",
+          "name": "Winter Throne",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 39,
+      "original_name": "Wind Chimes",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 681,
+          "token": "ABILITY_MR_WIND_CHIMES",
+          "name": "Wind Chimes",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 40,
+      "original_name": "Dead Bark",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 686,
+          "token": "ABILITY_MR_HEARTWOOD",
+          "name": "Heartwood",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Dead Bark",
+        "new_name": "Heartwood",
+        "exact_effect": "The user's Defense and Special Defense cannot be lowered by opponents. At the end of a turn in which the user took no direct damage, it restores 1/16 of its maximum HP.",
+        "trigger": "Defensive stat-drop prevention is continuous. Healing checks at end of turn.",
+        "restrictions": "Self-inflicted Defense or Special Defense drops still occur normally. Only direct damage from an opposing attack prevents the end-of-turn heal; indirect damage such as poison, weather, and hazards does not.",
+        "mechanic_family": "opponent_defense_drop_immunity_plus_no_direct_damage_recovery",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Defensive sustain without type-changing or broad damage reduction."
+      }
+    },
+    {
+      "review_id": 41,
+      "original_name": "Cryo Architect",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 687,
+          "token": "ABILITY_MR_CRYO_ARCHITECT",
+          "name": "Cryo Architect",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 42,
+      "original_name": "Rat King",
+      "decision": "CUT",
+      "ds_candidates": [
+        {
+          "id": 690,
+          "token": "ABILITY_MR_RAT_KING",
+          "name": "Rat King",
+          "retired": true
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 43,
+      "original_name": "Sap Trap",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 691,
+          "token": "ABILITY_MR_SAP_TRAP",
+          "name": "Sap Trap",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 44,
+      "original_name": "Toxic Surge",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 692,
+          "token": "ABILITY_MR_TOXIC_SURGE",
+          "name": "Toxic Surge",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 45,
+      "original_name": "Parasitic Spores",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 693,
+          "token": "ABILITY_MR_PARASITIC_SPORES",
+          "name": "Parasitic Spores",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 46,
+      "original_name": "Berserk DNA",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 695,
+          "token": "ABILITY_MR_BERSERK_DNA",
+          "name": "Berserk DNA",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 47,
+      "original_name": "Temporal Rupture",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 696,
+          "token": "ABILITY_MR_TIME_COMPRESSION",
+          "name": "Time Compression",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Temporal Rupture",
+        "new_name": "Time Compression",
+        "exact_effect": "Once per switch-in, the first move the user uses that would normally require a charging turn or a recharge turn ignores that delay.",
+        "trigger": "When a selected move would actually impose a charge-before-use or recharge-after-use delay.",
+        "restrictions": "Triggers once per switch-in. The charge is consumed only when the Ability actually removes a delay. If another effect already removes the delay, Time Compression remains unused. Switching out refreshes the one-use state.",
+        "mechanic_family": "once_per_entry_charge_or_recharge_delay_skip",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Shared hook can support future charge/recharge mechanics."
+      }
+    },
+    {
+      "review_id": 48,
+      "original_name": "Greedy",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 697,
+          "token": "ABILITY_MR_GREEDY",
+          "name": "Greedy",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 49,
+      "original_name": "Polarity",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 698,
+          "token": "ABILITY_MR_POLARITY",
+          "name": "Polarity",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 50,
+      "original_name": "Craving",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 699,
+          "token": "ABILITY_MR_CRAVING",
+          "name": "Craving",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 51,
+      "original_name": "Aquatic",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 702,
+          "token": "ABILITY_MR_AQUATIC",
+          "name": "Aquatic",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 52,
+      "original_name": "Grounded",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 703,
+          "token": "ABILITY_MR_GROUNDED",
+          "name": "Grounded",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 53,
+      "original_name": "Unrelenting",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 731,
+          "token": "ABILITY_MR_UNRELENTING",
+          "name": "Unrelenting",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 54,
+      "original_name": "Sharing Is Caring",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 732,
+          "token": "ABILITY_MR_PREDATORY_TIMING",
+          "name": "Predatory Timing",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Sharing Is Caring",
+        "new_name": "Predatory Timing",
+        "exact_effect": "Whenever an opposing Pokémon successfully uses a status move, the holder becomes Opportunistic. While Opportunistic, the user's next damaging move deals 30% more damage.",
+        "trigger": "After an opposing active battler successfully resolves a status move.",
+        "restrictions": "Opportunistic does not stack, is consumed after the user's next damaging move, and is cleared on switch-out. Failed status moves do not trigger the Ability.",
+        "mechanic_family": "opponent_status_move_reactive_next_attack_boost",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Broad anti-passivity role without global stat-copy chains."
+      }
+    },
+    {
+      "review_id": 55,
+      "original_name": "Two-Faced",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 733,
+          "token": "ABILITY_MR_TWO_FACED",
+          "name": "Two-Faced",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 56,
+      "original_name": "DNA Scramble",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 734,
+          "token": "ABILITY_MR_DNA_SCRAMBLE",
+          "name": "DNA Scramble",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 57,
+      "original_name": "Dreamscape",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 735,
+          "token": "ABILITY_MR_DREAMSCAPE",
+          "name": "Dreamscape",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 58,
+      "original_name": "Locust Swarm",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 736,
+          "token": "ABILITY_MR_LOCUST_SWARM",
+          "name": "Locust Swarm",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 59,
+      "original_name": "Revelation",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 737,
+          "token": "ABILITY_MR_REVELATION",
+          "name": "Revelation",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 60,
+      "original_name": "Strikeout",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 738,
+          "token": "ABILITY_MR_PATTERN_BREAKER",
+          "name": "Pattern Breaker",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Strikeout",
+        "new_name": "Pattern Breaker",
+        "exact_effect": "If an opposing Pokémon uses the same move it used on its previous turn, the holder becomes Locked In on that opponent for the rest of the turn. The holder's next damaging move against that Pokémon gains +1 priority and 30% power.",
+        "trigger": "After an opposing active battler successfully uses the same move it used on its previous turn.",
+        "restrictions": "Checks the move actually used. Failed moves still become the prior move for the next-turn comparison, but Ability-generated follow-up moves do not. The bonus does not stack and expires at the end of the turn if unused.",
+        "mechanic_family": "opponent_repeat_move_reactive_priority_power",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Punishes repetitive play without trapping or forced switching."
+      }
+    },
+    {
+      "review_id": 61,
+      "original_name": "Hydra",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 739,
+          "token": "ABILITY_MR_HYDRA",
+          "name": "Hydra",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 62,
+      "original_name": "Hand Barnacles",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 740,
+          "token": "ABILITY_MR_UNDERTOW",
+          "name": "Undertow",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Hand Barnacles",
+        "new_name": "Undertow",
+        "exact_effect": "Whenever the user successfully deals direct damage, the target becomes Dragged until the end of its next turn. While Dragged, its Speed is reduced by 25% and it cannot switch itself out through pivoting moves such as U-turn, Volt Switch, Flip Turn, or equivalent self-switch effects.",
+        "trigger": "After the user successfully deals direct damage.",
+        "restrictions": "Normal voluntary switching remains legal. Dragged does not hard-trap the target. Reapplying the effect refreshes duration but does not stack the Speed reduction.",
+        "mechanic_family": "damage_applies_temporary_speed_slow_and_pivot_lock",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Anti-pivot control without Shadow Tag-style trapping."
+      }
+    },
+    {
+      "review_id": 63,
+      "original_name": "Hollow Ice Zone",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 741,
+          "token": "ABILITY_MR_HOLLOW_ICE_ZONE",
+          "name": "Hollow Ice Zone",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 64,
+      "original_name": "Blood Stain",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 764,
+          "token": "ABILITY_MR_BLOOD_STAIN",
+          "name": "Blood Stain",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 65,
+      "original_name": "Cheating Death",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 767,
+          "token": "ABILITY_MR_TWO_LIVES",
+          "name": "Two Lives",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Cheating Death",
+        "new_name": "Two Lives",
+        "exact_effect": "Once per battle, the first direct damaging hit the user would take is completely blocked; afterward, the shield breaks and the user loses 1/8 of its maximum HP. Separately, while the user is at full HP, an attack that would knock it out instead leaves it at 1 HP.",
+        "trigger": "The Disguise-style shield triggers on the first qualifying direct damaging hit in the battle. The Sturdy-style survival check applies whenever the user is at full HP.",
+        "restrictions": "The shield is once per battle and does not refresh on switching. After the shield breaks, its 1/8 max-HP cost can prevent the Sturdy portion from being immediately active. Multi-hit attacks continue normally after the shielded hit. The Sturdy-style survival can function again if the user later returns to full HP.",
+        "mechanic_family": "once_per_battle_disguise_shield_plus_full_hp_sturdy",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign based on owner's double-Sturdy / Disguise-plus-Sturdy idea."
+      }
+    },
+    {
+      "review_id": 66,
+      "original_name": "Cold Rebound",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 771,
+          "token": "ABILITY_MR_COLD_REBOUND",
+          "name": "Cold Rebound",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 67,
+      "original_name": "Demolitionist",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 773,
+          "token": "ABILITY_MR_DEMOLITIONIST",
+          "name": "Demolitionist",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 68,
+      "original_name": "Dragonfly",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 775,
+          "token": "ABILITY_MR_DRAGONFLY",
+          "name": "Dragonfly",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 69,
+      "original_name": "Half Drake",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 791,
+          "token": "ABILITY_MR_HALF_DRAKE",
+          "name": "Half Drake",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 70,
+      "original_name": "Hover",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 793,
+          "token": "ABILITY_MR_HOVER",
+          "name": "Hover",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 71,
+      "original_name": "Ice Age",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 795,
+          "token": "ABILITY_MR_ICE_AGE",
+          "name": "Ice Age",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 72,
+      "original_name": "Ice Cold Hunter",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 796,
+          "token": "ABILITY_MR_ICE_COLD_HUNTER",
+          "name": "Ice Cold Hunter",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 73,
+      "original_name": "Lunar Affinity",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 803,
+          "token": "ABILITY_MR_LUNAR_AFFINITY",
+          "name": "Lunar Affinity",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 74,
+      "original_name": "Metallic",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 809,
+          "token": "ABILITY_MR_METALLIC",
+          "name": "Metallic",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 75,
+      "original_name": "Parry",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 811,
+          "token": "ABILITY_MR_PARRY",
+          "name": "Parry",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 76,
+      "original_name": "Patchwork",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 812,
+          "token": "ABILITY_MR_PATCHWORK",
+          "name": "Patchwork",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 77,
+      "original_name": "Soul Linker",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 821,
+          "token": "ABILITY_MR_SOUL_LINKER",
+          "name": "Soul Linker",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 78,
+      "original_name": "Thundercall",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 867,
+          "token": "ABILITY_MR_THUNDERCALL",
+          "name": "Thundercall",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 79,
+      "original_name": "Toxic Spill",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 881,
+          "token": "ABILITY_MR_TOXIC_SPILL",
+          "name": "Toxic Spill",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 80,
+      "original_name": "Atomic Burst",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 885,
+          "token": "ABILITY_MR_EXECUTION_DRIVE",
+          "name": "Execution Drive",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Atomic Burst",
+        "new_name": "Execution Drive",
+        "exact_effect": "The user's damaging moves deal 30% more damage to targets at or below 50% of their maximum HP. If the user knocks out an opposing Pokémon, it restores 1/8 of its maximum HP.",
+        "trigger": "The damage bonus is checked immediately before each damaging hit resolves. The healing triggers after the user directly knocks out an opposing Pokémon.",
+        "restrictions": "The 30% damage bonus applies only while the target is at or below 50% HP at the moment of the hit. On multi-hit moves, later hits can begin receiving the bonus if an earlier hit lowers the target to 50% HP or below. The 1/8 max-HP recovery occurs once per opposing Pokémon knocked out by the user's direct damage and does not trigger from indirect damage.",
+        "mechanic_family": "low_hp_target_execution_boost_plus_ko_recovery",
+        "implementation_class": "existing_hook",
+        "notes": "Approved blank-slate redesign. Replaces rejected Critical Mass concept with a straightforward finisher identity."
+      }
+    },
+    {
+      "review_id": 81,
+      "original_name": "Primal Maw",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 889,
+          "token": "ABILITY_MR_PRIMAL_MAW",
+          "name": "Primal Maw",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 82,
+      "original_name": "Dual Wield",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 894,
+          "token": "ABILITY_MR_DUAL_WIELD",
+          "name": "Dual Wield",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 83,
+      "original_name": "Color Change",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 16,
+          "token": "ABILITY_COLOR_CHANGE",
+          "name": "Color Change",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 84,
+      "original_name": "Zen Mode",
+      "decision": "CONVERT TO NORMAL POKEMON MECHANICS",
+      "ds_candidates": [
+        {
+          "id": 161,
+          "token": "ABILITY_ZEN_MODE",
+          "name": "Zen Mode",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 85,
+      "original_name": "Turboblaze",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 163,
+          "token": "ABILITY_TURBOBLAZE",
+          "name": "Turboblaze",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 86,
+      "original_name": "Teravolt",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 164,
+          "token": "ABILITY_TERAVOLT",
+          "name": "Teravolt",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 87,
+      "original_name": "Magical Dust",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 906,
+          "token": "ABILITY_MR_MAGICAL_DUST",
+          "name": "Magical Dust",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 88,
+      "original_name": "Phantom",
+      "decision": "CUT",
+      "ds_candidates": [
+        {
+          "id": 907,
+          "token": "ABILITY_MR_PHANTOM",
+          "name": "Phantom",
+          "retired": true
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 89,
+      "original_name": "Volcano Rage",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 908,
+          "token": "ABILITY_MR_VOLCANO_RAGE",
+          "name": "Volcano Rage",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 90,
+      "original_name": "Pyro Shells",
+      "decision": "REDESIGN",
+      "ds_candidates": [
+        {
+          "id": 910,
+          "token": "ABILITY_MR_RANGEFINDER",
+          "name": "Rangefinder",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": {
+        "status": "APPROVED",
+        "approved_on": "2026-09-29",
+        "original_name": "Pyro Shells",
+        "new_name": "Rangefinder",
+        "exact_effect": "Consecutive successful Mega Launcher-class damaging moves gain increasing power: +10% on the first qualifying hit, +20% on the second consecutive qualifying move, and +30% on the third and all later consecutive qualifying moves.",
+        "trigger": "When the user successfully resolves a qualifying Mega Launcher-class damaging move.",
+        "restrictions": "The calibration resets when the user switches out or successfully uses a damaging move outside the launcher class. Failed or missed launcher moves do not advance the calibration. Status moves do not reset it.",
+        "mechanic_family": "consecutive_launcher_move_power_ramp",
+        "implementation_class": "light_extension",
+        "notes": "Approved blank-slate redesign. Sustained-artillery identity using a reusable move-class streak counter."
+      }
+    },
+    {
+      "review_id": 91,
+      "original_name": "3 > 1",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 914,
+          "token": "ABILITY_MR_3_1",
+          "name": "3 > 1",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 92,
+      "original_name": "Schooling",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 208,
+          "token": "ABILITY_SCHOOLING",
+          "name": "Schooling",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    },
+    {
+      "review_id": 93,
+      "original_name": "Comatose",
+      "decision": "KEEP AS WRITTEN",
+      "ds_candidates": [
+        {
+          "id": 213,
+          "token": "ABILITY_COMATOSE",
+          "name": "Comatose",
+          "retired": false
+        }
+      ],
+      "redesign_resolution": null
+    }
+  ],
+  "known_conflicts": [
+    {
+      "identity": "Revelation / Ancient Script",
+      "older_authority": "September 8 handoff says Unown Revelation transformation removed; Ancient Script replaces slot",
+      "later_ds": "MR10D24J/K stages Revelation threshold controller; owner review must be checked for explicit supersession",
+      "action": "HOLD conflicting form controller until exact dated authority established"
+    },
+    {
+      "identity": "Locust Swarm",
+      "action": "HOLD native certification until approved symbolic species/form data is bound; no new production species IDs"
+    },
+    {
+      "identity": "ability name As One",
+      "action": "keep two distinct canonical identity IDs 266 and 267; never deduplicate by display name alone"
+    }
+  ],
+  "implementation_status": {
+    "historical_ds_d13_report": {
+      "modern_canonical": 187,
+      "redesigns": 15,
+      "keep_as_written": 46,
+      "target": 75,
+      "native_build_reported_pass": true
+    },
+    "later_final14_manifest": {
+      "starting_keep_as_written": 61,
+      "target": 75,
+      "remaining_at_manifest": 14
+    },
+    "latest_runtime_coverage": "not freshly verified; need implemented-token registry and exact certified workflow artifacts",
+    "innates": "native query, save and toggle proof pending"
+  },
+  "next": [
+    "Recover exact remaining 154 old imported names through aliases, redesign and donor identity; compare effect and trigger before merging.",
+    "Read entire 1620-row raw workbook or authoritative full source; reconcile all 1025 canonical entries and accepted forms symbolically.",
+    "Cross-check 916 research rows and all 97 duplicate approvals against locked 883-row DS intake and original historical audit; retain unresolved approvals.",
+    "Verify later D24 workflow outputs and implemented-token registry; audit primary/innate lookup and 10-bit packing before assigning any new IDs.",
+    "No native or production changes until collision-free definitive count and test gates are established."
+  ],
+  "production_allowed": false
+}
