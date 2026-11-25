@@ -1,0 +1,128 @@
+{
+  "schema": "mercury-learnset-design-amendment-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_NATIVE_PENDING",
+  "authority": "Owner agreed to Ludicolo U-turn and Gastrodon Flip Turn learnset additions with equal player access and corresponding Wake moveset replacements.",
+  "learnset": [
+    {
+      "species": "Ludicolo",
+      "add": "U-turn",
+      "player_access": true,
+      "acquisition_method": "pending native learnset and progression review"
+    },
+    {
+      "species": "Gastrodon",
+      "forms": [
+        "East Sea",
+        "West Sea"
+      ],
+      "add": "Flip Turn",
+      "player_access": true,
+      "acquisition_method": "pending native learnset and progression review"
+    }
+  ],
+  "gym": {
+    "leader": "Crasher Wake",
+    "status": "MOVES_APPROVED_REMAINING_TEAM_AND_AI_PENDING",
+    "changes": [
+      {
+        "species": "Ludicolo",
+        "difficulty": [
+          "Ace Trainer",
+          "Pro Trainer"
+        ],
+        "replace": "Fake Out",
+        "with": "U-turn",
+        "result": [
+          "Giga Drain",
+          "Scald",
+          "Ice Beam",
+          "U-turn"
+        ]
+      },
+      {
+        "species": "Gastrodon",
+        "difficulty": [
+          "Ace Trainer"
+        ],
+        "replace": "Scald",
+        "with": "Flip Turn",
+        "result": [
+          "Earth Power",
+          "Flip Turn",
+          "Recover",
+          "Yawn"
+        ]
+      },
+      {
+        "species": "Gastrodon",
+        "difficulty": [
+          "Pro Trainer"
+        ],
+        "replace": "Scald",
+        "with": "Flip Turn",
+        "result": [
+          "Earth Power",
+          "Flip Turn",
+          "Recover",
+          "Clear Smog"
+        ]
+      }
+    ],
+    "trainer_gastrodon": {
+      "status": "PROPOSED_FOR_FINAL_TEAM_REVIEW",
+      "replace": "Water Pulse",
+      "with": "Flip Turn",
+      "result": [
+        "Mud Bomb",
+        "Flip Turn",
+        "Recover",
+        "Yawn"
+      ],
+      "note": "Trainer set has Water Pulse rather than Scald; equivalent replacement proposed to ensure all Wake team members have a pivot move, not treated as explicit final team approval."
+    },
+    "pro_pivot_roster": [
+      [
+        "Pelipper",
+        "U-turn"
+      ],
+      [
+        "Lanturn",
+        "Volt Switch"
+      ],
+      [
+        "Ludicolo",
+        "U-turn"
+      ],
+      [
+        "Gastrodon",
+        "Flip Turn"
+      ],
+      [
+        "Basculegion Male",
+        "Flip Turn"
+      ],
+      [
+        "Mega Floatzel",
+        "Flip Turn"
+      ]
+    ]
+  },
+  "sources": {
+    "species_authority": "840e081884f88b28cc8a76d2625ff203c37c0f50",
+    "rolling_tide": "88be6a589a09a8047484bb6497d4ed6f4c5f14f8",
+    "global_field": "5cb15a45424fc35902101e9c31cb7d2de354dcf5"
+  },
+  "holds": [
+    "Verify actual native learnsets, move identifiers and availability at Gym 5; no NPC-only access",
+    "Confirm East/West shared learnset routing and player acquisition method",
+    "Verify U-turn and Flip Turn with successful damaging pivot trigger, legal replacement, trapping, entry hazards and Rolling Tide",
+    "Final difficulty teams, cap and adaptive AI remain pending owner approval"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false
+  }
+}
