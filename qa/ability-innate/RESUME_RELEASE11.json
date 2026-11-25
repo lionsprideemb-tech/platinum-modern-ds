@@ -1,0 +1,71 @@
+{
+  "schema": "mercury-release11-resume-v1",
+  "parent": "edaf8ef8a7c5f3079bee49f90e8c4742c579be1b",
+  "prior_checkpoint": "7fefff7b84f53064acfee85057cd588aab10d37e",
+  "source_tree_lock": "4f1a77335fa51d3aa247ce3c88fec91e945ca7a9",
+  "archive_intake": "6a02ab5b5b4f155a083cd30908b8b7091aca3f83",
+  "archive_replay": "88794d2c85fa3af68aa89799a29256ae5a62ea00",
+  "archive_replay_tests": "3c2c136bcc0cbbc98a5cc514651cea6b8077e688",
+  "reused": {
+    "plan": "a68c40c72b59d64bbb370504de505150137d944a",
+    "namespace": "d902d6ec26a43695a716f045dc880f5c1a3bd978",
+    "git_runner": "e2658cdb14887a0dedd0ea5979a2ac3bedb1fb95",
+    "context_adapter": "1f65f51cf1f375ca341962642c559d54af9b8c4a",
+    "generated_action_guard": "e3aa4fb75a105bb66e36fc746f4a732cf0dd2ed4"
+  },
+  "tests": {
+    "status": "PASS on real local Git-generated fixture and small shell/registry fixtures; not full project execution",
+    "checks": [
+      "independent extracted tree rehash with gitlink",
+      "tampered binary rejected",
+      "executable mode change rejected",
+      "symlink rejected",
+      "wrong blob rejected and correct blob accepted",
+      "failed stage stops subsequent stage and logs failure",
+      "valid registry accepted",
+      "missing required token rejected",
+      "duplicate declaration rejected",
+      "non-isolated network environment rejected"
+    ],
+    "limitations": "CLI end-to-end with all four actual archives not tested. Submodule contents not recovered. The loopback-only preflight is intentionally conservative and does not independently certify full sandbox isolation."
+  },
+  "acquisition": {
+    "new_route": "Separate container download service attempted official pinned Mercury ZIP. Service required successfully viewed URL; public web open failed DisabledError, service still rejected. No archive bytes. Local mounted folder has prior intake/test scripts only; no new ZIP/tar/bundle files. No repeated git clone/DNS or tar retrieval.",
+    "archives": 0
+  },
+  "environment": {
+    "tools": "node, git, rsync, jq, python3 present",
+    "network_interfaces": [
+      "eth0",
+      "lo"
+    ],
+    "unshare_network": "Operation not permitted",
+    "status": "BLOCKED: verified isolated execution environment needed"
+  },
+  "totals": {
+    "source_manifests": 4,
+    "blob_entries": 62257,
+    "full_archives": 0,
+    "replay_stages": 0,
+    "replay_total": 53,
+    "native_certified": false
+  },
+  "preserve": {
+    "slots": 1067,
+    "nonretired": 1062,
+    "retired": [
+      524,
+      1004
+    ],
+    "research_candidates": 620,
+    "approvals": "unchanged",
+    "gym_design": "paused",
+    "production_allowed": false
+  },
+  "next": [
+    "Acquire four exact archive bytes or clean pinned worktrees through attached files or genuinely new authorized routes. Do not reattempt exhausted acquisition methods.",
+    "Run the committed archive intake separately to verify actual ZIPs if attached; do not execute installers without isolated environment.",
+    "Obtain a permitted offline execution environment without spending; use archive replay or original Git replay only when prerequisites verified. Preserve failure logs, stop at first actual conflict.",
+    "Apply native guarded patches only to combined verified source; no standalone models. If no new evidence, report hard hold rather than producing another summary-only release."
+  ]
+}
