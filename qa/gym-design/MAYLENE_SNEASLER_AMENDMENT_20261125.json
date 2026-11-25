@@ -2,7 +2,7 @@
   "schema": "mercury-gym-design-amendment-v1",
   "date": "2026-11-25",
   "status": "OWNER_ACCEPTED_DESIGN_NATIVE_PENDING",
-  "authority": "Owner selected Sneasler instead of Heracross, requested counterplay against repeated Earthquake before Toxicroak, reviewed Air Balloon and proposed ability replacements, then requested building the design.",
+  "authority": "Owner selected Sneasler instead of Heracross, requested counterplay against repeated Earthquake before Toxicroak, reviewed Air Balloon and proposed ability replacements, then requested building the design. Owner corrected the counterplay intent: Sneasler should bait and potentially faint to Earthquake so the same opposing battler's repeated Earthquake against Mega Toxicroak is weakened by Duelist's Rhythm; approved removal of Air Balloon and restoration of White Herb.",
   "supersedes": {
     "file": "qa/gym-design/MAYLENE_APPROVED_20261125.json",
     "blob": "e9f76557cd7857eb4e36ae4ee122c9c9368d4a76",
@@ -261,7 +261,7 @@
           "species": "Sneasler",
           "level": 35,
           "primary": "Unburden",
-          "item": "Air Balloon",
+          "item": "White Herb",
           "moves": [
             "Dire Claw",
             "Close Combat",
@@ -301,13 +301,14 @@
     "unchanged_species_authority": "96faec12eb17846329deecc2d4d5bb4774a717a5",
     "adaptive_ai": {
       "status": "DESIGN_ACCEPTED_EXACT_HEURISTIC_PROPOSED_FOR_QA",
-      "intent": "Prefer available Sneasler before Toxicroak against repeated observed Ground attacks while Air Balloon is intact; preserve ace for later whenever practical.",
-      "suggested_trigger": "At least two consecutive executed Ground-type damaging moves by the player's active Pokemon; only observed history, not queued/unexecuted choices.",
-      "suggested_decision": "Prioritize Sneasler on a legal replacement opportunity if Balloon remains intact and known effects do not negate Ground immunity; allow ordinary AI alternatives including Hawlucha; no forced switch, no hidden information or immunity. Do not assume player will repeat Ground.",
-      "expiry": "Reevaluate if player changes active Pokemon or attack pattern; Balloon loss disables this special priority.",
+      "intent": "Use Sneasler as a viable offensive combatant and conditional Earthquake bait ahead of Mega Toxicroak. If Sneasler is knocked out by Earthquake, the next Earthquake executed by the same opposing active Pokemon against Toxicroak while Duelist's Rhythm remains active receives the ordinary 0.75 repetition multiplier. Defender replacement does not clear the attacker's history.",
+      "suggested_trigger": "Observed repeated Earthquake by the currently active opponent, sufficient field duration for bait and subsequent attack, Sneasler and Toxicroak available; evaluate known legal options and plausible damage. Never inspect the opponent's unexecuted choice.",
+      "suggested_decision": "On a legal replacement opportunity prioritize Sneasler ahead of Toxicroak when the bait offers useful expected value. Allow Sneasler to fight normally and exploit White Herb plus Unburden after Close Combat. If Earthquake faints Sneasler, consider Toxicroak as next replacement and Mega Evolve at a legal opportunity. Do not force a sacrifice, guarantee a KO, prevent the player changing moves, or refresh the field.",
+      "expiry": "Disable bait-specific preference if terrain has expired, been replaced or cleared, or will not last through the expected follow-up attack; reevaluate when opponent switches, changes move or a better legal option exists.",
       "holds": [
-        "Confirm exact history window and switch scoring during native QA",
-        "Ground immunity exceptions, Air Balloon loss and Unburden, Acrobatics, adaptive AI and field interaction"
+        "Native turn accounting: at least two remaining active turns at bait placement if bait and follow-up each require one turn; resolve exact timing at replacement and action execution",
+        "Verify that opponent history survives defender faint and replacement but clears on attacker switch or different executed technique; no special Earthquake damage reduction outside the existing terrain rule",
+        "Verify White Herb consumption after Close Combat, Unburden and Acrobatics; damage estimates, Mega transition timing and AI scoring in both innate modes; no assured survival or forced sacrifice"
       ]
     }
   },
@@ -322,5 +323,10 @@
     "rom_changed": false,
     "native_code_changed": false,
     "prior_design_preserved": true
+  },
+  "amendment_revision": {
+    "supersedes_blob": "09265c8abad31ecccedd442092a9398f06d8720b",
+    "supersedes_commit": "11face0d50941b41c48d096917040ebf0a58897d",
+    "scope": "Sneasler held item and adaptive AI intent only; previous Air Balloon counterplay retired; all other approval records preserved"
   }
 }
