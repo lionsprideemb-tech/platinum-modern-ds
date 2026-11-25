@@ -1,0 +1,401 @@
+{
+  "schema": "mercury-release7-resume-v1",
+  "parent": "0e32faf96e91d53076fe32d10c015ba3badcbb17",
+  "prior_commit": "f40a4c6ee0ebe4bd5d4ddcf9c12ec6f89dd5286a",
+  "prior_resume_blob": "7d8e65b6aa603f52dee4da515b782d6880b25357",
+  "source_ds_commit": "4a7560f8b6cfe7fc19ee266365428c04dbeb5f98",
+  "host_contract": {
+    "path": "qa/ability-innate/release7_native_contract.c",
+    "blob": "125346e0bfc9a5449fc1e149a924288faa72c808",
+    "compiler": "cc -std=c99 -Wall -Wextra -Werror -pedantic -O2",
+    "executed_counts": {
+      "predator": 1048576,
+      "nerve": 4800,
+      "item": 1026,
+      "recording": 66562,
+      "routing": 10,
+      "total": 1120974
+    },
+    "status": "PASS_HOST_C99_NOT_NATIVE",
+    "limitations": [
+      "Predator uses caller-supplied move classification and proposed integer power rounding; not native damage parity.",
+      "Nerve Agent uses abstract status enum, never a native status allocation; tests use supplied rolls and abstract generic cure.",
+      "Deep Pockets uses explicit slot selectors and atomic transfer model, not item persistence or native effects.",
+      "Recording checks use synthetic remap callback, not new verification of real 619-entry map; Release 5/6 real-map evidence preserved.",
+      "Routing requires eligibility and suppression callbacks; override authorization synthetic, not production randomizer persistence."
+    ]
+  },
+  "native_hook_evidence": {
+    "upstream_commit": "c248fb3f8cc9934ded800e489567c5c0eeee92eb",
+    "pinned_sources": [
+      {
+        "path": "src/battle/battle_lib.c",
+        "blob": "f1addf3e5d7e6e260f6817db3e330742604f70df",
+        "direct_battle_ability": 21,
+        "primary_query": 89,
+        "ignorable_query": 19,
+        "held_item_mentions": 41,
+        "status_mentions": 86
+      },
+      {
+        "path": "src/battle/battle_controller.c",
+        "blob": "a889181c49925b2b006530f90c799cf5077c8984",
+        "direct_battle_ability": 2,
+        "primary_query": 0,
+        "ignorable_query": 0,
+        "held_item_mentions": 2,
+        "status_mentions": 1
+      },
+      {
+        "path": "src/battle/battle_script.c",
+        "blob": "ac895a2d06576e0e162200777f52873fc0e0ee76",
+        "direct_battle_ability": 7,
+        "primary_query": 27,
+        "ignorable_query": 15,
+        "held_item_mentions": 16,
+        "status_mentions": 19
+      },
+      {
+        "path": "src/pokemon.c",
+        "blob": "2700366a181d78c2c6543f3846bc9e94165086e0",
+        "held_item_mentions": 7,
+        "status_mentions": 1
+      }
+    ],
+    "counts_scope": "Lexical occurrences in unpatched pinned donor source only, not unique runtime call sites or full final-tree inventory.",
+    "predator": {
+      "installer": "tools/install_mr08g_canonical_ability_late_shared_hooks.py",
+      "blob": "ff7fbbab9d4d23beaa8681e2155c76cbfb1bdfbe",
+      "target": "src/battle/battle_lib.c",
+      "existing_classifiers": [
+        "Mercury_MoveIsBiting",
+        "Mercury_MoveIsSlicing"
+      ],
+      "existing_damage_anchor": "attackerParams.ability == ABILITY_STRONG_JAW",
+      "plan": "Use one effective-ability dispatch and OR classification once; audit dynamic class overrides, future move coverage, non-damaging moves, overflow and rounding. Do not patch primary-only query."
+    },
+    "innates": {
+      "installer": "tools/install_mr08n_canonical_ability_weather_suppression_shell.py",
+      "blob": "ff04da7b4492f9ba21b208f76457a3c0bb401bd7",
+      "confirmed_problem": "Battler_Ability returns only one ability; raw Neutralizing Gas scan checks only battleMons[i].ability. Preserve primary getter semantics and add contextual effective membership/dispatch; avoid recursive Gas evaluation by raw enabled/eligible scan then suppression pass. Hold ability-specific exemptions and override persistence pending approval/native QA.",
+      "targets": [
+        "Battler_Ability",
+        "Battler_IgnorableAbility",
+        "Mercury_NeutralizingGasRawActive",
+        "Mercury_StrongWeatherType",
+        "BattleMon_CopyToParty"
+      ]
+    },
+    "nerve": {
+      "condition_header_blob": "45b150143baebd7b8b8de9398149a2f0ade21c59",
+      "native_major_bits": "0..7; toxic counter 8..11 in pinned donor; no new bit allocated; inspect post-R8 status changes before allocation.",
+      "plan": "Dedicated major-status representation; generic major predicate and native poison/paralysis predicates separate; route residual, speed, action failure and cure independently; audit Synchronize and Facade interactions, immunity, AI, UI and persistence without automatic whitelist."
+    },
+    "deep_pockets": {
+      "battle_mon_blob": "221778d23a2a1661f315eaddd28810ff23afdac2",
+      "pokemon_layout_blob": "e7c2c204a39a7adcfe067c5e4b0b97f7ba465cb4",
+      "recording_layout_blob": "4267cc5ed91909ce0a6e9a0980bf0c801a077061",
+      "plan": "Existing single u16 heldItem in boxed/battle/recording structures; second slot storage unallocated, do not repurpose padding. Primary-only capability, explicit deterministic event selection, atomic swaps, preserve untouched item, inventory and battle copy paths, ability loss policy requires authority."
+    },
+    "recording": {
+      "installer_blob": "f830bcf3593b0894e9682cb11e3dfd102e129f86",
+      "plan": "Trusted format/registry version outside ambiguous record bytes; decode legacy two-bit high value, remap through actual 619-entry table, encode 16-bit field, preserve flags and marks; reject unknown formats, no native marker assigned."
+    }
+  },
+  "species": {
+    "summary": {
+      "rows": 1000,
+      "uniqueRows": 1000,
+      "canonicalDex": 722,
+      "slots": 6000,
+      "singleCandidate": 5983,
+      "noCandidate": 17,
+      "ambiguous": 0,
+      "retiredCandidate": 0,
+      "completeCandidateRows": 989,
+      "stage2AbilityPatch": 19,
+      "unresolvedNames": {
+        "Grassy Pelt": 2,
+        "Mixed Martial": 2,
+        "Aura Guard": 3,
+        "Dream Eater": 1,
+        "Piercing Drill": 3,
+        "Cacophony": 1,
+        "Synthesis": 2,
+        "Eelevate": 3
+      }
+    },
+    "additional_tail_candidates": 9,
+    "additional_mixed_martial_candidates": 2,
+    "possible_grass_pelt_spelling_candidates": 2,
+    "unresolved_original_slots": [
+      {
+        "index": 226,
+        "species": "Leafeon",
+        "slot": 4,
+        "name": "Grassy Pelt",
+        "additional_candidate": {
+          "id": 179,
+          "token": "ABILITY_GRASS_PELT",
+          "state": "likely spelling alias; hold for explicit species assignment authority"
+        }
+      },
+      {
+        "index": 293,
+        "species": "Aipom",
+        "slot": 1,
+        "name": "Mixed Martial",
+        "additional_candidate": {
+          "id": 928,
+          "token": "ABILITY_MR_MIXED_MARTIAL_ARTS",
+          "state": "exact historical display abbreviation and semantic match; candidate not promoted in prior resolver"
+        }
+      },
+      {
+        "index": 294,
+        "species": "Ambipom",
+        "slot": 1,
+        "name": "Mixed Martial",
+        "additional_candidate": {
+          "id": 928,
+          "token": "ABILITY_MR_MIXED_MARTIAL_ARTS",
+          "state": "exact historical display abbreviation and semantic match; candidate not promoted in prior resolver"
+        }
+      },
+      {
+        "index": 632,
+        "species": "Mega Lucario Z",
+        "slot": 0,
+        "name": "Aura Guard",
+        "additional_candidate": {
+          "id": 319,
+          "token": "ABILITY_AURA_GUARD",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 632,
+        "species": "Mega Lucario Z",
+        "slot": 1,
+        "name": "Aura Guard",
+        "additional_candidate": {
+          "id": 319,
+          "token": "ABILITY_AURA_GUARD",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 632,
+        "species": "Mega Lucario Z",
+        "slot": 2,
+        "name": "Aura Guard",
+        "additional_candidate": {
+          "id": 319,
+          "token": "ABILITY_AURA_GUARD",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 717,
+        "species": "Munna",
+        "slot": 3,
+        "name": "Dream Eater",
+        "additional_candidate": null
+      },
+      {
+        "index": 731,
+        "species": "Mega Excadrill",
+        "slot": 0,
+        "name": "Piercing Drill",
+        "additional_candidate": {
+          "id": 311,
+          "token": "ABILITY_PIERCING_DRILL",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 731,
+        "species": "Mega Excadrill",
+        "slot": 1,
+        "name": "Piercing Drill",
+        "additional_candidate": {
+          "id": 311,
+          "token": "ABILITY_PIERCING_DRILL",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 731,
+        "species": "Mega Excadrill",
+        "slot": 2,
+        "name": "Piercing Drill",
+        "additional_candidate": {
+          "id": 311,
+          "token": "ABILITY_PIERCING_DRILL",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 751,
+        "species": "Petilil",
+        "slot": 5,
+        "name": "Grassy Pelt",
+        "additional_candidate": {
+          "id": 179,
+          "token": "ABILITY_GRASS_PELT",
+          "state": "likely spelling alias; hold for explicit species assignment authority"
+        }
+      },
+      {
+        "index": 768,
+        "species": "Maractus",
+        "slot": 3,
+        "name": "Cacophony",
+        "additional_candidate": null
+      },
+      {
+        "index": 810,
+        "species": "Foongus",
+        "slot": 2,
+        "name": "Synthesis",
+        "additional_candidate": null
+      },
+      {
+        "index": 811,
+        "species": "Amoonguss",
+        "slot": 2,
+        "name": "Synthesis",
+        "additional_candidate": null
+      },
+      {
+        "index": 826,
+        "species": "Mega Eelektross",
+        "slot": 0,
+        "name": "Eelevate",
+        "additional_candidate": {
+          "id": 313,
+          "token": "ABILITY_EELEVATE",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 826,
+        "species": "Mega Eelektross",
+        "slot": 1,
+        "name": "Eelevate",
+        "additional_candidate": {
+          "id": 313,
+          "token": "ABILITY_EELEVATE",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      },
+      {
+        "index": 826,
+        "species": "Mega Eelektross",
+        "slot": 2,
+        "name": "Eelevate",
+        "additional_candidate": {
+          "id": 313,
+          "token": "ABILITY_EELEVATE",
+          "state": "exact donor symbol; native runtime unverified"
+        }
+      }
+    ],
+    "current_name_or_symbol_candidate_slots": 5994,
+    "remaining_without_exact_identity": 6,
+    "complete_fixture_packages": 989,
+    "unexposed_workbook_rows": 620,
+    "stage2_patch_rows": 19,
+    "stage3_prior_rows": 83,
+    "note": "Original workbook row index only for fixtures; no numeric species allocations. No assignment authority inferred. Raw candidate file excludes donor tail and later alias supplement; resolver adds exact tail candidates but holds them for native verification. Mixed Martial supplement not yet included in model. Randomizer per-individual ability policy requires distinct override design.",
+    "new_full_packages": 0,
+    "independent_locked_batch_corroboration": [
+      {
+        "file": "Pokemon_Mercury_Redux_MasterPokedex_BATCH004_30Families_2026-09-04.csv",
+        "line": 32,
+        "species": "Leafeon",
+        "field": "innate_2",
+        "raw": "Grassy Pelt"
+      },
+      {
+        "file": "Pokemon_Mercury_Redux_MasterPokedex_BATCH011_30Families_2026-09-04.csv",
+        "line": 4,
+        "species": "Petilil",
+        "field": "innate_3",
+        "raw": "Grassy Pelt"
+      },
+      {
+        "file": "Pokemon_Mercury_Redux_MasterPokedex_BATCH011_30Families_2026-09-04.csv",
+        "line": 33,
+        "species": "Maractus",
+        "field": "innate_1",
+        "raw": "Cacophony"
+      },
+      {
+        "file": "Pokemon_Mercury_Redux_MasterPokedex_BATCH011_30Families_2026-09-04.csv",
+        "line": 104,
+        "species": "Foongus",
+        "field": "primary_3",
+        "raw": "Synthesis"
+      },
+      {
+        "file": "Pokemon_Mercury_Redux_MasterPokedex_BATCH011_30Families_2026-09-04.csv",
+        "line": 105,
+        "species": "Amoonguss",
+        "field": "primary_3",
+        "raw": "Synthesis"
+      }
+    ],
+    "interpretation": "Five of six unresolved slots corroborated in original locked batch exports; this establishes original wording, not replacement identity or mechanics. Munna remains mounted audit evidence only. No newly accessible complete packages; no invented assignment."
+  },
+  "count_boundary": {
+    "historical_report": 1062,
+    "generated_slots": 1067,
+    "zero": 1,
+    "placeholder_ids": [
+      314,
+      317
+    ],
+    "nonzero_nonplaceholder": 1064,
+    "retired_ids": [
+      524,
+      1004
+    ],
+    "nonretired_nonplaceholder_nonzero": 1062,
+    "duplicate_name_slots_preserved": [
+      382,
+      558
+    ],
+    "historical_report_excludes_duplicate_slots_not_retired": true,
+    "if_exclude_both_retired_and_two_duplicate_slots": 1060,
+    "definitive_approved_count": null,
+    "note": "Do not silently merge 382/893 or 558/895; runtime explicitly preserves distinct IDs. 1062 nonretired identity slots is reproducible, but not proof of 1062 mechanically distinct approved abilities."
+  },
+  "research_candidates_held": 620,
+  "final_mechanics": {
+    "predators_edge": {
+      "spec": "c0485f25cb70f4833ebb10cf304aeab5888c1843",
+      "truth_table_cases": 8,
+      "hold": "native move flags, actual damage rounding and integration"
+    },
+    "nerve_agent": {
+      "spec": "83dc2eb03ad108571327c3b4986c4e64831cbd41",
+      "trigger_cases": 1600,
+      "hold": "dedicated major status allocation, generic and specific interactions, cures, AI UI persistence"
+    },
+    "deep_pockets": {
+      "spec": "8c8f7a521a668e276293f0c729d78a9097ce6dcd",
+      "abstract_cases": 16,
+      "hold": "real second item slot, serialization, copy-in/out, item UI, all item transfer/use hooks; do not reuse unknown spare bytes"
+    }
+  },
+  "gym_design": "paused",
+  "production_allowed": false,
+  "next": [
+    "Implement concrete guarded native adapter patch on reconstructed isolated final 16-bit tree using recovered actual hooks; prioritize Predator's Edge and classify move families, then Nerve Agent and Deep Pockets.",
+    "Recover unexposed source workbook bytes or new independent locked late-generation batches; resolve six unresolved slots by original source authority or owner review, not guesses.",
+    "Reconstruct exact runtime installer chain and inventory all effective-ability query sites; implement two-phase suppression, per-instance override and form transition contract, avoid primary getter replacement.",
+    "Prepare versioned recording import/export and migration native tests using exact remap and trusted schema metadata; no production marker or ID allocation.",
+    "Preserve all nonretired slots, retired tombstones, duplicate identities, 620 research candidates and all historical approvals; no repeat R1-R8 recovery."
+  ]
+}
