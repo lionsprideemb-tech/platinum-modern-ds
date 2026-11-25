@@ -1,0 +1,76 @@
+{
+  "schema": "mercury-gym-field-design-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_NATIVE_PENDING",
+  "leader": "Crasher Wake",
+  "authority": "Owner approved Refreshing Current and requested Cleansing Current cure statuses rather than resetting stat stages; accepted final concept. Earlier Momentum Transfer damage bonus retired.",
+  "global_authority_blob": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+  "field": {
+    "name": "Rolling Tide",
+    "category": "protected custom Gym home field",
+    "duration_by_difficulty": {
+      "Trainer": 0,
+      "Ace Trainer": 5,
+      "Pro Trainer": "FULL_MATCH"
+    },
+    "activation": "battle start; no action or PP cost",
+    "both_sides": true,
+    "replaceable": false,
+    "removable": false,
+    "trigger": "Successful damaging pivot move deals damage and actually switches its user to a legal replacement; effects target that incoming Pokemon",
+    "effects": [
+      {
+        "name": "Refreshing Current",
+        "heal_fraction_max_hp": {
+          "numerator": 1,
+          "denominator": 16
+        }
+      },
+      {
+        "name": "Cleansing Current",
+        "cure": "major status conditions only",
+        "includes": [
+          "Burn",
+          "Poison",
+          "Bad Poison",
+          "Paralysis",
+          "Sleep",
+          "Freeze",
+          "Frostbite",
+          "Nerve Agent"
+        ],
+        "compound_status_handling": "Nerve Agent cured as one compound status; native verification required"
+      }
+    ],
+    "excluded": [
+      "Voluntary ordinary switches",
+      "Forced switches",
+      "Nondamaging pivot moves including Baton Pass",
+      "Misses, immunities, failed pivots, or no legal replacement",
+      "Stat-stage resets",
+      "Entry hazard removal",
+      "Damage bonuses including prior Momentum Transfer",
+      "Tidal Protection"
+    ],
+    "weather_coexistence": "Proposed ordinary rain coexistence; native custom-field routing unresolved under global contract",
+    "native_holds": [
+      "Exactly-once actual replacement event ownership, healing rounding and order relative to entry hazards and switch-in abilities",
+      "Verify compound status cure and associated speed/status bookkeeping; no volatile-status or stat-stage clearing",
+      "Protected field routing, five-turn expiry and full-match reset, no cross-battle leakage",
+      "Pivot eligibility and suppression interactions, both innate modes, AI and balance"
+    ]
+  },
+  "pending_designs": [
+    "Mega Floatzel Surge Relay and proposed innates",
+    "Basculegion primary Reckless replacing Adaptability and proposed moveset",
+    "All three revised teams and Level 42 cap",
+    "Adaptive pivot AI"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false,
+    "prior_approvals_preserved": true
+  }
+}
