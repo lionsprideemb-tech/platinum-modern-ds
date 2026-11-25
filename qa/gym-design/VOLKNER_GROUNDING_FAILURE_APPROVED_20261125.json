@@ -1,0 +1,49 @@
+{
+  "schema": "mercury-gym-home-field-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "leader": "Volkner",
+  "authority": "Owner explicitly approved Grounding Failure, Ground component resistance, eligible Electric paralysis effects including Thunder Wave, and preservation of other type interactions and existing abilities.",
+  "global_authority_blob": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+  "field": {
+    "name": "Grounding Failure",
+    "protected": true,
+    "both_sides": true,
+    "activation": "battle start without action or PP",
+    "duration": {
+      "Trainer": 0,
+      "Ace Trainer": 5,
+      "Pro Trainer": "FULL_MATCH"
+    },
+    "effect": "For Electric-type attacks, replace the immunity contributed by Ground typing with 0.5x resistance, then preserve other type factors. Allow eligible Electric-type paralysis effects including Thunder Wave against Ground targets; all other eligibility restrictions remain.",
+    "preserve": [
+      "normal Ground-type attack damage",
+      "other type effectiveness",
+      "Electric-type paralysis immunity except where a separately authorized ability overrides it",
+      "Volt Absorb",
+      "Lightning Rod",
+      "Motor Drive",
+      "other electrical absorption abilities",
+      "Levitate",
+      "existing Ground Shock semantics"
+    ],
+    "ground_shock": "Preserve independent ability advantage. Resolve ability bypass before applying field fallback; do not double-apply Ground factor or weaken existing Ground Shock. Exact native ability/type precedence pending verification.",
+    "coexistence": "Independent protected field, intended to coexist with ordinary terrain and weather.",
+    "excluded": [
+      "additional Electric damage boosts",
+      "Ground damage reduction",
+      "passive damage"
+    ]
+  },
+  "native_holds": [
+    "Verify single/dual/additional typing, target immunity and absorption precedence, Ground Shock and Overcharge precedence, eligible Thunder Wave and secondary effects, status prevention, Electric-type paralysis immunity, innate toggle, Volt Switch hit/switch behavior, terrain coexistence and protected expiry/reset.",
+    "Test both sides and all difficulty durations; no hidden AI privilege; native compile and emulator QA pending."
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false,
+    "prior_approvals_preserved": true
+  }
+}
