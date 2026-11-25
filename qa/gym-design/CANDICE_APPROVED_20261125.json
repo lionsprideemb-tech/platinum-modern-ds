@@ -1,0 +1,307 @@
+{
+  "schema": "mercury-gym-design-v1",
+  "date": "2026-11-25",
+  "leader": "Candice",
+  "badge": "Icicle Badge",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "authority": "Owner approved final three difficulty teams, Level 53 cap and adaptive AI; preserve prior field and species decisions.",
+  "player_level_cap": 53,
+  "field": {
+    "name": "Bitter Winter",
+    "authority_blob": "28f86118287335b7303bc5a135856ca94897f4fe",
+    "duration": {
+      "Trainer": 0,
+      "Ace Trainer": 5,
+      "Pro Trainer": "FULL_MATCH"
+    },
+    "protected": true
+  },
+  "species_authority_blob": "ad3c408b29990672eaa2b7653eab3d1b58b4b6a4",
+  "global_authority_blob": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+  "historical_ability_source": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+  "innates": {
+    "Alolan Ninetales": [
+      "Ice Body",
+      "Healer",
+      "Magic Bounce"
+    ],
+    "Froslass": [
+      "Infiltrator",
+      "Competitive",
+      "Ice Body"
+    ],
+    "Hisuian Avalugg": [
+      "Battle Armor",
+      "Frostmaw",
+      "Rock Head"
+    ],
+    "Lapras": [
+      "Ice Body",
+      "Liquid Voice",
+      "Thick Fat"
+    ],
+    "Weavile": [
+      "Tough Claws",
+      "Infiltrator",
+      "Inner Focus"
+    ]
+  },
+  "teams": {
+    "Trainer": [
+      {
+        "species": "Alolan Ninetales",
+        "level": 50,
+        "primary": "Snow Warning",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Ice Beam",
+          "Dazzling Gleam",
+          "Aurora Veil",
+          "Icy Wind"
+        ]
+      },
+      {
+        "species": "Hisuian Avalugg",
+        "level": 51,
+        "primary": "Sturdy",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Ice Fang",
+          "Jagged Fangs",
+          "Body Press",
+          "Recover"
+        ]
+      },
+      {
+        "species": "Lapras",
+        "level": 52,
+        "primary": "Water Absorb",
+        "item": "Mystic Water",
+        "moves": [
+          "Surf",
+          "Ice Beam",
+          "Body Slam",
+          "Life Dew"
+        ]
+      },
+      {
+        "species": "Mamoswine",
+        "level": 53,
+        "primary": null,
+        "item": "Mamoswinite",
+        "moves": [
+          "Ice Fang",
+          "Earthquake",
+          "Ice Shard",
+          "Stone Edge"
+        ],
+        "base_primary_status": "unselected; native QA",
+        "mega": {
+          "species": "Mega Mamoswine",
+          "primary": "Glacierbreaker",
+          "innates": [
+            "Frostmaw",
+            "Ice Body",
+            "Thick Fat"
+          ]
+        }
+      }
+    ],
+    "Ace Trainer": [
+      {
+        "species": "Alolan Ninetales",
+        "level": 51,
+        "primary": "Snow Warning",
+        "item": "Light Clay",
+        "moves": [
+          "Ice Beam",
+          "Moonblast",
+          "Aurora Veil",
+          "Encore"
+        ]
+      },
+      {
+        "species": "Froslass",
+        "level": 51,
+        "primary": "Cursed Body",
+        "item": "Focus Sash",
+        "moves": [
+          "Ice Beam",
+          "Shadow Ball",
+          "Will-O-Wisp",
+          "Spikes"
+        ]
+      },
+      {
+        "species": "Hisuian Avalugg",
+        "level": 52,
+        "primary": "Strong Jaw",
+        "item": "Rocky Helmet",
+        "moves": [
+          "Ice Fang",
+          "Jagged Fangs",
+          "Body Press",
+          "Recover"
+        ]
+      },
+      {
+        "species": "Lapras",
+        "level": 52,
+        "primary": "Water Absorb",
+        "item": "Leftovers",
+        "moves": [
+          "Freeze-Dry",
+          "Surf",
+          "Thunderbolt",
+          "Life Dew"
+        ]
+      },
+      {
+        "species": "Mamoswine",
+        "level": 53,
+        "primary": null,
+        "item": "Mamoswinite",
+        "moves": [
+          "Ice Fang",
+          "Earthquake",
+          "Ice Shard",
+          "Stone Edge"
+        ],
+        "base_primary_status": "unselected; native QA",
+        "mega": {
+          "species": "Mega Mamoswine",
+          "primary": "Glacierbreaker",
+          "innates": [
+            "Frostmaw",
+            "Ice Body",
+            "Thick Fat"
+          ]
+        }
+      }
+    ],
+    "Pro Trainer": [
+      {
+        "species": "Alolan Ninetales",
+        "level": 51,
+        "primary": "Snow Warning",
+        "item": "Light Clay",
+        "moves": [
+          "Blizzard",
+          "Moonblast",
+          "Aurora Veil",
+          "Encore"
+        ]
+      },
+      {
+        "species": "Froslass",
+        "level": 51,
+        "primary": "Levitate",
+        "item": "Focus Sash",
+        "moves": [
+          "Blizzard",
+          "Shadow Ball",
+          "Spikes",
+          "Destiny Bond"
+        ]
+      },
+      {
+        "species": "Hisuian Avalugg",
+        "level": 52,
+        "primary": "Strong Jaw",
+        "item": "Rocky Helmet",
+        "moves": [
+          "Ice Fang",
+          "Jagged Fangs",
+          "Body Press",
+          "Recover"
+        ]
+      },
+      {
+        "species": "Lapras",
+        "level": 52,
+        "primary": "Water Absorb",
+        "item": "Assault Vest",
+        "moves": [
+          "Freeze-Dry",
+          "Surf",
+          "Thunderbolt",
+          "Psychic"
+        ]
+      },
+      {
+        "species": "Weavile",
+        "level": 52,
+        "primary": "Technician",
+        "item": "Expert Belt",
+        "moves": [
+          "Triple Axel",
+          "Ice Shard",
+          "Knock Off",
+          "Low Kick"
+        ]
+      },
+      {
+        "species": "Mamoswine",
+        "level": 53,
+        "primary": null,
+        "item": "Mamoswinite",
+        "moves": [
+          "Ice Fang",
+          "Earthquake",
+          "Ice Shard",
+          "Stone Edge"
+        ],
+        "base_primary_status": "unselected; native QA",
+        "mega": {
+          "species": "Mega Mamoswine",
+          "primary": "Glacierbreaker",
+          "innates": [
+            "Frostmaw",
+            "Ice Body",
+            "Thick Fat"
+          ]
+        }
+      }
+    ]
+  },
+  "ai": {
+    "strategy": [
+      "Ninetales opens icy weather and Aurora Veil when useful",
+      "Froslass Spikes and Destiny Bond pressure",
+      "Avalugg biting Frostbite and recovery",
+      "Lapras Water immunity and coverage",
+      "Weavile fast offense and Knock Off",
+      "Mega Mamoswine second weather wave and Glacierbreaker"
+    ],
+    "responses": [
+      "Fire: Lapras or Mamoswine when matchup permits",
+      "Fighting: Froslass immunity",
+      "Steel: Mamoswine Ground coverage",
+      "Physical offense: Avalugg",
+      "Special offense: Frostbite and Assault Vest Lapras",
+      "Recovery stall: Bitter Winter and Knock Off",
+      "Weather replacement: preserve Mega Mamoswine reset when practical"
+    ],
+    "constraints": [
+      "Adaptive, not forced switching order; no unrevealed move access or hidden player inputs",
+      "Respect innate toggle, legal moves, weather, status immunity, observed damage and item restrictions"
+    ]
+  },
+  "story_preservation": [
+    "Preserve Snowpoint ice puzzle and Icicle Badge",
+    "Preserve move-management Avalanche unlock and HM-free Rock Climb progression",
+    "Preserve historical post-Gym Lake Acuity opening"
+  ],
+  "holds": [
+    "Recover exact historical Hisuian Avalugg ability and stat authority; provisional package not native accepted",
+    "Native move legality, base Mamoswine primary before Mega Evolution, icy weather and Frostmaw/Glacierbreaker stacking, field and innate mode parity, AI and resource bindings",
+    "Trainer and Ace/Pro testing and compilation/emulation remain pending"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false,
+    "prior_approvals_preserved": true
+  }
+}
