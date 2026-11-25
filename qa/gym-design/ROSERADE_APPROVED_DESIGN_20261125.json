@@ -1,0 +1,103 @@
+{
+  "schema": "mercury-gym-species-design-authority-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "authority": "Owner requested replacement of Roserade Chlorophyll with guaranteed special-hit poison ability, then explicitly approved replacing Toxic Chain with Merciless and instructed to set it.",
+  "source": {
+    "release6_candidates": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+    "historical_row": 453,
+    "merciless_partition": "47fd8a3c6fa1225293d1ede5bb61318b072d0581",
+    "prior_native_checkpoint": "e34112f5079b10fd78e5defc0839d7d1c954e1cc"
+  },
+  "species": {
+    "name": "Roserade",
+    "scope": "species-level innate assignments; not limited to Gym battle",
+    "primary_options": [
+      "Natural Cure",
+      "Technician",
+      "Poison Point"
+    ],
+    "historical_innates": [
+      "Chlorophyll",
+      "Toxic Chain",
+      "Flower Veil"
+    ],
+    "approved_innates": [
+      "Venomous Bloom",
+      "Merciless",
+      "Flower Veil"
+    ],
+    "new_ability": {
+      "display_name": "Venomous Bloom",
+      "effect": "Successful damaging special moves guarantee regular poison against eligible targets. Normal poison immunities remain intact.",
+      "production_id": null,
+      "native_status": "UNIMPLEMENTED",
+      "unresolved_native_details": [
+        "Timing relative to damage, critical-hit determination and other move effects",
+        "Substitute and multi-hit interactions",
+        "Status eligibility and suppression routing",
+        "AI and balance acceptance"
+      ]
+    },
+    "existing_ability": {
+      "display_name": "Merciless",
+      "token": "ABILITY_MERCILESS",
+      "effect": "The user's attacks are guaranteed critical hits against poisoned targets or targets whose Speed stage is below neutral.",
+      "preserve_existing_mechanic": true
+    }
+  },
+  "gym": {
+    "leader": "Gardenia",
+    "ace": "Roserade",
+    "ace_levels": {
+      "Trainer": 25,
+      "Ace Trainer": 25,
+      "Pro Trainer": 25
+    },
+    "player_caps": {
+      "Trainer": 22,
+      "Ace Trainer": 22,
+      "Pro Trainer": 22
+    },
+    "mega": false,
+    "remaining_team_design": "PENDING_OWNER_APPROVAL",
+    "pro_field": {
+      "effect": "Grassy Terrain",
+      "turns": 5,
+      "status": "PROPOSED_NOT_FINAL"
+    },
+    "moves_and_items": "Retain prior design proposals pending overall team approval; no new moves or items approved by this record."
+  },
+  "preserved_global": {
+    "difficulty_names": [
+      "Trainer",
+      "Ace Trainer",
+      "Pro Trainer"
+    ],
+    "shared_player_level_cap": true,
+    "no_mega_before_fantina": true,
+    "field_advantage": {
+      "exclusive": "Pro Trainer",
+      "initial_turns": 5,
+      "activation": "battle start, no turn or PP cost",
+      "normal_removal_and_replacement": true,
+      "automatic_reactivation": false
+    },
+    "roark": {
+      "pro_ace": "Cranidos",
+      "held_item": "Life Orb",
+      "starting_weather": "Sandstorm",
+      "turns": 5,
+      "status": "OWNER_APPROVED_DESIGN"
+    }
+  },
+  "safety": {
+    "native_source_changed": false,
+    "production_id_allocated": false,
+    "rom_changed": false,
+    "main_changed": false,
+    "historical_records_preserved": true,
+    "existing_ability_namespace_unchanged": true,
+    "unresolved_candidates_preserved": 620
+  }
+}
