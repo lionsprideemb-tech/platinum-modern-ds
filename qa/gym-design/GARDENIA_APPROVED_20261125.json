@@ -1,0 +1,176 @@
+{
+  "schema": "mercury-gym-design-v1",
+  "status": "OWNER_APPROVED_DESIGN_ONLY",
+  "date": "2026-11-25",
+  "leader": "Gardenia",
+  "badge": "Forest Badge",
+  "player_level_cap": 22,
+  "mega": false,
+  "roserade_authority": "3188f2c871f387ee6095d859dd48f1f92abb9886",
+  "source_candidates": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+  "pro_field": {
+    "effect": "Grassy Terrain",
+    "turns": 5,
+    "activation": "battle start",
+    "normal_removal": true,
+    "reapply": false
+  },
+  "teams": {
+    "Trainer": [
+      {
+        "species": "Turtwig",
+        "level": 19,
+        "ability": "Overgrow",
+        "item": "Oran Berry",
+        "moves": [
+          "Razor Leaf",
+          "Bite",
+          "Withdraw",
+          "Leech Seed"
+        ]
+      },
+      {
+        "species": "Cherrim",
+        "level": 20,
+        "ability": "Flower Gift",
+        "item": null,
+        "moves": [
+          "Magical Leaf",
+          "Sunny Day",
+          "Growth",
+          "Morning Sun"
+        ]
+      },
+      {
+        "species": "Roserade",
+        "level": 25,
+        "ability": "Natural Cure",
+        "item": "Oran Berry",
+        "moves": [
+          "Magical Leaf",
+          "Sludge",
+          "Stun Spore",
+          "Mega Drain"
+        ]
+      }
+    ],
+    "Ace Trainer": [
+      {
+        "species": "Turtwig",
+        "level": 20,
+        "ability": "Shell Armor",
+        "item": "Oran Berry",
+        "moves": [
+          "Razor Leaf",
+          "Rock Tomb",
+          "Leech Seed",
+          "Stealth Rock"
+        ]
+      },
+      {
+        "species": "Lombre",
+        "level": 21,
+        "ability": "Own Tempo",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Water Pulse",
+          "Fake Out",
+          "Mega Drain",
+          "Icy Wind"
+        ]
+      },
+      {
+        "species": "Cherrim",
+        "level": 21,
+        "ability": "Flower Gift",
+        "item": "Oran Berry",
+        "moves": [
+          "Sunny Day",
+          "Magical Leaf",
+          "Growth",
+          "Morning Sun"
+        ]
+      },
+      {
+        "species": "Roserade",
+        "level": 25,
+        "ability": "Technician",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Magical Leaf",
+          "Sludge",
+          "Stun Spore",
+          "Weather Ball"
+        ]
+      }
+    ],
+    "Pro Trainer": [
+      {
+        "species": "Grotle",
+        "level": 21,
+        "ability": "Shell Armor",
+        "item": "Eviolite",
+        "moves": [
+          "Seed Bomb",
+          "Rock Tomb",
+          "Stealth Rock",
+          "Leech Seed"
+        ]
+      },
+      {
+        "species": "Lombre",
+        "level": 21,
+        "ability": "Own Tempo",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Water Pulse",
+          "Fake Out",
+          "Giga Drain",
+          "Icy Wind"
+        ]
+      },
+      {
+        "species": "Hisuian Voltorb",
+        "level": 21,
+        "ability": "Static",
+        "item": "Magnet",
+        "moves": [
+          "Shock Wave",
+          "Magical Leaf",
+          "Volt Switch",
+          "Thunder Wave"
+        ]
+      },
+      {
+        "species": "Cherrim",
+        "level": 22,
+        "ability": "Flower Gift",
+        "item": "Oran Berry",
+        "moves": [
+          "Sunny Day",
+          "Magical Leaf",
+          "Morning Sun",
+          "Growth"
+        ]
+      },
+      {
+        "species": "Roserade",
+        "level": 25,
+        "ability": "Technician",
+        "item": "Black Sludge",
+        "moves": [
+          "Magical Leaf",
+          "Venoshock",
+          "Weather Ball",
+          "Giga Drain"
+        ]
+      }
+    ]
+  },
+  "notes": [
+    "Roserade species-level innates Venomous Bloom, Merciless, Flower Veil supersede historical slots. Pro moves use latest explicit proposal replacing Stun Spore with Giga Drain.",
+    "All other species inherit historical candidate innates subject to native reconciliation.",
+    "No automatic ability changes or production IDs; learnsets, terrain and balance pending native acceptance.",
+    "Roark Pro Life Orb Cranidos and five-turn Sandstorm preserved."
+  ]
+}
