@@ -1,0 +1,116 @@
+{
+  "schema": "mercury-release8-resume-v1",
+  "parent": "86284186da52e647f4c9bca53ead7910e62769f2",
+  "prior_commit": "6c680baa8c94b4227cedc9385c511db3de5ea541",
+  "prior_blob": "e2de7561ce965933a5ba8f5cd828efed07591932",
+  "source_ds_commit": "4a7560f8b6cfe7fc19ee266365428c04dbeb5f98",
+  "files": {
+    "qa/ability-innate/release8_native_installer.cjs": "768d82cc66c9b8a5dc3002ae4cecbe34cf2e55fe",
+    "qa/ability-innate/release8_recording_migration.h": "b92fe70621ad602175059744d9c19ac7c38c8b65",
+    "qa/ability-innate/release8_recording_migration_test.c": "46bee3927e3af2fa2352732156208a53486e6bdd"
+  },
+  "native_patch": {
+    "status": "SOURCE_FRAGMENT_APPLICATION_PASS_NOT_FULL_TREE",
+    "anchor_sources": {
+      "MR08G": "ff7fbbab9d4d23beaa8681e2155c76cbfb1bdfbe",
+      "MR08N": "ff04da7b4492f9ba21b208f76457a3c0bb401bd7",
+      "upstream_header": "4003b1a74d96e3c52d354f3c067847790f1c9507"
+    },
+    "checks": {
+      "primary_getter_preserved": true,
+      "sharpness_preserved": true,
+      "single_predator_hook": true,
+      "two_phase_gas": true,
+      "header": true,
+      "rejected_invalid_inputs": 6
+    },
+    "fixture_scope": "Real historical installer fragments and synthetic surrounding code; no final native source reconstruction or compile",
+    "holds": [
+      "Full reconstructed tree application and native compile required",
+      "Provider defaults NULL; actual context-owned species/form table, global toggle, eligible runtime tokens, authorized per-instance randomizer overrides, lifecycle binding and detachment not implemented",
+      "Provider must never query effective abilities or leak context; global registration pointer is QA-only until lifecycle audited",
+      "Innate suppression mirrors existing primary exemptions provisionally; Gas and strong-weather activation, Mold Breaker, slot-specific suppression and stacking policies require explicit acceptance",
+      "Predator static biting/slicing classifiers require dynamic and future move-class audit; 16-bit movePower overflow asserts and skips out-of-range boost, native range proof required",
+      "No registry runtime_enabled change"
+    ]
+  },
+  "recording": {
+    "status": "PASS_COMPILED_HOST_C99_REAL_MAP",
+    "source_migration_blob": "504ef92d5f40334b2f53272cbf9a782dea5bb6b6",
+    "actual_entries": 619,
+    "source_to_target_symbol_matches": 619,
+    "compiler": "cc -std=c99 -Wall -Wextra -Werror -pedantic -O2",
+    "compiled_header_blob": "b92fe70621ad602175059744d9c19ac7c38c8b65",
+    "compiled_test_blob": "46bee3927e3af2fa2352732156208a53486e6bdd",
+    "tests": {
+      "legacy_recording": 1024,
+      "legacy_box": 65536,
+      "modern_recording": 65536,
+      "marking_roundtrip": 59520,
+      "negative": 4,
+      "total": 191620
+    },
+    "holds": [
+      "Explicit trusted outer format required; no version bit or production metadata allocated",
+      "Caller verifies registry eligibility, checksum, record flags, current save container and retired/placeholder identities",
+      "Actual native import/export caller integration, real save fixture and emulator tests pending",
+      "Modern helper deliberately limits to current registry 0..1066, not theoretical future 16-bit range"
+    ]
+  },
+  "combined_workflow": {
+    "historical_R8_blob": "b77e55a6965fc2a655caba9c4f1c5ef42019e02e",
+    "advanced75_blob": "ce17f2ec963da49e26a6c3b31b3e7afe5085e5ff",
+    "rebase_blob": "686cb6378964c88ea3acb9956466c1697e106768",
+    "finding": "R8 uses canonical stack then 16-bit storage/namespace and R1-R8; advanced75 uses community move restores, safe overrides, C1-C15, D-series and integration; 16bit rebase workflow uses advanced sequence then rebase. These do not prove a combined R8+advanced+community tree. Need exact build-order reconciliation and conflict tests, not a blind merge.",
+    "no_compute_started": true
+  },
+  "nerve": {
+    "spec": "83dc2eb03ad108571327c3b4986c4e64831cbd41",
+    "new_source_evidence": {
+      "r8_installer": "c942a05660cc51954fd2a5717738c3b9f5656ca6",
+      "existing_custom_status_context_fields": [
+        "mercuryR7Bleeding",
+        "mercuryR7Enraged",
+        "mercuryR8Frostbite",
+        "mercuryR8FearTurns"
+      ],
+      "note": "Existing custom states are battle-context fields, not evidence of persistent compound major status. Nerve requires major status routing with generic status, residual, speed and failure lanes independent of native poison/paralysis masks. No bit allocated."
+    },
+    "status": "architecture only; native status allocation, cure masks, field persistence and UI held"
+  },
+  "deep_pockets": {
+    "spec": "8c8f7a521a668e276293f0c729d78a9097ce6dcd",
+    "status": "architecture only",
+    "required": "Separate persistent second slot and synchronized battle copy; preserve primary-only eligibility and all original item semantics. No spare bytes claimed; loss-of-ability and deterministic item priority need explicit policy."
+  },
+  "species": {
+    "prior_packages": 1000,
+    "prior_slot_candidates": 5994,
+    "remaining_packages": 620,
+    "remaining_slots": 6,
+    "new_full_packages": 0,
+    "new_exact_slots": 0,
+    "new_search": "Batch009 exact Munna lookup no match; targeted late-generation search returned no new complete exports. No inferred assignments."
+  },
+  "preserve": {
+    "nonretired_slots": 1062,
+    "generated_slots": 1067,
+    "retired": [
+      524,
+      1004
+    ],
+    "research_candidates": 620,
+    "duplicate_pairs": "preserved",
+    "all_historical_approvals": true,
+    "prior_r1_r8_evidence": true
+  },
+  "gym_design": "paused",
+  "production_allowed": false,
+  "next": [
+    "Reconstruct isolated combined advanced75/community moves + 16bit rebase + R1-R8 source tree without running paid compute; resolve installer anchor conflicts and verify implemented token coverage.",
+    "Apply guarded Predator/innate source installer to complete reconstructed tree, bind context-owned provider and real setting, preserve eligibility and approved suppression and randomizer semantics.",
+    "Connect real-map migration helper to native version-aware recording and boxed-save readers only after provenance and storage policy established.",
+    "Prepare Nerve Agent native major-status routing and Deep Pockets second-slot design; no new production allocations.",
+    "Recover only genuinely new historical species/ability evidence; preserve all 620 research candidates and unresolved identities."
+  ]
+}
