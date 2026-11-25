@@ -1,0 +1,63 @@
+{
+  "schema": "mercury-release10-source-tree-lock-v1",
+  "sources": [
+    {
+      "key": "mercury",
+      "repository": "lionsprideemb-tech/platinum-modern-ds",
+      "commit": "4a7560f8b6cfe7fc19ee266365428c04dbeb5f98",
+      "tree": "2aa5c71abc978e832d90fee94a2b13f7bf40caa7",
+      "entries": 684,
+      "blobs": 658,
+      "bytes": 57190256,
+      "archive_url": "https://github.com/lionsprideemb-tech/platinum-modern-ds/archive/4a7560f8b6cfe7fc19ee266365428c04dbeb5f98.zip"
+    },
+    {
+      "key": "pokeplatinum",
+      "repository": "pret/pokeplatinum",
+      "commit": "c248fb3f8cc9934ded800e489567c5c0eeee92eb",
+      "tree": "1fc0c552ddab856ba026a0132a3eb39de8d91b9c",
+      "entries": 29395,
+      "blobs": 27669,
+      "bytes": 138280413,
+      "archive_url": "https://github.com/pret/pokeplatinum/archive/c248fb3f8cc9934ded800e489567c5c0eeee92eb.zip"
+    },
+    {
+      "key": "hg-engine",
+      "repository": "BluRosie/hg-engine",
+      "commit": "5157c501dc0e6f88ef1654ab121352a5cc9ed7de",
+      "tree": "ee31c262b8a9f30ca799c598076019ec0ae43adf",
+      "entries": 37327,
+      "blobs": 32437,
+      "bytes": 128126630,
+      "gitlinks": {
+        "tools/source/nitrogfx": "a8fd94a3e582ded71eda5b9f5f0c69258544bb22"
+      },
+      "archive_url": "https://github.com/BluRosie/hg-engine/archive/5157c501dc0e6f88ef1654ab121352a5cc9ed7de.zip"
+    },
+    {
+      "key": "community-moves",
+      "repository": "lionsprideemb-tech/Pokemon-moves",
+      "commit": "4250c4bfbb2e8dddd117160cec9e1e8395dfe9f7",
+      "tree": "0a182c33f6c01e25b90ee14ae13c278c7637e9ef",
+      "entries": 1525,
+      "blobs": 1493,
+      "bytes": 6907829,
+      "archive_url": "https://github.com/lionsprideemb-tech/Pokemon-moves/archive/4250c4bfbb2e8dddd117160cec9e1e8395dfe9f7.zip"
+    }
+  ],
+  "manifest_checks": "GitHub Git commits and recursive tree endpoints returned exact commits/root trees; all four recursive manifests untruncated",
+  "attributes": "Six .gitattributes blobs inspected, none contained export-ignore or export-subst. CRLF attributes exist; preserve raw Git archive bytes.",
+  "archive_status": "NOT_ACQUIRED",
+  "workflow_checks": {
+    "source_commit_runs": [
+      36792795178,
+      36791807531
+    ],
+    "artifacts": [
+      [],
+      []
+    ],
+    "releases": [],
+    "limitations": "Other historical runs not exhaustively checked; repository-wide artifacts endpoint unsupported. No local worktrees or archive files found. Library search did not return the four exact archives. No repeat of exhausted clone/DNS routes."
+  }
+}

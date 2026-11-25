@@ -1,0 +1,50 @@
+{
+  "schema": "mercury-release10-resume-v1",
+  "parent": "845cead15940a0dbc6a4ee37e031073e48c0181d",
+  "previous_checkpoint": "qa/ability-innate/RESUME_RELEASE9.json",
+  "source_tree_lock": "4f1a77335fa51d3aa247ce3c88fec91e945ca7a9",
+  "archive_intake": "6a02ab5b5b4f155a083cd30908b8b7091aca3f83",
+  "archive_intake_tests": "cbf564667112a29474098668f789db177527aa7d",
+  "tests": {
+    "actual_git_archive_acceptances": 2,
+    "negative_cases": 4,
+    "initial_failure": "Git archive stores ordinary files with DOS creator and zero external attributes; corrected and re-tested.",
+    "status": "PASS on local Git-created fixtures only"
+  },
+  "totals": {
+    "pinned_source_manifests": 4,
+    "untruncated": 4,
+    "blob_entries": 62257,
+    "raw_blob_bytes": 330505128,
+    "full_source_archives_acquired": 0,
+    "replay_stages_completed": 0,
+    "replay_stages_total": 53,
+    "native_certified": false
+  },
+  "reused": {
+    "runner": "e2658cdb14887a0dedd0ea5979a2ac3bedb1fb95",
+    "plan": "a68c40c72b59d64bbb370504de505150137d944a",
+    "namespace": "d902d6ec26a43695a716f045dc880f5c1a3bd978",
+    "context_adapter": "1f65f51cf1f375ca341962642c559d54af9b8c4a",
+    "generated_action_guard": "e3aa4fb75a105bb66e36fc746f4a732cf0dd2ed4"
+  },
+  "preserve": {
+    "nonretired": 1062,
+    "total_slots": 1067,
+    "retired": [
+      524,
+      1004
+    ],
+    "research_candidates": 620,
+    "approvals": "unchanged",
+    "gym_design": "paused",
+    "production_allowed": false
+  },
+  "blocker": "No complete archive bytes or exact Git worktrees available. Intake verifies root tree, not commit object or actual submodule content. Existing Release9 runner requires four clean Git checkouts with exact commit HEAD; do not fake commit identities. For archive path, implement a guarded archive-mode entry point with fresh independently reverified trees and exact pinned plan/namespace; execute only in isolated offline environment. Review gitlink needs, LFS/normalization and actual archive format before claiming acceptance.",
+  "next": [
+    "Acquire exact source ZIP archives via official pinned URLs or authorized offline worktrees, without purchases.",
+    "Verify all four tree roots using archive intake, or use original runner with exact clean Git worktrees.",
+    "Prepare archive-mode source replay entry point only if required; execute exact 53 stages, stop at first genuine conflict.",
+    "Apply guarded patches only to verified combined tree; retain all prior holds."
+  ]
+}
