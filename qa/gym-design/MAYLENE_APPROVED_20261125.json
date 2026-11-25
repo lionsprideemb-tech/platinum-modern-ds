@@ -1,0 +1,296 @@
+{
+  "schema": "mercury-gym-design-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "leader": "Maylene",
+  "badge": "Cobble Badge",
+  "player_level_cap": 36,
+  "source_candidates": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+  "species_authority": "96faec12eb17846329deecc2d4d5bb4774a717a5",
+  "pro_field": {
+    "name": "Duelist's Rhythm",
+    "slot": "terrain",
+    "duration_turns": 5,
+    "activation": "battle start",
+    "both_sides": true,
+    "airborne_included": true,
+    "normal_terrain_replacement_and_removal": true,
+    "automatic_reactivation": false,
+    "damage_multiplier_on_consecutive_same_damaging_move": 0.75,
+    "nonstacking": true,
+    "history_rules": {
+      "different_move": "resets repetition",
+      "status_move": "resets repetition, including Protect and Detect",
+      "switch": "clears switched Pokemon history",
+      "multi_hit": "one move execution; all hits share modifier",
+      "choice_items": "ordinary repetition penalty",
+      "priority": "ordinary repetition rules",
+      "miss": "counts as executed technique",
+      "flinch": "does not reset history",
+      "ability_generated_attacks": "neither trigger nor reset repetition; includes Venomous Reflex",
+      "forced_repetition": "penalized normally",
+      "expiry": "removes mechanic"
+    },
+    "ai": "prefer varied attacks when worthwhile; repeat when best damage or knockout; no hidden immunity",
+    "native_status": "UNIMPLEMENTED"
+  },
+  "teams": {
+    "Trainer": [
+      {
+        "species": "Hawlucha",
+        "level": 32,
+        "primary": "Limber",
+        "item": "Oran Berry",
+        "moves": [
+          "Wing Attack",
+          "Brick Break",
+          "Hone Claws",
+          "Roost"
+        ]
+      },
+      {
+        "species": "Lucario",
+        "level": 33,
+        "primary": "Inner Focus",
+        "item": "Black Belt",
+        "moves": [
+          "Force Palm",
+          "Metal Claw",
+          "Bullet Punch",
+          "Detect"
+        ]
+      },
+      {
+        "species": "Medicham",
+        "level": 34,
+        "primary": "Pure Power",
+        "item": "Oran Berry",
+        "moves": [
+          "Brick Break",
+          "Psycho Cut",
+          "Fake Out",
+          "Recover"
+        ]
+      },
+      {
+        "species": "Toxicroak",
+        "level": 36,
+        "primary": null,
+        "item": "Toxicroakite",
+        "moves": [
+          "Drain Punch",
+          "Poison Jab",
+          "Sucker Punch",
+          "Mud Shot"
+        ],
+        "base_primary_status": "not explicitly selected; choose from existing approved base options during QA",
+        "mega": {
+          "species": "Mega Toxicroak",
+          "primary": "Toxic Technique",
+          "innates": [
+            "Dry Skin",
+            "Iron Fist",
+            "Venomous Reflex"
+          ]
+        }
+      }
+    ],
+    "Ace Trainer": [
+      {
+        "species": "Hawlucha",
+        "level": 33,
+        "primary": "Unburden",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Acrobatics",
+          "Brick Break",
+          "Roost",
+          "U-turn"
+        ]
+      },
+      {
+        "species": "Lucario",
+        "level": 33,
+        "primary": "Adaptability",
+        "item": "Metal Coat",
+        "moves": [
+          "Aura Sphere",
+          "Bullet Punch",
+          "Ice Punch",
+          "Work Up"
+        ]
+      },
+      {
+        "species": "Annihilape",
+        "level": 34,
+        "primary": "Vital Spirit",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Rage Fist",
+          "Drain Punch",
+          "Rock Tomb",
+          "Taunt"
+        ]
+      },
+      {
+        "species": "Medicham",
+        "level": 34,
+        "primary": "Pure Power",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Brick Break",
+          "Psycho Cut",
+          "Thunder Punch",
+          "Fake Out"
+        ]
+      },
+      {
+        "species": "Toxicroak",
+        "level": 36,
+        "primary": null,
+        "item": "Toxicroakite",
+        "moves": [
+          "Drain Punch",
+          "Ice Punch",
+          "Sucker Punch",
+          "Bulldoze"
+        ],
+        "base_primary_status": "not explicitly selected; choose from existing approved base options during QA",
+        "mega": {
+          "species": "Mega Toxicroak",
+          "primary": "Toxic Technique",
+          "innates": [
+            "Dry Skin",
+            "Iron Fist",
+            "Venomous Reflex"
+          ]
+        }
+      }
+    ],
+    "Pro Trainer": [
+      {
+        "species": "Hawlucha",
+        "level": 33,
+        "primary": "Unburden",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Acrobatics",
+          "Flying Press",
+          "U-turn",
+          "Roost"
+        ]
+      },
+      {
+        "species": "Lucario",
+        "level": 34,
+        "primary": "Adaptability",
+        "item": "Muscle Band",
+        "moves": [
+          "Aura Sphere",
+          "Bullet Punch",
+          "Ice Punch",
+          "Rock Tomb"
+        ]
+      },
+      {
+        "species": "Annihilape",
+        "level": 34,
+        "primary": "Defiant",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Rage Fist",
+          "Drain Punch",
+          "Rock Tomb",
+          "Taunt"
+        ]
+      },
+      {
+        "species": "Medicham",
+        "level": 35,
+        "primary": "Pure Power",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Drain Punch",
+          "Psycho Cut",
+          "Fake Out",
+          "Thunder Punch"
+        ]
+      },
+      {
+        "species": "Heracross",
+        "level": 35,
+        "primary": "Moxie",
+        "item": "Expert Belt",
+        "moves": [
+          "Brick Break",
+          "Pin Missile",
+          "Rock Blast",
+          "Knock Off"
+        ]
+      },
+      {
+        "species": "Toxicroak",
+        "level": 36,
+        "primary": null,
+        "item": "Toxicroakite",
+        "moves": [
+          "Drain Punch",
+          "Ice Punch",
+          "Sucker Punch",
+          "Earthquake"
+        ],
+        "base_primary_status": "not explicitly selected; choose from existing approved base options during QA",
+        "mega": {
+          "species": "Mega Toxicroak",
+          "primary": "Toxic Technique",
+          "innates": [
+            "Dry Skin",
+            "Iron Fist",
+            "Venomous Reflex"
+          ]
+        }
+      }
+    ]
+  },
+  "historical_innates": {
+    "Hawlucha": [
+      "Wind Rider",
+      "Scrappy",
+      "Inner Focus"
+    ],
+    "Lucario": [
+      "Justified",
+      "Scrappy",
+      "Iron Fist"
+    ],
+    "Annihilape": [
+      "Anger Point",
+      "Iron Fist",
+      "Cursed Body"
+    ],
+    "Medicham": [
+      "Anticipation",
+      "Steadfast",
+      "Synchronize"
+    ],
+    "Heracross": [
+      "Scrappy",
+      "Skill Link",
+      "Mold Breaker"
+    ],
+    "Toxicroak": [
+      "Merciless",
+      "Quick Feet",
+      "Unnerve"
+    ]
+  },
+  "holds": [
+    "Learnset compatibility, base primary selection, Mega transition, sprite acceptance, field move history and generated-action ownership, AI and native balance in both innate modes"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false
+  }
+}
