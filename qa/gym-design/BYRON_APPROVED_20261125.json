@@ -1,0 +1,407 @@
+{
+  "schema": "mercury-gym-design-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "leader": "Byron",
+  "badge": "Mine Badge",
+  "player_level_cap": 49,
+  "authority": "Owner approved all nine listed decisions, including provisional Copperajah package subject to recovery, no Ballast Stone, and adaptive AI.",
+  "sources": {
+    "global": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+    "historical_slots": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+    "ability_contracts": "47fd8a3c6fa1225293d1ede5bb61318b072d0581"
+  },
+  "home_field": {
+    "name": "Heavy Industry",
+    "duration": {
+      "Trainer": 0,
+      "Ace Trainer": 5,
+      "Pro Trainer": "FULL_MATCH"
+    },
+    "protected": true,
+    "both_sides": true,
+    "activation": "battle start; no action or PP",
+    "weight_basis": "current effective weight at damage resolution",
+    "tiers": [
+      {
+        "heavier_to_lighter_ratio": 1,
+        "damage_dealt": 1,
+        "damage_received": 1
+      },
+      {
+        "ratio_greater_than": 1,
+        "ratio_less_than": 2,
+        "damage_dealt": 1.1,
+        "damage_received": 0.9
+      },
+      {
+        "ratio_at_least": 2,
+        "damage_dealt": 1.2,
+        "damage_received": 0.8
+      }
+    ],
+    "scope": "one directional weight modifier per conventional attack; not two multiplicative applications of same advantage",
+    "heavy_slam_heat_crash_bp_cap": 120,
+    "open_native_details": "fixed damage and retaliation paths, exact rounding, ability suppression and weight modifiers require QA; no unapproved exemptions asserted"
+  },
+  "retired_proposals": [
+    "Ballast Stone entirely"
+  ],
+  "species": [
+    {
+      "name": "Copperajah",
+      "status": "PROVISIONAL_OWNER_ACCEPTED_RECOVERY_REQUIRED",
+      "primary": [
+        "Sheer Force",
+        "Heavy Metal",
+        "Sturdy"
+      ],
+      "innates": [
+        "Strong Jaw",
+        "Battle Armor",
+        "Rock Head"
+      ],
+      "hold": "recover historical Mercury package; do not overwrite conflicting historical authority automatically"
+    },
+    {
+      "name": "Steelix",
+      "historical_row": 146,
+      "primary": [
+        "Sturdy",
+        "Rock Head",
+        "Sheer Force"
+      ],
+      "innates": [
+        "Battle Armor",
+        "Heavy Metal",
+        "Heatproof"
+      ],
+      "change": "Sand Force -> Heavy Metal innate",
+      "mega_unchanged": true
+    },
+    {
+      "name": "Metagross",
+      "historical_row": 537,
+      "primary": [
+        "Clear Body",
+        "Heavy Metal",
+        "Iron Fist"
+      ],
+      "innates": [
+        "Tough Claws",
+        "Battle Armor",
+        "Analytic"
+      ],
+      "change": "Light Metal -> Heavy Metal primary",
+      "mega_unchanged": true
+    },
+    {
+      "name": "Hisuian Sliggoo",
+      "historical_row": 999,
+      "primary": [
+        "Sap Sipper",
+        "Shell Armor",
+        "Gooey"
+      ],
+      "innates": [
+        "Filter",
+        "Heavy Metal",
+        "Dragon's Maw"
+      ],
+      "unchanged": true
+    },
+    {
+      "name": "Bronzong",
+      "historical_row": 619,
+      "primary": [
+        "Levitate",
+        "Heatproof",
+        "Sturdy"
+      ],
+      "innates": [
+        "Heavy Metal",
+        "Battle Armor",
+        "Analytic"
+      ],
+      "change": "Heavy Metal primary -> Sturdy; Light Metal innate -> Heavy Metal",
+      "mega_unchanged": true
+    },
+    {
+      "name": "Mega Bastiodon",
+      "type": [
+        "Rock",
+        "Steel"
+      ],
+      "stone": "Bastiodonite",
+      "stats": {
+        "hp": 60,
+        "atk": 72,
+        "def": 198,
+        "spa": 67,
+        "spd": 168,
+        "spe": 30
+      },
+      "bst": 595,
+      "base_weight_kg": 450,
+      "primary": [
+        "Anchored Bastion"
+      ],
+      "innates": [
+        "Filter",
+        "Soundproof",
+        "Overcoat"
+      ],
+      "signature": {
+        "name": "Anchored Bastion",
+        "effect": "Triples effective weight and prevents opposing moves used by lighter Pokemon from forcing the user to switch out.",
+        "production_id": null,
+        "native_status": "UNIMPLEMENTED"
+      },
+      "preserve_historical_artwork": true,
+      "base_form_unchanged": true
+    }
+  ],
+  "teams": {
+    "Trainer": [
+      {
+        "species": "Steelix",
+        "level": 45,
+        "primary": "Sturdy",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Heavy Slam",
+          "Bulldoze",
+          "Rock Slide",
+          "Stealth Rock"
+        ]
+      },
+      {
+        "species": "Hisuian Sliggoo",
+        "level": 46,
+        "primary": "Sap Sipper",
+        "item": "Oran Berry",
+        "moves": [
+          "Dragon Pulse",
+          "Flash Cannon",
+          "Shelter",
+          "Muddy Water"
+        ]
+      },
+      {
+        "species": "Bronzong",
+        "level": 47,
+        "primary": "Levitate",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Heavy Slam",
+          "Extrasensory",
+          "Reflect",
+          "Trick Room"
+        ]
+      },
+      {
+        "species": "Bastiodon",
+        "level": 49,
+        "primary": null,
+        "item": "Bastiodonite",
+        "moves": [
+          "Heavy Slam",
+          "Rock Slide",
+          "Body Press",
+          "Iron Defense"
+        ],
+        "base_primary_status": "unselected; verify during QA",
+        "mega": {
+          "species": "Mega Bastiodon",
+          "primary": "Anchored Bastion",
+          "innates": [
+            "Filter",
+            "Soundproof",
+            "Overcoat"
+          ]
+        }
+      }
+    ],
+    "Ace Trainer": [
+      {
+        "species": "Steelix",
+        "level": 46,
+        "primary": "Sheer Force",
+        "item": "Soft Sand",
+        "moves": [
+          "Heavy Slam",
+          "Earthquake",
+          "Rock Slide",
+          "Stealth Rock"
+        ]
+      },
+      {
+        "species": "Copperajah",
+        "level": 46,
+        "primary": "Heavy Metal",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Heavy Slam",
+          "Heat Crash",
+          "High Horsepower",
+          "Power Whip"
+        ]
+      },
+      {
+        "species": "Hisuian Sliggoo",
+        "level": 47,
+        "primary": "Gooey",
+        "item": "Eviolite",
+        "moves": [
+          "Dragon Pulse",
+          "Flash Cannon",
+          "Shelter",
+          "Muddy Water"
+        ]
+      },
+      {
+        "species": "Bronzong",
+        "level": 48,
+        "primary": "Levitate",
+        "item": "Light Clay",
+        "moves": [
+          "Heavy Slam",
+          "Psychic",
+          "Reflect",
+          "Trick Room"
+        ]
+      },
+      {
+        "species": "Bastiodon",
+        "level": 49,
+        "primary": null,
+        "item": "Bastiodonite",
+        "moves": [
+          "Heavy Slam",
+          "Body Press",
+          "Metal Burst",
+          "Iron Defense"
+        ],
+        "base_primary_status": "unselected; verify during QA",
+        "mega": {
+          "species": "Mega Bastiodon",
+          "primary": "Anchored Bastion",
+          "innates": [
+            "Filter",
+            "Soundproof",
+            "Overcoat"
+          ]
+        }
+      }
+    ],
+    "Pro Trainer": [
+      {
+        "species": "Steelix",
+        "level": 46,
+        "primary": "Sheer Force",
+        "item": "Rocky Helmet",
+        "moves": [
+          "Heavy Slam",
+          "Earthquake",
+          "Body Press",
+          "Stealth Rock"
+        ]
+      },
+      {
+        "species": "Copperajah",
+        "level": 46,
+        "primary": "Heavy Metal",
+        "item": "Assault Vest",
+        "moves": [
+          "Heavy Slam",
+          "Heat Crash",
+          "High Horsepower",
+          "Power Whip"
+        ]
+      },
+      {
+        "species": "Metagross",
+        "level": 47,
+        "primary": "Heavy Metal",
+        "item": "Expert Belt",
+        "moves": [
+          "Heavy Slam",
+          "Zen Headbutt",
+          "Bullet Punch",
+          "Hammer Arm"
+        ]
+      },
+      {
+        "species": "Hisuian Sliggoo",
+        "level": 47,
+        "primary": "Gooey",
+        "item": "Eviolite",
+        "moves": [
+          "Dragon Pulse",
+          "Flash Cannon",
+          "Shelter",
+          "Muddy Water"
+        ]
+      },
+      {
+        "species": "Bronzong",
+        "level": 48,
+        "primary": "Levitate",
+        "item": "Leftovers",
+        "moves": [
+          "Heavy Slam",
+          "Psychic",
+          "Reflect",
+          "Trick Room"
+        ]
+      },
+      {
+        "species": "Bastiodon",
+        "level": 49,
+        "primary": null,
+        "item": "Bastiodonite",
+        "moves": [
+          "Heavy Slam",
+          "Body Press",
+          "Metal Burst",
+          "Iron Defense"
+        ],
+        "base_primary_status": "unselected; verify during QA",
+        "mega": {
+          "species": "Mega Bastiodon",
+          "primary": "Anchored Bastion",
+          "innates": [
+            "Filter",
+            "Soundproof",
+            "Overcoat"
+          ]
+        }
+      }
+    ]
+  },
+  "adaptive_ai": {
+    "rules": [
+      "Prioritize weight-based attacks when actual matchup and power favor them",
+      "Consider Levitate Bronzong against observed Ground attacks",
+      "Consider Heatproof Steelix against Fire when innate active",
+      "Consider Copperajah or Hisuian Sliggoo against special attackers",
+      "Use Trick Room when turn order and team benefit justify it",
+      "Consider Metal Burst against strong direct attacks, Iron Defense and Body Press when useful"
+    ],
+    "constraints": [
+      "Use only revealed information, never unexecuted player move choices",
+      "Account for current effective weight, innate toggle, ability suppression and actual matchup; avoid forced loops"
+    ]
+  },
+  "holds": [
+    "Copperajah historical ability recovery required before native acceptance",
+    "Native weights and ceilings, current effective weight resolution, damage modifier ownership, fixed damage and Body Press interaction, forced switch restrictions and innate OFF behavior",
+    "Learnsets, item availability, base Bastiodon primary selection, Mega transition, sprite acceptance and balance"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false
+  }
+}
