@@ -1,0 +1,116 @@
+{
+  "schema": "mercury-gym-species-design-v1",
+  "date": "2026-11-25",
+  "leader": "Candice",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "authority": "Owner explicitly approved Glacierbreaker, Mega Mamoswine three innates, provisional Hisuian Avalugg six-slot package pending historical reconciliation, and revised biting-focused movesets.",
+  "field_authority_blob": "28f86118287335b7303bc5a135856ca94897f4fe",
+  "species": [
+    {
+      "name": "Mega Mamoswine",
+      "type": [
+        "Ice",
+        "Ground"
+      ],
+      "stats": {
+        "hp": 110,
+        "atk": 165,
+        "def": 110,
+        "spa": 70,
+        "spd": 90,
+        "spe": 85
+      },
+      "bst": 630,
+      "stone": "Mamoswinite",
+      "historical_primary": "Snow Warning",
+      "primary": [
+        "Glacierbreaker"
+      ],
+      "signature": {
+        "name": "Glacierbreaker",
+        "effect": "Summons icy weather upon entering battle or Mega Evolving; deals 25% more attack damage against already Frostbitten opponents.",
+        "damage_multiplier": 1.25,
+        "target_condition": "Frostbite already present at damage resolution; no retroactive increase to hit that first inflicts Frostbite",
+        "weather": "Preserve existing Snow Warning icy weather behavior; Mega transition activation required without duplicate activation",
+        "production_id": null
+      },
+      "innates": [
+        "Frostmaw",
+        "Ice Body",
+        "Thick Fat"
+      ],
+      "approved_moves": [
+        "Ice Fang",
+        "Earthquake",
+        "Ice Shard",
+        "Stone Edge"
+      ],
+      "artwork_authority": "Stage10R3 true-repixel glacier-armored visual master; preserve exact approved artwork",
+      "base_form_unchanged": true
+    },
+    {
+      "name": "Hisuian Avalugg",
+      "status": "PROVISIONAL_OWNER_ACCEPTED_HISTORICAL_RECONCILIATION_REQUIRED",
+      "type": [
+        "Ice",
+        "Rock"
+      ],
+      "reference_standard_stats": {
+        "hp": 95,
+        "atk": 127,
+        "def": 184,
+        "spa": 34,
+        "spd": 36,
+        "spe": 38
+      },
+      "stats_policy": "Preserve historical Mercury stats; standard stats are reference only, not a new stat lock.",
+      "primary": [
+        "Strong Jaw",
+        "Sturdy",
+        "Ice Body"
+      ],
+      "innates": [
+        "Battle Armor",
+        "Frostmaw",
+        "Rock Head"
+      ],
+      "selected_gym_primary": "Strong Jaw",
+      "approved_moves": [
+        "Ice Fang",
+        "Jagged Fangs",
+        "Body Press",
+        "Recover"
+      ],
+      "historical_move_evidence": "Batch025 Stage2 patch row 128: Jagged Fangs Rock physical 80 BP, explicitly added to Hisuian Avalugg; other moves require native verification.",
+      "hold": "Recover exact historical Mercury abilities; do not silently override conflicting authority."
+    }
+  ],
+  "ability_contracts": {
+    "Frostmaw": "Successful biting-move hits have a 50% chance to inflict frostbite.",
+    "Ice_Body": "Restores 1/8 max HP at end of turn in icy weather.",
+    "Thick_Fat": "Halves incoming Fire and Ice attack damage.",
+    "Strong_Jaw": "Biting moves deal 50% more damage.",
+    "Battle_Armor": "Prevents critical hits and reduces incoming attack damage by 20%.",
+    "Rock_Head": "Prevents recoil damage from recoil-causing attacks."
+  },
+  "sources": {
+    "registry": "47fd8a3c6fa1225293d1ede5bb61318b072d0581",
+    "historical_slots": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+    "historical_mega": "Pokemon_Mercury_Redux_CUSTOM_MEGA_INTEGRATION_MASTER_STAGE23_2026-09-13.xlsx; MERCURY_MAMOSWINE_STAGE10_MECHANICS_RECONCILIATION_FLAG.txt",
+    "historical_learnset": "Pokemon_Mercury_Redux_MasterPokedex_BATCH025_GLOBAL_MECHANICS_STAGE2_PATCH_2026-09-04.csv"
+  },
+  "holds": [
+    "Exact historical Avalugg abilities and stats reconciliation",
+    "Glacierbreaker name collision and weather ownership, activation on entry/Mega transition, no duplicate activation, status timing, damage rounding, innate on/off",
+    "Frostmaw proc interaction with existing secondary effects, immunities, multi-hit, biting flags and status prevention",
+    "Move legality and acquisition, resource bindings, compiler/emulator acceptance and balance",
+    "Candice teams remain review-only; no team approval implied"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false,
+    "prior_approvals_preserved": true
+  }
+}
