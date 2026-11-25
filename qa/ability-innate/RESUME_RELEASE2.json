@@ -1,0 +1,264 @@
+{
+  "schema": "mercury-full-ability-release2-health-and-resume-v1",
+  "parent": "5fb5720f4789d1d448daddb6083b0bdcdf21ebaf",
+  "branch": "qa/full-ability-innate-reconciliation-20261125",
+  "verified_prior_crosswalk": "d40ef6418c583bc8a723694e980f026c611ca3ab",
+  "source": {
+    "planning_ref": "planning/mr09-custom-ability-redesigns",
+    "planning_commit": "9492af477b2120e4b9b4d3bafb698ad8bdef3901",
+    "namespace_blob": "19304f6ceaba773ab43047142f2f93a2fd111822",
+    "health_design_blob": "eae67505b623898a690ad0a6cc23fc2a96d7d878",
+    "fast_hook_spec_blob": "0452b71f91b4b32bd1de1320396d5e3f1003d4d4",
+    "partition_blob": "32706e139e31931231a5ec2c3336b3bf8193282d"
+  },
+  "checks": {
+    "all_eleven_exact_symbol_matches": true,
+    "partition_ids_unique": true,
+    "all_mapping_ids_changed": true
+  },
+  "mappings": [
+    {
+      "source": "Elite Redux",
+      "source_name": "Prismatic Fur",
+      "identity": "Prismatic Pelt",
+      "symbol": "ABILITY_PRISMATIC_PELT",
+      "planning_id": 311,
+      "partition_matches": [
+        {
+          "id": 316,
+          "display_name": "Prismatic Pelt",
+          "exact_effect": "On switch-in, the user gains Prismatic Veil for 3 turns. While the veil is active, super-effective damage taken is reduced by 25%. The first qualifying super-effective hit taken per switch-in also raises Defense by 1 stage if the hit is physical, or Special Defense by 1 stage if the hit is special. The user's typing does not change.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "On entry, gains a 3-turn veil that\n",
+        "weakens super-effective hits."
+      ]
+    },
+    {
+      "source": "Pokémon Rejuvenation",
+      "source_name": "Stop \\\\PN",
+      "identity": "Lockdown Protocol",
+      "symbol": "ABILITY_LOCKDOWN_PROTOCOL",
+      "planning_id": 312,
+      "partition_matches": [
+        {
+          "id": 317,
+          "display_name": "Lockdown Protocol",
+          "exact_effect": "On entry, mark one opposing target for 3 turns. That target's damaging moves deal 10% less damage and it cannot use the same status move twice consecutively. Switching clears the mark. Only one target is marked.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "Marks a foe for 3 turns, weakening\n",
+        "damage and repeat status moves."
+      ]
+    },
+    {
+      "source": "Pokémon Rejuvenation",
+      "source_name": "Storm-9",
+      "identity": "Storm Sequence",
+      "symbol": "ABILITY_STORM_SEQUENCE",
+      "planning_id": 313,
+      "partition_matches": [
+        {
+          "id": 319,
+          "display_name": "Storm Sequence",
+          "exact_effect": "On entry choose Rain, Sun, or Sandstorm for 4 turns. Rain heals the user each turn; Sun boosts the user's Fire- and Grass-type moves; Sandstorm gives sand-chip immunity and +1 Defense on entry. No random cycling.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "On entry, choose Rain, Sun, or\n",
+        "Sandstorm and gain its bonus."
+      ]
+    },
+    {
+      "source": "Radical Red Showdown mod",
+      "source_name": "Commissioner",
+      "identity": "Field Commissioner",
+      "symbol": "ABILITY_FIELD_COMMISSIONER",
+      "planning_id": 314,
+      "partition_matches": [
+        {
+          "id": 320,
+          "display_name": "Field Commissioner",
+          "exact_effect": "On entry, once per switch-in, choose Advance (+1 Speed), Fortify (+1 Defense), or Disrupt (Torment one opposing target for 2 turns). In doubles Disrupt uses the normal opponent-target cursor; AI choice is deterministic.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "On entry, choose Advance, Fortify,\n",
+        "or Disrupt."
+      ]
+    },
+    {
+      "source": "Pokémon Exceeded",
+      "source_name": "Berserk Fury",
+      "identity": "Controlled Fury",
+      "symbol": "ABILITY_CONTROLLED_FURY",
+      "planning_id": 315,
+      "partition_matches": [
+        {
+          "id": 311,
+          "display_name": "Controlled Fury",
+          "exact_effect": "The first time the user falls below 50% HP, it gains +1 Attack and +1 Speed. For the next 3 turns, its damaging moves deal 10% more damage, and each direct damaging move it uses causes recoil equal to 10% of its max HP.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "At half HP once, raises Attack and\n",
+        "Speed and enters a 3-turn fury."
+      ]
+    },
+    {
+      "source": "Pokémon Exceeded",
+      "source_name": "Eternal Life",
+      "identity": "Eternal Life",
+      "symbol": "ABILITY_ETERNAL_LIFE",
+      "planning_id": 316,
+      "partition_matches": [
+        {
+          "id": 312,
+          "display_name": "Eternal Life",
+          "exact_effect": "The first time the user reaches 50% HP or less, it restores 25% of its max HP, cures any major status condition, and removes all negative stat stages.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "At half HP once, heals 1/4, cures\n",
+        "status, and clears stat drops."
+      ]
+    },
+    {
+      "source": "Pokémon Exceeded",
+      "source_name": "Hollow Shell",
+      "identity": "Hollow Shell",
+      "symbol": "ABILITY_HOLLOW_SHELL",
+      "planning_id": 317,
+      "partition_matches": [
+        {
+          "id": 313,
+          "display_name": "Hollow Shell",
+          "exact_effect": "If the user is actually knocked out by a direct damaging move, the attacker loses 25% of its max HP. This damage cannot reduce the attacker below 1 HP.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "If KO'd by direct damage, the foe\n",
+        "loses 1/4 HP but cannot faint."
+      ]
+    },
+    {
+      "source": "Pokémon Exceeded",
+      "source_name": "Mind Game",
+      "identity": "Mind Games",
+      "symbol": "ABILITY_MIND_GAMES",
+      "planning_id": 318,
+      "partition_matches": [
+        {
+          "id": 314,
+          "display_name": "Mind Games",
+          "exact_effect": "On switch-in, the opponent's actual last-used move is sealed for 2 turns.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "On entry, seals the foe's last-used\n",
+        "move for 2 turns."
+      ]
+    },
+    {
+      "source": "Pokémon Insurgence",
+      "source_name": "Protean Maxima",
+      "identity": "Protean Maxima",
+      "symbol": "ABILITY_PROTEAN_MAXIMA",
+      "planning_id": 319,
+      "partition_matches": [
+        {
+          "id": 321,
+          "display_name": "Protean Maxima",
+          "exact_effect": "Mega Eevee only. After a successful damaging move, transform into the Eeveelution matching that move's type, using that form's effective type and stat profile. Status moves do not trigger it. The form persists until another qualifying damaging move. Designated per-form Ability assignments remain to be locked.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "Mega Eevee changes form after using\n",
+        "an eligible damaging move."
+      ]
+    },
+    {
+      "source": "Radical Red Showdown mod",
+      "source_name": "The Look",
+      "identity": "The Look",
+      "symbol": "ABILITY_THE_LOOK",
+      "planning_id": 320,
+      "partition_matches": [
+        {
+          "id": 315,
+          "display_name": "The Look",
+          "exact_effect": "While the user is active, opposing active Pokémon cannot use the same move they used immediately before.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "Foes cannot use the same move twice\n",
+        "in a row while the user is active."
+      ]
+    },
+    {
+      "source": "Pokémon Exceeded",
+      "source_name": "Bioengineering",
+      "identity": "Adaptive Genome",
+      "symbol": "ABILITY_ADAPTIVE_GENOME",
+      "planning_id": 321,
+      "partition_matches": [
+        {
+          "id": 318,
+          "display_name": "Adaptive Genome",
+          "exact_effect": "The first time per switch-in the user is hit super effectively, a physical hit grants +1 Defense and a special hit grants +1 Sp. Def.",
+          "retired": false
+        }
+      ],
+      "planning_description": [
+        "First super-effective hit each stay\n",
+        "raises the matching defense."
+      ]
+    }
+  ],
+  "mechanic_holds": [
+    {
+      "identity": "Controlled Fury",
+      "details": "MR09 health design says crossing to <=50% HP and recoil 10% damage dealt; MR09C says crossing to <=50% HP, 10% max HP recoil and three full postactivation turns; locked later partition says first falls below 50% and 10% max HP recoil. Retain latest stored partition data but hold exact threshold/timing acceptance pending dated decision and native QA."
+    },
+    {
+      "identity": "Protean Maxima",
+      "details": "Planning document labels provisional; later reserved partition preserves design but per-form ability assignments remain to be locked. No inferred species/form allocation."
+    }
+  ],
+  "native_evidence": {
+    "pinned_head": "bf2f8626c36f80dd2b61088a45e9fba810809df1",
+    "combined_status_entries": 0,
+    "interpretation": "No combined statuses returned; not proof of native pass or fail. Existing historical D13 and D24 manifests remain evidence of earlier reported progress only."
+  },
+  "species_recovery": {
+    "batch020_csv_total_lines": 54,
+    "interpretation": "Batch020 source-evolution backfill is a separate patch, not the missing full 1620-row mounted workbook. No claim of newly verified canonical coverage."
+  },
+  "count_boundary": {
+    "namespace_slots": 930,
+    "nonzero_nonretired_reserved_slots": 927,
+    "remaining_legacy_unmatched": 124,
+    "legacy_placeholder_descriptions": 112,
+    "research_no_direct_ds_or_old_match": 622,
+    "definitive_unique_count": null
+  },
+  "next": [
+    "Recover actual sealed final ability audit descriptions for 112 placeholder legacy records and source-backed semantics for remaining 12 unmatched records; use exact donor symbols and approved replacement history.",
+    "Recover complete canonical assignments from individual locked batch exports or original workbook; preserve 1000 exposed historical rows.",
+    "Review 622 research-only candidates without assuming approval; reconcile three incomplete duplicate decisions and five selected versions without direct DS match.",
+    "Verify exact current implemented-token registry and runtime evidence; never reuse planning-era numeric IDs."
+  ],
+  "production_allowed": false
+}
