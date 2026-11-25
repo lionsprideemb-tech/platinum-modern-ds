@@ -1,0 +1,310 @@
+{
+  "schema": "mercury-gym-design-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "leader": "Crasher Wake",
+  "badge": "Fen Badge",
+  "player_level_cap": 42,
+  "authority": "Owner approved final difficulty teams including revised pivot moves, cap 42, adaptive switching AI.",
+  "sources": {
+    "field": "88be6a589a09a8047484bb6497d4ed6f4c5f14f8",
+    "species": "840e081884f88b28cc8a76d2625ff203c37c0f50",
+    "learnsets": "3b8759de9c2fa1dcf02f2bc5a2e6be3a67f9adc5",
+    "global": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+    "historical_slots": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee"
+  },
+  "home_field": {
+    "name": "Rolling Tide",
+    "duration": {
+      "Trainer": 0,
+      "Ace Trainer": 5,
+      "Pro Trainer": "FULL_MATCH"
+    },
+    "protected": true,
+    "refer_to_field_authority": true
+  },
+  "teams": {
+    "Trainer": [
+      {
+        "species": "Pelipper",
+        "level": 38,
+        "primary": "Drizzle",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Water Pulse",
+          "Air Cutter",
+          "Roost",
+          "U-turn"
+        ]
+      },
+      {
+        "species": "Lanturn",
+        "level": 39,
+        "primary": "Volt Absorb",
+        "item": "Oran Berry",
+        "moves": [
+          "Water Pulse",
+          "Volt Switch",
+          "Thunder Wave",
+          "Confuse Ray"
+        ]
+      },
+      {
+        "species": "Gastrodon",
+        "level": 40,
+        "primary": "Storm Drain",
+        "item": "Rindo Berry",
+        "moves": [
+          "Mud Bomb",
+          "Flip Turn",
+          "Recover",
+          "Yawn"
+        ]
+      },
+      {
+        "species": "Floatzel",
+        "level": 42,
+        "primary": "Water Veil",
+        "item": "Floatzelite",
+        "moves": [
+          "Flip Turn",
+          "Brick Break",
+          "Ice Fang",
+          "Aqua Jet"
+        ],
+        "mega": {
+          "species": "Mega Floatzel",
+          "primary": "Surge Relay",
+          "innates": [
+            "Water Veil",
+            "Strong Jaw",
+            "Limber"
+          ]
+        }
+      }
+    ],
+    "Ace Trainer": [
+      {
+        "species": "Pelipper",
+        "level": 39,
+        "primary": "Drizzle",
+        "item": "Damp Rock",
+        "moves": [
+          "Scald",
+          "Air Slash",
+          "Roost",
+          "U-turn"
+        ]
+      },
+      {
+        "species": "Lanturn",
+        "level": 39,
+        "primary": "Volt Absorb",
+        "item": "Shuca Berry",
+        "moves": [
+          "Scald",
+          "Volt Switch",
+          "Thunder Wave",
+          "Ice Beam"
+        ]
+      },
+      {
+        "species": "Ludicolo",
+        "level": 40,
+        "primary": "Swift Swim",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Giga Drain",
+          "Scald",
+          "Ice Beam",
+          "U-turn"
+        ]
+      },
+      {
+        "species": "Gastrodon",
+        "level": 40,
+        "primary": "Storm Drain",
+        "item": "Rindo Berry",
+        "moves": [
+          "Earth Power",
+          "Flip Turn",
+          "Recover",
+          "Yawn"
+        ]
+      },
+      {
+        "species": "Floatzel",
+        "level": 42,
+        "primary": "Water Veil",
+        "item": "Floatzelite",
+        "moves": [
+          "Flip Turn",
+          "Drain Punch",
+          "Ice Fang",
+          "Aqua Jet"
+        ],
+        "mega": {
+          "species": "Mega Floatzel",
+          "primary": "Surge Relay",
+          "innates": [
+            "Water Veil",
+            "Strong Jaw",
+            "Limber"
+          ]
+        }
+      }
+    ],
+    "Pro Trainer": [
+      {
+        "species": "Pelipper",
+        "level": 39,
+        "primary": "Drizzle",
+        "item": "Damp Rock",
+        "moves": [
+          "Scald",
+          "Hurricane",
+          "Roost",
+          "U-turn"
+        ]
+      },
+      {
+        "species": "Lanturn",
+        "level": 39,
+        "primary": "Volt Absorb",
+        "item": "Shuca Berry",
+        "moves": [
+          "Scald",
+          "Volt Switch",
+          "Thunder",
+          "Ice Beam"
+        ]
+      },
+      {
+        "species": "Ludicolo",
+        "level": 40,
+        "primary": "Swift Swim",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Giga Drain",
+          "Scald",
+          "Ice Beam",
+          "U-turn"
+        ]
+      },
+      {
+        "species": "Gastrodon",
+        "level": 40,
+        "primary": "Storm Drain",
+        "item": "Rindo Berry",
+        "moves": [
+          "Earth Power",
+          "Flip Turn",
+          "Recover",
+          "Clear Smog"
+        ]
+      },
+      {
+        "species": "Basculegion Male",
+        "level": 41,
+        "primary": "Reckless",
+        "item": "Mystic Water",
+        "moves": [
+          "Flip Turn",
+          "Wave Crash",
+          "Double-Edge",
+          "Shadow Claw"
+        ]
+      },
+      {
+        "species": "Floatzel",
+        "level": 42,
+        "primary": "Water Veil",
+        "item": "Floatzelite",
+        "moves": [
+          "Flip Turn",
+          "Drain Punch",
+          "Ice Fang",
+          "Crunch"
+        ],
+        "mega": {
+          "species": "Mega Floatzel",
+          "primary": "Surge Relay",
+          "innates": [
+            "Water Veil",
+            "Strong Jaw",
+            "Limber"
+          ]
+        }
+      }
+    ]
+  },
+  "innates": {
+    "Pelipper": [
+      "Hydration",
+      "Big Pecks",
+      "Wind Rider"
+    ],
+    "Lanturn": [
+      "Power Leak",
+      "Water Veil",
+      "Regenerator"
+    ],
+    "Ludicolo": [
+      "Hydration",
+      "Leaf Guard",
+      "Thick Fat"
+    ],
+    "Gastrodon": [
+      "Water Absorb",
+      "Regenerator",
+      "Oblivious"
+    ],
+    "Basculegion Male": [
+      "Rock Head",
+      "Water Veil",
+      "Cursed Body"
+    ],
+    "Floatzel": [
+      "Technician",
+      "Quick Feet",
+      "Limber"
+    ],
+    "Mega Floatzel": [
+      "Water Veil",
+      "Strong Jaw",
+      "Limber"
+    ]
+  },
+  "adaptive_ai": {
+    "Trainer": "Basic damaging pivots, basic immunities and Mega rotation",
+    "Ace Trainer": "Exploit active Rolling Tide; consider status-afflicted allies, defensive immunities and strategic Mega rotation",
+    "Pro Trainer": "Use observed attack patterns, defensive immunities and status cleansing; advanced pivot and Mega rotation, no mandatory ace-last rule",
+    "counterplay": {
+      "Electric": "Lanturn or Gastrodon",
+      "Grass": "Ludicolo or Pelipper if matchup favorable",
+      "Water": "Gastrodon or Ludicolo",
+      "Normal_or_Fighting": "Basculegion",
+      "status": "Pivot into afflicted teammate while field active",
+      "weakened_target": "Prefer knockout when appropriate",
+      "defensive_target": "Consider Mega Floatzel and Basculegion pressure"
+    },
+    "constraints": [
+      "No access to unexecuted move choice",
+      "No forced infinite loops",
+      "Require legal replacement, score matchup and actual benefit, retain ability to attack directly",
+      "Ordinary weather and field interactions subject to native QA"
+    ]
+  },
+  "story_preserve": "Historical Fen Badge, Damp Rock and advanced Water tutors; no premature Surf or Lake Valor bombing.",
+  "holds": [
+    "Gastrodon form choice not explicitly selected; resolve historical trainer identity during native QA",
+    "Water Veil selected for base Floatzel from historical roster; verify Mega transition",
+    "Learnset availability, native form and artwork binding, protected field/rain coexistence, recoil/ability interactions, pivot resolution and AI balance in both innate modes"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false
+  }
+}
