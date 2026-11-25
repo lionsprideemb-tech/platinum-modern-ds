@@ -1,0 +1,56 @@
+{
+  "schema": "mercury-gym-home-field-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "leader": "Candice",
+  "authority": "Owner explicitly approved Bitter Winter, specified exceptions, protected home field and standard difficulty durations.",
+  "global_authority_blob": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+  "field": {
+    "name": "Bitter Winter",
+    "protected": true,
+    "activation": "battle start without action or PP",
+    "duration": {
+      "Trainer": 0,
+      "Ace Trainer": 5,
+      "Pro Trainer": "FULL_MATCH"
+    },
+    "both_sides": true,
+    "effect": "Non-Ice Pokemon restore 50% less HP from battle healing effects; Ice-type Pokemon retain normal healing.",
+    "recipient_type": "current type at healing resolution",
+    "multiplier_non_ice": 0.5,
+    "multiplier_ice": 1,
+    "application": "Apply once to positive intended healing before missing-HP cap; round down, minimum 1 HP for otherwise successful positive healing. Never create healing from zero or bypass healing prevention.",
+    "included": [
+      "direct recovery moves including Rest",
+      "held items and permitted bag healing items",
+      "passive healing",
+      "drain healing, not damage dealt",
+      "ability healing including switching abilities and absorption",
+      "ally healing based on recipient type"
+    ],
+    "exceptions": [
+      "status removal and prevention unchanged",
+      "reviving fainted Pokemon if otherwise allowed",
+      "Substitute HP cost and creation",
+      "direct HP equalization such as Pain Split",
+      "outside battle healing"
+    ],
+    "not_added": [
+      "passive damage",
+      "automatic Frostbite",
+      "Ice damage boost"
+    ],
+    "weather": "Separate from weather; intended coexistence with normal weather and terrain. Weather replacement cannot clear Bitter Winter."
+  },
+  "native_holds": [
+    "Verify centralized healing ownership and no duplicate application, rounding, missing HP caps, full-health failures, Rest status timing and sleep, item and drain recovery, switching and absorption abilities, type changes, revival exception, HP equalization and Substitute exceptions, both innate modes, weather/terrain coexistence, protected duration and reset, AI parity.",
+    "Native implementation, compiler/emulator acceptance and playtesting pending."
+  ],
+  "safety": {
+    "native_code_changed": false,
+    "main_changed": false,
+    "rom_changed": false,
+    "production_ids_allocated": false,
+    "prior_approvals_preserved": true
+  }
+}
