@@ -1,0 +1,167 @@
+{
+  "schema": "mercury-release9-resume-v1",
+  "parent": "eac054916a8959debdc57e9aa02b676877765c70",
+  "prior_commit": "51463d08cca1f47e804761fd235898b7e8c7b0e4",
+  "prior_blob": "fe712a1a1a5bb4962ad2e5f7ff1f96a23aadc98e",
+  "source_ds_commit": "4a7560f8b6cfe7fc19ee266365428c04dbeb5f98",
+  "files": {
+    "qa/ability-innate/RELEASE9_NATIVE_NAMESPACE_REPLAY.json": "d902d6ec26a43695a716f045dc880f5c1a3bd978",
+    "qa/ability-innate/RELEASE9_SOURCE_REPLAY_PLAN.json": "a68c40c72b59d64bbb370504de505150137d944a",
+    "qa/ability-innate/release9_replay.cjs": "e2658cdb14887a0dedd0ea5979a2ac3bedb1fb95",
+    "qa/ability-innate/release9_context_adapter.cjs": "1f65f51cf1f375ca341962642c559d54af9b8c4a",
+    "qa/ability-innate/release9_generated_action_guard.cjs": "e3aa4fb75a105bb66e36fc746f4a732cf0dd2ed4"
+  },
+  "reused_blobs": {
+    "native_installer": "768d82cc66c9b8a5dc3002ae4cecbe34cf2e55fe",
+    "migration_header": "b92fe70621ad602175059744d9c19ac7c38c8b65",
+    "migration_tests": "46bee3927e3af2fa2352732156208a53486e6bdd"
+  },
+  "namespace": {
+    "status": "RECONSTRUCTED_EXACT_SYMBOLS_NOT_RUNTIME",
+    "counts": {
+      "slots": 1067,
+      "unique_tokens": 1067,
+      "vanilla_matches": 124,
+      "donor_canonical_tail": 320,
+      "custom": 747,
+      "keep_as_written": 75,
+      "keep_exact_tokens": 75,
+      "redesign_label_count": 15,
+      "staging_partition_token_count": 888,
+      "staging_survive": 888,
+      "remaps": 619,
+      "remaps_exact": 619,
+      "historical_declarations": 125,
+      "historical_exact": 125
+    },
+    "retired": [
+      {
+        "id": 524,
+        "token": "ABILITY_MR_PHANTOM"
+      },
+      {
+        "id": 1004,
+        "token": "ABILITY_MR_RAT_KING"
+      }
+    ],
+    "reserved": [
+      {
+        "id": 314,
+        "token": "ABILITY_TEMP2"
+      },
+      {
+        "id": 317,
+        "token": "ABILITY_TEMP4"
+      }
+    ],
+    "required_union": 200,
+    "keep_historical_overlap": [],
+    "all_staging_tokens_preserved": true
+  },
+  "replay": {
+    "status": "PLAN_AND_RUNNER_PREPARED_FULL_REPLAY_NOT_EXECUTED",
+    "stage_count": 53,
+    "python_command_occurrences": 68,
+    "source_pins": {
+      "mercury": "4a7560f8b6cfe7fc19ee266365428c04dbeb5f98",
+      "pokeplatinum": "c248fb3f8cc9934ded800e489567c5c0eeee92eb",
+      "hg-engine": "5157c501dc0e6f88ef1654ab121352a5cc9ed7de",
+      "community-moves": "4250c4bfbb2e8dddd117160cec9e1e8395dfe9f7"
+    },
+    "workflow_blobs": {
+      "advanced_rebase": "686cb6378964c88ea3acb9956466c1697e106768",
+      "historical": "b77e55a6965fc2a655caba9c4f1c5ef42019e02e"
+    },
+    "guards": "tested plan and registry predicates using exact namespace and synthetic required-token set; 4 invalid inputs rejected; actual offline runner not executed on full checkout",
+    "blocker": "Local git public checkout failed DNS (Could not resolve host: github.com); no complete pinned Mercury/Platinum/HG/community worktrees available. Public tar retrieval also not completed. Connector retrieves exact individual source text, not full worktree.",
+    "limits": "Source commands only; no build, purchases, paid compute or ROM. Full ordered replay may fail on conflicting anchors; stop, preserve logs and repair only exact conflict. Runner assumes git archive contains all required tracked sources and dependencies available. Need isolated network-disabled environment for execution.",
+    "source_order": "advanced/community pipeline then existing 16-bit rebase then R1-R8 using shared registry; proposed combined order not proven"
+  },
+  "context_provider": {
+    "status": "PARTIAL_NATIVE_SOURCE_PATCH_TESTED_NOT_COMPILED",
+    "source_blobs": {
+      "include/battle/battle_context.h": "c7f44aa1b275bc14c6b35b9c95ca472f56a63923",
+      "src/battle/battle_controller_player.c": "17366e7b7e05b90bcf1b4f608f17d26f852a9e0e",
+      "include/battle/battle_lib.h": "4003b1a74d96e3c52d354f3c067847790f1c9507",
+      "src/battle/battle_lib.c": "f1addf3e5d7e6e260f6817db3e330742604f70df"
+    },
+    "scope": "Actual complete pinned context header and constructor source patched; upstream lib/header with Release8 snippets grafted for testing; no fully reconstructed tree or native compile.",
+    "checks": 7,
+    "rejected": 4,
+    "constructor": "BattleContext_New allocates sizeof(BattleContext), clears it, sets provider NULL before BattleContext_Init; transient context ownership replaces global pointer; caller must bind approved provider before use",
+    "holds": [
+      "Actual species/form lookup, global setting, implemented-token eligibility and randomizer override authorization unbound",
+      "Provider must be pure, context-bound and non-recursive; suppression and dispatch policy unverified",
+      "No native structure size/ABI certification or production enablement"
+    ]
+  },
+  "overlaps": {
+    "generated_action": {
+      "advanced_flags": [
+        "mercuryAbilityGeneratedAction",
+        "mercuryAbilityFollowupActive",
+        "mercuryReactiveCounterActive"
+      ],
+      "historical_flags": [
+        "mercuryR7GeneratedAction",
+        "mercuryR7GeneratedActive"
+      ],
+      "candidate_patch": "six guarded start/queue predicates across D7,D8,R7,R8; no writes, restoration or fixed power lanes changed; exact installer fragment application passed, 3 invalid input rejections",
+      "hold": "Cross-family recursion prevention candidate, not approved change in behavior. Need confirm intended cross-trigger policy, ordering, queued action ownership, restore and per-hit effects on combined native tree."
+    },
+    "added_type": {
+      "advanced": "mercuryDynamicAddedType reset 0xFF",
+      "historical": "mercuryR7AddedType reset 0",
+      "hold": "different sentinel representations; verify shared type chart and precedence; no blind field alias"
+    },
+    "multi_hit": {
+      "advanced": "mercuryCustomMultiHitActive/TriggerAbility",
+      "historical": "mercuryR7CustomMultiHitActive/Ability",
+      "hold": "single multi-hit scheduler and trigger ordering required; no merge"
+    },
+    "enraged": {
+      "advanced": "mercuryEnraged with 1/3 recoil",
+      "historical": "mercuryR7Enraged read by R7/R8 mechanics",
+      "hold": "separate status flags; need exact cross-family authority, reset and recoil rules; preserve both"
+    },
+    "reactive_counter": {
+      "advanced": "mercuryReactiveCounterPending/Target/Move/Power",
+      "historical": "mercuryR7ReactivePending/Target/Move/Power",
+      "hold": "cross-queue arbitration and state restoration pending"
+    }
+  },
+  "mechanics": {
+    "predators_edge": "Release8 patch preserved, not applied to complete tree",
+    "nerve_agent": "locked compound status spec preserved; no new source or bit allocation",
+    "deep_pockets": "locked primary-only second item spec preserved; no new source or storage allocation",
+    "recording": "actual 619-entry compiled helper preserved; versioned native reader binding pending"
+  },
+  "species": {
+    "recovered_packages": 1000,
+    "slot_candidates": 5994,
+    "remaining_packages": 620,
+    "remaining_slots": 6,
+    "new_recovery": 0,
+    "policy": "No repeat exhausted workbook search; only new authoritative source evidence."
+  },
+  "preserve": {
+    "nonretired_slots": 1062,
+    "generated_slots": 1067,
+    "retired": [
+      524,
+      1004
+    ],
+    "research_candidates": 620,
+    "all_approvals": true,
+    "duplicate_identity_pairs": true
+  },
+  "gym_design": "paused",
+  "production_allowed": false,
+  "next": [
+    "Obtain existing exact pinned worktrees or an authorized offline source archive; do not retry exhausted DNS routes without new evidence or spend funds.",
+    "Execute release9_replay.cjs in isolated environment; stop on first actual conflict, preserve source and reports, fix exact failing anchors; compare implemented registry and source hooks after each stage.",
+    "Apply release8 native installer, release9 context adapter and candidate generated-action guard only after source reconstruction; review cross-family guard behavior and native acceptance.",
+    "Reconcile added-type sentinel, multi-hit, generated actions/reactive queue, and Enraged semantics without discarding prior mechanics; no blind aliases.",
+    "Bind actual species-form innates and global toggle/randomizer, integrate versioned recording helper and remaining native mechanisms only with authoritative data and test evidence."
+  ]
+}
