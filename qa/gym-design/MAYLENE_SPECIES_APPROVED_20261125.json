@@ -1,0 +1,138 @@
+{
+  "schema": "mercury-species-design-authority-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "authority": "Owner approved Iron Fist for regular Lucario, selected Toxic Technique for Mega Toxicroak, directed redistribution of 40 Special Attack points (30 Defense, 10 Special Defense), replaced Anticipation with Venomous Reflex, and instructed to lock the resulting package.",
+  "source": {
+    "historical_candidates": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+    "historical_rows": {
+      "Lucario": 630,
+      "Toxicroak": 640,
+      "Mega Toxicroak": 641
+    },
+    "prior_fantina": "f188be0a8d6271b4b8ca021f5607f477025c66cb",
+    "prior_roserade": "3188f2c871f387ee6095d859dd48f1f92abb9886"
+  },
+  "species": [
+    {
+      "name": "Lucario",
+      "scope": "base form only",
+      "primary_options": [
+        "Inner Focus",
+        "Steadfast",
+        "Adaptability"
+      ],
+      "previous_innates": [
+        "Justified",
+        "Scrappy",
+        "Sharpness"
+      ],
+      "approved_innates": [
+        "Justified",
+        "Scrappy",
+        "Iron Fist"
+      ],
+      "preserve_mega_forms": true
+    },
+    {
+      "name": "Mega Toxicroak",
+      "scope": "species/form-wide; same package for player and bosses",
+      "type": [
+        "Poison",
+        "Fighting"
+      ],
+      "stone": "Toxicroakite",
+      "previous_stats": {
+        "hp": 83,
+        "atk": 126,
+        "def": 75,
+        "spa": 96,
+        "spd": 75,
+        "spe": 135
+      },
+      "approved_stats": {
+        "hp": 83,
+        "atk": 126,
+        "def": 105,
+        "spa": 56,
+        "spd": 85,
+        "spe": 135
+      },
+      "bst": 590,
+      "previous_primary": "Poison Touch",
+      "approved_primary": "Toxic Technique",
+      "primary_locked": true,
+      "previous_innates": [
+        "Dry Skin",
+        "Merciless",
+        "Anticipation"
+      ],
+      "approved_innates": [
+        "Dry Skin",
+        "Iron Fist",
+        "Venomous Reflex"
+      ],
+      "abilities": [
+        {
+          "name": "Toxic Technique",
+          "kind": "primary",
+          "effect": "Punching and kicking moves gain Poison as an additional type for type effectiveness only, similar to Flying Press. No additional STAB or automatic poisoning. Already Poison-type moves do not gain duplicate Poison effectiveness. Ordinary type immunities remain in effect.",
+          "production_id": null,
+          "native_status": "UNIMPLEMENTED"
+        },
+        {
+          "name": "Venomous Reflex",
+          "kind": "innate",
+          "effect": "When struck by a damaging contact move, retaliates with a 40-base-power physical Poison-type attack. Activates once per turn, consumes no normal action, and cannot trigger another retaliatory attack.",
+          "production_id": null,
+          "native_status": "UNIMPLEMENTED"
+        }
+      ],
+      "artwork_status": "PENDING_NATIVE_ACCEPTANCE"
+    }
+  ],
+  "preserve": {
+    "regular_toxicroak": "unchanged",
+    "roserade": "unchanged; Venomous Bloom, Merciless, Flower Veil",
+    "mega_lucario": "unchanged",
+    "mega_lucario_z": {
+      "type": [
+        "Fighting",
+        "Psychic"
+      ],
+      "primary": "Aura Mantle",
+      "innates": [
+        "Inner Focus",
+        "Mega Launcher",
+        "Competitive"
+      ],
+      "note": "Preserve later owner-approved package; do not distribute its signature ability to regular Lucario."
+    }
+  },
+  "maylene": {
+    "status": "REMAINING_TEAM_AND_FIELD_PENDING_APPROVAL",
+    "ace": "Mega Toxicroak",
+    "proposed_ace_level": 36,
+    "proposed_player_cap": 36,
+    "proposed_moves": [
+      "Drain Punch",
+      "Ice Punch",
+      "Sucker Punch",
+      "Earthquake"
+    ],
+    "moves_status": "PROPOSED_NOT_LOCKED",
+    "field_status": "UNAPPROVED"
+  },
+  "native_holds": [
+    "Exact move-class tags, dual-type effectiveness and immunity handling, existing dual-type moves and damage rounding",
+    "Retaliation queue ownership, once-per-turn guard, generated-action recursion prevention, fainting and substitute behavior, damage calculation and interaction with Iron Fist",
+    "Innates-OFF routing, form transitions, ability suppression, AI, sprite acceptance and balance tests"
+  ],
+  "safety": {
+    "native_source_changed": false,
+    "production_ids_allocated": false,
+    "main_changed": false,
+    "rom_changed": false,
+    "historical_records_preserved": true
+  }
+}
