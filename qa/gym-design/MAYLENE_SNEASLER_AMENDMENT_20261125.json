@@ -1,0 +1,326 @@
+{
+  "schema": "mercury-gym-design-amendment-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_ACCEPTED_DESIGN_NATIVE_PENDING",
+  "authority": "Owner selected Sneasler instead of Heracross, requested counterplay against repeated Earthquake before Toxicroak, reviewed Air Balloon and proposed ability replacements, then requested building the design.",
+  "supersedes": {
+    "file": "qa/gym-design/MAYLENE_APPROVED_20261125.json",
+    "blob": "e9f76557cd7857eb4e36ae4ee122c9c9368d4a76",
+    "scope": "Pro Trainer Heracross slot replaced; remaining Gym design unchanged"
+  },
+  "species": {
+    "name": "Sneasler",
+    "scope": "species-wide",
+    "source": {
+      "blob": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+      "row": 332
+    },
+    "historical_primary": [
+      "Unburden",
+      "Poison Touch",
+      "Pressure"
+    ],
+    "historical_innates": [
+      "Tough Claws",
+      "Infiltrator",
+      "Quick Feet"
+    ],
+    "approved_primary": [
+      "Unburden",
+      "Poison Touch",
+      "Limber"
+    ],
+    "approved_innates": [
+      "Tough Claws",
+      "Predator's Edge",
+      "Countercurrent"
+    ],
+    "existing_ability_contracts": {
+      "Limber": "Prevents paralysis and halves recoil and crash damage taken by the user from the ER recoil/crash damage paths.",
+      "Unburden": "Doubles Speed after the user's held item is consumed or otherwise lost.",
+      "Poison Touch": "Successful contact attacks have a 30% chance to badly poison the target.",
+      "Tough Claws": "Moves that make contact deal 30% more damage.",
+      "Predator's Edge": "Powers up biting and slicing moves by 30%.",
+      "Countercurrent": "When the user is hit by a contact move, the attacker's Speed falls by 1 stage. If that Speed drop makes the user faster than the attacker, the user's next move gains +1 priority."
+    },
+    "ability_contract_source": "47fd8a3c6fa1225293d1ede5bb61318b072d0581"
+  },
+  "gym": {
+    "leader": "Maylene",
+    "player_level_cap": 36,
+    "pro_field": {
+      "name": "Duelist's Rhythm",
+      "slot": "terrain",
+      "duration_turns": 5,
+      "activation": "battle start",
+      "both_sides": true,
+      "airborne_included": true,
+      "normal_terrain_replacement_and_removal": true,
+      "automatic_reactivation": false,
+      "damage_multiplier_on_consecutive_same_damaging_move": 0.75,
+      "nonstacking": true,
+      "history_rules": {
+        "different_move": "resets repetition",
+        "status_move": "resets repetition, including Protect and Detect",
+        "switch": "clears switched Pokemon history",
+        "multi_hit": "one move execution; all hits share modifier",
+        "choice_items": "ordinary repetition penalty",
+        "priority": "ordinary repetition rules",
+        "miss": "counts as executed technique",
+        "flinch": "does not reset history",
+        "ability_generated_attacks": "neither trigger nor reset repetition; includes Venomous Reflex",
+        "forced_repetition": "penalized normally",
+        "expiry": "removes mechanic"
+      },
+      "ai": "prefer varied attacks when worthwhile; repeat when best damage or knockout; no hidden immunity",
+      "native_status": "UNIMPLEMENTED"
+    },
+    "teams": {
+      "Trainer": [
+        {
+          "species": "Hawlucha",
+          "level": 32,
+          "primary": "Limber",
+          "item": "Oran Berry",
+          "moves": [
+            "Wing Attack",
+            "Brick Break",
+            "Hone Claws",
+            "Roost"
+          ]
+        },
+        {
+          "species": "Lucario",
+          "level": 33,
+          "primary": "Inner Focus",
+          "item": "Black Belt",
+          "moves": [
+            "Force Palm",
+            "Metal Claw",
+            "Bullet Punch",
+            "Detect"
+          ]
+        },
+        {
+          "species": "Medicham",
+          "level": 34,
+          "primary": "Pure Power",
+          "item": "Oran Berry",
+          "moves": [
+            "Brick Break",
+            "Psycho Cut",
+            "Fake Out",
+            "Recover"
+          ]
+        },
+        {
+          "species": "Toxicroak",
+          "level": 36,
+          "primary": null,
+          "item": "Toxicroakite",
+          "moves": [
+            "Drain Punch",
+            "Poison Jab",
+            "Sucker Punch",
+            "Mud Shot"
+          ],
+          "base_primary_status": "not explicitly selected; choose from existing approved base options during QA",
+          "mega": {
+            "species": "Mega Toxicroak",
+            "primary": "Toxic Technique",
+            "innates": [
+              "Dry Skin",
+              "Iron Fist",
+              "Venomous Reflex"
+            ]
+          }
+        }
+      ],
+      "Ace Trainer": [
+        {
+          "species": "Hawlucha",
+          "level": 33,
+          "primary": "Unburden",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Acrobatics",
+            "Brick Break",
+            "Roost",
+            "U-turn"
+          ]
+        },
+        {
+          "species": "Lucario",
+          "level": 33,
+          "primary": "Adaptability",
+          "item": "Metal Coat",
+          "moves": [
+            "Aura Sphere",
+            "Bullet Punch",
+            "Ice Punch",
+            "Work Up"
+          ]
+        },
+        {
+          "species": "Annihilape",
+          "level": 34,
+          "primary": "Vital Spirit",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Rage Fist",
+            "Drain Punch",
+            "Rock Tomb",
+            "Taunt"
+          ]
+        },
+        {
+          "species": "Medicham",
+          "level": 34,
+          "primary": "Pure Power",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Brick Break",
+            "Psycho Cut",
+            "Thunder Punch",
+            "Fake Out"
+          ]
+        },
+        {
+          "species": "Toxicroak",
+          "level": 36,
+          "primary": null,
+          "item": "Toxicroakite",
+          "moves": [
+            "Drain Punch",
+            "Ice Punch",
+            "Sucker Punch",
+            "Bulldoze"
+          ],
+          "base_primary_status": "not explicitly selected; choose from existing approved base options during QA",
+          "mega": {
+            "species": "Mega Toxicroak",
+            "primary": "Toxic Technique",
+            "innates": [
+              "Dry Skin",
+              "Iron Fist",
+              "Venomous Reflex"
+            ]
+          }
+        }
+      ],
+      "Pro Trainer": [
+        {
+          "species": "Hawlucha",
+          "level": 33,
+          "primary": "Unburden",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Acrobatics",
+            "Flying Press",
+            "U-turn",
+            "Roost"
+          ]
+        },
+        {
+          "species": "Lucario",
+          "level": 34,
+          "primary": "Adaptability",
+          "item": "Muscle Band",
+          "moves": [
+            "Aura Sphere",
+            "Bullet Punch",
+            "Ice Punch",
+            "Rock Tomb"
+          ]
+        },
+        {
+          "species": "Annihilape",
+          "level": 34,
+          "primary": "Defiant",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Rage Fist",
+            "Drain Punch",
+            "Rock Tomb",
+            "Taunt"
+          ]
+        },
+        {
+          "species": "Medicham",
+          "level": 35,
+          "primary": "Pure Power",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Drain Punch",
+            "Psycho Cut",
+            "Fake Out",
+            "Thunder Punch"
+          ]
+        },
+        {
+          "species": "Sneasler",
+          "level": 35,
+          "primary": "Unburden",
+          "item": "Air Balloon",
+          "moves": [
+            "Dire Claw",
+            "Close Combat",
+            "Acrobatics",
+            "U-turn"
+          ],
+          "innates": [
+            "Tough Claws",
+            "Predator's Edge",
+            "Countercurrent"
+          ]
+        },
+        {
+          "species": "Toxicroak",
+          "level": 36,
+          "primary": null,
+          "item": "Toxicroakite",
+          "moves": [
+            "Drain Punch",
+            "Ice Punch",
+            "Sucker Punch",
+            "Earthquake"
+          ],
+          "base_primary_status": "not explicitly selected; choose from existing approved base options during QA",
+          "mega": {
+            "species": "Mega Toxicroak",
+            "primary": "Toxic Technique",
+            "innates": [
+              "Dry Skin",
+              "Iron Fist",
+              "Venomous Reflex"
+            ]
+          }
+        }
+      ]
+    },
+    "unchanged_species_authority": "96faec12eb17846329deecc2d4d5bb4774a717a5",
+    "adaptive_ai": {
+      "status": "DESIGN_ACCEPTED_EXACT_HEURISTIC_PROPOSED_FOR_QA",
+      "intent": "Prefer available Sneasler before Toxicroak against repeated observed Ground attacks while Air Balloon is intact; preserve ace for later whenever practical.",
+      "suggested_trigger": "At least two consecutive executed Ground-type damaging moves by the player's active Pokemon; only observed history, not queued/unexecuted choices.",
+      "suggested_decision": "Prioritize Sneasler on a legal replacement opportunity if Balloon remains intact and known effects do not negate Ground immunity; allow ordinary AI alternatives including Hawlucha; no forced switch, no hidden information or immunity. Do not assume player will repeat Ground.",
+      "expiry": "Reevaluate if player changes active Pokemon or attack pattern; Balloon loss disables this special priority.",
+      "holds": [
+        "Confirm exact history window and switch scoring during native QA",
+        "Ground immunity exceptions, Air Balloon loss and Unburden, Acrobatics, adaptive AI and field interaction"
+      ]
+    }
+  },
+  "holds": [
+    "Historical ability contracts preserved; verify availability and final signature ownership before runtime integration",
+    "Dire Claw flags, overlapping damage modifiers, existing Countercurrent priority queue, innate toggle and suppression, learnsets, native AI and battle balance",
+    "All prior native and artwork holds preserved"
+  ],
+  "safety": {
+    "production_ids_allocated": false,
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "prior_design_preserved": true
+  }
+}
