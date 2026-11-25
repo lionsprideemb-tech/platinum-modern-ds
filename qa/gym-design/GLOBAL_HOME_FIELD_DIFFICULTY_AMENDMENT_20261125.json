@@ -1,8 +1,8 @@
 {
   "schema": "mercury-global-gym-difficulty-amendment-v1",
   "date": "2026-11-25",
-  "status": "OWNER_APPROVED_DURATION_RULE_NATIVE_PENDING",
-  "authority": "Owner amended global rule: Trainer difficulty has no home field advantage; Ace Trainer five-turn home field advantage; Pro Trainer full-match home field advantage.",
+  "status": "OWNER_APPROVED_DURATION_AND_FIELD_PROTECTION_NATIVE_PENDING",
+  "authority": "Owner amended global rule: Trainer difficulty has no home field advantage; Ace Trainer five-turn home field advantage; Pro Trainer full-match home field advantage. Owner specified first two Gym home fields can only be changed by something of the same type; the others cannot be changed. Interpreted as Roark weather and Gardenia terrain exceptions, with custom Gym home fields protected.",
   "scope": "All eight Gym Leaders, retroactive and prospective. Supersedes previous Pro-exclusive five-turn home-field rule; all approved teams, species, moves, items, level caps and field effect identities otherwise preserved.",
   "difficulty": {
     "Trainer": {
@@ -23,7 +23,7 @@
     "player_cap_same_across_difficulties": true,
     "initial_activation": "battle start, no action or PP cost",
     "both_sides": true,
-    "normal_weather_and_terrain_slots": "retain existing design pending explicit ruling on full-match replacement/removal"
+    "normal_weather_and_terrain_slots": "Roark and Gardenia use their corresponding native slots; custom home fields must be protected against overwrite and removal while active; native coexistence routing to verify"
   },
   "retroactive_fields": [
     {
@@ -54,11 +54,11 @@
     "Candice",
     "Volkner"
   ],
-  "maylene_ai": "Pro Trainer no longer requires checking five-turn natural expiration; still require field active and same opposing active battler repeating Earthquake. No changes to Sneasler or Mega Toxicroak.",
-  "open_design_question": "Does full-match Pro home field resist replacement/removal, resume after temporary interruption, or remain until deliberately replaced/removed? Owner has approved duration only. Do not silently reinterpret earlier normal replacement/removal rules or certify exact interaction before explicit decision.",
+  "maylene_ai": "Pro Trainer custom field persists through entire match; Ace Trainer field expires normally at five turns. Preserve Sneasler Pro-exclusive bait and same attacking battler repeated move requirement.",
   "native_holds": [
     "Implement difficulty routing and permanent-duration representation without sentinel collisions; verify weather/terrain ownership, activation, move history, suppression, removal/replacement and reset on battle exit once interaction policy is approved.",
-    "Test both innate modes and existing field/weather effects; rebalance Ace Trainer teams with five-turn fields and Pro Trainer with permanent fields; no unauthorized roster changes."
+    "Test both innate modes and existing field/weather effects; rebalance Ace Trainer teams with five-turn fields and Pro Trainer with permanent fields; no unauthorized roster changes.",
+    "Verify direct removal rejection, cross-category coexistence, same-category weather/terrain replacement, no hidden reapplication, custom-field protection and normal battle reset; do not alter native semantics until explicit unresolved cases are reviewed."
   ],
   "safety": {
     "native_code_changed": false,
@@ -66,5 +66,30 @@
     "rom_changed": false,
     "production_ids_allocated": false,
     "prior_approvals_preserved": true
+  },
+  "revision": {
+    "supersedes_blob": "3c8538b233769c2658ba1367d720bfe9f3c5e3cc",
+    "scope": "home field replacement and removal policy"
+  },
+  "replacement_policy": {
+    "scope": "Ace Trainer and Pro Trainer while home field active; Trainer has no automatic field",
+    "Roark": {
+      "field": "Sandstorm",
+      "replace_only_with": "different weather",
+      "direct_clear_allowed": false
+    },
+    "Gardenia": {
+      "field": "Grassy Terrain",
+      "replace_only_with": "different terrain",
+      "direct_clear_allowed": false
+    },
+    "custom_fields": {
+      "replace_allowed": false,
+      "direct_clear_allowed": false,
+      "ace_natural_expiry": true,
+      "pro_natural_expiry": false
+    },
+    "interpretation": "same type means same field category, not Pokemon elemental type. Ordinary weather and terrain replacement lasts according to the replacement effect's own duration; no automatic return proposed, consistent with prior no-reapply rule. Other field category does not overwrite home field. Future Gym fields protected by default unless owner explicitly changes rule.",
+    "unresolved_native_details": "suppression vs removal (e.g. Cloud Nine), same-effect refresh, custom field coexistence with ordinary weather/terrain, and exact replacement expiry semantics require native QA or explicit owner ruling if ambiguous."
   }
 }
