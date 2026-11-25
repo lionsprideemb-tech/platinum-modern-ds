@@ -1,0 +1,190 @@
+{
+  "schema": "mercury-release4-resume-v1",
+  "parent": "bd0b20c4759473076b1da9ce7eaf0715b8ab44e1",
+  "crosswalk_blob": "18ae4946b5db2bec0d8c80549cd4b2faea24e5cc",
+  "source_gba_commit": "5a88bded9ad705029867054b150787e770d649fc",
+  "source_hg_commit": "5157c501dc0e6f88ef1654ab121352a5cc9ed7de",
+  "summary": {
+    "counts": {
+      "symbol_candidate": 865,
+      "canonical_variant_identity": 6,
+      "unmatched": 132,
+      "name_candidate": 36,
+      "retired": 2,
+      "historical_typo_composite": 1,
+      "approved_redesign": 1
+    },
+    "unique_targets": 909,
+    "duplicate_targets": [
+      [
+        "662",
+        [
+          382,
+          893
+        ]
+      ],
+      [
+        "664",
+        [
+          558,
+          895
+        ]
+      ]
+    ],
+    "ds_unmatched_by_gba": [
+      {
+        "id": 311,
+        "token": "ABILITY_CONTROLLED_FURY",
+        "name": "Controlled Fury"
+      },
+      {
+        "id": 312,
+        "token": "ABILITY_ETERNAL_LIFE",
+        "name": "Eternal Life"
+      },
+      {
+        "id": 313,
+        "token": "ABILITY_HOLLOW_SHELL",
+        "name": "Hollow Shell"
+      },
+      {
+        "id": 314,
+        "token": "ABILITY_MIND_GAMES",
+        "name": "Mind Games"
+      },
+      {
+        "id": 315,
+        "token": "ABILITY_THE_LOOK",
+        "name": "The Look"
+      },
+      {
+        "id": 317,
+        "token": "ABILITY_LOCKDOWN_PROTOCOL",
+        "name": "Lockdown Protocol"
+      },
+      {
+        "id": 318,
+        "token": "ABILITY_ADAPTIVE_GENOME",
+        "name": "Adaptive Genome"
+      },
+      {
+        "id": 319,
+        "token": "ABILITY_STORM_SEQUENCE",
+        "name": "Storm Sequence"
+      },
+      {
+        "id": 320,
+        "token": "ABILITY_FIELD_COMMISSIONER",
+        "name": "Field Commissioner"
+      },
+      {
+        "id": 321,
+        "token": "ABILITY_PROTEAN_MAXIMA",
+        "name": "Protean Maxima"
+      },
+      {
+        "id": 329,
+        "token": "ABILITY_MR_AURA_MANTLE",
+        "name": "Aura Mantle"
+      },
+      {
+        "id": 330,
+        "token": "ABILITY_MR_SAND_SKIMMER",
+        "name": "Sand Skimmer"
+      },
+      {
+        "id": 331,
+        "token": "ABILITY_MR_CALAMITY_EDGE",
+        "name": "Calamity Edge"
+      },
+      {
+        "id": 333,
+        "token": "ABILITY_MR_DAM_BUILDER",
+        "name": "Dam Builder"
+      },
+      {
+        "id": 334,
+        "token": "ABILITY_MR_NERVE_AGENT",
+        "name": "Nerve Agent"
+      },
+      {
+        "id": 335,
+        "token": "ABILITY_MR_SIEGE_ENGINE",
+        "name": "Siege Engine"
+      },
+      {
+        "id": 346,
+        "token": "ABILITY_MR_AERIAL_PREDATOR",
+        "name": "Aerial Predator"
+      },
+      {
+        "id": 347,
+        "token": "ABILITY_MR_DYNAMO_FIST",
+        "name": "Dynamo Fist"
+      },
+      {
+        "id": 348,
+        "token": "ABILITY_MR_SOVEREIGN_ARSENAL",
+        "name": "Sovereign Arsenal"
+      },
+      {
+        "id": 350,
+        "token": "ABILITY_MR_COLD_CALCULATION",
+        "name": "Cold Calculation"
+      },
+      {
+        "id": 737,
+        "token": "ABILITY_MR_REVELATION",
+        "name": "Revelation"
+      }
+    ],
+    "research_counts": {
+      "no_candidate": 620,
+      "gba_only_candidate": 1,
+      "ds_candidate": 1
+    },
+    "composite_records": 34,
+    "exact_description_candidate_records": 3,
+    "storage_model": {
+      "cases": 65536,
+      "failures": 0,
+      "current_slots": 930,
+      "free": 94,
+      "conditional_imported_only": 1054,
+      "conditional_overflow": 30,
+      "conditional_including_four_legacy": 1058,
+      "conditional_overflow_with_legacy": 34,
+      "note": "Pure integer model only. No native save execution. Counts are scenario arithmetic, not approval totals."
+    }
+  },
+  "approval_count": null,
+  "approval_count_reason": "Identity candidates and mechanics descriptions alone do not establish all approved aliases, research decisions or current approval status.",
+  "native_evidence": {
+    "mr10d24d_and_e_same_commit": "aa1b4bacb91315c8b476f466fd784b8f0eabb314",
+    "pr_triggered_workflow_runs_returned": 0,
+    "interpretation": "No additional native certification established; connector filters PR-triggered runs. D24F workflow at prior verified head is syntax-only. Do not infer passing gameplay tests.",
+    "storage_model": "65536 arithmetic round trips passed; no native save write/read performed."
+  },
+  "species_assignment_recovery": {
+    "prior_exposed_mounted_rows": 1000,
+    "prior_total_reported": 1620,
+    "new_canonical_coverage": 0,
+    "notes": "Search found early Batch004/005 exports; no newly verified complete six-slot assignment source. Library Abilities folder listing returned no entries. Preserve existing historical assignments."
+  },
+  "holds": [
+    "124 legacy imports retained; 34 explicit plus-sign composite descriptions triaged. No merges approved.",
+    "Eight pre-import unmatched GBA slots: four functional candidates, two unimplemented, two blank. Do not allocate until authority established.",
+    "620 research-only records still without direct match; no new approval inferred.",
+    "Two explicitly retired DS slots remain reserved. Preserve Revelation and Ancient Script, all eleven health mappings and 93 review decisions.",
+    "Canonical variants remapped by identity; do not copy GBA numeric IDs into DS data."
+  ],
+  "next": [
+    "Recover explicit alias/approval evidence and GBA runtime references for 124 legacy imports, prioritizing composite dependencies and same-description candidates; compare mechanics instead of name-only joins.",
+    "Prepare isolated scalable ability storage architecture and test harness; do not allocate production IDs. Preserve marking bits, checksum and existing save structure; investigate species-fixed innates as separate data rather than four serialized ability IDs.",
+    "Recover full six-slot authored species assignments from locked individual batch exports or original workbook.",
+    "Verify exact native implemented-token registry and test artifacts without starting paid compute.",
+    "Maintain research candidate holds until explicit approval evidence."
+  ],
+  "gym_design": "paused; Roark approval and Gardenia unapproved revision preserved",
+  "production_allowed": false
+}
