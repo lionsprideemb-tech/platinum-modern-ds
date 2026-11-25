@@ -1,0 +1,97 @@
+{
+  "schema": "mercury-species-design-authority-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "authority": "Owner explicitly approved Mega Floatzel's Surge Relay, Water Veil, Strong Jaw and Limber, historical stats, and male Basculegion's Reckless replacing Adaptability while preserving female Basculegion.",
+  "sources": {
+    "rolling_tide": "88be6a589a09a8047484bb6497d4ed6f4c5f14f8",
+    "global_field": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+    "historical_slots": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+    "ability_contracts": "47fd8a3c6fa1225293d1ede5bb61318b072d0581"
+  },
+  "species": [
+    {
+      "name": "Mega Floatzel",
+      "type": [
+        "Water",
+        "Fighting"
+      ],
+      "stone": "Floatzelite",
+      "stats": {
+        "hp": 85,
+        "atk": 145,
+        "def": 70,
+        "spa": 95,
+        "spd": 75,
+        "spe": 125
+      },
+      "bst": 595,
+      "prior_primary": "Tough Claws",
+      "approved_primary": "Surge Relay",
+      "approved_innates": [
+        "Water Veil",
+        "Strong Jaw",
+        "Limber"
+      ],
+      "signature": {
+        "name": "Surge Relay",
+        "effect": "Damaging pivot moves deal 50% additional damage when a legal replacement Pokemon is available.",
+        "damage_multiplier": 1.5,
+        "scope": "species/form-wide; player and NPC",
+        "production_id": null,
+        "native_status": "UNIMPLEMENTED"
+      },
+      "preserve_historical_artwork": true,
+      "base_floatzel_unchanged": true
+    },
+    {
+      "name": "Basculegion Male",
+      "historical_row": 758,
+      "old_primary": [
+        "Swift Swim",
+        "Adaptability",
+        "Mold Breaker"
+      ],
+      "approved_primary": [
+        "Swift Swim",
+        "Reckless",
+        "Mold Breaker"
+      ],
+      "approved_innates": [
+        "Rock Head",
+        "Water Veil",
+        "Cursed Body"
+      ],
+      "stat_change": false
+    },
+    {
+      "name": "Basculegion Female",
+      "historical_row": 757,
+      "approved_primary": [
+        "Swift Swim",
+        "Adaptability",
+        "Mold Breaker"
+      ],
+      "approved_innates": [
+        "Water Veil",
+        "Cursed Body",
+        "Competitive"
+      ],
+      "unchanged": true
+    }
+  ],
+  "holds": [
+    "Surge Relay damage classification, legal replacement at attack resolution, trapping and forced-pivot interactions, failed pivots, last Pokemon, rain stacking and native form transition",
+    "Reckless uses intrinsic recoil/crash move classification even when Rock Head prevents recoil; native verification",
+    "Innate toggle, suppression, entry Aqua Ring, sprite acceptance, move legality and battle balance"
+  ],
+  "pending": [
+    "Wake difficulty teams and adaptive AI review; not owner-approved in this record"
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false
+  }
+}
