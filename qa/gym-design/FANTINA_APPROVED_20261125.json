@@ -1,0 +1,359 @@
+{
+  "schema": "mercury-gym-design-v1",
+  "date": "2026-11-25",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "leader": "Fantina",
+  "badge": "Relic Badge",
+  "player_level_cap": 30,
+  "mega": {
+    "name": "Mega Mismagius",
+    "type": [
+      "Ghost",
+      "Fairy"
+    ],
+    "stats": {
+      "hp": 60,
+      "atk": 65,
+      "def": 85,
+      "spa": 145,
+      "spd": 110,
+      "spe": 125
+    },
+    "bst": 590,
+    "primary": "Magic Bounce",
+    "innates": [
+      "Levitate",
+      "Serene Grace",
+      "Cursed Body"
+    ],
+    "stone": "Mismagiusite",
+    "player_access_before_battle": true,
+    "artwork_acceptance": "PENDING"
+  },
+  "pro_field": {
+    "name": "Spirit Realm",
+    "duration_turns": 5,
+    "slot": "terrain",
+    "activation": "battle start",
+    "both_sides": true,
+    "airborne_included": true,
+    "ghost_vs_normal_component": 1,
+    "other_type_components": "unchanged",
+    "major_status_speed_multiplier": 0.75,
+    "stacking": "apply once per afflicted battler; multiplicative with paralysis; not a stat stage; remove on cure or expiry",
+    "normal_terrain_replacement_and_removal": true,
+    "automatic_reactivation": false,
+    "native_status": "UNIMPLEMENTED",
+    "test_holds": [
+      "Nerve Agent and other custom major status recognition",
+      "speed rounding and action-order refresh",
+      "type-chart and dual-type immunities",
+      "terrain duration and clearing including airborne targets"
+    ]
+  },
+  "teams": {
+    "Trainer": [
+      {
+        "species": "Drifblim",
+        "level": 26,
+        "primary": "Aftermath",
+        "item": "Oran Berry",
+        "moves": [
+          "Hex",
+          "Air Cutter",
+          "Will-O-Wisp",
+          "Ominous Wind"
+        ],
+        "innates": [
+          "Wind Rider",
+          "Frisk",
+          "Cursed Body"
+        ]
+      },
+      {
+        "species": "Haunter",
+        "level": 27,
+        "primary": "Levitate",
+        "item": null,
+        "moves": [
+          "Shadow Ball",
+          "Sludge",
+          "Confuse Ray",
+          "Night Shade"
+        ],
+        "innates": [
+          "Frisk",
+          "Insomnia",
+          "Unnerve"
+        ]
+      },
+      {
+        "species": "Rotom",
+        "level": 28,
+        "primary": "Levitate",
+        "item": "Oran Berry",
+        "moves": [
+          "Shock Wave",
+          "Hex",
+          "Will-O-Wisp",
+          "Thunder Wave"
+        ],
+        "innates": [
+          "Infiltrator",
+          "Motor Drive",
+          "Overcoat"
+        ]
+      },
+      {
+        "species": "Mismagius",
+        "level": 30,
+        "primary": "Levitate",
+        "item": "Mismagiusite",
+        "moves": [
+          "Shadow Ball",
+          "Draining Kiss",
+          "Magical Leaf",
+          "Mystical Fire"
+        ],
+        "innates": [
+          "Cursed Body",
+          "Serene Grace",
+          "Infiltrator"
+        ],
+        "mega": {
+          "species": "Mega Mismagius",
+          "primary": "Magic Bounce",
+          "innates": [
+            "Levitate",
+            "Serene Grace",
+            "Cursed Body"
+          ]
+        }
+      }
+    ],
+    "Ace Trainer": [
+      {
+        "species": "Drifblim",
+        "level": 27,
+        "primary": "Unburden",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Hex",
+          "Air Slash",
+          "Will-O-Wisp",
+          "Strength Sap"
+        ],
+        "innates": [
+          "Wind Rider",
+          "Frisk",
+          "Cursed Body"
+        ]
+      },
+      {
+        "species": "Rotom",
+        "level": 28,
+        "primary": "Levitate",
+        "item": "Magnet",
+        "moves": [
+          "Volt Switch",
+          "Hex",
+          "Will-O-Wisp",
+          "Shock Wave"
+        ],
+        "innates": [
+          "Infiltrator",
+          "Motor Drive",
+          "Overcoat"
+        ]
+      },
+      {
+        "species": "Lampent",
+        "level": 28,
+        "primary": "Flash Fire",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Flame Burst",
+          "Hex",
+          "Will-O-Wisp",
+          "Energy Ball"
+        ],
+        "innates": [
+          "Cursed Body",
+          "Levitate",
+          "Competitive"
+        ]
+      },
+      {
+        "species": "Hisuian Zoroark",
+        "level": 29,
+        "primary": "Illusion",
+        "item": "Spell Tag",
+        "moves": [
+          "Shadow Ball",
+          "Hyper Voice",
+          "Extrasensory",
+          "U-turn"
+        ],
+        "innates": [
+          "Competitive",
+          "Magic Guard",
+          "Unnerve"
+        ]
+      },
+      {
+        "species": "Mismagius",
+        "level": 30,
+        "primary": "Levitate",
+        "item": "Mismagiusite",
+        "moves": [
+          "Shadow Ball",
+          "Dazzling Gleam",
+          "Mystical Fire",
+          "Power Gem"
+        ],
+        "innates": [
+          "Cursed Body",
+          "Serene Grace",
+          "Infiltrator"
+        ],
+        "mega": {
+          "species": "Mega Mismagius",
+          "primary": "Magic Bounce",
+          "innates": [
+            "Levitate",
+            "Serene Grace",
+            "Cursed Body"
+          ]
+        }
+      }
+    ],
+    "Pro Trainer": [
+      {
+        "species": "Rotom",
+        "level": 28,
+        "primary": "Levitate",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Thunderbolt",
+          "Hex",
+          "Will-O-Wisp",
+          "Volt Switch"
+        ],
+        "innates": [
+          "Infiltrator",
+          "Motor Drive",
+          "Overcoat"
+        ]
+      },
+      {
+        "species": "Drifblim",
+        "level": 28,
+        "primary": "Unburden",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Hex",
+          "Air Slash",
+          "Will-O-Wisp",
+          "Strength Sap"
+        ],
+        "innates": [
+          "Wind Rider",
+          "Frisk",
+          "Cursed Body"
+        ]
+      },
+      {
+        "species": "Lampent",
+        "level": 28,
+        "primary": "Flash Fire",
+        "item": "Eviolite",
+        "moves": [
+          "Flamethrower",
+          "Hex",
+          "Energy Ball",
+          "Will-O-Wisp"
+        ],
+        "innates": [
+          "Cursed Body",
+          "Levitate",
+          "Competitive"
+        ]
+      },
+      {
+        "species": "Mimikyu",
+        "level": 29,
+        "primary": "Disguise",
+        "item": "Lum Berry",
+        "moves": [
+          "Play Rough",
+          "Shadow Sneak",
+          "Swords Dance",
+          "Shadow Claw"
+        ],
+        "innates": null
+      },
+      {
+        "species": "Hisuian Zoroark",
+        "level": 29,
+        "primary": "Illusion",
+        "item": "Life Orb",
+        "moves": [
+          "Shadow Ball",
+          "Hyper Voice",
+          "Focus Blast",
+          "U-turn"
+        ],
+        "innates": [
+          "Competitive",
+          "Magic Guard",
+          "Unnerve"
+        ]
+      },
+      {
+        "species": "Mismagius",
+        "level": 30,
+        "primary": "Levitate",
+        "item": "Mismagiusite",
+        "moves": [
+          "Shadow Ball",
+          "Dazzling Gleam",
+          "Mystical Fire",
+          "Calm Mind"
+        ],
+        "innates": [
+          "Cursed Body",
+          "Serene Grace",
+          "Infiltrator"
+        ],
+        "mega": {
+          "species": "Mega Mismagius",
+          "primary": "Magic Bounce",
+          "innates": [
+            "Levitate",
+            "Serene Grace",
+            "Cursed Body"
+          ]
+        }
+      }
+    ]
+  },
+  "story": {
+    "spiritomb": "Reserve ordinary authored story encounters for Cynthia and player's special Hallowed Tower encounter; no Fantina Spiritomb or ordinary wild distribution. Not a claim about official lore population; breeding/randomizer exceptions not specified.",
+    "rotom": "Base form only"
+  },
+  "source_candidates": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+  "previous_gardenia": "90bf0a9d8a4dbc119d4e112f6e75bd275a2f85e3",
+  "holds": [
+    "Mimikyu historical innates unresolved; do not invent",
+    "learnset and item availability",
+    "Mega artwork and native form transitions",
+    "balance with innates enabled and disabled",
+    "native Spirit Realm implementation"
+  ],
+  "safety": {
+    "production_ids_allocated": false,
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false
+  }
+}
