@@ -1,0 +1,102 @@
+{
+  "schema": "mercury-gym-roster-amendment-v1",
+  "date": "2026-11-25",
+  "leader": "Volkner",
+  "status": "OWNER_APPROVED_ROSTER_SUBSTITUTION_ONLY_NATIVE_PENDING",
+  "authority": "Owner accepted replacing Galvantula with Kilowattrel; keep Hisuian Electrode with Gardenia. Full team approval not implied.",
+  "substitution": {
+    "remove": "Galvantula",
+    "add": "Kilowattrel",
+    "difficulty": [
+      "Ace Trainer",
+      "Pro Trainer"
+    ],
+    "Trainer": "unchanged",
+    "scope": "Volkner gym team design only; no species deletion or global exclusivity rules"
+  },
+  "historical_dex": {
+    "repository": "lionsprideemb-tech/Mercury-redux-dex",
+    "base_shard_blob": "85e47d9350478ff339734c7d7f40b4156236571e",
+    "source_overlay_blob": "5392ca1900496c1019ae5de2582b41ea145a234d",
+    "key": "SPECIES_KILOWATTREL",
+    "type": [
+      "Electric",
+      "Flying"
+    ],
+    "stats": {
+      "hp": 70,
+      "atk": 70,
+      "def": 60,
+      "spa": 105,
+      "spd": 60,
+      "spe": 125
+    },
+    "primary": [
+      "Wind Power",
+      "Volt Absorb",
+      "Competitive"
+    ],
+    "base_shard_innates": [
+      "Striker",
+      "Keen Eye",
+      "Motor Drive"
+    ],
+    "source_overlay_innates": [],
+    "innate_status": "Historical conflict; preserve both layers and reconcile exact authority before assigning native slots. No new innate approval inferred.",
+    "verified_learnset": [
+      "Electro Ball (evolution)",
+      "Roost (24)",
+      "Agility (36)",
+      "Volt Switch (43)",
+      "Discharge (48)",
+      "Hurricane (55)"
+    ]
+  },
+  "review_only": {
+    "player_level_cap": 60,
+    "teams": {
+      "Ace Trainer": {
+        "level": 58,
+        "primary": "Competitive",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Discharge",
+          "Hurricane",
+          "Volt Switch",
+          "Roost"
+        ]
+      },
+      "Pro Trainer": {
+        "level": 59,
+        "primary": "Competitive",
+        "item": "Focus Sash",
+        "moves": [
+          "Electro Ball",
+          "Hurricane",
+          "Volt Switch",
+          "Roost"
+        ]
+      }
+    },
+    "note": "All moves supported by historical Dex level-up records, but native legality and implementation pending. Levels, items, primary and exact moves still need owner review."
+  },
+  "preserve": {
+    "gardenia_hisuian_electrode": true,
+    "field_authority_blob": "71b74d98eab74e8af1a19d32178fe72a57be7e3f",
+    "mega_luxray_authority_blob": "466d3394c172f84390b283103f42677b9842a245",
+    "historical_artwork": true,
+    "prior_species_decisions": true
+  },
+  "holds": [
+    "Resolve historical base-shard versus source-overlay innate discrepancy; verify Motor Drive routing and interaction with Volt Absorb if selected.",
+    "Verify native move flags, Electro Ball speed calculation, Grounding Failure and Volt Switch interaction, AI, species resource binding and compilation/emulation.",
+    "All three teams and shared player cap remain review-only."
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false,
+    "github_actions_requested": false
+  }
+}
