@@ -1,0 +1,91 @@
+{
+  "schema": "mercury-gym-species-design-v1",
+  "date": "2026-11-25",
+  "leader": "Volkner",
+  "status": "OWNER_APPROVED_DESIGN_ONLY_NATIVE_PENDING",
+  "authority": "Owner explicitly approved Voltage Hunter signature primary, Shocking Jaws, Intimidate and Lightning Rod innates, preserving regular Luxray's existing abilities, and the four biting-move moveset.",
+  "field_authority_blob": "71b74d98eab74e8af1a19d32178fe72a57be7e3f",
+  "global_authority_blob": "5cb15a45424fc35902101e9c31cb7d2de354dcf5",
+  "species": [
+    {
+      "name": "Mega Luxray",
+      "primary": [
+        "Voltage Hunter"
+      ],
+      "innates": [
+        "Shocking Jaws",
+        "Intimidate",
+        "Lightning Rod"
+      ],
+      "approved_moves": [
+        "Thunder Fang",
+        "Crunch",
+        "Ice Fang",
+        "Psychic Fangs"
+      ],
+      "signature": {
+        "name": "Voltage Hunter",
+        "biting_damage_multiplier": 1.5,
+        "additional_effect": "Physical biting moves ignore target positive Defense stages if target is already paralyzed at damage resolution.",
+        "production_id": null
+      },
+      "context_from_recovered_review": {
+        "type": [
+          "Electric",
+          "Dark"
+        ],
+        "stats": {
+          "hp": 80,
+          "atk": 160,
+          "def": 94,
+          "spa": 100,
+          "spd": 89,
+          "spe": 100
+        },
+        "bst": 623,
+        "policy": "Context only; not a new type/stat/artwork approval or override. Reconcile with existing exact historical identity before integration."
+      },
+      "artwork_policy": "Preserve all exact historical approved artwork; no replacement, conversion or new identity approved here.",
+      "base_form_unchanged": true
+    }
+  ],
+  "base_luxray": {
+    "source_blob": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+    "historical_candidate_primary": [
+      "Intimidate",
+      "Guts",
+      "Strong Jaw"
+    ],
+    "historical_candidate_innates": [
+      "Rivalry",
+      "Quick Feet",
+      "Lightning Rod"
+    ],
+    "policy": "Preserve existing authority; no base-form slot changes."
+  },
+  "ability_contracts": {
+    "Shocking_Jaws": "Existing locked import: biting moves roll 50% paralysis on each successful hit, subject to normal eligibility and immunity; Grounding Failure remains independent.",
+    "Intimidate": "Preserve existing Mercury Intimidate semantics; no global alteration.",
+    "Lightning_Rod": "Existing modified Mercury semantics: redirects eligible Electric moves, absorbs them and raises the higher offensive stat by one stage; preserve restrictions and routing."
+  },
+  "sources": {
+    "historical_slots": "8c5e6c650cff46f3cef692fa775a17a1ef1c18ee",
+    "locked_ability_intake": "eac0cd0d974b3d3ab11274b0cb10bff1417fa1ab",
+    "previous_head": "db3336a4ce40bfcc4bae38806a6cde4b18cfceef"
+  },
+  "holds": [
+    "Reconcile exact historical Mega typing, stats, Mega Stone and sprite identity; no inferred changes.",
+    "Check Voltage Hunter name collision; implement guarded bite flag, multiplier and positive Defense stage bypass only for physical biting moves; test timing, rounding, negative stages, crit interactions and immunity.",
+    "Test Shocking Jaws per-hit roll, native secondary effects and eligible status prevention, Grounding Failure expiry and absorption precedence; no unauthorized global changes.",
+    "Verify Mega transition slot routing, Intimidate activation/duplicate prevention, Lightning Rod redirection, both innate modes, all four move flags and learnset legality; require native compilation and emulator acceptance.",
+    "Volkner's teams, levels and player cap remain design review only until owner approval."
+  ],
+  "safety": {
+    "main_changed": false,
+    "rom_changed": false,
+    "native_code_changed": false,
+    "production_ids_allocated": false,
+    "prior_approvals_preserved": true,
+    "github_actions_requested": false
+  }
+}
